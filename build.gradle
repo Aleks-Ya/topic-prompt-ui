@@ -1,8 +1,8 @@
 plugins {
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.1.0'
-    id 'org.gradlex.extra-java-module-info' version '1.12'
-    id 'org.beryx.jlink' version '3.1.1'
+    id 'org.gradlex.extra-java-module-info' version '1.13.1'
+    id 'org.beryx.jlink' version '3.1.3'
 }
 javafx {
     version = 21
@@ -16,15 +16,15 @@ application {
     mainModule = 'GptUi.main'
 }
 dependencies {
-    implementation 'com.google.code.gson:gson:2.13.1', 'com.vladsch.flexmark:flexmark-ext-tables:0.64.8',
-            'ch.qos.logback:logback-classic:1.5.18', 'org.slf4j:jul-to-slf4j:2.0.17',
+    implementation 'com.google.code.gson:gson:2.13.2', 'com.vladsch.flexmark:flexmark-ext-tables:0.64.8',
+            'ch.qos.logback:logback-classic:1.5.21', 'org.slf4j:jul-to-slf4j:2.0.17',
             'com.gluonhq:ignite-guice:1.2.2', 'com.google.inject:guice:7.0.0',
             "org.apache.lucene:lucene-core:$lucene9Version", "org.apache.lucene:lucene-analysis-common:$lucene9Version",
             "org.apache.lucene:lucene-queryparser:$lucene9Version", 'org.controlsfx:controlsfx:11.2.2'
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit5Version", 'org.assertj:assertj-core:3.27.6',
             "org.testfx:testfx-junit5:4.0.18", 'org.awaitility:awaitility:4.3.0', 'com.google.jimfs:jimfs:1.3.0',
-            'org.mockito:mockito-core:5.18.0'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.13.4',
+            'org.mockito:mockito-core:5.20.0'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.14.1',
             "org.junit.jupiter:junit-jupiter-engine:$junit5Version"
 }
 test {
@@ -48,9 +48,7 @@ extraJavaModuleInfo {
     automaticModule("com.vladsch.flexmark:flexmark-util-options", "flexmark.util.options")
     automaticModule("org.awaitility:awaitility", "org.awaitility")
     automaticModule("org.osgi:org.osgi.core", "osgi.core")
-    automaticModule("com.google.j2objc:j2objc-annotations", "j2objc.annotations")
     automaticModule("com.google.code.findbugs:jsr305", "jsr305")
-    automaticModule("com.google.guava:failureaccess", "failureaccess")
     automaticModule("com.gluonhq:ignite-guice", "ignite.guice")
     automaticModule("com.gluonhq:ignite-common", "ignite.common")
     automaticModule("aopalliance:aopalliance", "aopalliance")

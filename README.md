@@ -15,6 +15,7 @@
 12. Utilize "Structured output" from `gpt-4o-2024-08-06` model (https://openai.com/index/introducing-structured-outputs-in-the-api/)
 
 ## Unit-tests
+Compile: `./gradlew compileTestJava`
 Run: `./gradlew test`
 
 ## Install on Ubuntu
