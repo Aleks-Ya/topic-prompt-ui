@@ -27,6 +27,10 @@ dependencies {
     testRuntimeOnly "org.junit.platform:junit-platform-launcher:$junit5PlatformVersion",
             "org.junit.jupiter:junit-jupiter-engine:$junit5Version"
 }
+test {
+    testLogging.showStandardStreams = true
+    useJUnitPlatform()
+}
 extraJavaModuleInfo {
     automaticModule("com.vladsch.flexmark:flexmark", "flexmark")
     automaticModule("com.vladsch.flexmark:flexmark-util-ast", "flexmark.util.ast")

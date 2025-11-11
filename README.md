@@ -1,7 +1,6 @@
 # GptUi
 
 ## TODO
-
 1. Add `Delete` button for the Themes
 2. Add `Rename` button for the Themes
 3. Add a filter (search) field for History
@@ -15,11 +14,13 @@
 11. Bug: Ctrl-Alt-Up/Down switch Interaction is random order
 12. Utilize "Structured output" from `gpt-4o-2024-08-06` model (https://openai.com/index/introducing-structured-outputs-in-the-api/)
 
-## Install on Ubuntu
+## Unit-tests
+Run: `./gradlew test`
 
+## Install on Ubuntu
 1. Build distribution and deploy to `/home/aleks/installed/GptUI`:
-    1. With tests: `gradle :App+:GptUi:installLocally`
-    2. Without tests: `gradle -x :App+:GptUi:test :App+:GptUi:installLocally`
+    1. With tests: `./gradlew installLocally`
+    2. Without tests: `./gradlew -x test installLocally`
 2. Add to `PATH` in `~/.bashrc`: `export PATH=$PATH:/home/aleks/installed/GptUI/bin`
 3. Add a menu icon by `MenuLibre` application:
     1. Command: `/home/aleks/installed/GptUI/bin/GptUi`
