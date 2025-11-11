@@ -55,7 +55,6 @@ extraJavaModuleInfo {
     automaticModule("com.gluonhq:ignite-common", "ignite.common")
     automaticModule("aopalliance:aopalliance", "aopalliance")
     automaticModule("com.google.guava:failureaccess", "failureaccess")
-    automaticModule("com.google.code.findbugs:jsr305", "jsr305")
     automaticModule("com.google.guava:listenablefuture", "listenablefuture")
     automaticModule("com.google.j2objc:j2objc-annotations", "j2objc.annotations")
     automaticModule("org.codehaus.mojo:animal-sniffer-annotations", "animal.sniffer.annotations")
@@ -74,7 +73,7 @@ tasks.jlink.mustRunAfter tasks.clean, tasks.test
 def installDir = System.properties['user.home'] + '/installed/GptUI'
 tasks.register('addIconToImage', Copy) {
     mustRunAfter tasks.jlink
-    from layout.projectDirectory.dir('resources/gptui/model/file').file('icon.png')
+    from layout.projectDirectory.dir('src/main/resources/gptui/model/file').file('icon.png')
     into layout.projectDirectory.dir('build/image/bin')
 }
 tasks.register('deleteInstalledApp', Delete) {

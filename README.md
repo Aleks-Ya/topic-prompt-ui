@@ -1,4 +1,4 @@
-# GptUi
+# Topic Prompt UI
 
 ## TODO
 1. Add `Delete` button for the Themes
@@ -23,8 +23,11 @@ Run: `./gradlew test`
     2. Without tests: `./gradlew -x test installLocally`
 2. Add to `PATH` in `~/.bashrc`: `export PATH=$PATH:/home/aleks/installed/GptUI/bin`
 3. Add a menu icon by `MenuLibre` application:
-    1. Command: `/home/aleks/installed/GptUI/bin/GptUi`
-    2. Icon: `/home/aleks/installed/GptUI/bin/icon.png`
+    1. Icon: `/home/aleks/installed/GptUI/bin/icon.png`
+    2. Name: `Topic Prompt UI`
+    3. Command: `/home/aleks/installed/GptUI/bin/GptUi`
+    4. Advanced:
+        1. Start VM Class: `gptui.view.GptUiApplication`
 4. Tokens: `~/.gpt/config.properties`. Properties:
     1. `openai.token`
     2. `gcp.api.key`
