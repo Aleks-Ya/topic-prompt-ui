@@ -1,5 +1,5 @@
 @startuml
-'https://plantuml.com/class-diagram
+hide empty members
 
 package model{
     class StateModel
