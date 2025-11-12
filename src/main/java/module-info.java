@@ -15,8 +15,6 @@ module GptUi.main {
     requires ch.qos.logback.classic;
     //noinspection Java9RedundantRequiresStatement
     requires java.naming;
-    //noinspection Java9RedundantRequiresStatement
-    requires jdk.crypto.ec;
     requires com.google.gson;
     requires flexmark;
     requires flexmark.util.ast;
