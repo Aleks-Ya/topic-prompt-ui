@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class GptUiController extends BaseController {
-    private static final Logger log = LoggerFactory.getLogger(HistoryController.class);
+    private static final Logger log = LoggerFactory.getLogger(GptUiController.class);
     @Inject
     private GptUiVmController vm;
     @FXML

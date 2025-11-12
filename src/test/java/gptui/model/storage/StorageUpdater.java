@@ -9,7 +9,7 @@ import static gptui.model.storage.AnswerType.LONG;
 import static gptui.model.storage.AnswerType.SHORT;
 
 public class StorageUpdater {
-    public static void main(String[] args) {
+    static void main() {
         var storage = new StorageFilesystem(FileSystems.getDefault());
         var storageModel = new StorageModelImpl(storage);
         convertInteractions(storageModel);
