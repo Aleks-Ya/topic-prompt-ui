@@ -1,8 +1,8 @@
-package gptui.model.question.openai;
+package gptui.model.question.openai.responses;
 
 import java.util.List;
 
-record OpenAiResponseBody(String model, List<Outputs> output, Error error) {
+record ResponseBody(String model, List<Outputs> output, Error error) {
     public record Content(String text) {}
 
     public record Outputs(List<Content> content, String status) {

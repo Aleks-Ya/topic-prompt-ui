@@ -1,8 +1,8 @@
 package gptui.model.question.question;
 
-import module javafx.media;
 import gptui.model.storage.AnswerType;
 import jakarta.inject.Singleton;
+import javafx.scene.media.AudioClip;
 
 import static java.util.Objects.requireNonNull;
 

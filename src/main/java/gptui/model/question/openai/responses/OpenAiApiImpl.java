@@ -1,7 +1,8 @@
-package gptui.model.question.openai;
+package gptui.model.question.openai.responses;
 
 import com.google.gson.Gson;
 import gptui.model.config.ConfigModel;
+import gptui.model.question.openai.OpenAiApi;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
@@ -33,7 +34,7 @@ class OpenAiApiImpl implements OpenAiApi {
     public String send(String content, Integer temperature) {
         log.info("Sending question: {}", content);
         var bigDecimalTemperature = convertTemperature(temperature);
-        var body = new OpenAiRequestBody(MODEL, content, bigDecimalTemperature);
+        var body = new RequestBody(MODEL, content, bigDecimalTemperature);
         var json = gson.toJson(body);
         log.trace("Request body: {}", json);
         HttpResponse<String> response;
@@ -51,7 +52,7 @@ class OpenAiApiImpl implements OpenAiApi {
             throw new RuntimeException(e);
         }
         if (response.statusCode() == 200) {
-            var responseBody = gson.fromJson(response.body(), OpenAiResponseBody.class);
+            var responseBody = gson.fromJson(response.body(), ResponseBody.class);
             var outputs = responseBody.output();
             if (outputs.size() > 1) {
                 throw new RuntimeException("Multiple outputs in response: " + outputs);

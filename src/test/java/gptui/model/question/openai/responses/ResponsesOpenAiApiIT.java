@@ -1,13 +1,14 @@
-package gptui.model.question.openai;
+package gptui.model.question.openai.responses;
 
 import com.google.inject.Guice;
 import gptui.model.config.ConfigurationModule;
+import gptui.model.question.openai.OpenAiApi;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class OpenAiApiIT {
-    private final OpenAiApi api = Guice.createInjector(new ConfigurationModule(), new OpenAiModule())
+class ResponsesOpenAiApiIT {
+    private final OpenAiApi api = Guice.createInjector(new ConfigurationModule(), new ResponsesOpenAiModule())
             .getInstance(OpenAiApi.class);
 
     @Test

@@ -63,4 +63,6 @@ module GptUi.main {
     opens gptui.viewmodel.ui to com.google.gson, com.google.guice, javafx.fxml;
     opens gptui.viewmodel.uiapp to com.google.gson, com.google.guice, javafx.fxml;
     opens gptui.viewmodel.mediator to com.google.gson, com.google.guice, javafx.fxml;
+    exports gptui.model.question.openai.responses;
+    opens gptui.model.question.openai.responses to com.google.gson, com.google.guice;
 }
