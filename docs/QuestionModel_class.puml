@@ -1,0 +1,42 @@
+@startuml
+hide empty members
+left to right direction
+
+title QuestionModel interface
+
+interface QuestionModel {
+    requestAnswer()
+}
+interface StateModel {
+    getTemperature()
+}
+interface StorageModel {
+    readInteraction()
+    getTheme()
+    updateInteraction()
+}
+interface PromptFactory {
+    getPrompt()
+}
+interface GptApi {
+    send()
+}
+interface GcpApi {
+    send()
+}
+interface SoundService {
+    beenOnAnswer()
+}
+interface FormatConverter {
+    markdownToHtml()
+}
+
+QuestionModel --> StateModel
+QuestionModel --> StorageModel
+QuestionModel --> PromptFactory
+QuestionModel --> GptApi
+QuestionModel --> GcpApi
+QuestionModel --> SoundService
+QuestionModel --> FormatConverter
+
+@enduml
