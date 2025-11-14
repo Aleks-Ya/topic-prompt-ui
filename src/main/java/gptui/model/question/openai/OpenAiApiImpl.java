@@ -17,15 +17,15 @@ import java.time.Duration;
 import static java.math.RoundingMode.HALF_UP;
 
 @Singleton
-class GptApiImpl implements GptApi {
-    private static final Logger log = LoggerFactory.getLogger(GptApiImpl.class);
+class OpenAiApiImpl implements OpenAiApi {
+    private static final Logger log = LoggerFactory.getLogger(OpenAiApiImpl.class);
     private static final String MODEL = "gpt-4.1";
     private static final Gson gson = new Gson();
     private static final URI endpoint = URI.create("https://api.openai.com/v1/responses");
     private final String token;
 
     @Inject
-    public GptApiImpl(ConfigModel configModel) {
+    public OpenAiApiImpl(ConfigModel configModel) {
         token = configModel.getProperty("openai.token");
     }
 
@@ -33,7 +33,7 @@ class GptApiImpl implements GptApi {
     public String send(String content, Integer temperature) {
         log.info("Sending question: {}", content);
         var bigDecimalTemperature = convertTemperature(temperature);
-        var body = new GptRequestBody(MODEL, content, bigDecimalTemperature);
+        var body = new OpenAiRequestBody(MODEL, content, bigDecimalTemperature);
         var json = gson.toJson(body);
         log.trace("Request body: {}", json);
         HttpResponse<String> response;
@@ -51,7 +51,7 @@ class GptApiImpl implements GptApi {
             throw new RuntimeException(e);
         }
         if (response.statusCode() == 200) {
-            var responseBody = gson.fromJson(response.body(), GptResponseBody.class);
+            var responseBody = gson.fromJson(response.body(), OpenAiResponseBody.class);
             var outputs = responseBody.output();
             if (outputs.size() > 1) {
                 throw new RuntimeException("Multiple outputs in response: " + outputs);

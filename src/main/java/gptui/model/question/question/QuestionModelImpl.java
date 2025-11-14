@@ -3,7 +3,7 @@ package gptui.model.question.question;
 import gptui.Mdc;
 import gptui.model.question.QuestionModel;
 import gptui.model.question.gcp.GcpApi;
-import gptui.model.question.openai.GptApi;
+import gptui.model.question.openai.OpenAiApi;
 import gptui.model.state.StateModel;
 import gptui.model.storage.Answer;
 import gptui.model.storage.AnswerType;
@@ -33,7 +33,7 @@ class QuestionModelImpl implements QuestionModel {
     @Inject
     private PromptFactory promptFactory;
     @Inject
-    private GptApi gptApi;
+    private OpenAiApi openAiApi;
     @Inject
     private GcpApi gcpApi;
     @Inject
@@ -61,7 +61,7 @@ class QuestionModelImpl implements QuestionModel {
                     callback);
             runAsync(() -> Mdc.run(interactionId, () -> {
                 log.trace("requestAnswer async");
-                var answerMd = answerType != GCP ? gptApi.send(prompt, temperature) : gcpApi.send(prompt, temperature);
+                var answerMd = answerType != GCP ? openAiApi.send(prompt, temperature) : gcpApi.send(prompt, temperature);
                 var answerHtml = formatConverter.markdownToHtml(answerMd);
                 updateAnswer(interactionId, answerType, answer ->
                         answer.withAnswerMd(answerMd).withAnswerHtml(answerHtml).withState(SUCCESS), callback);

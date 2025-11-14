@@ -3,7 +3,7 @@ package gptui.ui;
 import com.google.inject.util.Modules;
 import gptui.RootModule;
 import gptui.model.clipboard.ClipboardModel;
-import gptui.model.question.openai.MockGptApi;
+import gptui.model.question.openai.MockOpenAiApi;
 import gptui.model.search.HistorySearchModel;
 import gptui.model.state.StateModel;
 import gptui.model.storage.StorageModel;
@@ -35,7 +35,7 @@ import static javafx.scene.input.KeyCode.CONTROL;
 public abstract class BaseGptUiTest extends ApplicationTest {
     private final GptUiApplication app = new GptUiApplication(Modules.override(new RootModule()).with(new TestRootModule()));
     protected final StateModel stateModel = app.getGuiceContext().getInstance(StateModel.class);
-    protected final MockGptApi gptApi = app.getGuiceContext().getInstance(MockGptApi.class);
+    protected final MockOpenAiApi gptApi = app.getGuiceContext().getInstance(MockOpenAiApi.class);
     protected final StorageModel storage = app.getGuiceContext().getInstance(StorageModel.class);
     protected final HistorySearchModel search = app.getGuiceContext().getInstance(HistorySearchModel.class);
     protected final ClipboardModel clipboardModel = app.getGuiceContext().getInstance(ClipboardModel.class);

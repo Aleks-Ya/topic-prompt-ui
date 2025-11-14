@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class GptApiIT {
-    private final GptApi api = Guice.createInjector(new ConfigurationModule(), new OpenAiModule())
-            .getInstance(GptApi.class);
+class OpenAiApiIT {
+    private final OpenAiApi api = Guice.createInjector(new ConfigurationModule(), new OpenAiModule())
+            .getInstance(OpenAiApi.class);
 
     @Test
     void send() {

@@ -17,8 +17,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.awaitility.Awaitility.await;
 
 @Singleton
-public class MockGptApi implements GptApi, GcpApi {
-    private static final Logger log = LoggerFactory.getLogger(MockGptApi.class);
+public class MockOpenAiApi implements OpenAiApi, GcpApi {
+    private static final Logger log = LoggerFactory.getLogger(MockOpenAiApi.class);
     private final Map<RequestInfo, ResponseInfo> contentSubstringToResponseMap = new HashMap<>();
     private final List<String> sendHistory = new ArrayList<>();
     private final AtomicInteger receivedCounter = new AtomicInteger();
@@ -62,37 +62,37 @@ public class MockGptApi implements GptApi, GcpApi {
         return sendHistory;
     }
 
-    public MockGptApi putGrammarResponse(String response, Duration timeout) {
+    public MockOpenAiApi putGrammarResponse(String response, Duration timeout) {
         return put("has grammatical mistakes", null, response, timeout);
     }
 
-    public MockGptApi putShortResponse(String response, Duration timeout) {
+    public MockOpenAiApi putShortResponse(String response, Duration timeout) {
         return put("a short response", null, response, timeout);
     }
 
     @SuppressWarnings("UnusedReturnValue")
-    public MockGptApi putLongResponse(String response, Duration timeout) {
+    public MockOpenAiApi putLongResponse(String response, Duration timeout) {
         return put("I will ask you a question about", "a short response", response, timeout);
     }
 
     @SuppressWarnings("UnusedReturnValue")
-    public MockGptApi putGcpResponse(String response, Duration timeout) {
+    public MockOpenAiApi putGcpResponse(String response, Duration timeout) {
         return put("Answer question about", null, response, timeout);
     }
 
     @SuppressWarnings("UnusedReturnValue")
-    public MockGptApi putFactResponse(String response, Duration timeout) {
+    public MockOpenAiApi putFactResponse(String response, Duration timeout) {
         return put("factually correct", null, response, timeout);
     }
 
-    private MockGptApi put(String containsSubstring, String notContainSubstring, String response, Duration timeout) {
+    private MockOpenAiApi put(String containsSubstring, String notContainSubstring, String response, Duration timeout) {
         var requestInfo = new RequestInfo(Optional.ofNullable(containsSubstring), Optional.ofNullable(notContainSubstring));
         var responseInfo = new ResponseInfo(response, timeout);
         contentSubstringToResponseMap.put(requestInfo, responseInfo);
         return this;
     }
 
-    public MockGptApi clear() {
+    public MockOpenAiApi clear() {
         receivedCounter.set(0);
         contentSubstringToResponseMap.clear();
         sendHistory.clear();
