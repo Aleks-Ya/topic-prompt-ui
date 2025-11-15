@@ -77,7 +77,7 @@ public class MockOpenAiApi implements OpenAiApi, GcpApi {
 
     @SuppressWarnings("UnusedReturnValue")
     public MockOpenAiApi putGcpResponse(String response, Duration timeout) {
-        return put("Answer question about", null, response, timeout);
+        return put("I will ask you a question about", null, response, timeout);
     }
 
     @SuppressWarnings("UnusedReturnValue")
