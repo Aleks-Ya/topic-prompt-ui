@@ -81,9 +81,9 @@ class RegenerateAnswerTest extends BaseGptUiTest {
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
 
                 .work("Regenerate GCP Answer", () -> {
-                    gptApi.clear().putGcpResponse(I3.GCP_HTML, ZERO);
+                    gcpApi.clear().putGcpResponse(I3.GCP_HTML, ZERO);
                     clickOn(gcpAnswer().regenerateButton());
-                    gptApi.waitUntilSent(1);
+                    gcpApi.waitUntilSent(1);
                 })
                 .focus(gcpAnswer().regenerateButton())
                 .historyItems(storage.readInteraction(I2.INTERACTION.id()).orElseThrow(), I1.INTERACTION)
@@ -105,9 +105,9 @@ class RegenerateAnswerTest extends BaseGptUiTest {
                 .answerTextTemperatures(50, 60, 70, 80)
 
                 .work("Regenerate GCP Answer", () -> {
-                    gptApi.clear().putGcpResponse(I3.GCP_HTML, ZERO);
+                    gcpApi.clear().putGcpResponse(I3.GCP_HTML, ZERO);
                     clickOn(gcpAnswer().regenerateButton());
-                    gptApi.waitUntilSent(1);
+                    gcpApi.waitUntilSent(1);
                 })
                 .focus(gcpAnswer().regenerateButton())
                 .historyItems(storage.readInteraction(I2.INTERACTION.id()).orElseThrow(), storage.readInteraction(I1.INTERACTION.id()).orElseThrow())

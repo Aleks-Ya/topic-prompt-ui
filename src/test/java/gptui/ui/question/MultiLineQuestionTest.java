@@ -59,11 +59,12 @@ class MultiLineQuestionTest extends BaseGptUiTest {
         gptApi.clear()
                 .putGrammarResponse(I1.GRAMMAR_HTML, ZERO)
                 .putShortResponse(I1.SHORT_HTML, ZERO)
-                .putLongResponse(I1.LONG_HTML, ZERO)
-                .putGcpResponse(I1.GCP_HTML, ZERO);
+                .putLongResponse(I1.LONG_HTML, ZERO);
+        gcpApi.clear().putGcpResponse(I1.GCP_HTML, ZERO);
         clickOn(question().questionButton());
 
-        gptApi.waitUntilSent(4);
+        gptApi.waitUntilSent(3);
+        gcpApi.waitUntilSent(1);
         var questionText = questionLine1 + "\n" + questionLine2 + "\n" + questionLine3;
         assertion()
                 .focus(question().questionButton())

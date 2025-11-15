@@ -55,10 +55,11 @@ class RegenerateQuestionTest extends BaseGptUiTest {
         gptApi.clear()
                 .putGrammarResponse(I2.GRAMMAR_HTML, ZERO)
                 .putShortResponse(I2.SHORT_HTML, ZERO)
-                .putLongResponse(I2.LONG_HTML, ZERO)
-                .putGcpResponse(I2.GCP_HTML, ZERO);
+                .putLongResponse(I2.LONG_HTML, ZERO);
+        gcpApi.clear().putGcpResponse(I2.GCP_HTML, ZERO);
         clickOn(question().regenerateButton());
-        gptApi.waitUntilSent(4);
+        gptApi.waitUntilSent(3);
+        gcpApi.waitUntilSent(1);
 
         assertion()
                 .focus(question().regenerateButton())

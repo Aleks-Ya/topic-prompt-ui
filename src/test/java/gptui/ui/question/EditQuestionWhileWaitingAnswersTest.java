@@ -82,8 +82,8 @@ class EditQuestionWhileWaitingAnswersTest extends BaseGptUiTest {
         gptApi.clear()
                 .putGrammarResponse(I1.GRAMMAR_HTML, ofMillis(5000))
                 .putShortResponse(I1.SHORT_HTML, ofMillis(5500))
-                .putLongResponse(I1.LONG_HTML, ofMillis(6000))
-                .putGcpResponse(I1.GCP_HTML, ofMillis(6500));
+                .putLongResponse(I1.LONG_HTML, ofMillis(6000));
+        gcpApi.putGcpResponse(I1.GCP_HTML, ofMillis(6500));
 
         clickOn(question().questionButton());
         assertion()
@@ -137,7 +137,8 @@ class EditQuestionWhileWaitingAnswersTest extends BaseGptUiTest {
                 .answerSpinnerTemperaturesDefault()
                 .assertApp();
 
-        gptApi.waitUntilSent(4);
+        gptApi.waitUntilSent(3);
+        gcpApi.waitUntilSent(1);
         assertion()
                 .focus(question().textArea())
                 .historySize(1, 1)
