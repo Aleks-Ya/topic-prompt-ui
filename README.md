@@ -1,19 +1,5 @@
 # Topic Prompt UI
 
-## TODO
-1. Add `Delete` button for the Themes
-2. Add `Rename` button for the Themes
-3. Add a filter (search) field for History
-4. Add a "Copy" button for Question
-5. Expand the Question and Answer view to full screen
-6. Replace Gemini Pro with Gemini Ultra.
-7. Add a new Theme dialog: disable the OK button if the theme title is empty
-8. Fix floating unit-tests: `TemperatureTest`
-9. Limit length of text in History ComboBox
-10. Bug: Ctrl-Alt-V within the Theme ComboBox
-11. Bug: Ctrl-Alt-Up/Down switch Interaction in random order
-12. Utilize "Structured output" from `gpt-4o-2024-08-06` model (https://openai.com/index/introducing-structured-outputs-in-the-api/)
-
 ## Unit-tests
 Compile: `./gradlew compileTestJava`
 Run: `./gradlew test`
