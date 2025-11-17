@@ -1,6 +1,8 @@
 package gptui.model.storage;
 
-import java.nio.file.FileSystems;
+import com.google.inject.Guice;
+import gptui.RootModule;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static gptui.model.storage.AnswerType.GCP;
@@ -9,9 +11,10 @@ import static gptui.model.storage.AnswerType.LONG;
 import static gptui.model.storage.AnswerType.SHORT;
 
 public class StorageUpdater {
+
     static void main() {
-        var storage = new StorageFilesystem(FileSystems.getDefault());
-        var storageModel = new StorageModelImpl(storage);
+        var injector = Guice.createInjector(new RootModule());
+        var storageModel = injector.getInstance(StorageModel.class);
         convertInteractions(storageModel);
     }
 
