@@ -1,8 +1,12 @@
 package gptui.model.question.prompt;
 
 import gptui.BaseTest;
+import gptui.model.config.ConfigModel;
 import gptui.model.storage.InteractionType;
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+import java.nio.file.Files;
 
 import static gptui.model.storage.AnswerType.GCP;
 import static gptui.model.storage.AnswerType.GRAMMAR;
@@ -15,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class PromptFactoryTest extends BaseTest {
     private final PromptFactory factory = injector.getInstance(PromptFactory.class);
+    private final ConfigModel configModel = injector.getInstance(ConfigModel.class);
 
     @Test
     void question() {
@@ -77,5 +82,20 @@ class PromptFactoryTest extends BaseTest {
         assertThat(factory.getPrompt(InteractionType.GRAMMAR, "Theme A", "Question A", SHORT)).isEmpty();
         assertThat(factory.getPrompt(InteractionType.GRAMMAR, "Theme A", "Question A", LONG)).isEmpty();
         assertThat(factory.getPrompt(InteractionType.GRAMMAR, "Theme A", "Question A", GCP)).isEmpty();
+    }
+
+    @Test
+    void userModifiesTemplate() throws IOException {
+        var expDefaultPrompt = "Provide a single-sentence definition of `Question A` in the context of `Theme A`.";
+
+        var templateFile = configModel.getAppDataPath().resolve("templates").resolve("definition-gcp.ftl");
+        assertThat(factory.getPrompt(DEFINITION, "Theme A", "Question A", GCP)).contains(expDefaultPrompt);
+
+        Files.writeString(templateFile, "Answer ${question} about ${theme}");
+        assertThat(factory.getPrompt(DEFINITION, "Theme A", "Question A", GCP))
+                .contains("Answer Question A about Theme A");
+
+        Files.delete(templateFile);
+        assertThat(factory.getPrompt(DEFINITION, "Theme A", "Question A", GCP)).contains(expDefaultPrompt);
     }
 }
