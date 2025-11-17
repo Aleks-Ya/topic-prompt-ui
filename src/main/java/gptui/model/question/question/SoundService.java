@@ -4,7 +4,7 @@ import gptui.model.storage.AnswerType;
 import jakarta.inject.Singleton;
 import javafx.scene.media.AudioClip;
 
-import static java.util.Objects.requireNonNull;
+import static gptui.util.ResourceUtils.resourcePath;
 
 @Singleton
 class SoundService {
@@ -14,9 +14,9 @@ class SoundService {
     private final AudioClip beep3;
 
     public SoundService() {
-        beep1 = new AudioClip(requireNonNull(getClass().getResource("beep-1.wav")).toString());
-        beep2 = new AudioClip(requireNonNull(getClass().getResource("beep-2.wav")).toString());
-        beep3 = new AudioClip(requireNonNull(getClass().getResource("beep-3.wav")).toString());
+        beep1 = new AudioClip(resourcePath(getClass(), "beep-1.wav"));
+        beep2 = new AudioClip(resourcePath(getClass(), "beep-2.wav"));
+        beep3 = new AudioClip(resourcePath(getClass(), "beep-3.wav"));
     }
 
     public synchronized void beenOnAnswer(AnswerType answerType) {

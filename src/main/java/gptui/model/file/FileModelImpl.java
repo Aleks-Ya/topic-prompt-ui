@@ -9,6 +9,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
+import static gptui.util.ResourceUtils.resourceIS;
+import static gptui.util.ResourceUtils.resourceUrl;
 import static java.util.Objects.requireNonNull;
 
 @Singleton
@@ -17,14 +19,14 @@ class FileModelImpl implements FileModel {
 
     @Override
     public InputStream getAppIcon() {
-        return requireNonNull(getClass().getResourceAsStream("icon.png"));
+        return resourceIS(getClass(), "icon.png");
     }
 
     @Override
     public String getAppVersion() {
         log.info("Reading application version...");
         try {
-            var is = requireNonNull(getClass().getResourceAsStream("/gptui/version.txt"));
+            var is = resourceIS(getClass(), "/gptui/version.txt");
             try (var dataInputStream = new DataInputStream(is)) {
                 var bytes = new byte[is.available()];
                 dataInputStream.readFully(bytes);
@@ -40,7 +42,7 @@ class FileModelImpl implements FileModel {
     @Override
     public URL getFxmlLocation() {
         log.info("Java version: {}", Runtime.version());
-        var gptUiFxml = getClass().getResource("/gptui/view/GptUi.fxml");
+        var gptUiFxml = resourceUrl(getClass(), "/gptui/view/GptUi.fxml");
         log.info("GptUi.fxml: {}", gptUiFxml);
         return requireNonNull(gptUiFxml);
     }
