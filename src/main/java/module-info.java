@@ -27,11 +27,12 @@ module GptUi.main {
     requires org.apache.lucene.analysis.common;
     requires org.apache.lucene.queryparser;
     requires org.controlsfx.controls;
+    requires com.google.common;
 
     exports gptui;
     exports gptui.view;
-    exports gptui.model.storage;
     exports gptui.model;
+    exports gptui.model.storage;
     exports gptui.model.question;
     exports gptui.model.question.openai;
     exports gptui.model.question.gcp;

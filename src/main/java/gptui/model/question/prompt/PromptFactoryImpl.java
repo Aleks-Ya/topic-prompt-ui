@@ -6,91 +6,46 @@ import jakarta.inject.Singleton;
 
 import java.util.Optional;
 
+import static gptui.util.ResourceUtils.resourceContent;
 import static java.lang.String.format;
 
 @Singleton
 @SuppressWarnings("TextBlockMigration")
 class PromptFactoryImpl implements PromptFactory {
+    private final String questionShortTemplate = resourceContent(getClass(), "question-short.txt");
+    private final String questionLongTemplate = resourceContent(getClass(), "question-long.txt");
+    private final String questionGcpTemplate = resourceContent(getClass(), "question-gcp.txt");
+    private final String definitionGrammarTemplate = resourceContent(getClass(), "definition-grammar.txt");
+    private final String definitionShortTemplate = resourceContent(getClass(), "definition-short.txt");
+    private final String definitionLongTemplate = resourceContent(getClass(), "definition-long.txt");
+    private final String definitionGcpTemplate = resourceContent(getClass(), "definition-gcp.txt");
+    private final String grammarTemplate = resourceContent(getClass(), "grammar.txt");
+    private final String factGrammarTemplate = resourceContent(getClass(), "fact-grammar.txt");
+
     @Override
     public Optional<String> getPrompt(InteractionType interactionType, String theme, String question, AnswerType answerType) {
         return switch (interactionType) {
             case QUESTION -> switch (answerType) {
-                case GRAMMAR -> grammarPrompt(question);
-                case SHORT -> Optional.of(format(
-                        "I will ask you a question about \"%s\". " +
-                                "You should answer with a short response. " +
-                                "Do not repeat the question in your answer. " +
-                                "Format your answer into Markdown. " +
-                                "The question is:\n" +
-                                "```\n" +
-                                "%s\n" +
-                                "```",
-                        theme, question));
-                case LONG -> Optional.of(format(
-                        "I will ask you a question about \"%s\". " +
-                                "Do not repeat the question in your answer. " +
-                                "Format your answer into Markdown. " +
-                                "The question is:\n" +
-                                "```\n" +
-                                "%s\n" +
-                                "```",
-                        theme, question));
-                case GCP -> Optional.of(format(
-                        "I will ask you a question about \"%s\". " +
-                                "Do not repeat the question in your answer. " +
-                                "The question is:\n" +
-                                "```\n" +
-                                "%s\n" +
-                                "```", theme, question));
+                case GRAMMAR -> Optional.of(format(grammarTemplate, question));
+                case SHORT -> Optional.of(format(questionShortTemplate, theme, question));
+                case LONG -> Optional.of(format(questionLongTemplate, theme, question));
+                case GCP -> Optional.of(format(questionGcpTemplate, theme, question));
             };
             case DEFINITION -> switch (answerType) {
-                case GRAMMAR -> Optional.of(format(
-                        "I will give you a phrase related to `%s`. " +
-                                "Check if the phrase has grammatical mistakes. " +
-                                "It is not a mistake if the phrase starts with \"How to\". " +
-                                "The phrase is:\n" +
-                                "```\n" +
-                                "%s\n" +
-                                "```",
-                        theme, question));
-                case SHORT -> Optional.of(format(
-                        "Provide a single-sentence definition of `%s` in the context of `%s`, as short as possible. " +
-                                "Format your answer into Markdown.",
-                        question, theme));
-                case LONG -> Optional.of(format(
-                        "Provide a detailed, single-sentence definition of `%s` in the context of `%s`. " +
-                                "Format your answer into Markdown.",
-                        question, theme));
-                case GCP -> Optional.of(format(
-                        "Provide a single-sentence definition of `%s` in the context of `%s`.",
-                        question, theme));
+                case GRAMMAR -> Optional.of(format(definitionGrammarTemplate, theme, question));
+                case SHORT -> Optional.of(format(definitionShortTemplate, question, theme));
+                case LONG -> Optional.of(format(definitionLongTemplate, question, theme));
+                case GCP -> Optional.of(format(definitionGcpTemplate, question, theme));
             };
             case GRAMMAR -> switch (answerType) {
-                case GRAMMAR -> grammarPrompt(question);
+                case GRAMMAR -> Optional.of(format(grammarTemplate, question));
                 case SHORT, LONG, GCP -> Optional.empty();
             };
             case FACT -> switch (answerType) {
-                case GRAMMAR -> Optional.of(format(
-                        "Check is this sentence factually correct in context of `%s`: `%s`? " +
-                                "Format your answer into Markdown.",
-                        theme, question));
+                case GRAMMAR -> Optional.of(format(factGrammarTemplate, theme, question));
                 case SHORT, LONG, GCP -> Optional.empty();
             };
         };
-    }
-
-    private static Optional<String> grammarPrompt(String question) {
-        return Optional.of(format(
-                "I will give you a sentence or phrase. " +
-                        "Check if the sentence or phrase has grammatical mistakes. " +
-                        "It is not a mistake if the sentence or phrase starts with \"How to\". " +
-                        "If the given sentence or phrase is correct, just answer \"Correct\". " +
-                        "If the sentence or phrase has mistakes, just answer with correct sentence. " +
-                        "The sentence or phrase is:\n" +
-                        "```\n" +
-                        "%s\n" +
-                        "```",
-                question));
     }
 }
 

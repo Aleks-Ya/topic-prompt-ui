@@ -1,0 +1,1 @@
+Provide a detailed, single-sentence definition of `%s` in the context of `%s`. Format your answer into Markdown.
