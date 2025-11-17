@@ -1,6 +1,6 @@
 package gptui.model.question.question;
 
-import gptui.Mdc;
+import gptui.util.Mdc;
 import gptui.model.question.QuestionModel;
 import gptui.model.question.gcp.GcpApi;
 import gptui.model.question.openai.OpenAiApi;

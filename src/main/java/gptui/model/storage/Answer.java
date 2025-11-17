@@ -1,6 +1,6 @@
 package gptui.model.storage;
 
-import static gptui.LogUtils.shorten;
+import static gptui.util.LogUtils.shorten;
 
 public record Answer(AnswerType answerType, String prompt, Integer temperature,
                      String answerMd, String answerHtml, AnswerState answerState) {

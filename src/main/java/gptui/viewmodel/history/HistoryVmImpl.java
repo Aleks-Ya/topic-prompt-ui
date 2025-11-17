@@ -1,7 +1,7 @@
 package gptui.viewmodel.history;
 
 import com.google.inject.Singleton;
-import gptui.LogUtils;
+import gptui.util.LogUtils;
 import gptui.model.storage.Interaction;
 import gptui.viewmodel.InteractionItem;
 import gptui.viewmodel.mediator.HistoryMediator;
@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
-import static gptui.LogUtils.shorten;
+import static gptui.util.LogUtils.shorten;
 import static gptui.viewmodel.CbHelper.updateCbSilently;
 import static java.lang.String.format;
 import static javafx.collections.FXCollections.observableArrayList;

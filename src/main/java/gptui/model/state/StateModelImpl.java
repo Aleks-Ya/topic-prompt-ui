@@ -1,7 +1,7 @@
 package gptui.model.state;
 
-import gptui.LogUtils;
-import gptui.Mdc;
+import gptui.util.LogUtils;
+import gptui.util.Mdc;
 import gptui.model.storage.Answer;
 import gptui.model.storage.AnswerType;
 import gptui.model.storage.Interaction;

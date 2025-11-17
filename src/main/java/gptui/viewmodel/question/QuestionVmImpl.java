@@ -1,7 +1,7 @@
 package gptui.viewmodel.question;
 
 import com.google.inject.Singleton;
-import gptui.Mdc;
+import gptui.util.Mdc;
 import gptui.model.storage.Interaction;
 import gptui.model.storage.InteractionType;
 import gptui.viewmodel.mediator.QuestionMediator;

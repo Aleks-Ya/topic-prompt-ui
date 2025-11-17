@@ -1,4 +1,4 @@
-package gptui;
+package gptui.util;
 
 import gptui.model.storage.AnswerType;
 import gptui.model.storage.InteractionId;

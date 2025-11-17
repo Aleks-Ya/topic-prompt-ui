@@ -1,4 +1,4 @@
-package gptui;
+package gptui.util;
 
 import org.junit.jupiter.api.Test;
 

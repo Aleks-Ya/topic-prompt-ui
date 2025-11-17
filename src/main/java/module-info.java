@@ -43,6 +43,7 @@ module GptUi.main {
     exports gptui.model.file;
     exports gptui.model.clipboard;
     exports gptui.model.search;
+    exports gptui.util;
 
     opens gptui.model.storage to com.google.guice;
     opens gptui.model.question to com.google.gson, com.google.guice;
@@ -67,4 +68,5 @@ module GptUi.main {
     opens gptui.viewmodel.mediator to com.google.gson, com.google.guice, javafx.fxml;
     opens gptui.model.question.openai.responses to com.google.gson, com.google.guice;
     opens gptui.model.question.prompt to com.google.gson, com.google.guice;
+    opens gptui.util to com.google.gson, com.google.guice, javafx.fxml;
 }
