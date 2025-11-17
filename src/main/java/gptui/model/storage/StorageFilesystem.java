@@ -3,13 +3,13 @@ package gptui.model.storage;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import gptui.model.config.ConfigModel;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -27,9 +27,9 @@ class StorageFilesystem {
     private final Path themesFile;
 
     @Inject
-    public StorageFilesystem(FileSystem fileSystem) {
+    public StorageFilesystem(ConfigModel config) {
         try {
-            var storageDir = fileSystem.getPath(System.getProperty("user.home"), ".gpt/storage");
+            var storageDir = config.getAppDataPath().resolve("storage");
             log.info("Storage directory: {}", storageDir);
             if (Files.notExists(storageDir)) {
                 Files.createDirectories(storageDir);
