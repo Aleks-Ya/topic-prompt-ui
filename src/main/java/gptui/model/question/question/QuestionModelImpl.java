@@ -4,6 +4,7 @@ import gptui.Mdc;
 import gptui.model.question.QuestionModel;
 import gptui.model.question.gcp.GcpApi;
 import gptui.model.question.openai.OpenAiApi;
+import gptui.model.question.prompt.PromptFactory;
 import gptui.model.state.StateModel;
 import gptui.model.storage.Answer;
 import gptui.model.storage.AnswerType;

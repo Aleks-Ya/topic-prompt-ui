@@ -1,4 +1,4 @@
-package gptui.model.question.question;
+package gptui.model.question.prompt;
 
 import gptui.model.storage.InteractionType;
 import org.junit.jupiter.api.Test;
@@ -13,7 +13,7 @@ import static gptui.model.storage.InteractionType.QUESTION;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class PromptFactoryTest {
-    private final PromptFactory factory = new PromptFactory();
+    private final PromptFactory factory = new PromptFactoryImpl();
 
     @Test
     void question() {

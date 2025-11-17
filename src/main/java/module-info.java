@@ -29,13 +29,15 @@ module GptUi.main {
     requires org.controlsfx.controls;
 
     exports gptui;
-    exports gptui.model.storage;
     exports gptui.view;
+    exports gptui.model.storage;
     exports gptui.model;
     exports gptui.model.question;
     exports gptui.model.question.openai;
     exports gptui.model.question.gcp;
     exports gptui.model.question.question;
+    exports gptui.model.question.openai.responses;
+    exports gptui.model.question.prompt;
     exports gptui.model.config;
     exports gptui.model.state;
     exports gptui.model.file;
@@ -63,6 +65,6 @@ module GptUi.main {
     opens gptui.viewmodel.ui to com.google.gson, com.google.guice, javafx.fxml;
     opens gptui.viewmodel.uiapp to com.google.gson, com.google.guice, javafx.fxml;
     opens gptui.viewmodel.mediator to com.google.gson, com.google.guice, javafx.fxml;
-    exports gptui.model.question.openai.responses;
     opens gptui.model.question.openai.responses to com.google.gson, com.google.guice;
+    opens gptui.model.question.prompt to com.google.gson, com.google.guice;
 }

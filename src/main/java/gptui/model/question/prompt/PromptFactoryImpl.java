@@ -1,4 +1,4 @@
-package gptui.model.question.question;
+package gptui.model.question.prompt;
 
 import gptui.model.storage.AnswerType;
 import gptui.model.storage.InteractionType;
@@ -10,7 +10,8 @@ import static java.lang.String.format;
 
 @Singleton
 @SuppressWarnings("TextBlockMigration")
-class PromptFactory {
+class PromptFactoryImpl implements PromptFactory {
+    @Override
     public Optional<String> getPrompt(InteractionType interactionType, String theme, String question, AnswerType answerType) {
         return switch (interactionType) {
             case QUESTION -> switch (answerType) {
