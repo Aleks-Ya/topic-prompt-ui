@@ -23,15 +23,14 @@ class StorageFilesystem {
             .registerTypeAdapter(ThemeId.class, new ThemeIdSerDe())
             .setPrettyPrinting()
             .create();
-    private final FileSystem fileSystem;
     private final Path interactionsDir;
     private final Path themesFile;
 
     @Inject
     public StorageFilesystem(FileSystem fileSystem) {
         try {
-            this.fileSystem = fileSystem;
             var storageDir = fileSystem.getPath(System.getProperty("user.home"), ".gpt/storage");
+            log.info("Storage directory: {}", storageDir);
             if (Files.notExists(storageDir)) {
                 Files.createDirectories(storageDir);
             }
@@ -60,7 +59,7 @@ class StorageFilesystem {
     }
 
     private Path getInteractionFile(InteractionId interactionId) {
-        return fileSystem.getPath(interactionsDir.toString(), interactionId.id() + ".json");
+        return interactionsDir.resolve(interactionId.id() + ".json");
     }
 
     public synchronized List<Interaction> readAllInteractions() {
