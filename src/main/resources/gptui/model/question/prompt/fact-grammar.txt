@@ -1,1 +1,0 @@
-Check is this sentence factually correct in context of `%s`: `%s`? Format your answer into Markdown.

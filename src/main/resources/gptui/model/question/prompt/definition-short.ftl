@@ -1,0 +1,1 @@
+Provide a single-sentence definition of `${question}` in the context of `${theme}`, as short as possible. Format your answer into Markdown.

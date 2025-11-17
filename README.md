@@ -4,6 +4,9 @@
 Compile: `./gradlew compileTestJava`
 Run: `./gradlew test`
 
+## Link
+`./gradlew -x test clean jlink`
+
 ## Install on Ubuntu
 1. Use Java 25: `sdk use java 25.0.1-zulu`
 2. Build distribution and deploy to `/home/aleks/installed/GptUI`:

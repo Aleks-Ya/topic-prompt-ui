@@ -1,4 +1,0 @@
-I will ask you a question about "%s". Do not repeat the question in your answer. The question is:
-```
-%s
-```

@@ -1,51 +1,80 @@
 package gptui.model.question.prompt;
 
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import gptui.model.storage.AnswerType;
 import gptui.model.storage.InteractionType;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.Map;
 import java.util.Optional;
-
-import static gptui.util.ResourceUtils.resourceContent;
-import static java.lang.String.format;
 
 @Singleton
 @SuppressWarnings("TextBlockMigration")
 class PromptFactoryImpl implements PromptFactory {
-    private final String questionShortTemplate = resourceContent(getClass(), "question-short.txt");
-    private final String questionLongTemplate = resourceContent(getClass(), "question-long.txt");
-    private final String questionGcpTemplate = resourceContent(getClass(), "question-gcp.txt");
-    private final String definitionGrammarTemplate = resourceContent(getClass(), "definition-grammar.txt");
-    private final String definitionShortTemplate = resourceContent(getClass(), "definition-short.txt");
-    private final String definitionLongTemplate = resourceContent(getClass(), "definition-long.txt");
-    private final String definitionGcpTemplate = resourceContent(getClass(), "definition-gcp.txt");
-    private final String grammarTemplate = resourceContent(getClass(), "grammar.txt");
-    private final String factGrammarTemplate = resourceContent(getClass(), "fact-grammar.txt");
+    private final Template questionShortTemplate;
+    private final Template questionLongTemplate;
+    private final Template questionGcpTemplate;
+    private final Template definitionGrammarTemplate;
+    private final Template definitionShortTemplate;
+    private final Template definitionLongTemplate;
+    private final Template definitionGcpTemplate;
+    private final Template grammarTemplate;
+    private final Template factGrammarTemplate;
+
+    @Inject
+    public PromptFactoryImpl(Configuration cfg) throws IOException {
+        cfg.setClassForTemplateLoading(getClass(), "");
+        questionShortTemplate = cfg.getTemplate("question-short.ftl");
+        questionLongTemplate = cfg.getTemplate("question-long.ftl");
+        questionGcpTemplate = cfg.getTemplate("question-gcp.ftl");
+        definitionGrammarTemplate = cfg.getTemplate("definition-grammar.ftl");
+        definitionShortTemplate = cfg.getTemplate("definition-short.ftl");
+        definitionLongTemplate = cfg.getTemplate("definition-long.ftl");
+        definitionGcpTemplate = cfg.getTemplate("definition-gcp.ftl");
+        grammarTemplate = cfg.getTemplate("grammar.ftl");
+        factGrammarTemplate = cfg.getTemplate("fact-grammar.ftl");
+    }
 
     @Override
     public Optional<String> getPrompt(InteractionType interactionType, String theme, String question, AnswerType answerType) {
+        var data = Map.of("theme", theme, "question", question);
         return switch (interactionType) {
             case QUESTION -> switch (answerType) {
-                case GRAMMAR -> Optional.of(format(grammarTemplate, question));
-                case SHORT -> Optional.of(format(questionShortTemplate, theme, question));
-                case LONG -> Optional.of(format(questionLongTemplate, theme, question));
-                case GCP -> Optional.of(format(questionGcpTemplate, theme, question));
+                case GRAMMAR -> render(grammarTemplate, data);
+                case SHORT -> render(questionShortTemplate, data);
+                case LONG -> render(questionLongTemplate, data);
+                case GCP -> render(questionGcpTemplate, data);
             };
             case DEFINITION -> switch (answerType) {
-                case GRAMMAR -> Optional.of(format(definitionGrammarTemplate, theme, question));
-                case SHORT -> Optional.of(format(definitionShortTemplate, question, theme));
-                case LONG -> Optional.of(format(definitionLongTemplate, question, theme));
-                case GCP -> Optional.of(format(definitionGcpTemplate, question, theme));
+                case GRAMMAR -> render(definitionGrammarTemplate, data);
+                case SHORT -> render(definitionShortTemplate, data);
+                case LONG -> render(definitionLongTemplate, data);
+                case GCP -> render(definitionGcpTemplate, data);
             };
             case GRAMMAR -> switch (answerType) {
-                case GRAMMAR -> Optional.of(format(grammarTemplate, question));
+                case GRAMMAR -> render(grammarTemplate, data);
                 case SHORT, LONG, GCP -> Optional.empty();
             };
             case FACT -> switch (answerType) {
-                case GRAMMAR -> Optional.of(format(factGrammarTemplate, theme, question));
+                case GRAMMAR -> render(factGrammarTemplate, data);
                 case SHORT, LONG, GCP -> Optional.empty();
             };
         };
+    }
+
+    private static Optional<String> render(Template template, Map<String, String> data) {
+        try {
+            var out = new StringWriter();
+            template.process(data, out);
+            return Optional.of(out.toString());
+        } catch (TemplateException | IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 

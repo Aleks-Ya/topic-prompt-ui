@@ -1,5 +1,6 @@
 package gptui.model.question.prompt;
 
+import com.google.inject.Guice;
 import gptui.model.storage.InteractionType;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +14,7 @@ import static gptui.model.storage.InteractionType.QUESTION;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class PromptFactoryTest {
-    private final PromptFactory factory = new PromptFactoryImpl();
+    private final PromptFactory factory = Guice.createInjector(new PromptModule()).getInstance(PromptFactory.class);
 
     @Test
     void question() {

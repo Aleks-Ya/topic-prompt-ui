@@ -9,11 +9,8 @@ module GptUi.main {
     requires jakarta.inject;
 
     requires org.slf4j;
-    //noinspection Java9RedundantRequiresStatement
     requires jul.to.slf4j;
-    //noinspection Java9RedundantRequiresStatement
     requires ch.qos.logback.classic;
-    //noinspection Java9RedundantRequiresStatement
     requires java.naming;
     requires com.google.gson;
     requires flexmark;
@@ -28,6 +25,7 @@ module GptUi.main {
     requires org.apache.lucene.queryparser;
     requires org.controlsfx.controls;
     requires com.google.common;
+    requires freemarker;
 
     exports gptui;
     exports gptui.view;
