@@ -1,6 +1,6 @@
 package gptui.ui.theme;
 
-import gptui.ui.BaseGptUiTest;
+import gptui.BaseGptUiTest;
 import gptui.ui.TestingData.I1;
 import gptui.ui.TestingData.I2;
 import gptui.ui.TestingData.I3;

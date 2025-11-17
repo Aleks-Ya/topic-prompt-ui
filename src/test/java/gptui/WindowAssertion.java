@@ -1,4 +1,4 @@
-package gptui.ui;
+package gptui;
 
 import gptui.model.storage.Interaction;
 import gptui.model.storage.Theme;

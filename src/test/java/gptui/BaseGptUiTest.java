@@ -1,7 +1,6 @@
-package gptui.ui;
+package gptui;
 
 import com.google.inject.util.Modules;
-import gptui.RootModule;
 import gptui.model.clipboard.ClipboardModel;
 import gptui.model.question.gcp.MockGcpApi;
 import gptui.model.question.openai.MockOpenAiApi;

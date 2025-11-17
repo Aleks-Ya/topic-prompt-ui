@@ -1,6 +1,6 @@
 package gptui.ui.history;
 
-import gptui.ui.BaseGptUiTest;
+import gptui.BaseGptUiTest;
 import gptui.ui.TestingData.I1;
 import gptui.ui.TestingData.I2;
 import org.junit.jupiter.api.Test;

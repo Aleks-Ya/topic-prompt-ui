@@ -1,4 +1,4 @@
-package gptui.ui;
+package gptui;
 
 import com.google.common.jimfs.Jimfs;
 import com.google.inject.AbstractModule;
@@ -11,7 +11,7 @@ import java.nio.file.FileSystem;
 
 import static com.google.common.jimfs.Configuration.unix;
 
-class TestRootModule extends AbstractModule {
+public class TestRootModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(MockOpenAiApi.class);

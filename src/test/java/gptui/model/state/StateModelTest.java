@@ -1,6 +1,6 @@
 package gptui.model.state;
 
-import gptui.ui.BaseGptUiTest;
+import gptui.BaseGptUiTest;
 import org.junit.jupiter.api.Test;
 import org.testfx.util.WaitForAsyncUtils;
 
