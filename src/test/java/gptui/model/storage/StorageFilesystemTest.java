@@ -1,16 +1,15 @@
 package gptui.model.storage;
 
-import com.google.common.jimfs.Jimfs;
+import gptui.BaseTest;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static com.google.common.jimfs.Configuration.unix;
 import static gptui.model.storage.InteractionType.QUESTION;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class StorageFilesystemTest {
-    private final StorageFilesystem storageFileSystem = new StorageFilesystem(Jimfs.newFileSystem(unix()));
+class StorageFilesystemTest extends BaseTest {
+    private final StorageFilesystem storageFileSystem = injector.getInstance(StorageFilesystem.class);
 
     @Test
     void readAllInteractions() {

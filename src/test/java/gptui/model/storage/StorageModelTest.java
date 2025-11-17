@@ -1,6 +1,6 @@
 package gptui.model.storage;
 
-import com.google.common.jimfs.Jimfs;
+import gptui.BaseTest;
 import gptui.ui.TestingData.I1;
 import gptui.ui.TestingData.I2;
 import gptui.ui.TestingData.I3;
@@ -8,14 +8,13 @@ import org.junit.jupiter.api.Test;
 
 import java.nio.file.FileSystem;
 
-import static com.google.common.jimfs.Configuration.unix;
 import static gptui.model.storage.AnswerType.GRAMMAR;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class StorageModelTest {
-    private final FileSystem fileSystem = Jimfs.newFileSystem(unix());
-    private final StorageModel storage = new StorageModelImpl(new StorageFilesystem(fileSystem));
+class StorageModelTest extends BaseTest {
+    private final FileSystem fileSystem = injector.getInstance(FileSystem.class);
+    private final StorageModel storage = injector.getInstance(StorageModel.class);
 
     @Test
     void newInteractionId() {

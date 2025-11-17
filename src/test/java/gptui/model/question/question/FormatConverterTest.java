@@ -1,11 +1,12 @@
 package gptui.model.question.question;
 
+import gptui.BaseTest;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class FormatConverterTest {
-    private final FormatConverter formatConverter = new FormatConverter();
+class FormatConverterTest extends BaseTest {
+    private final FormatConverter formatConverter = injector.getInstance(FormatConverter.class);
 
     @Test
     void markdownToHtml() {
@@ -24,7 +25,7 @@ class FormatConverterTest {
     void tables() {
         var md = """
                 Table 1
-                                
+                
                 | AA | BB |
                 |----|----|
                 | 11 | 22 |""";
@@ -39,7 +40,7 @@ class FormatConverterTest {
                 <tr><td>11</td><td>22</td></tr>
                 </tbody>
                 </table>
-                  """);
+                """);
     }
 
     @Test
@@ -50,12 +51,12 @@ class FormatConverterTest {
                 1. AAA
                 2. BBB
                 ```
-                                
+                
                 Should skip:
                 ```plaintext
                 Hi, FlexMark
                 ```
-                                
+                
                 New Data:
                 ```markdown
                 # Head 1
