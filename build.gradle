@@ -42,7 +42,9 @@ dependencies {
 test {
     testLogging.showStandardStreams = true
     useJUnitPlatform()
-    exclude '**/*IT.class'
+    if (project.findProperty('skipIntegrationTests')?.toString()?.toBoolean()) {
+        exclude '**/*IT.class'
+    }
 }
 extraJavaModuleInfo {
     automaticModule("com.vladsch.flexmark:flexmark", "flexmark")

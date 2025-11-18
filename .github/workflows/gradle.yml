@@ -27,6 +27,6 @@ jobs:
           echo "DISPLAY=:99" >> $GITHUB_ENV
       - name: Test
         if: false #TODO disables until tests are fixed
-        run: ./gradlew test
+        run: ./gradlew -DskipIntegrationTests test
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
