@@ -1,1 +1,3 @@
-Provide a detailed, single-sentence definition of `${question}` in the context of `${theme}`. Format your answer into Markdown.
+Provide a detailed, single-sentence definition of `${question}` in the context of `${theme}`.
+Format your answer as "${question} is/are".
+Do not repeat the context in your answer if possible.

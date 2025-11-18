@@ -48,18 +48,20 @@ class PromptFactoryTest extends BaseTest {
     @Test
     void definition() {
         assertThat(factory.getPrompt(DEFINITION, "Theme A", "Question A", GRAMMAR)).contains("""
-                I will give you a phrase related to `Theme A`. Check if the phrase has grammatical mistakes. It is not a mistake if the phrase starts with "How to". The phrase is:
-                ```
-                Question A
-                ```""");
-        assertThat(factory.getPrompt(DEFINITION, "Theme A", "Question A", SHORT))
-                .contains("Provide a single-sentence definition of `Question A` in the context of `Theme A`, as short as possible. " +
-                        "Format your answer into Markdown.");
-        assertThat(factory.getPrompt(DEFINITION, "Theme A", "Question A", LONG))
-                .contains("Provide a detailed, single-sentence definition of `Question A` in the context of `Theme A`. " +
-                        "Format your answer into Markdown.");
-        assertThat(factory.getPrompt(DEFINITION, "Theme A", "Question A", GCP))
-                .contains("Provide a single-sentence definition of `Question A` in the context of `Theme A`.");
+                Check grammar of text `Question A` in the context of `Theme A`.
+                If the text is correct, answer `Correct`.""");
+        assertThat(factory.getPrompt(DEFINITION, "Theme A", "Question A", SHORT)).contains("""
+                Provide a single-sentence definition of `Question A` in the context of `Theme A`, as short as possible.
+                Format your answer as "Question A is/are".
+                Do not repeat the context in your answer if possible.""");
+        assertThat(factory.getPrompt(DEFINITION, "Theme A", "Question A", LONG)).contains("""
+                Provide a detailed, single-sentence definition of `Question A` in the context of `Theme A`.
+                Format your answer as "Question A is/are".
+                Do not repeat the context in your answer if possible.""");
+        assertThat(factory.getPrompt(DEFINITION, "Theme A", "Question A", GCP)).contains("""
+                Provide a single-sentence definition of `Question A` in the context of `Theme A`.
+                Format your answer as "Question A is/are".
+                Do not repeat the context in your answer if possible.""");
     }
 
     @Test
@@ -86,7 +88,10 @@ class PromptFactoryTest extends BaseTest {
 
     @Test
     void userModifiesTemplate() throws IOException {
-        var expDefaultPrompt = "Provide a single-sentence definition of `Question A` in the context of `Theme A`.";
+        var expDefaultPrompt = """
+                Provide a single-sentence definition of `Question A` in the context of `Theme A`.
+                Format your answer as "Question A is/are".
+                Do not repeat the context in your answer if possible.""";
 
         var templateFile = configModel.getAppDataPath().resolve("templates").resolve("definition-gcp.ftl");
         assertThat(factory.getPrompt(DEFINITION, "Theme A", "Question A", GCP)).contains(expDefaultPrompt);
