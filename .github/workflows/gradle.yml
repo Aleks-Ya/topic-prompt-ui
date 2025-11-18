@@ -26,7 +26,6 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
           echo "DISPLAY=:99" >> $GITHUB_ENV
       - name: Test
-        if: false #TODO disables until tests are fixed
         run: ./gradlew -DskipIntegrationTests test
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
