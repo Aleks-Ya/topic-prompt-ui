@@ -3,7 +3,7 @@
 ## Unit-tests
 Compile: `./gradlew compileTestJava`
 Run (including integration tests): `./gradlew test`
-Run (skip integration tests): `./gradlew -DskipIntegrationTests test`
+Run (skip integration tests): `./gradlew -PskipIntegrationTests test`
 
 ## Link
 `./gradlew -x test clean jlink`

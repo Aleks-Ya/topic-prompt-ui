@@ -42,7 +42,7 @@ dependencies {
 test {
     testLogging.showStandardStreams = true
     useJUnitPlatform()
-    if (project.findProperty('skipIntegrationTests')?.toString()?.toBoolean()) {
+    if (project.hasProperty('skipIntegrationTests')) {
         exclude '**/*IT.class'
     }
 }
