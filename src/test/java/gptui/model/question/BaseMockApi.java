@@ -51,9 +51,9 @@ public abstract class BaseMockApi implements GcpApi {
     }
 
     public void waitUntilSent(int counter) {
-        log.debug("Start waiting: receivedCounter=" + receivedCounter.get());
+        log.debug("Start waiting: receivedCounter={}", receivedCounter.get());
         await().timeout(Duration.ofSeconds(15)).until(() -> receivedCounter.get() >= counter);
-        log.debug("Finished waiting: receivedCounter=" + receivedCounter.get());
+        log.debug("Finished waiting: receivedCounter={}", receivedCounter.get());
     }
 
     public List<String> getSendHistory() {

@@ -1,5 +1,6 @@
 package gptui.model.question.question;
 
+import gptui.model.question.sound.SoundService;
 import gptui.util.Mdc;
 import gptui.model.question.QuestionModel;
 import gptui.model.question.gcp.GcpApi;
