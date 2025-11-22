@@ -212,11 +212,11 @@ public class WindowAssertion {
     }
 
     public WindowAssertion answerTextTemperaturesDefault() {
-        return answerTextTemperatures(50, 60, 70, 90);
+        return answerTextTemperatures(50, 60, 70, 100);
     }
 
     public WindowAssertion answerSpinnerTemperaturesDefault() {
-        return answerSpinnerTemperatures(50, 60, 70, 90);
+        return answerSpinnerTemperatures(50, 60, 70, 100);
     }
 
     private static String nodeFullId(Node node) {

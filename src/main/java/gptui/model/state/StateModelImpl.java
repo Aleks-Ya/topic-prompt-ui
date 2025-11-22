@@ -1,7 +1,5 @@
 package gptui.model.state;
 
-import gptui.util.LogUtils;
-import gptui.util.Mdc;
 import gptui.model.storage.Answer;
 import gptui.model.storage.AnswerType;
 import gptui.model.storage.Interaction;
@@ -10,6 +8,8 @@ import gptui.model.storage.InteractionType;
 import gptui.model.storage.StorageModel;
 import gptui.model.storage.Theme;
 import gptui.model.storage.ThemeId;
+import gptui.util.LogUtils;
+import gptui.util.Mdc;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
@@ -40,7 +40,8 @@ class StateModelImpl implements StateModel {
             AnswerType.GRAMMAR, 50,
             AnswerType.SHORT, 60,
             AnswerType.LONG, 70,
-            AnswerType.GCP, 90
+            //Gemini 3 recommends always use "1.0" https://ai.google.dev/gemini-api/docs/gemini-3?thinking=high#temperature
+            AnswerType.GCP, 100
     ));
 
     @Override

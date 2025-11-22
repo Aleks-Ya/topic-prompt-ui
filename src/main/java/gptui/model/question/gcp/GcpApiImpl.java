@@ -23,7 +23,7 @@ class GcpApiImpl implements GcpApi {
     private static final Logger log = LoggerFactory.getLogger(GcpApiImpl.class);
     private static final Gson gson = new Gson();
     private static final URI endpoint = URI.create(
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent");
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-preview:generateContent");
     private final String apiKey;
 
     @Inject

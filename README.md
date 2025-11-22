@@ -1,9 +1,12 @@
 # Topic Prompt UI
 
+## Run from IDE
+Run `gptui.GptUiMain` class.
+
 ## Unit-tests
 Compile: `./gradlew compileTestJava`
-Run (including integration tests): `./gradlew test`
-Run (skip integration tests): `./gradlew -PskipIntegrationTests test`
+Run unit-tests (including integration tests): `./gradlew test`
+Run unit-tests (skip integration tests): `./gradlew -PskipIntegrationTests test`
 
 ## Link
 `./gradlew -x test clean jlink`
