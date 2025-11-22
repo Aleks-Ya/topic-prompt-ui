@@ -10,9 +10,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static java.lang.String.format;
 import static org.awaitility.Awaitility.await;
 
 public abstract class BaseMockApi implements GcpApi {
@@ -38,7 +40,9 @@ public abstract class BaseMockApi implements GcpApi {
                     return contains && notContains;
                 })
                 .findFirst()
-                .orElseThrow()
+                .orElseThrow(() -> new NoSuchElementException(format(
+                        "Not found mock content: content='%s', temperature='%d', mapKeys='%s'",
+                        content, temperature, contentSubstringToResponseMap.keySet())))
                 .getValue();
         try {
             Thread.sleep(info.timeout().toMillis());
