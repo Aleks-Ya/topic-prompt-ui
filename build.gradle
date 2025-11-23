@@ -81,7 +81,7 @@ jlink {
 tasks.jlink.dependsOn tasks.test
 tasks.jlink.mustRunAfter tasks.clean, tasks.test
 
-def installDir = System.properties['user.home'] + '/installed/GptUI'
+def installDir = System.properties.getProperty('user.home') + '/installed/GptUI'
 tasks.register('addIconToImage', Copy) {
     mustRunAfter tasks.jlink
     from layout.projectDirectory.dir('src/main/resources/gptui/model/file').file('icon.png')

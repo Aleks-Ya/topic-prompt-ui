@@ -9,9 +9,6 @@ module GptUi.main {
     requires jakarta.inject;
 
     requires org.slf4j;
-    requires jul.to.slf4j;
-    requires ch.qos.logback.classic;
-    requires java.naming;
     requires com.google.gson;
     requires flexmark;
     requires flexmark.util.ast;

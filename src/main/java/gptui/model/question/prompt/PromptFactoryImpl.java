@@ -23,7 +23,6 @@ import static freemarker.template.TemplateExceptionHandler.RETHROW_HANDLER;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Singleton
-@SuppressWarnings("TextBlockMigration")
 class PromptFactoryImpl implements PromptFactory {
     private static final Logger log = LoggerFactory.getLogger(PromptFactoryImpl.class);
 

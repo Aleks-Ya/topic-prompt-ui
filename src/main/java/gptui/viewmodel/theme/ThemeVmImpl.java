@@ -84,7 +84,7 @@ class ThemeVmImpl implements ThemeVmController, ThemeVmMediator {
 
     @Override
     public void initialize() {
-        properties.themeCbCellFactory.setValue(listView -> new ListCell<>() {
+        properties.themeCbCellFactory.setValue(_ -> new ListCell<>() {
             @Override
             protected void updateItem(Theme item, boolean empty) {
                 super.updateItem(item, empty);

@@ -51,7 +51,7 @@ public class ThemeController extends BaseController {
 
         newThemeDialog.setTitle("Add new theme");
         newThemeDialog.setHeaderText("New theme:");
-        addButton.setOnAction(event -> {
+        addButton.setOnAction(_ -> {
             newThemeDialog.show();
             newThemeDialog.getEditor().clear();
             newThemeDialog.getEditor().requestFocus();
@@ -59,6 +59,7 @@ public class ThemeController extends BaseController {
             newThemeDialog.showAndWait().ifPresent(theme -> vm.addNewTheme(theme));
         });
         themeLabel.setLabelFor(themeComboBox);
-        themeComboBox.showingProperty().addListener((observable, oldValue, newValue) -> vm.onThemeComboBoxAction());
+        themeComboBox.showingProperty()
+                .addListener((_, _, _) -> vm.onThemeComboBoxAction());
     }
 }
