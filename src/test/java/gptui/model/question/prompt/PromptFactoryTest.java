@@ -78,12 +78,14 @@ class PromptFactoryTest extends BaseTest {
 
     @Test
     void fact() {
-        assertThat(factory.getPrompt(FACT, "Theme A", "Question A", GRAMMAR))
+        assertThat(factory.getPrompt(FACT, "Theme A", "Question A", GRAMMAR)).isEmpty();
+        assertThat(factory.getPrompt(FACT, "Theme A", "Question A", SHORT)).isEmpty();
+        assertThat(factory.getPrompt(FACT, "Theme A", "Question A", LONG))
                 .contains("Check is this sentence factually correct in context of `Theme A`: `Question A`? " +
                         "Format your answer into Markdown.");
-        assertThat(factory.getPrompt(InteractionType.GRAMMAR, "Theme A", "Question A", SHORT)).isEmpty();
-        assertThat(factory.getPrompt(InteractionType.GRAMMAR, "Theme A", "Question A", LONG)).isEmpty();
-        assertThat(factory.getPrompt(InteractionType.GRAMMAR, "Theme A", "Question A", GCP)).isEmpty();
+        assertThat(factory.getPrompt(FACT, "Theme A", "Question A", GCP))
+                .contains("Check is this sentence factually correct in context of `Theme A`: `Question A`? " +
+                        "Format your answer into Markdown.");
     }
 
     @Test

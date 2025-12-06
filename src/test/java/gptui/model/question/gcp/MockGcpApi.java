@@ -14,6 +14,12 @@ public class MockGcpApi extends BaseMockApi implements GcpApi {
         return this;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
+    public MockGcpApi putFactResponse(String response, Duration timeout) {
+        put("factually correct", null, response, timeout);
+        return this;
+    }
+
     public MockGcpApi clear() {
         super.clear();
         return this;

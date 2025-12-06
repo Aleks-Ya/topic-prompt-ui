@@ -72,8 +72,8 @@ class PromptFactoryImpl implements PromptFactory {
                 case SHORT, LONG, GCP -> Optional.empty();
             };
             case FACT -> switch (answerType) {
-                case GRAMMAR -> render(FACT_GRAMMAR_FTL, data);
-                case SHORT, LONG, GCP -> Optional.empty();
+                case GRAMMAR, SHORT -> Optional.empty();
+                case LONG, GCP -> render(FACT_GRAMMAR_FTL, data);
             };
         };
     }
