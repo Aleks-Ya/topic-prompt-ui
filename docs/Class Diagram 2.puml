@@ -1,14 +1,17 @@
 @startuml
 hide empty members
 
-package model{
-    class StateModel
-    class ClipboardModel
-    class ConfigModel
-    class FileModel
-    class QuestionModel
-    class StorageModel
+package view {
+    class GptUiController
+    together {
+        class GptUiApplication
+        class HistoryController
+        class QuestionController
+        class ThemeController
+        class AnswerController
+    }
 }
+
 package viewmodel {
     class GptUiApplicationVM
     class AnswerVM
@@ -19,14 +22,13 @@ package viewmodel {
     class ViewModelMediator
 }
 
-package view {
-    class GptUiApplication
-    class AnswerController
-    class GptUiApplication
-    class GptUiController
-    class HistoryController
-    class QuestionController
-    class ThemeController
+package model{
+    class StateModel
+    class ClipboardModel
+    class ConfigModel
+    class FileModel
+    class QuestionModel
+    class StorageModel
 }
 
 GptUiApplication --> GptUiApplicationVM

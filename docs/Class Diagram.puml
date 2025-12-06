@@ -1,14 +1,20 @@
 @startuml
 hide empty members
 
-package model{
-    class StateModel
-    class ClipboardModel
-    class ConfigModel
-    class FileModel
-    class QuestionModel
-    class StorageModel
+package view {
+    class GptUiController
+    together {
+        class GptUiApplication
+        class "AnswerController" as grammarAnswerController <<GRAMMAR>>
+        class "AnswerController" as shortAnswerController <<SHORT>>
+        class "AnswerController" as longAnswerController <<LONG>>
+        class "AnswerController" as gcpAnswerController <<GCP>>
+        class HistoryController
+        class QuestionController
+        class ThemeController
+    }
 }
+
 package viewmodel {
     class "AnswerVM" as grammarAnswerVM <<GRAMMAR>>
     class "AnswerVM" as shortAnswerVM <<SHORT>>
@@ -21,16 +27,13 @@ package viewmodel {
     class ViewModelMediator
 }
 
-package view {
-    class "AnswerController"  as grammarAnswerController <<GRAMMAR>>
-    class "AnswerController" as shortAnswerController <<SHORT>>
-    class "AnswerController" as longAnswerController <<LONG>>
-    class "AnswerController" as gcpAnswerController <<GCP>>
-    class GptUiApplication
-    class GptUiController
-    class HistoryController
-    class QuestionController
-    class ThemeController
+package model{
+    class StateModel
+    class ClipboardModel
+    class ConfigModel
+    class FileModel
+    class QuestionModel
+    class StorageModel
 }
 
 ThemeController ---> ThemeVM
