@@ -78,7 +78,11 @@ class PromptFactoryTest extends BaseTest {
 
     @Test
     void fact() {
-        assertThat(factory.getPrompt(FACT, "Theme A", "Question A", GRAMMAR)).isEmpty();
+        assertThat(factory.getPrompt(FACT, "Theme A", "Question A", GRAMMAR)).contains("""
+                I will give you a sentence or phrase. Check if the sentence or phrase has grammatical mistakes. It is not a mistake if the sentence or phrase starts with "How to". If the given sentence or phrase is correct, just answer "Correct". If the sentence or phrase has mistakes, just answer with correct sentence. The sentence or phrase is:
+                ```
+                Question A
+                ```""");
         assertThat(factory.getPrompt(FACT, "Theme A", "Question A", SHORT)).isEmpty();
         assertThat(factory.getPrompt(FACT, "Theme A", "Question A", LONG))
                 .contains("Check is this sentence factually correct in context of `Theme A`: `Question A`? " +

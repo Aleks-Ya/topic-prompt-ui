@@ -50,7 +50,9 @@ class SendFactTest extends BaseGptUiTest {
                 .answerSpinnerTemperatures(50, 60, 70, 80)
                 .assertApp();
 
-        gptApi.clear().putFactResponse("Fact answer 4", ZERO);
+        gptApi.clear()
+                .putGrammarResponse("Grammar answer 4", ZERO)
+                .putFactResponse("Fact answer 4", ZERO);
         gcpApi.clear().putFactResponse("Fact answer 4", ZERO);
         clickOn(question().textArea());
         overWrite("Question 4");
@@ -70,11 +72,11 @@ class SendFactTest extends BaseGptUiTest {
                 .questionStyle(QUESTION_STYLE_EDITED)
                 .modelEditedQuestion("Question 4")
                 .modelIsEnteringNewQuestion(false)
-                .grammarA().text(I0.GRAMMAR_HTML)
+                .grammarA().text("<p>Grammar answer 4</p>\n")
                 .shortA().text(I0.SHORT_HTML)
                 .longA().text("<p>Fact answer 4</p>\n")
                 .gcpA().text("<p>Fact answer 4</p>\n")
-                .answerCircleColors(WHITE, WHITE, GREEN, GREEN)
+                .answerCircleColors(GREEN, WHITE, GREEN, GREEN)
                 .answerTextTemperatures(50, 60, 70, 80)
                 .answerSpinnerTemperatures(50, 60, 70, 80)
                 .assertApp();
