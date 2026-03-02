@@ -12,18 +12,20 @@ Run unit-tests (skip integration tests): `./gradlew -PskipIntegrationTests test`
 `./gradlew -x test clean jlink`
 
 ## Install on Ubuntu
-1. Use Java 25: `sdk use java 25.0.1-zulu`
-2. Build distribution and deploy to `/home/aleks/installed/GptUI`:
+1. Upgrade version: `src/main/resources/gptui/version.txt`
+2. Create a Git tag: `git tag v62`
+3. Use Java 25: `sdk use java 25.0.2-zulu`
+4. Build distribution and deploy to `/home/aleks/installed/GptUI`:
     1. With tests: `./gradlew installLocally`
     2. Without tests: `./gradlew -x test installLocally`
-3. Add to `PATH` in `~/.bashrc`: `export PATH=$PATH:/home/aleks/installed/GptUI/bin`
-4. Add a menu icon by `MenuLibre` application:
+5. Add to `PATH` in `~/.bashrc`: `export PATH=$PATH:/home/aleks/installed/GptUI/bin`
+6. Add a menu icon by `MenuLibre` application:
     1. Icon: `/home/aleks/installed/GptUI/bin/icon.png`
     2. Name: `Topic Prompt UI`
     3. Command: `/home/aleks/installed/GptUI/bin/GptUi`
     4. Advanced:
         1. Start VM Class: `gptui.view.GptUiApplication`
-5. Tokens: `~/.gpt/config.properties`. Properties:
+7. Tokens: `~/.gpt/config.properties`. Properties:
     1. `openai.token`
     2. `gcp.api.key`
-6. Log file: `~/.gpt/console.log`
+8. Log file: `~/.gpt/console.log`
