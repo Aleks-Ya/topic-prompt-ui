@@ -8,19 +8,16 @@ import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.math.BigDecimal;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
-import static java.math.RoundingMode.HALF_UP;
-
 @Singleton
 class OpenAiApiImpl implements OpenAiApi {
     private static final Logger log = LoggerFactory.getLogger(OpenAiApiImpl.class);
-    private static final String MODEL = "gpt-5.4";
+    private static final String MODEL = "gpt-5.5";
     private static final Gson gson = new Gson();
     private static final URI endpoint = URI.create("https://api.openai.com/v1/responses");
     private final String token;
@@ -33,8 +30,8 @@ class OpenAiApiImpl implements OpenAiApi {
     @Override
     public String send(String content, Integer temperature) {
         log.info("Sending question: {}", content);
-        var bigDecimalTemperature = convertTemperature(temperature);
-        var body = new RequestBody(MODEL, content, bigDecimalTemperature);
+        var reasoning = new Reasoning(ReasoningEffort.HIGH);
+        var body = new RequestBody(MODEL, content, reasoning);
         var json = gson.toJson(body);
         log.trace("Request body: {}", json);
         HttpResponse<String> response;
@@ -54,10 +51,13 @@ class OpenAiApiImpl implements OpenAiApi {
         if (response.statusCode() == 200) {
             var responseBody = gson.fromJson(response.body(), ResponseBody.class);
             var outputs = responseBody.output();
-            if (outputs.size() > 1) {
+            var completedOutputs = outputs.stream()
+                    .filter(output -> "completed".equalsIgnoreCase(output.status()))
+                    .toList();
+            if (completedOutputs.size() > 1) {
                 throw new RuntimeException("Multiple outputs in response: " + outputs);
             }
-            var contents = outputs.getFirst().content();
+            var contents = completedOutputs.getFirst().content();
             if (contents.size() > 1) {
                 throw new RuntimeException("Multiple contents in output: " + contents);
             }
@@ -68,7 +68,4 @@ class OpenAiApiImpl implements OpenAiApi {
         }
     }
 
-    private BigDecimal convertTemperature(Integer temperature) {
-        return BigDecimal.valueOf(temperature).setScale(1, HALF_UP).divide(BigDecimal.valueOf(100), HALF_UP);
-    }
 }

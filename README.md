@@ -13,11 +13,11 @@ Run unit-tests (skip integration tests): `./gradlew -PskipIntegrationTests test`
 
 ## Install on Ubuntu
 1. Upgrade version: `src/main/resources/gptui/version.txt`
-2. Create a Git tag: `git tag v62`
-3. Use Java 25: `sdk use java 25.0.2-zulu`
-4. Build distribution and deploy to `/home/aleks/installed/GptUI`:
+2. Use Java 25: `sdk use java 25.0.3-zulu`
+3. Build distribution and deploy to `/home/aleks/installed/GptUI`:
     1. With tests: `./gradlew installLocally`
     2. Without tests: `./gradlew -x test installLocally`
+4. Create a Git tag: `git tag "v$(cat src/main/resources/gptui/version.txt)"`
 5. Add to `PATH` in `~/.bashrc`: `export PATH=$PATH:/home/aleks/installed/GptUI/bin`
 6. Add a menu icon by `MenuLibre` application:
     1. Icon: `/home/aleks/installed/GptUI/bin/icon.png`
