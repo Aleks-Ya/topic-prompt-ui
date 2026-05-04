@@ -1,9 +1,8 @@
-package gptui.model.question.openai.responses;
+package gptui.model.question.openai;
 
 import com.google.inject.AbstractModule;
-import gptui.model.question.openai.OpenAiApi;
 
-public class ResponsesOpenAiModule extends AbstractModule {
+public class OpenAiModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(OpenAiApi.class).to(OpenAiApiImpl.class);

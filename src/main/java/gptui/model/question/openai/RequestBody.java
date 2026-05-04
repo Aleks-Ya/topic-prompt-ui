@@ -1,4 +1,4 @@
-package gptui.model.question.openai.responses;
+package gptui.model.question.openai;
 
 import com.google.gson.annotations.SerializedName;
 

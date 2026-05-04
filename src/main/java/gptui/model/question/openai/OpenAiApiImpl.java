@@ -1,8 +1,7 @@
-package gptui.model.question.openai.responses;
+package gptui.model.question.openai;
 
 import com.google.gson.Gson;
 import gptui.model.config.ConfigModel;
-import gptui.model.question.openai.OpenAiApi;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;

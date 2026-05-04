@@ -1,9 +1,8 @@
-package gptui.model.question.openai.responses;
+package gptui.model.question.openai;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import gptui.model.config.ConfigurationModule;
-import gptui.model.question.openai.OpenAiApi;
 import gptui.model.question.prompt.PromptFactory;
 import gptui.model.question.prompt.PromptModule;
 import gptui.model.storage.StorageModule;
@@ -13,8 +12,8 @@ import static gptui.model.storage.AnswerType.SHORT;
 import static gptui.model.storage.InteractionType.DEFINITION;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class ResponsesOpenAiApiIT {
-    private final Injector injector = Guice.createInjector(new ResponsesOpenAiModule(), new ConfigurationModule(),
+class OpenAiApiIT {
+    private final Injector injector = Guice.createInjector(new OpenAiModule(), new ConfigurationModule(),
             new StorageModule(), new PromptModule());
     private final OpenAiApi api = injector.getInstance(OpenAiApi.class);
     private final PromptFactory promptFactory = injector.getInstance(PromptFactory.class);

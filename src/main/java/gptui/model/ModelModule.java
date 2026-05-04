@@ -5,7 +5,7 @@ import gptui.model.clipboard.ClipboardModelModule;
 import gptui.model.config.ConfigurationModule;
 import gptui.model.file.FileModelModule;
 import gptui.model.question.gcp.GcpModule;
-import gptui.model.question.openai.responses.ResponsesOpenAiModule;
+import gptui.model.question.openai.OpenAiModule;
 import gptui.model.question.prompt.PromptModule;
 import gptui.model.question.question.QuestionModule;
 import gptui.model.search.SearchModule;
@@ -17,7 +17,7 @@ public class ModelModule extends AbstractModule {
     protected void configure() {
         install(new FileModelModule());
         install(new ConfigurationModule());
-        install(new ResponsesOpenAiModule());
+        install(new OpenAiModule());
         install(new GcpModule());
         install(new QuestionModule());
         install(new StorageModule());
