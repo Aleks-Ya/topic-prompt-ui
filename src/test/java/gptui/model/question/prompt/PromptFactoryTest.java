@@ -24,22 +24,36 @@ class PromptFactoryTest extends BaseTest {
     @Test
     void question() {
         assertThat(factory.getPrompt(QUESTION, "Theme A", "Question A", GRAMMAR)).contains("""
-                I will give you a sentence or phrase. Check if the sentence or phrase has grammatical mistakes. It is not a mistake if the sentence or phrase starts with "How to". If the given sentence or phrase is correct, just answer "Correct". If the sentence or phrase has mistakes, just answer with correct sentence. The sentence or phrase is:
+                I will give you a sentence or phrase.
+                Check if the sentence or phrase has grammatical mistakes.
+                It is not a mistake if the sentence or phrase starts with "How to".
+                If the given sentence or phrase is correct, just answer "Correct".
+                If the sentence or phrase has mistakes, just answer with correct sentence.
+                The sentence or phrase is:
                 ```
                 Question A
                 ```""");
         assertThat(factory.getPrompt(QUESTION, "Theme A", "Question A", SHORT)).contains("""
-                I will ask you a question about "Theme A". You should answer with a short response. Do not repeat the question in your answer. Format your answer into Markdown. The question is:
+                I will ask you a question about "Theme A".
+                You should answer with a short response.
+                Do not repeat the question in your answer.
+                Format your answer into Markdown.
+                The question is:
                 ```
                 Question A
                 ```""");
         assertThat(factory.getPrompt(QUESTION, "Theme A", "Question A", LONG)).contains("""
-                I will ask you a question about "Theme A". Do not repeat the question in your answer. Format your answer into Markdown. The question is:
+                I will ask you a question about "Theme A".
+                Do not repeat the question in your answer.
+                Format your answer into Markdown.
+                The question is:
                 ```
                 Question A
                 ```""");
         assertThat(factory.getPrompt(QUESTION, "Theme A", "Question A", GCP)).contains("""
-                I will ask you a question about "Theme A". Do not repeat the question in your answer. The question is:
+                I will ask you a question about "Theme A".
+                Do not repeat the question in your answer.
+                The question is:
                 ```
                 Question A
                 ```""");
@@ -67,7 +81,12 @@ class PromptFactoryTest extends BaseTest {
     @Test
     void grammar() {
         assertThat(factory.getPrompt(InteractionType.GRAMMAR, "Theme A", "Question A", GRAMMAR)).contains("""
-                I will give you a sentence or phrase. Check if the sentence or phrase has grammatical mistakes. It is not a mistake if the sentence or phrase starts with "How to". If the given sentence or phrase is correct, just answer "Correct". If the sentence or phrase has mistakes, just answer with correct sentence. The sentence or phrase is:
+                I will give you a sentence or phrase.
+                Check if the sentence or phrase has grammatical mistakes.
+                It is not a mistake if the sentence or phrase starts with "How to".
+                If the given sentence or phrase is correct, just answer "Correct".
+                If the sentence or phrase has mistakes, just answer with correct sentence.
+                The sentence or phrase is:
                 ```
                 Question A
                 ```""");
@@ -79,7 +98,12 @@ class PromptFactoryTest extends BaseTest {
     @Test
     void fact() {
         assertThat(factory.getPrompt(FACT, "Theme A", "Question A", GRAMMAR)).contains("""
-                I will give you a sentence or phrase. Check if the sentence or phrase has grammatical mistakes. It is not a mistake if the sentence or phrase starts with "How to". If the given sentence or phrase is correct, just answer "Correct". If the sentence or phrase has mistakes, just answer with correct sentence. The sentence or phrase is:
+                I will give you a sentence or phrase.
+                Check if the sentence or phrase has grammatical mistakes.
+                It is not a mistake if the sentence or phrase starts with "How to".
+                If the given sentence or phrase is correct, just answer "Correct".
+                If the sentence or phrase has mistakes, just answer with correct sentence.
+                The sentence or phrase is:
                 ```
                 Question A
                 ```""");
