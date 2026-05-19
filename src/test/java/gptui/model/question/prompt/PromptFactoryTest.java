@@ -28,7 +28,8 @@ class PromptFactoryTest extends BaseTest {
                 Check if the sentence or phrase has grammatical mistakes.
                 It is not a mistake if the sentence or phrase starts with "How to".
                 If the given sentence or phrase is correct, just answer "Correct".
-                If the sentence or phrase has mistakes, just answer with correct sentence.
+                If the sentence or phrase has mistakes, just answer with the correct sentence.
+                Make the changed fragments bold.
                 The sentence or phrase is:
                 ```
                 Question A
@@ -85,7 +86,8 @@ class PromptFactoryTest extends BaseTest {
                 Check if the sentence or phrase has grammatical mistakes.
                 It is not a mistake if the sentence or phrase starts with "How to".
                 If the given sentence or phrase is correct, just answer "Correct".
-                If the sentence or phrase has mistakes, just answer with correct sentence.
+                If the sentence or phrase has mistakes, just answer with the correct sentence.
+                Make the changed fragments bold.
                 The sentence or phrase is:
                 ```
                 Question A
@@ -102,18 +104,21 @@ class PromptFactoryTest extends BaseTest {
                 Check if the sentence or phrase has grammatical mistakes.
                 It is not a mistake if the sentence or phrase starts with "How to".
                 If the given sentence or phrase is correct, just answer "Correct".
-                If the sentence or phrase has mistakes, just answer with correct sentence.
+                If the sentence or phrase has mistakes, just answer with the correct sentence.
+                Make the changed fragments bold.
                 The sentence or phrase is:
                 ```
                 Question A
                 ```""");
         assertThat(factory.getPrompt(FACT, "Theme A", "Question A", SHORT)).isEmpty();
         assertThat(factory.getPrompt(FACT, "Theme A", "Question A", LONG))
-                .contains("Check is this sentence factually correct in context of `Theme A`: `Question A`? " +
-                        "Format your answer into Markdown.");
+                .contains("""
+                        Check is this sentence factually correct in context of `Theme A`: `Question A`?
+                        Format your answer into Markdown.""");
         assertThat(factory.getPrompt(FACT, "Theme A", "Question A", GCP))
-                .contains("Check is this sentence factually correct in context of `Theme A`: `Question A`? " +
-                        "Format your answer into Markdown.");
+                .contains("""
+                        Check is this sentence factually correct in context of `Theme A`: `Question A`?
+                        Format your answer into Markdown.""");
     }
 
     @Test
