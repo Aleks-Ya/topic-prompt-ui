@@ -85,7 +85,7 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
 
     @Override
     public void initialize() {
-        properties.temperatureSpinner.addListener((obs, oldValue, newValue) -> mediator.setTemperature(answerType, newValue));
+        properties.temperatureSpinner.addListener((_, _, newValue) -> mediator.setTemperature(answerType, newValue));
         Mdc.run(answerType, () -> {
             log.trace("displayInitialState");
             properties.answerLabelText.setValue(labelTextMap.get(answerType));

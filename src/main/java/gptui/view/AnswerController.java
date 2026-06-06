@@ -60,7 +60,7 @@ public class AnswerController extends BaseController {
                 return Integer.valueOf(string.replace("°", ""));
             }
         });
-        webView.getEngine().documentProperty().addListener((observable, oldValue, newValue) -> {
+        webView.getEngine().documentProperty().addListener((_, _, newValue) -> {
             if (newValue != null) {
                 var currentContent = vm.properties().webViewContent.getValue();
                 var newContent = (String) webView.getEngine().executeScript("document.documentElement.outerHTML");
@@ -70,7 +70,7 @@ public class AnswerController extends BaseController {
                 }
             }
         });
-        vm.properties().webViewContent.addListener((observable, oldValue, newValue) -> {
+        vm.properties().webViewContent.addListener((_, _, newValue) -> {
             if (newValue != null) {
                 log.trace("Load content to WebView Engine: {}", shorten(newValue));
                 webView.getEngine().loadContent(newValue);
