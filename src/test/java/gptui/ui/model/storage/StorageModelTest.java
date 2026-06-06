@@ -1,13 +1,18 @@
 package gptui.ui.model.storage;
 
 import gptui.BaseTest;
+import gptui.core.storagefilesystem.Interaction;
+import gptui.core.storagefilesystem.InteractionId;
+import gptui.core.storagefilesystem.StorageFilesystemImpl;
+import gptui.core.storagefilesystem.Theme;
+import gptui.core.storagefilesystem.ThemeId;
 import gptui.ui.TestingData.I1;
 import gptui.ui.TestingData.I2;
 import gptui.ui.TestingData.I3;
 import gptui.ui.model.config.ConfigModel;
 import org.junit.jupiter.api.Test;
 
-import static gptui.ui.model.storage.AnswerType.GRAMMAR;
+import static gptui.core.storagefilesystem.AnswerType.GRAMMAR;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -123,7 +128,7 @@ class StorageModelTest extends BaseTest {
 
     @Test
     void getThemesSeveralStart() {
-        var storage1 = new StorageModelImpl(new StorageFilesystem(configModel));
+        var storage1 = new StorageModelImpl(new StorageFilesystemImpl(configModel));
         var themeTitle1 = "AAA";
         var themeTitle2 = "BBB";
         var themeTitle4 = "CCC";
@@ -144,19 +149,19 @@ class StorageModelTest extends BaseTest {
         storage1.saveInteraction(newInteraction(id4, theme4));
         storage1.saveInteraction(newInteraction(id5, theme2));
 
-        var storage2 = new StorageModelImpl(new StorageFilesystem(configModel));
+        var storage2 = new StorageModelImpl(new StorageFilesystemImpl(configModel));
         assertThat(storage2.getThemes().stream().map(Theme::title)).containsExactly(themeTitle4, themeTitle2, themeTitle1);
     }
 
     @Test
     void getThemesSingleStart() {
-        var storage1 = new StorageModelImpl(new StorageFilesystem(configModel));
+        var storage1 = new StorageModelImpl(new StorageFilesystemImpl(configModel));
         var themeTitle = "AAA";
         var theme = new Theme(new ThemeId(1L), themeTitle);
         storage1.saveTheme(theme);
         storage1.saveInteraction(newInteraction(1693929900L, theme));
 
-        var storage2 = new StorageModelImpl(new StorageFilesystem(configModel));
+        var storage2 = new StorageModelImpl(new StorageFilesystemImpl(configModel));
         assertThat(storage2.getThemes()).containsExactly(theme);
     }
 

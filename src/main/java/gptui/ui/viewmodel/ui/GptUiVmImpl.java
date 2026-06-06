@@ -6,10 +6,10 @@ import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static gptui.ui.model.storage.AnswerType.GCP;
-import static gptui.ui.model.storage.AnswerType.GRAMMAR;
-import static gptui.ui.model.storage.AnswerType.LONG;
-import static gptui.ui.model.storage.AnswerType.SHORT;
+import static gptui.core.storagefilesystem.AnswerType.GCP;
+import static gptui.core.storagefilesystem.AnswerType.GRAMMAR;
+import static gptui.core.storagefilesystem.AnswerType.LONG;
+import static gptui.core.storagefilesystem.AnswerType.SHORT;
 
 @Singleton
 class GptUiVmImpl implements GptUiVmController {

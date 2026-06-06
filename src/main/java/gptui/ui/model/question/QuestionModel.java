@@ -1,7 +1,7 @@
 package gptui.ui.model.question;
 
-import gptui.ui.model.storage.AnswerType;
-import gptui.ui.model.storage.InteractionId;
+import gptui.core.storagefilesystem.AnswerType;
+import gptui.core.storagefilesystem.InteractionId;
 
 public interface QuestionModel {
     void requestAnswer(InteractionId interactionId, AnswerType answerType, Runnable callback);

@@ -1,4 +1,4 @@
-package gptui.ui.model.storage;
+package gptui.core.storagefilesystem;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;

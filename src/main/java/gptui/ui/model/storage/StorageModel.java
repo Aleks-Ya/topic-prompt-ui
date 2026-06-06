@@ -1,5 +1,10 @@
 package gptui.ui.model.storage;
 
+import gptui.core.storagefilesystem.Interaction;
+import gptui.core.storagefilesystem.InteractionId;
+import gptui.core.storagefilesystem.Theme;
+import gptui.core.storagefilesystem.ThemeId;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;

@@ -1,4 +1,4 @@
-package gptui.ui.model.storage;
+package gptui.core.storagefilesystem;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -15,9 +15,10 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+//TODO Remove "public" modifier (added just for StorageModelTest)
 @Singleton
-class StorageFilesystem {
-    private static final Logger log = LoggerFactory.getLogger(StorageFilesystem.class);
+public class StorageFilesystemImpl implements StorageFilesystem {
+    private static final Logger log = LoggerFactory.getLogger(StorageFilesystemImpl.class);
     private static final Gson gson = new GsonBuilder()
             .registerTypeAdapter(InteractionId.class, new InteractionIdSerDe())
             .registerTypeAdapter(ThemeId.class, new ThemeIdSerDe())
@@ -27,7 +28,7 @@ class StorageFilesystem {
     private final Path themesFile;
 
     @Inject
-    public StorageFilesystem(ConfigModel config) {
+    public StorageFilesystemImpl(ConfigModel config) {
         try {
             var storageDir = config.getAppDataPath().resolve("storage");
             log.info("Storage directory: {}", storageDir);
@@ -47,6 +48,7 @@ class StorageFilesystem {
         }
     }
 
+    @Override
     public synchronized void saveInteraction(Interaction interaction) {
         try {
             var file = getInteractionFile(interaction.id());
@@ -62,6 +64,7 @@ class StorageFilesystem {
         return interactionsDir.resolve(interactionId.id() + ".json");
     }
 
+    @Override
     public synchronized List<Interaction> readAllInteractions() {
         try {
             var result = new ArrayList<Interaction>();
@@ -77,6 +80,7 @@ class StorageFilesystem {
         }
     }
 
+    @Override
     public synchronized void deleteInteraction(InteractionId interactionId) {
         try {
             Files.delete(getInteractionFile(interactionId));
@@ -85,6 +89,7 @@ class StorageFilesystem {
         }
     }
 
+    @Override
     public synchronized List<Theme> readThemes() {
         try {
             var json = Files.readString(themesFile);
@@ -98,6 +103,7 @@ class StorageFilesystem {
         }
     }
 
+    @Override
     public synchronized void saveThemes(List<Theme> themes) {
         try {
             var json = gson.toJson(themes);

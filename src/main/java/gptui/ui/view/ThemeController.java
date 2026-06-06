@@ -1,6 +1,6 @@
 package gptui.ui.view;
 
-import gptui.ui.model.storage.Theme;
+import gptui.core.storagefilesystem.Theme;
 import gptui.ui.viewmodel.theme.ThemeVmController;
 import jakarta.inject.Inject;
 import javafx.event.ActionEvent;

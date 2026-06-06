@@ -1,6 +1,6 @@
 package gptui.ui.model.question.sound;
 
-import gptui.ui.model.storage.AnswerType;
+import gptui.core.storagefilesystem.AnswerType;
 import jakarta.inject.Singleton;
 import javafx.scene.media.AudioClip;
 

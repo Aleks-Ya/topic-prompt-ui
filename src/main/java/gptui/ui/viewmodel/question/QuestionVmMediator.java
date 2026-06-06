@@ -1,6 +1,6 @@
 package gptui.ui.viewmodel.question;
 
-import gptui.ui.model.storage.InteractionType;
+import gptui.core.storagefilesystem.InteractionType;
 
 public interface QuestionVmMediator {
     void displayCurrentInteraction();

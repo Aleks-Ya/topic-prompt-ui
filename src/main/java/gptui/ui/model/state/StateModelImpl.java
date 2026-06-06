@@ -1,13 +1,13 @@
 package gptui.ui.model.state;
 
-import gptui.ui.model.storage.Answer;
-import gptui.ui.model.storage.AnswerType;
-import gptui.ui.model.storage.Interaction;
-import gptui.ui.model.storage.InteractionId;
-import gptui.ui.model.storage.InteractionType;
+import gptui.core.storagefilesystem.Answer;
+import gptui.core.storagefilesystem.AnswerType;
+import gptui.core.storagefilesystem.Interaction;
+import gptui.core.storagefilesystem.InteractionId;
+import gptui.core.storagefilesystem.InteractionType;
 import gptui.ui.model.storage.StorageModel;
-import gptui.ui.model.storage.Theme;
-import gptui.ui.model.storage.ThemeId;
+import gptui.core.storagefilesystem.Theme;
+import gptui.core.storagefilesystem.ThemeId;
 import gptui.core.util.LogUtils;
 import gptui.core.util.Mdc;
 import jakarta.inject.Inject;
@@ -21,11 +21,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import static gptui.ui.model.storage.AnswerState.NEW;
-import static gptui.ui.model.storage.AnswerType.GCP;
-import static gptui.ui.model.storage.AnswerType.GRAMMAR;
-import static gptui.ui.model.storage.AnswerType.LONG;
-import static gptui.ui.model.storage.AnswerType.SHORT;
+import static gptui.core.storagefilesystem.AnswerState.NEW;
+import static gptui.core.storagefilesystem.AnswerType.GCP;
+import static gptui.core.storagefilesystem.AnswerType.GRAMMAR;
+import static gptui.core.storagefilesystem.AnswerType.LONG;
+import static gptui.core.storagefilesystem.AnswerType.SHORT;
 
 @Singleton
 class StateModelImpl implements StateModel {

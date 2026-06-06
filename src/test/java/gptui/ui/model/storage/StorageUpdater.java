@@ -5,10 +5,10 @@ import gptui.RootModule;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static gptui.ui.model.storage.AnswerType.GCP;
-import static gptui.ui.model.storage.AnswerType.GRAMMAR;
-import static gptui.ui.model.storage.AnswerType.LONG;
-import static gptui.ui.model.storage.AnswerType.SHORT;
+import static gptui.core.storagefilesystem.AnswerType.GCP;
+import static gptui.core.storagefilesystem.AnswerType.GRAMMAR;
+import static gptui.core.storagefilesystem.AnswerType.LONG;
+import static gptui.core.storagefilesystem.AnswerType.SHORT;
 
 public class StorageUpdater {
 

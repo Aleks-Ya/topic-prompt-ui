@@ -5,9 +5,9 @@ import gptui.ui.model.question.QuestionModel;
 import gptui.ui.model.question.prompt.PromptFactory;
 import gptui.ui.model.question.sound.SoundService;
 import gptui.ui.model.state.StateModel;
-import gptui.ui.model.storage.Answer;
-import gptui.ui.model.storage.AnswerType;
-import gptui.ui.model.storage.InteractionId;
+import gptui.core.storagefilesystem.Answer;
+import gptui.core.storagefilesystem.AnswerType;
+import gptui.core.storagefilesystem.InteractionId;
 import gptui.ui.model.storage.StorageModel;
 import gptui.core.util.Mdc;
 import jakarta.inject.Inject;
@@ -21,10 +21,10 @@ import java.util.function.Function;
 
 import static gptui.core.ai.AiModule.GCP_AI;
 import static gptui.core.ai.AiModule.OPEN_AI;
-import static gptui.ui.model.storage.AnswerState.FAIL;
-import static gptui.ui.model.storage.AnswerState.SENT;
-import static gptui.ui.model.storage.AnswerState.SUCCESS;
-import static gptui.ui.model.storage.AnswerType.GCP;
+import static gptui.core.storagefilesystem.AnswerState.FAIL;
+import static gptui.core.storagefilesystem.AnswerState.SENT;
+import static gptui.core.storagefilesystem.AnswerState.SUCCESS;
+import static gptui.core.storagefilesystem.AnswerType.GCP;
 import static java.util.concurrent.CompletableFuture.runAsync;
 
 @Singleton

@@ -1,5 +1,10 @@
 package gptui.ui.model.storage;
 
+import gptui.core.storagefilesystem.Interaction;
+import gptui.core.storagefilesystem.InteractionId;
+import gptui.core.storagefilesystem.StorageFilesystem;
+import gptui.core.storagefilesystem.Theme;
+import gptui.core.storagefilesystem.ThemeId;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;

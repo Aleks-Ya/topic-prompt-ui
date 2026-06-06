@@ -1,7 +1,7 @@
 package gptui.ui.viewmodel;
 
-import gptui.ui.model.storage.Interaction;
-import gptui.ui.model.storage.Theme;
+import gptui.core.storagefilesystem.Interaction;
+import gptui.core.storagefilesystem.Theme;
 
 public record InteractionItem(Theme theme, Interaction interaction) {
     private static final int MAX_LENGTH = 150;

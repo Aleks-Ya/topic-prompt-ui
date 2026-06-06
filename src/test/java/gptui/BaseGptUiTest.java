@@ -7,7 +7,7 @@ import gptui.ui.model.clipboard.ClipboardModel;
 import gptui.ui.model.search.HistorySearchModel;
 import gptui.ui.model.state.StateModel;
 import gptui.ui.model.storage.StorageModel;
-import gptui.ui.model.storage.Theme;
+import gptui.core.storagefilesystem.Theme;
 import gptui.ui.view.GptUiApplication;
 import gptui.ui.viewmodel.InteractionItem;
 import javafx.scene.Node;

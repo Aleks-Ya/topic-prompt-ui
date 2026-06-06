@@ -1,7 +1,7 @@
 package gptui.core.util;
 
-import gptui.ui.model.storage.AnswerType;
-import gptui.ui.model.storage.InteractionId;
+import gptui.core.storagefilesystem.AnswerType;
+import gptui.core.storagefilesystem.InteractionId;
 import org.slf4j.MDC;
 
 public class Mdc {

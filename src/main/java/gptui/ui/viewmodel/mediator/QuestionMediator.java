@@ -1,9 +1,9 @@
 package gptui.ui.viewmodel.mediator;
 
-import gptui.ui.model.storage.AnswerType;
-import gptui.ui.model.storage.Interaction;
-import gptui.ui.model.storage.InteractionId;
-import gptui.ui.model.storage.InteractionType;
+import gptui.core.storagefilesystem.AnswerType;
+import gptui.core.storagefilesystem.Interaction;
+import gptui.core.storagefilesystem.InteractionId;
+import gptui.core.storagefilesystem.InteractionType;
 
 import java.util.Optional;
 

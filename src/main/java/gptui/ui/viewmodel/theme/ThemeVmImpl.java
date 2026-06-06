@@ -1,8 +1,8 @@
 package gptui.ui.viewmodel.theme;
 
 import com.google.inject.Singleton;
-import gptui.ui.model.storage.Interaction;
-import gptui.ui.model.storage.Theme;
+import gptui.core.storagefilesystem.Interaction;
+import gptui.core.storagefilesystem.Theme;
 import gptui.ui.viewmodel.mediator.ThemeMediator;
 import jakarta.inject.Inject;
 import javafx.collections.FXCollections;

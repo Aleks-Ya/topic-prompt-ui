@@ -2,7 +2,7 @@ package gptui.ui.model.question.sound;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import gptui.ui.model.storage.AnswerType;
+import gptui.core.storagefilesystem.AnswerType;
 import org.junit.jupiter.api.Test;
 
 class SoundServiceIT {

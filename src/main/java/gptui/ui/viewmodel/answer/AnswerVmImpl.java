@@ -1,9 +1,9 @@
 package gptui.ui.viewmodel.answer;
 
 import gptui.core.util.Mdc;
-import gptui.ui.model.storage.Answer;
-import gptui.ui.model.storage.AnswerState;
-import gptui.ui.model.storage.AnswerType;
+import gptui.core.storagefilesystem.Answer;
+import gptui.core.storagefilesystem.AnswerState;
+import gptui.core.storagefilesystem.AnswerType;
 import gptui.ui.viewmodel.mediator.AnswerMediator;
 import jakarta.inject.Inject;
 import javafx.scene.paint.Color;
@@ -12,11 +12,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
-import static gptui.ui.model.storage.AnswerState.NEW;
-import static gptui.ui.model.storage.AnswerType.GCP;
-import static gptui.ui.model.storage.AnswerType.GRAMMAR;
-import static gptui.ui.model.storage.AnswerType.LONG;
-import static gptui.ui.model.storage.AnswerType.SHORT;
+import static gptui.core.storagefilesystem.AnswerState.NEW;
+import static gptui.core.storagefilesystem.AnswerType.GCP;
+import static gptui.core.storagefilesystem.AnswerType.GRAMMAR;
+import static gptui.core.storagefilesystem.AnswerType.LONG;
+import static gptui.core.storagefilesystem.AnswerType.SHORT;
 import static javafx.scene.paint.Color.BLUE;
 import static javafx.scene.paint.Color.GREEN;
 import static javafx.scene.paint.Color.RED;

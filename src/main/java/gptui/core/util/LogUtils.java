@@ -1,6 +1,6 @@
 package gptui.core.util;
 
-import gptui.ui.model.storage.Interaction;
+import gptui.core.storagefilesystem.Interaction;
 
 import java.util.Map;
 

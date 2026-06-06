@@ -1,4 +1,4 @@
-package gptui.ui.model.storage;
+package gptui.core.storagefilesystem;
 
 public record Theme(ThemeId id, String title) {
     @Override

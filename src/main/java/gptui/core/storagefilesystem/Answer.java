@@ -1,4 +1,4 @@
-package gptui.ui.model.storage;
+package gptui.core.storagefilesystem;
 
 import static gptui.core.util.LogUtils.shorten;
 

@@ -2,7 +2,7 @@ package gptui.ui.viewmodel.history;
 
 import com.google.inject.Singleton;
 import gptui.core.util.LogUtils;
-import gptui.ui.model.storage.Interaction;
+import gptui.core.storagefilesystem.Interaction;
 import gptui.ui.viewmodel.InteractionItem;
 import gptui.ui.viewmodel.mediator.HistoryMediator;
 import jakarta.inject.Inject;

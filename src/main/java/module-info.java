@@ -65,4 +65,6 @@ module GptUi.main {
     opens gptui.ui.model.question.prompt to com.google.gson, com.google.guice;
     opens gptui.core.util to com.google.gson, com.google.guice, javafx.fxml;
     opens gptui.ui.model.question.sound to com.google.gson, com.google.guice;
+    exports gptui.core.storagefilesystem;
+    opens gptui.core.storagefilesystem to com.google.guice;
 }

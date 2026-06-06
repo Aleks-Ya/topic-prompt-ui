@@ -2,19 +2,19 @@ package gptui.ui.model.question.prompt;
 
 import gptui.BaseTest;
 import gptui.ui.model.config.ConfigModel;
-import gptui.ui.model.storage.InteractionType;
+import gptui.core.storagefilesystem.InteractionType;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
 
-import static gptui.ui.model.storage.AnswerType.GCP;
-import static gptui.ui.model.storage.AnswerType.GRAMMAR;
-import static gptui.ui.model.storage.AnswerType.LONG;
-import static gptui.ui.model.storage.AnswerType.SHORT;
-import static gptui.ui.model.storage.InteractionType.DEFINITION;
-import static gptui.ui.model.storage.InteractionType.FACT;
-import static gptui.ui.model.storage.InteractionType.QUESTION;
+import static gptui.core.storagefilesystem.AnswerType.GCP;
+import static gptui.core.storagefilesystem.AnswerType.GRAMMAR;
+import static gptui.core.storagefilesystem.AnswerType.LONG;
+import static gptui.core.storagefilesystem.AnswerType.SHORT;
+import static gptui.core.storagefilesystem.InteractionType.DEFINITION;
+import static gptui.core.storagefilesystem.InteractionType.FACT;
+import static gptui.core.storagefilesystem.InteractionType.QUESTION;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class PromptFactoryTest extends BaseTest {

@@ -2,7 +2,7 @@ package gptui.ui.viewmodel.answer;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
-import gptui.ui.model.storage.AnswerType;
+import gptui.core.storagefilesystem.AnswerType;
 
 public class AnswerVmModule extends AbstractModule {
     public static final String GRAMMAR = "GrammarAnswerVM";

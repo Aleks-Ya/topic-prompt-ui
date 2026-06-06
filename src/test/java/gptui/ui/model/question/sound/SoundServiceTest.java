@@ -1,7 +1,7 @@
 package gptui.ui.model.question.sound;
 
 import gptui.BaseTest;
-import gptui.ui.model.storage.AnswerType;
+import gptui.core.storagefilesystem.AnswerType;
 import org.junit.jupiter.api.Test;
 
 class SoundServiceTest extends BaseTest {

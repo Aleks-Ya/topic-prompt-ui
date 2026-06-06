@@ -12,8 +12,8 @@ import gptui.ui.model.storage.StorageModule;
 import org.junit.jupiter.api.Test;
 
 import static gptui.core.ai.AiModule.OPEN_AI;
-import static gptui.ui.model.storage.AnswerType.SHORT;
-import static gptui.ui.model.storage.InteractionType.DEFINITION;
+import static gptui.core.storagefilesystem.AnswerType.SHORT;
+import static gptui.core.storagefilesystem.InteractionType.DEFINITION;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class OpenAiApiIT {

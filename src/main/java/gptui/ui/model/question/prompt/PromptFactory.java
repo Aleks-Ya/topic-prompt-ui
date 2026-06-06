@@ -1,7 +1,7 @@
 package gptui.ui.model.question.prompt;
 
-import gptui.ui.model.storage.AnswerType;
-import gptui.ui.model.storage.InteractionType;
+import gptui.core.storagefilesystem.AnswerType;
+import gptui.core.storagefilesystem.InteractionType;
 
 import java.util.Optional;
 

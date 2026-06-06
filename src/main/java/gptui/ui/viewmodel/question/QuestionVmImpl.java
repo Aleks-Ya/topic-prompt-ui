@@ -2,20 +2,20 @@ package gptui.ui.viewmodel.question;
 
 import com.google.inject.Singleton;
 import gptui.core.util.Mdc;
-import gptui.ui.model.storage.Interaction;
-import gptui.ui.model.storage.InteractionType;
+import gptui.core.storagefilesystem.Interaction;
+import gptui.core.storagefilesystem.InteractionType;
 import gptui.ui.viewmodel.mediator.QuestionMediator;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static gptui.ui.model.storage.AnswerType.GCP;
-import static gptui.ui.model.storage.AnswerType.GRAMMAR;
-import static gptui.ui.model.storage.AnswerType.LONG;
-import static gptui.ui.model.storage.AnswerType.SHORT;
-import static gptui.ui.model.storage.InteractionType.DEFINITION;
-import static gptui.ui.model.storage.InteractionType.FACT;
-import static gptui.ui.model.storage.InteractionType.QUESTION;
+import static gptui.core.storagefilesystem.AnswerType.GCP;
+import static gptui.core.storagefilesystem.AnswerType.GRAMMAR;
+import static gptui.core.storagefilesystem.AnswerType.LONG;
+import static gptui.core.storagefilesystem.AnswerType.SHORT;
+import static gptui.core.storagefilesystem.InteractionType.DEFINITION;
+import static gptui.core.storagefilesystem.InteractionType.FACT;
+import static gptui.core.storagefilesystem.InteractionType.QUESTION;
 import static gptui.ui.viewmodel.question.QuestionStyle.QUESTION_STYLE_EDITED;
 
 @Singleton

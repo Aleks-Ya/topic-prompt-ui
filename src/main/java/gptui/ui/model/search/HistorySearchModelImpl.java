@@ -1,7 +1,7 @@
 package gptui.ui.model.search;
 
-import gptui.ui.model.storage.Interaction;
-import gptui.ui.model.storage.InteractionId;
+import gptui.core.storagefilesystem.Interaction;
+import gptui.core.storagefilesystem.InteractionId;
 import gptui.ui.model.storage.StorageModel;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

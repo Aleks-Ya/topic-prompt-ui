@@ -1,6 +1,6 @@
 package gptui.ui.viewmodel.theme;
 
-import gptui.ui.model.storage.Theme;
+import gptui.core.storagefilesystem.Theme;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;

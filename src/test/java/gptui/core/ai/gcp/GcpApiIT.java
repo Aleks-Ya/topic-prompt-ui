@@ -12,8 +12,8 @@ import gptui.ui.model.storage.StorageModule;
 import org.junit.jupiter.api.Test;
 
 import static gptui.core.ai.AiModule.GCP_AI;
-import static gptui.ui.model.storage.AnswerType.GCP;
-import static gptui.ui.model.storage.InteractionType.DEFINITION;
+import static gptui.core.storagefilesystem.AnswerType.GCP;
+import static gptui.core.storagefilesystem.InteractionType.DEFINITION;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class GcpApiIT {

@@ -1,11 +1,11 @@
-package gptui.ui.model.storage;
+package gptui.core.storagefilesystem;
 
 import gptui.BaseTest;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static gptui.ui.model.storage.InteractionType.QUESTION;
+import static gptui.core.storagefilesystem.InteractionType.QUESTION;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class StorageFilesystemTest extends BaseTest {

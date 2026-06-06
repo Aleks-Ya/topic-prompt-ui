@@ -1,4 +1,4 @@
-package gptui.ui.model.storage;
+package gptui.core.storagefilesystem;
 
 import java.util.Map;
 import java.util.Optional;

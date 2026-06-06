@@ -5,6 +5,7 @@ package gptui {
     package core {
         package ai {}
         package util {}
+        package storagefilesystem {}
     }
     package ui {
         package model {}
@@ -18,7 +19,7 @@ view --> model
 viewmodel --> model
 viewmodel --> util
 model --> util
-util --> model
+util --> storagefilesystem
 model --> ai
 
 @enduml
