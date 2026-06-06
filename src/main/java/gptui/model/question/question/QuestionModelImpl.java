@@ -1,17 +1,17 @@
 package gptui.model.question.question;
 
-import gptui.model.question.sound.SoundService;
-import gptui.util.Mdc;
+import gptui.core.ai.AiApi;
 import gptui.model.question.QuestionModel;
-import gptui.core.ai.gcp.GcpApi;
-import gptui.core.ai.openai.OpenAiApi;
 import gptui.model.question.prompt.PromptFactory;
+import gptui.model.question.sound.SoundService;
 import gptui.model.state.StateModel;
 import gptui.model.storage.Answer;
 import gptui.model.storage.AnswerType;
 import gptui.model.storage.InteractionId;
 import gptui.model.storage.StorageModel;
+import gptui.util.Mdc;
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import javafx.application.Platform;
 import org.slf4j.Logger;
@@ -19,6 +19,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.function.Function;
 
+import static gptui.core.ai.AiModule.GCP_AI;
+import static gptui.core.ai.AiModule.OPEN_AI;
 import static gptui.model.storage.AnswerState.FAIL;
 import static gptui.model.storage.AnswerState.SENT;
 import static gptui.model.storage.AnswerState.SUCCESS;
@@ -35,9 +37,11 @@ class QuestionModelImpl implements QuestionModel {
     @Inject
     private PromptFactory promptFactory;
     @Inject
-    private OpenAiApi openAiApi;
+    @Named(OPEN_AI)
+    private AiApi openAiApi;
     @Inject
-    private GcpApi gcpApi;
+    @Named(GCP_AI)
+    private AiApi gcpApi;
     @Inject
     private SoundService soundService;
     @Inject

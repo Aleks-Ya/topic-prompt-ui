@@ -1,6 +1,6 @@
 package gptui.model.question;
 
-import gptui.core.ai.gcp.GcpApi;
+import gptui.core.ai.AiApi;
 import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static java.lang.String.format;
 import static org.awaitility.Awaitility.await;
 
-public abstract class BaseMockApi implements GcpApi {
+public abstract class BaseMockApi implements AiApi {
     private static final Logger log = LoggerFactory.getLogger(BaseMockApi.class);
     protected final Map<RequestInfo, ResponseInfo> contentSubstringToResponseMap = new HashMap<>();
     protected final List<String> sendHistory = new ArrayList<>();

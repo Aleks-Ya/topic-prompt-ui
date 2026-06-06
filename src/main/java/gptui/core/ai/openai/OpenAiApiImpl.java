@@ -1,6 +1,7 @@
 package gptui.core.ai.openai;
 
 import com.google.gson.Gson;
+import gptui.core.ai.AiApi;
 import gptui.model.config.ConfigModel;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -14,7 +15,7 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 
 @Singleton
-class OpenAiApiImpl implements OpenAiApi {
+class OpenAiApiImpl implements AiApi {
     private static final Logger log = LoggerFactory.getLogger(OpenAiApiImpl.class);
     private static final String MODEL = "gpt-5.5";
     private static final Gson gson = new Gson();

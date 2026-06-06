@@ -1,6 +1,7 @@
 package gptui.core.ai.gcp;
 
 import com.google.gson.Gson;
+import gptui.core.ai.AiApi;
 import gptui.model.config.ConfigModel;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -19,7 +20,7 @@ import static gptui.core.ai.gcp.ResponseBody.FinishReason.STOP;
 import static java.math.RoundingMode.HALF_UP;
 
 @Singleton
-class GcpApiImpl implements GcpApi {
+class GcpApiImpl implements AiApi {
     private static final Logger log = LoggerFactory.getLogger(GcpApiImpl.class);
     private static final Gson gson = new Gson();
     private static final URI endpoint = URI.create(

@@ -1,12 +1,13 @@
 package gptui.core.ai.gcp;
 
+import gptui.core.ai.AiApi;
 import gptui.model.question.BaseMockApi;
 import jakarta.inject.Singleton;
 
 import java.time.Duration;
 
 @Singleton
-public class MockGcpApi extends BaseMockApi implements GcpApi {
+public class MockGcpApi extends BaseMockApi implements AiApi {
 
     @SuppressWarnings("UnusedReturnValue")
     public MockGcpApi putGcpResponse(String response, Duration timeout) {

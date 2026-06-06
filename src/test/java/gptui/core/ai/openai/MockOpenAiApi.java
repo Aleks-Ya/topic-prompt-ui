@@ -1,12 +1,13 @@
 package gptui.core.ai.openai;
 
+import gptui.core.ai.AiApi;
 import gptui.model.question.BaseMockApi;
 import jakarta.inject.Singleton;
 
 import java.time.Duration;
 
 @Singleton
-public class MockOpenAiApi extends BaseMockApi implements OpenAiApi {
+public class MockOpenAiApi extends BaseMockApi implements AiApi {
 
     public MockOpenAiApi putGrammarResponse(String response, Duration timeout) {
         put("has grammatical mistakes", null, response, timeout);

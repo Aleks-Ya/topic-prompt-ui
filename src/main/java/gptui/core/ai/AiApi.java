@@ -1,5 +1,5 @@
-package gptui.core.ai.gcp;
+package gptui.core.ai;
 
-public interface GcpApi {
+public interface AiApi {
     String send(String content, Integer temperature);
 }
