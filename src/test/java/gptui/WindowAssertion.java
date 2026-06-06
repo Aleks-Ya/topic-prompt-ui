@@ -1,8 +1,8 @@
 package gptui;
 
-import gptui.model.storage.Interaction;
-import gptui.model.storage.Theme;
-import gptui.viewmodel.InteractionItem;
+import gptui.ui.model.storage.Interaction;
+import gptui.ui.model.storage.Theme;
+import gptui.ui.viewmodel.InteractionItem;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;

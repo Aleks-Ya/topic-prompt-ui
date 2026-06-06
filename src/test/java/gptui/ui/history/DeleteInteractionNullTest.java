@@ -4,7 +4,7 @@ import gptui.BaseGptUiTest;
 import gptui.ui.TestingData.I0;
 import org.junit.jupiter.api.Test;
 
-import static gptui.viewmodel.question.QuestionStyle.QUESTION_STYLE_EMPTY;
+import static gptui.ui.viewmodel.question.QuestionStyle.QUESTION_STYLE_EMPTY;
 import static javafx.scene.paint.Color.WHITE;
 
 class DeleteInteractionNullTest extends BaseGptUiTest {

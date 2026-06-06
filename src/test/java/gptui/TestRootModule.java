@@ -6,8 +6,8 @@ import com.google.inject.name.Names;
 import gptui.core.ai.AiApi;
 import gptui.core.ai.gcp.MockGcpApi;
 import gptui.core.ai.openai.MockOpenAiApi;
-import gptui.model.question.sound.SoundService;
-import gptui.model.question.sound.SoundServiceMock;
+import gptui.ui.model.question.sound.SoundService;
+import gptui.ui.model.question.sound.SoundServiceMock;
 
 import java.nio.file.FileSystem;
 

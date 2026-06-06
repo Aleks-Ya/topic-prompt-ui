@@ -5,15 +5,15 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
 import gptui.core.ai.AiApi;
-import gptui.model.config.ConfigurationModule;
-import gptui.model.question.prompt.PromptFactory;
-import gptui.model.question.prompt.PromptModule;
-import gptui.model.storage.StorageModule;
+import gptui.ui.model.config.ConfigurationModule;
+import gptui.ui.model.question.prompt.PromptFactory;
+import gptui.ui.model.question.prompt.PromptModule;
+import gptui.ui.model.storage.StorageModule;
 import org.junit.jupiter.api.Test;
 
 import static gptui.core.ai.AiModule.OPEN_AI;
-import static gptui.model.storage.AnswerType.SHORT;
-import static gptui.model.storage.InteractionType.DEFINITION;
+import static gptui.ui.model.storage.AnswerType.SHORT;
+import static gptui.ui.model.storage.InteractionType.DEFINITION;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class OpenAiApiIT {

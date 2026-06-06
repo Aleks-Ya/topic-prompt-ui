@@ -1,15 +1,15 @@
 package gptui;
 
 import com.google.inject.util.Modules;
-import gptui.model.clipboard.ClipboardModel;
 import gptui.core.ai.gcp.MockGcpApi;
 import gptui.core.ai.openai.MockOpenAiApi;
-import gptui.model.search.HistorySearchModel;
-import gptui.model.state.StateModel;
-import gptui.model.storage.StorageModel;
-import gptui.model.storage.Theme;
-import gptui.view.GptUiApplication;
-import gptui.viewmodel.InteractionItem;
+import gptui.ui.model.clipboard.ClipboardModel;
+import gptui.ui.model.search.HistorySearchModel;
+import gptui.ui.model.state.StateModel;
+import gptui.ui.model.storage.StorageModel;
+import gptui.ui.model.storage.Theme;
+import gptui.ui.view.GptUiApplication;
+import gptui.ui.viewmodel.InteractionItem;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;

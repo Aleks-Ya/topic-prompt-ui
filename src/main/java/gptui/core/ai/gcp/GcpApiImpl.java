@@ -2,7 +2,7 @@ package gptui.core.ai.gcp;
 
 import com.google.gson.Gson;
 import gptui.core.ai.AiApi;
-import gptui.model.config.ConfigModel;
+import gptui.ui.model.config.ConfigModel;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;

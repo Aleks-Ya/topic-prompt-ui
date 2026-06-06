@@ -6,9 +6,11 @@ package gptui {
         package ai {}
         package util {}
     }
-    package model {}
-    package view {}
-    package viewmodel {}
+    package ui {
+        package model {}
+        package view {}
+        package viewmodel {}
+    }
 }
 
 view --> viewmodel

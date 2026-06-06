@@ -1,9 +1,9 @@
 package gptui;
 
 import com.google.inject.AbstractModule;
-import gptui.model.ModelModule;
-import gptui.view.ViewModule;
-import gptui.viewmodel.ViewModelModule;
+import gptui.ui.model.ModelModule;
+import gptui.ui.view.ViewModule;
+import gptui.ui.viewmodel.ViewModelModule;
 
 public class RootModule extends AbstractModule {
     @Override

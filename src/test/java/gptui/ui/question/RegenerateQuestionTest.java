@@ -1,16 +1,16 @@
 package gptui.ui.question;
 
-import gptui.model.storage.Interaction;
 import gptui.BaseGptUiTest;
 import gptui.ui.TestingData.I1;
 import gptui.ui.TestingData.I2;
+import gptui.ui.model.storage.Interaction;
 import org.junit.jupiter.api.Test;
 
-import static gptui.model.storage.AnswerState.FAIL;
-import static gptui.model.storage.AnswerType.GCP;
-import static gptui.model.storage.AnswerType.LONG;
-import static gptui.model.storage.AnswerType.SHORT;
-import static gptui.viewmodel.question.QuestionStyle.QUESTION_STYLE_EMPTY;
+import static gptui.ui.model.storage.AnswerState.FAIL;
+import static gptui.ui.model.storage.AnswerType.GCP;
+import static gptui.ui.model.storage.AnswerType.LONG;
+import static gptui.ui.model.storage.AnswerType.SHORT;
+import static gptui.ui.viewmodel.question.QuestionStyle.QUESTION_STYLE_EMPTY;
 import static java.time.Duration.ZERO;
 import static javafx.scene.paint.Color.GREEN;
 import static javafx.scene.paint.Color.RED;

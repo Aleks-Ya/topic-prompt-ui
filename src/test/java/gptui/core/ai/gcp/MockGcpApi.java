@@ -1,7 +1,7 @@
 package gptui.core.ai.gcp;
 
 import gptui.core.ai.AiApi;
-import gptui.model.question.BaseMockApi;
+import gptui.ui.model.question.BaseMockApi;
 import jakarta.inject.Singleton;
 
 import java.time.Duration;
