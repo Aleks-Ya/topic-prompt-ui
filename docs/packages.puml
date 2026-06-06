@@ -4,9 +4,9 @@
 package gptui {
     package core {
         package ai {}
+        package util {}
     }
     package model {}
-    package util {}
     package view {}
     package viewmodel {}
 }

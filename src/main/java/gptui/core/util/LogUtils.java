@@ -1,4 +1,4 @@
-package gptui.util;
+package gptui.core.util;
 
 import gptui.model.storage.Interaction;
 

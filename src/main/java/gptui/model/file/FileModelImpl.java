@@ -9,8 +9,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-import static gptui.util.ResourceUtils.resourceIS;
-import static gptui.util.ResourceUtils.resourceUrl;
+import static gptui.core.util.ResourceUtils.resourceIS;
+import static gptui.core.util.ResourceUtils.resourceUrl;
 import static java.util.Objects.requireNonNull;
 
 @Singleton

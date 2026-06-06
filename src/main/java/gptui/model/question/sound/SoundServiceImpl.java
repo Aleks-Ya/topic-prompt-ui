@@ -4,7 +4,7 @@ import gptui.model.storage.AnswerType;
 import jakarta.inject.Singleton;
 import javafx.scene.media.AudioClip;
 
-import static gptui.util.ResourceUtils.resourcePath;
+import static gptui.core.util.ResourceUtils.resourcePath;
 
 @Singleton
 class SoundServiceImpl implements SoundService {

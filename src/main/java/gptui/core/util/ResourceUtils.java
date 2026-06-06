@@ -1,4 +1,4 @@
-package gptui.util;
+package gptui.core.util;
 
 import com.google.common.io.Resources;
 

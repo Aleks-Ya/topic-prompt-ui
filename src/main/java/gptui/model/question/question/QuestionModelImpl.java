@@ -9,7 +9,7 @@ import gptui.model.storage.Answer;
 import gptui.model.storage.AnswerType;
 import gptui.model.storage.InteractionId;
 import gptui.model.storage.StorageModel;
-import gptui.util.Mdc;
+import gptui.core.util.Mdc;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;

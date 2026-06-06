@@ -13,7 +13,7 @@ import javafx.util.StringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static gptui.util.LogUtils.shorten;
+import static gptui.core.util.LogUtils.shorten;
 import static javafx.scene.input.KeyCode.DOWN;
 import static javafx.scene.input.KeyCode.UP;
 import static javafx.scene.input.KeyEvent.KEY_PRESSED;

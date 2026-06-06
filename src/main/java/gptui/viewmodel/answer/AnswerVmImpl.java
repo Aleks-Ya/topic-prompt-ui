@@ -1,6 +1,6 @@
 package gptui.viewmodel.answer;
 
-import gptui.util.Mdc;
+import gptui.core.util.Mdc;
 import gptui.model.storage.Answer;
 import gptui.model.storage.AnswerState;
 import gptui.model.storage.AnswerType;

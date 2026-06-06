@@ -6,7 +6,7 @@ import freemarker.template.TemplateException;
 import gptui.model.config.ConfigModel;
 import gptui.model.storage.AnswerType;
 import gptui.model.storage.InteractionType;
-import gptui.util.ResourceUtils;
+import gptui.core.util.ResourceUtils;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
