@@ -2,8 +2,8 @@ package gptui;
 
 import com.google.inject.util.Modules;
 import gptui.model.clipboard.ClipboardModel;
-import gptui.model.question.gcp.MockGcpApi;
-import gptui.model.question.openai.MockOpenAiApi;
+import gptui.core.ai.gcp.MockGcpApi;
+import gptui.core.ai.openai.MockOpenAiApi;
 import gptui.model.search.HistorySearchModel;
 import gptui.model.state.StateModel;
 import gptui.model.storage.StorageModel;

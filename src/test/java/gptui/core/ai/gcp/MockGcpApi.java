@@ -1,4 +1,4 @@
-package gptui.model.question.gcp;
+package gptui.core.ai.gcp;
 
 import gptui.model.question.BaseMockApi;
 import jakarta.inject.Singleton;

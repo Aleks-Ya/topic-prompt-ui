@@ -1,6 +1,6 @@
 package gptui.model.question;
 
-import gptui.model.question.gcp.GcpApi;
+import gptui.core.ai.gcp.GcpApi;
 import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

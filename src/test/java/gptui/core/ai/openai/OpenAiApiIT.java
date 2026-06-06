@@ -1,4 +1,4 @@
-package gptui.model.question.gcp;
+package gptui.core.ai.openai;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -8,33 +8,33 @@ import gptui.model.question.prompt.PromptModule;
 import gptui.model.storage.StorageModule;
 import org.junit.jupiter.api.Test;
 
-import static gptui.model.storage.AnswerType.GCP;
+import static gptui.model.storage.AnswerType.SHORT;
 import static gptui.model.storage.InteractionType.DEFINITION;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class GcpApiIT {
-    private final Injector injector = Guice.createInjector(new GcpModule(), new ConfigurationModule(),
+class OpenAiApiIT {
+    private final Injector injector = Guice.createInjector(new OpenAiModule(), new ConfigurationModule(),
             new StorageModule(), new PromptModule());
-    private final GcpApi api = injector.getInstance(GcpApi.class);
+    private final OpenAiApi api = injector.getInstance(OpenAiApi.class);
     private final PromptFactory promptFactory = injector.getInstance(PromptFactory.class);
 
     @Test
     void send() {
-        var response = api.send("What is the last Java version?", 100);
+        var response = api.send("What is the last Java version?", 50);
         System.out.println(response);
     }
 
     @Test
-    void definition() {
-        var prompt = promptFactory.getPrompt(DEFINITION, "AWS S3", "Bucket", GCP).orElseThrow();
-        var response = api.send(prompt, 100);
+    void definitionShort() {
+        var prompt = promptFactory.getPrompt(DEFINITION, "AWS S3", "Bucket", SHORT).orElseThrow();
+        var response = api.send(prompt, 50);
         System.out.println(response);
     }
 
     @Test
     void error() {
-        assertThatThrownBy(() -> api.send(null, 100))
+        assertThatThrownBy(() -> api.send(null, 50))
                 .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("INVALID_ARGUMENT");
+                .hasMessageContaining("invalid_request_error");
     }
 }

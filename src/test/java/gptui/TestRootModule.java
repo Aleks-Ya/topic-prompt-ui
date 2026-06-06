@@ -2,10 +2,10 @@ package gptui;
 
 import com.google.common.jimfs.Jimfs;
 import com.google.inject.AbstractModule;
-import gptui.model.question.gcp.GcpApi;
-import gptui.model.question.gcp.MockGcpApi;
-import gptui.model.question.openai.MockOpenAiApi;
-import gptui.model.question.openai.OpenAiApi;
+import gptui.core.ai.gcp.GcpApi;
+import gptui.core.ai.gcp.MockGcpApi;
+import gptui.core.ai.openai.MockOpenAiApi;
+import gptui.core.ai.openai.OpenAiApi;
 import gptui.model.question.sound.SoundService;
 import gptui.model.question.sound.SoundServiceMock;
 

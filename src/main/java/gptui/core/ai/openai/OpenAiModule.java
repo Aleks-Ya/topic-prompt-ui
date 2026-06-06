@@ -1,4 +1,4 @@
-package gptui.model.question.openai;
+package gptui.core.ai.openai;
 
 import com.google.inject.AbstractModule;
 

@@ -1,4 +1,4 @@
-package gptui.model.question.gcp;
+package gptui.core.ai.gcp;
 
 import com.google.gson.Gson;
 import gptui.model.config.ConfigModel;
@@ -15,7 +15,7 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.List;
 
-import static gptui.model.question.gcp.ResponseBody.FinishReason.STOP;
+import static gptui.core.ai.gcp.ResponseBody.FinishReason.STOP;
 import static java.math.RoundingMode.HALF_UP;
 
 @Singleton

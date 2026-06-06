@@ -1,4 +1,4 @@
-package gptui.model.question.gcp;
+package gptui.core.ai.gcp;
 
 import java.math.BigDecimal;
 import java.util.List;
