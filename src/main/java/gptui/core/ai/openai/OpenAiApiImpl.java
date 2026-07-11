@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import gptui.core.ai.AiApi;
 import gptui.ui.model.config.ConfigModel;
 import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,24 +13,24 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
-@Singleton
 class OpenAiApiImpl implements AiApi {
     private static final Logger log = LoggerFactory.getLogger(OpenAiApiImpl.class);
-    private static final String MODEL = "gpt-5.5";
     private static final Gson gson = new Gson();
     private static final URI endpoint = URI.create("https://api.openai.com/v1/responses");
-    private final String token;
-
+    private final String model;
     @Inject
-    public OpenAiApiImpl(ConfigModel configModel) {
-        token = configModel.getProperty("openai.token");
+    private ConfigModel configModel;
+
+    OpenAiApiImpl(String model) {
+        this.model = model;
     }
 
     @Override
     public String send(String content) {
         log.info("Sending question: {}", content);
+        var token = configModel.getProperty("openai.token");
         var reasoning = new Reasoning(ReasoningEffort.HIGH);
-        var body = new RequestBody(MODEL, content, reasoning);
+        var body = new RequestBody(model, content, reasoning);
         var json = gson.toJson(body);
         log.trace("Request body: {}", json);
         HttpResponse<String> response;

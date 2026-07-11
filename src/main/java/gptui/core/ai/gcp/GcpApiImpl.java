@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import gptui.core.ai.AiApi;
 import gptui.ui.model.config.ConfigModel;
 import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,22 +16,23 @@ import java.util.List;
 
 import static gptui.core.ai.gcp.ResponseBody.FinishReason.STOP;
 
-@Singleton
 class GcpApiImpl implements AiApi {
     private static final Logger log = LoggerFactory.getLogger(GcpApiImpl.class);
     private static final Gson gson = new Gson();
-    private static final URI endpoint = URI.create(
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-pro-preview:generateContent");
-    private final String apiKey;
-
+    private static final String ENDPOINT_TEMPLATE =
+            "https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent";
+    private final URI endpoint;
     @Inject
-    public GcpApiImpl(ConfigModel configModel) {
-        apiKey = configModel.getProperty("gcp.api.key");
+    private ConfigModel configModel;
+
+    GcpApiImpl(String model) {
+        this.endpoint = URI.create(String.format(ENDPOINT_TEMPLATE, model));
     }
 
     @Override
     public String send(String content) {
         log.info("Sending question: {}", content);
+        var apiKey = configModel.getProperty("gcp.api.key");
         try (var client = HttpClient.newHttpClient()) {
             var body = new RequestBody(List.of(new Content(List.of(new Part(content)), "user")),
                     new GenerationConfig(1));

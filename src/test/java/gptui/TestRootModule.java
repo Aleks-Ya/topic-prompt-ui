@@ -16,6 +16,7 @@ import static com.google.common.jimfs.Configuration.unix;
 import static gptui.core.ai.AiModule.CLAUDE_AI;
 import static gptui.core.ai.AiModule.GCP_AI;
 import static gptui.core.ai.AiModule.OPEN_AI;
+import static gptui.core.ai.AiModule.OPEN_AI_GRAMMAR;
 
 public class TestRootModule extends AbstractModule {
     @Override
@@ -24,6 +25,7 @@ public class TestRootModule extends AbstractModule {
         bind(MockGcpApi.class);
         bind(MockClaudeApi.class);
         bind(AiApi.class).annotatedWith(Names.named(OPEN_AI)).to(MockOpenAiApi.class);
+        bind(AiApi.class).annotatedWith(Names.named(OPEN_AI_GRAMMAR)).to(MockOpenAiApi.class);
         bind(AiApi.class).annotatedWith(Names.named(GCP_AI)).to(MockGcpApi.class);
         bind(AiApi.class).annotatedWith(Names.named(CLAUDE_AI)).to(MockClaudeApi.class);
         bind(SoundService.class).to(SoundServiceMock.class);

@@ -23,6 +23,7 @@ import java.util.function.Function;
 import static gptui.core.ai.AiModule.CLAUDE_AI;
 import static gptui.core.ai.AiModule.GCP_AI;
 import static gptui.core.ai.AiModule.OPEN_AI;
+import static gptui.core.ai.AiModule.OPEN_AI_GRAMMAR;
 import static gptui.core.storagefilesystem.AnswerState.FAIL;
 import static gptui.core.storagefilesystem.AnswerState.SENT;
 import static gptui.core.storagefilesystem.AnswerState.SUCCESS;
@@ -42,6 +43,9 @@ class QuestionModelImpl implements QuestionModel {
     @Inject
     @Named(OPEN_AI)
     private AiApi openAiApi;
+    @Inject
+    @Named(OPEN_AI_GRAMMAR)
+    private AiApi openAiGrammarApi;
     @Inject
     @Named(GCP_AI)
     private AiApi gcpApi;
@@ -74,7 +78,8 @@ class QuestionModelImpl implements QuestionModel {
                 var answerMd = switch (answerType) {
                     case GCP -> gcpApi.send(prompt);
                     case CLAUDE -> claudeApi.send(prompt);
-                    case GRAMMAR, OPEN_AI -> openAiApi.send(prompt);
+                    case OPEN_AI -> openAiApi.send(prompt);
+                    case GRAMMAR -> openAiGrammarApi.send(prompt);
                 };
                 var answerHtml = formatConverter.markdownToHtml(answerMd);
                 updateAnswer(interactionId, answerType, answer ->
