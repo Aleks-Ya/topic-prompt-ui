@@ -17,6 +17,8 @@ import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Function;
 
 import static gptui.core.ai.AiModule.CLAUDE_AI;
@@ -30,6 +32,10 @@ import static java.util.concurrent.CompletableFuture.runAsync;
 @Singleton
 class QuestionModelImpl implements QuestionModel {
     private static final Logger log = LoggerFactory.getLogger(QuestionModelImpl.class);
+    // Requests to the 4 AiApi providers are network-bound and sent concurrently, so they
+    // must not be limited by ForkJoinPool.commonPool()'s CPU-core-based sizing, which can
+    // serialize them on machines with few cores (e.g. CI runners).
+    private static final ExecutorService EXECUTOR = Executors.newCachedThreadPool();
     @Inject
     private StateModel stateModel;
     @Inject
@@ -80,7 +86,7 @@ class QuestionModelImpl implements QuestionModel {
                         answer.withAnswerMd(answerMd).withAnswerHtml(answerHtml).withState(SUCCESS), callback);
                 soundService.beenOnAnswer(answerType);
                 log.info("The short answer request finished.");
-            })).handle((res, e) -> {
+            }), EXECUTOR).handle((res, e) -> {
                 if (e != null) {
                     log.error("Sending question exception", e);
                     Mdc.run(interactionId, () -> {
