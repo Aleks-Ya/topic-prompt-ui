@@ -15,6 +15,7 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Singleton
 class ClaudeApiImpl implements AiApi {
@@ -55,7 +56,10 @@ class ClaudeApiImpl implements AiApi {
                     var message = String.format("Wrong stop reason in response: %s", responseBody);
                     throw new RuntimeException(message);
                 }
-                return responseBody.content().getFirst().text();
+                return responseBody.content().stream()
+                        .filter(block -> "text".equals(block.type()))
+                        .map(ResponseBody.ContentBlock::text)
+                        .collect(Collectors.joining());
             } else {
                 log.error("Claude API error status {}: {}", response.statusCode(), response.body());
                 throw new RuntimeException(response.body());
