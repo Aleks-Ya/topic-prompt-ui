@@ -15,6 +15,7 @@ Topic Prompt UI (`GptUi`) is a JavaFX desktop client for sending prompts to Open
 - Run a single test class: `./gradlew test --tests "gptui.ui.question.SendFactTest"`
 - Build native image via jlink: `./gradlew -x test clean jlink`
 - Full local install (builds, tests, deploys to `~/installed/GptUI`): `./gradlew installLocally` (or `./gradlew -x test installLocally` to skip tests)
+- Redeploy the locally installed app safely: `./deploy-local.sh` — stops any running `~/installed/GptUI` instance (graceful `SIGTERM`, matched via `pkill -f "installed/GptUI/bin"`) before running `./gradlew -x test installLocally`, since `installLocally` deletes the old install directory without stopping a running process first.
 
 UI tests use TestFX (`ApplicationTest`) and need a display; on headless CI (see `.github/workflows/gradle.yml`) they run under Xvfb.
 

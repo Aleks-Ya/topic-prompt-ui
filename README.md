@@ -17,6 +17,7 @@ Run unit-tests (skip integration tests): `./gradlew -PskipIntegrationTests test`
 3. Build distribution and deploy to `/home/aleks/installed/GptUI`:
     1. With tests: `./gradlew installLocally`
     2. Without tests: `./gradlew -x test installLocally`
+    3. Or, to also stop a currently running instance first: `./deploy-local.sh`
 4. Create a Git tag: `git tag "v$(cat src/main/resources/gptui/version.txt)"`
 5. Add to `PATH` in `~/.bashrc`: `export PATH=$PATH:/home/aleks/installed/GptUI/bin`
 6. Add a menu icon by `MenuLibre` application:
