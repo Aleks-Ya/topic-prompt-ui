@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Claude Code memory
+
+Durable facts, decisions, and conventions that Claude Code learns while working in this repo are committed here rather than kept only in the private per-user auto-memory store — that keeps them shared across machines and contributors instead of stuck on one person's disk. When you learn something worth remembering long-term about this project, add it to the relevant section of this file (and commit it) instead of (or in addition to) saving it to local memory.
+
 ## What this is
 
 Topic Prompt UI (`GptUi`) is a JavaFX desktop client for sending prompts to OpenAI, GCP (Gemini), and Claude APIs, organizing the resulting Q&A into themed history, and rendering answers (grammar/openai/claude/GCP variants) side by side. Built as a Java Platform Module System (JPMS) application with Guice for dependency injection.
@@ -15,11 +19,15 @@ Topic Prompt UI (`GptUi`) is a JavaFX desktop client for sending prompts to Open
 - Run a single test class: `./gradlew test --tests "gptui.ui.question.SendFactTest"`
 - Build native image via jlink: `./gradlew -x test clean jlink`
 - Full local install (builds, tests, deploys to `~/installed/GptUI`): `./gradlew installLocally` (or `./gradlew -x test installLocally` to skip tests)
-- Redeploy the locally installed app safely: `./deploy-local.sh` — stops any running `~/installed/GptUI` instance (graceful `SIGTERM`, matched via `pkill -f "installed/GptUI/bin"`) before running `./gradlew -x test installLocally`, since `installLocally` deletes the old install directory without stopping a running process first.
+- Redeploy the locally installed app safely: `./deploy-local.sh` — stops any running `~/installed/GptUI` instance (graceful `SIGTERM`, matched via `pkill -f "installed/GptUI/bin"`, polls up to 10s for exit) before running `./gradlew -x test installLocally`, since the `installLocally` Gradle task deletes the old `~/installed/GptUI` directory and copies in the new jlink image but never stops a running process first — a bare `installLocally` while the app is running deletes its jars/launcher out from under it. Prefer this script over calling `./gradlew installLocally` directly when redeploying locally.
 
 UI tests use TestFX (`ApplicationTest`) and need a display; on headless CI (see `.github/workflows/gradle.yml`) they run under Xvfb.
 
-Integration tests (`*IT.java`, e.g. `OpenAiApiIT`, `ClaudeApiIT`, `GcpApiIT`, `SoundServiceIT`) hit real external services/APIs and require credentials in `~/.gpt/config.properties` (`openai.token`, `claude.api.key`, `gcp.api.key`); they are excluded by `-PskipIntegrationTests` and are not run in CI.
+Integration tests (`*IT.java`, e.g. `OpenAiApiIT`, `ClaudeApiIT`, `GcpApiIT`, `SoundServiceIT`) hit real external services/APIs and require credentials in `~/.gpt/config.properties` (`openai.token`, `claude.api.key`, `gcp.api.key`); they are excluded by `-PskipIntegrationTests` and are not run in CI. If `~/.gpt/config.properties` on the local machine already has all three credentials populated, these tests are directly runnable via `./gradlew test` — don't assume they're unrunnable and skip straight to `-PskipIntegrationTests`; try running the relevant `*ApiIT` class first.
+
+## Code quality
+
+SonarCloud project: https://sonarcloud.io/project/overview?id=Aleks-Ya_topic-prompt-ui — check here for code quality/coverage metrics and issues.
 
 ## Architecture
 
