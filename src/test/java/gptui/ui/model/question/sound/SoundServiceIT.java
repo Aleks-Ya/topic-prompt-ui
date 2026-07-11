@@ -16,8 +16,8 @@ class SoundServiceIT {
     }
 
     @Test
-    void beenOnAnswerShort() throws InterruptedException {
-        soundService.beenOnAnswer(AnswerType.SHORT);
+    void beenOnAnswerOpenAi() throws InterruptedException {
+        soundService.beenOnAnswer(AnswerType.OPEN_AI);
         Thread.sleep(3000);
     }
 

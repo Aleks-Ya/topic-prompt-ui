@@ -25,7 +25,7 @@ import static gptui.core.storagefilesystem.AnswerState.NEW;
 import static gptui.core.storagefilesystem.AnswerType.CLAUDE;
 import static gptui.core.storagefilesystem.AnswerType.GCP;
 import static gptui.core.storagefilesystem.AnswerType.GRAMMAR;
-import static gptui.core.storagefilesystem.AnswerType.SHORT;
+import static gptui.core.storagefilesystem.AnswerType.OPEN_AI;
 
 @Singleton
 class StateModelImpl implements StateModel {
@@ -38,7 +38,7 @@ class StateModelImpl implements StateModel {
     private Boolean isHistoryFilteringEnabled = false;
     private final Map<AnswerType, Integer> temperatures = new HashMap<>(Map.of(
             AnswerType.GRAMMAR, 50,
-            AnswerType.SHORT, 60,
+            AnswerType.OPEN_AI, 60,
             AnswerType.CLAUDE, 70,
             //Gemini 3 recommends always use "1.0" https://ai.google.dev/gemini-api/docs/gemini-3?thinking=high#temperature
             AnswerType.GCP, 100
@@ -92,7 +92,7 @@ class StateModelImpl implements StateModel {
             var question = getEditedQuestion();
             var interaction = new Interaction(interactionId, interactionType, theme.id(), question, Map.of(
                     GRAMMAR, new Answer(GRAMMAR, "", getTemperature(GRAMMAR), "", "", NEW),
-                    SHORT, new Answer(SHORT, "", getTemperature(SHORT), "", "", NEW),
+                    OPEN_AI, new Answer(OPEN_AI, "", getTemperature(OPEN_AI), "", "", NEW),
                     CLAUDE, new Answer(CLAUDE, "", getTemperature(CLAUDE), "", "", NEW),
                     GCP, new Answer(GCP, "", getTemperature(GCP), "", "", NEW)
             ));

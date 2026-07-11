@@ -45,7 +45,7 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .modelEditedQuestion(null)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I0.GRAMMAR_HTML)
-                .shortA().text(I0.SHORT_HTML)
+                .openAiA().text(I0.OPEN_AI_HTML)
                 .claudeA().text(I0.CLAUDE_HTML)
                 .gcpA().text(I0.GCP_HTML)
                 .answerCircleColors(WHITE, WHITE, WHITE, WHITE)
@@ -73,7 +73,7 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .modelEditedQuestion(I1.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I0.GRAMMAR_HTML)
-                .shortA().text(I0.SHORT_HTML)
+                .openAiA().text(I0.OPEN_AI_HTML)
                 .claudeA().text(I0.CLAUDE_HTML)
                 .gcpA().text(I0.GCP_HTML)
                 .answerCircleColors(WHITE, WHITE, WHITE, WHITE)
@@ -83,7 +83,7 @@ class SequentialRequestsTest extends BaseGptUiTest {
 
         gptApi.clear()
                 .putGrammarResponse(I1.GRAMMAR_HTML, ofMillis(1000))
-                .putShortResponse(I1.SHORT_HTML, ofMillis(1500));
+                .putOpenAiResponse(I1.OPEN_AI_HTML, ofMillis(1500));
         claudeApi.clear().putClaudeResponse(I1.CLAUDE_HTML, ofMillis(2000));
         gcpApi.clear().putGcpResponse(I1.GCP_HTML, ofMillis(2500));
 
@@ -103,7 +103,7 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .modelEditedQuestion(I1.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I0.GRAMMAR_HTML)
-                .shortA().text(I0.SHORT_HTML)
+                .openAiA().text(I0.OPEN_AI_HTML)
                 .claudeA().text(I0.CLAUDE_HTML)
                 .gcpA().text(I0.GCP_HTML)
                 .answerCircleColors(BLUE, BLUE, BLUE, BLUE)
@@ -129,7 +129,7 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .modelEditedQuestion(I1.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I1.EXP_GRAMMAR_HTML_BODY)
-                .shortA().text(I1.EXP_SHORT_HTML_BODY)
+                .openAiA().text(I1.EXP_OPEN_AI_HTML_BODY)
                 .claudeA().text(I1.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I1.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
@@ -137,9 +137,9 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .answerSpinnerTemperaturesDefault()
                 .assertApp();
 
-        clickOn(shortAnswer().copyButton());
+        clickOn(openAiAnswer().copyButton());
         assertion()
-                .focus(shortAnswer().copyButton())
+                .focus(openAiAnswer().copyButton())
                 .historySize(1, 1)
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(storage.readAllInteractions().getFirst())
@@ -153,13 +153,13 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .modelEditedQuestion(I1.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I1.EXP_GRAMMAR_HTML_BODY)
-                .shortA().text(I1.EXP_SHORT_HTML_BODY)
+                .openAiA().text(I1.EXP_OPEN_AI_HTML_BODY)
                 .claudeA().text(I1.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I1.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
                 .answerTextTemperaturesDefault()
                 .answerSpinnerTemperaturesDefault()
-                .clipboard(I1.EXP_SHORT_HTML_BODY)
+                .clipboard(I1.EXP_OPEN_AI_HTML_BODY)
                 .assertApp();
 
         clickOn(claudeAnswer().copyButton());
@@ -178,7 +178,7 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .modelEditedQuestion(I1.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I1.EXP_GRAMMAR_HTML_BODY)
-                .shortA().text(I1.EXP_SHORT_HTML_BODY)
+                .openAiA().text(I1.EXP_OPEN_AI_HTML_BODY)
                 .claudeA().text(I1.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I1.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
@@ -203,7 +203,7 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .modelEditedQuestion(I1.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I1.EXP_GRAMMAR_HTML_BODY)
-                .shortA().text(I1.EXP_SHORT_HTML_BODY)
+                .openAiA().text(I1.EXP_OPEN_AI_HTML_BODY)
                 .claudeA().text(I1.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I1.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
@@ -232,7 +232,7 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .modelEditedQuestion(I2.QUESTION)
                 .modelIsEnteringNewQuestion(true)
                 .grammarA().text(I1.EXP_GRAMMAR_HTML_BODY)
-                .shortA().text(I1.EXP_SHORT_HTML_BODY)
+                .openAiA().text(I1.EXP_OPEN_AI_HTML_BODY)
                 .claudeA().text(I1.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I1.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
@@ -242,7 +242,7 @@ class SequentialRequestsTest extends BaseGptUiTest {
 
         gptApi.clear()
                 .putGrammarResponse(I2.GRAMMAR_HTML, ofMillis(1000))
-                .putShortResponse(I2.SHORT_HTML, ofMillis(1500));
+                .putOpenAiResponse(I2.OPEN_AI_HTML, ofMillis(1500));
         claudeApi.clear().putClaudeResponse(I2.CLAUDE_HTML, ofMillis(2000));
         gcpApi.clear().putGcpResponse(I2.GCP_HTML, ofMillis(2500));
         clickOn(question().questionButton());
@@ -261,7 +261,7 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .modelEditedQuestion(I2.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I0.GRAMMAR_HTML)
-                .shortA().text(I0.SHORT_HTML)
+                .openAiA().text(I0.OPEN_AI_HTML)
                 .claudeA().text(I0.CLAUDE_HTML)
                 .gcpA().text(I0.GCP_HTML)
                 .answerCircleColors(BLUE, BLUE, BLUE, BLUE)
@@ -288,7 +288,7 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .modelEditedQuestion(I2.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I2.EXP_GRAMMAR_HTML_BODY)
-                .shortA().text(I2.EXP_SHORT_HTML_BODY)
+                .openAiA().text(I2.EXP_OPEN_AI_HTML_BODY)
                 .claudeA().text(I2.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I2.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
@@ -296,9 +296,9 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .answerSpinnerTemperaturesDefault()
                 .assertApp();
 
-        clickOn(shortAnswer().copyButton());
+        clickOn(openAiAnswer().copyButton());
         assertion()
-                .focus(shortAnswer().copyButton())
+                .focus(openAiAnswer().copyButton())
                 .historySize(2, 2)
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(storage.readAllInteractions().getFirst())
@@ -312,13 +312,13 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .modelEditedQuestion(I2.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I2.EXP_GRAMMAR_HTML_BODY)
-                .shortA().text(I2.EXP_SHORT_HTML_BODY)
+                .openAiA().text(I2.EXP_OPEN_AI_HTML_BODY)
                 .claudeA().text(I2.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I2.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
                 .answerTextTemperaturesDefault()
                 .answerSpinnerTemperaturesDefault()
-                .clipboard(I2.EXP_SHORT_HTML_BODY)
+                .clipboard(I2.EXP_OPEN_AI_HTML_BODY)
                 .assertApp();
 
         clickOn(claudeAnswer().copyButton());
@@ -337,7 +337,7 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .modelEditedQuestion(I2.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I2.EXP_GRAMMAR_HTML_BODY)
-                .shortA().text(I2.EXP_SHORT_HTML_BODY)
+                .openAiA().text(I2.EXP_OPEN_AI_HTML_BODY)
                 .claudeA().text(I2.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I2.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
@@ -362,7 +362,7 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .modelEditedQuestion(I2.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I2.EXP_GRAMMAR_HTML_BODY)
-                .shortA().text(I2.EXP_SHORT_HTML_BODY)
+                .openAiA().text(I2.EXP_OPEN_AI_HTML_BODY)
                 .claudeA().text(I2.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I2.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
@@ -388,7 +388,7 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .modelEditedQuestion(I2.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I2.EXP_GRAMMAR_HTML_BODY)
-                .shortA().text(I2.EXP_SHORT_HTML_BODY)
+                .openAiA().text(I2.EXP_OPEN_AI_HTML_BODY)
                 .claudeA().text(I2.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I2.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
@@ -412,7 +412,7 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .modelEditedQuestion(I1.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I1.EXP_GRAMMAR_HTML_BODY)
-                .shortA().text(I1.EXP_SHORT_HTML_BODY)
+                .openAiA().text(I1.EXP_OPEN_AI_HTML_BODY)
                 .claudeA().text(I1.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I1.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
@@ -420,9 +420,9 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .answerSpinnerTemperaturesDefault()
                 .assertApp();
 
-        clickOn(shortAnswer().copyButton());
+        clickOn(openAiAnswer().copyButton());
         assertion()
-                .focus(shortAnswer().copyButton())
+                .focus(openAiAnswer().copyButton())
                 .historySize(2, 2)
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(storage.readAllInteractions().get(1))
@@ -436,13 +436,13 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .modelEditedQuestion(I1.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I1.EXP_GRAMMAR_HTML_BODY)
-                .shortA().text(I1.EXP_SHORT_HTML_BODY)
+                .openAiA().text(I1.EXP_OPEN_AI_HTML_BODY)
                 .claudeA().text(I1.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I1.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
                 .answerTextTemperaturesDefault()
                 .answerSpinnerTemperaturesDefault()
-                .clipboard(I1.EXP_SHORT_HTML_BODY)
+                .clipboard(I1.EXP_OPEN_AI_HTML_BODY)
                 .assertApp();
 
         clickOn(claudeAnswer().copyButton());
@@ -461,7 +461,7 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .modelEditedQuestion(I1.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I1.EXP_GRAMMAR_HTML_BODY)
-                .shortA().text(I1.EXP_SHORT_HTML_BODY)
+                .openAiA().text(I1.EXP_OPEN_AI_HTML_BODY)
                 .claudeA().text(I1.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I1.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
@@ -486,7 +486,7 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .modelEditedQuestion(I1.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I1.EXP_GRAMMAR_HTML_BODY)
-                .shortA().text(I1.EXP_SHORT_HTML_BODY)
+                .openAiA().text(I1.EXP_OPEN_AI_HTML_BODY)
                 .claudeA().text(I1.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I1.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)

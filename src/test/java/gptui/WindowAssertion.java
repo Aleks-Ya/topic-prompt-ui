@@ -41,7 +41,7 @@ public class WindowAssertion {
     private Boolean isEnteringNewQuestion;
     private String modelEditedQuestion;
     private final AnswerInfo grammarAnswer = new AnswerInfo();
-    private final AnswerInfo shortAnswer = new AnswerInfo();
+    private final AnswerInfo openAiAnswer = new AnswerInfo();
     private final AnswerInfo claudeAnswer = new AnswerInfo();
     private final AnswerInfo gcpAnswer = new AnswerInfo();
     private String testName = "Initialize";
@@ -167,8 +167,8 @@ public class WindowAssertion {
         return grammarAnswer;
     }
 
-    public AnswerInfo shortA() {
-        return shortAnswer;
+    public AnswerInfo openAiA() {
+        return openAiAnswer;
     }
 
     public AnswerInfo claudeA() {
@@ -179,28 +179,28 @@ public class WindowAssertion {
         return gcpAnswer;
     }
 
-    public WindowAssertion answerCircleColors(Color answerGrammarCircleColor, Color answerShortCircleColor,
+    public WindowAssertion answerCircleColors(Color answerGrammarCircleColor, Color answerOpenAiCircleColor,
                                               Color answerClaudeCircleColor, Color answerGcpCircleColor) {
         grammarA().circleColor(answerGrammarCircleColor);
-        shortA().circleColor(answerShortCircleColor);
+        openAiA().circleColor(answerOpenAiCircleColor);
         claudeA().circleColor(answerClaudeCircleColor);
         gcpA().circleColor(answerGcpCircleColor);
         return this;
     }
 
-    public WindowAssertion answerTextTemperatures(Integer grammarTemperature, Integer shortTemperature,
+    public WindowAssertion answerTextTemperatures(Integer grammarTemperature, Integer openAiTemperature,
                                                   Integer claudeTemperature, Integer gcpTemperature) {
         grammarA().temperatureText(grammarTemperature);
-        shortA().temperatureText(shortTemperature);
+        openAiA().temperatureText(openAiTemperature);
         claudeA().temperatureText(claudeTemperature);
         gcpA().temperatureText(gcpTemperature);
         return this;
     }
 
-    public WindowAssertion answerSpinnerTemperatures(Integer grammarTemperature, Integer shortTemperature,
+    public WindowAssertion answerSpinnerTemperatures(Integer grammarTemperature, Integer openAiTemperature,
                                                      Integer claudeTemperature, Integer gcpTemperature) {
         grammarA().temperatureSpinner(grammarTemperature);
-        shortA().temperatureSpinner(shortTemperature);
+        openAiA().temperatureSpinner(openAiTemperature);
         claudeA().temperatureSpinner(claudeTemperature);
         gcpA().temperatureSpinner(gcpTemperature);
         return this;
@@ -300,16 +300,16 @@ public class WindowAssertion {
         }
 
         {
-            var answer = app.shortAnswer();
-            soft.assertThat(answer.label().getText()).as(descr("Answer/Short/Label/Text")).isEqualTo("Short\nanswer:");
-            soft.assertThat(answer.copyButton().getText()).as(descr("Answer/Short/CopyButton/Text")).isEqualTo("Copy _2");
-            soft.assertThat(answer.regenerateButton().getText()).as(descr("Answer/Short/RegenerateButton/Text")).isEqualTo("⟳");
-            app.verifyWebViewBody(soft, descr("Answer/Short/WebView/Body"), answer.webView(), shortA().text);
-            soft.assertThat(colorToString(answer.circle().getFill())).as(descr("Answer/Short/Circle/Fill")).isEqualTo(colorToString(shortA().circleColor));
-            soft.assertThat(answer.temperatureText().getText()).as(descr("Answer/Short/Temperature/Text"))
-                    .isEqualTo(temperatureToString(shortA().temperatureText));
-            soft.assertThat(answer.temperatureSpinner().getValue()).as(descr("Answer/Short/TemperatureSpinner/Value"))
-                    .isEqualTo(temperatureToInteger(shortA().temperatureSpinner));
+            var answer = app.openAiAnswer();
+            soft.assertThat(answer.label().getText()).as(descr("Answer/OpenAI/Label/Text")).isEqualTo("OpenAI\nanswer:");
+            soft.assertThat(answer.copyButton().getText()).as(descr("Answer/OpenAI/CopyButton/Text")).isEqualTo("Copy _2");
+            soft.assertThat(answer.regenerateButton().getText()).as(descr("Answer/OpenAI/RegenerateButton/Text")).isEqualTo("⟳");
+            app.verifyWebViewBody(soft, descr("Answer/OpenAI/WebView/Body"), answer.webView(), openAiA().text);
+            soft.assertThat(colorToString(answer.circle().getFill())).as(descr("Answer/OpenAI/Circle/Fill")).isEqualTo(colorToString(openAiA().circleColor));
+            soft.assertThat(answer.temperatureText().getText()).as(descr("Answer/OpenAI/Temperature/Text"))
+                    .isEqualTo(temperatureToString(openAiA().temperatureText));
+            soft.assertThat(answer.temperatureSpinner().getValue()).as(descr("Answer/OpenAI/TemperatureSpinner/Value"))
+                    .isEqualTo(temperatureToInteger(openAiA().temperatureSpinner));
         }
 
         {

@@ -70,7 +70,7 @@ class HotKeysTest extends BaseGptUiTest {
                 .modelEditedQuestion(I3.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I3.GRAMMAR_HTML)
-                .shortA().text(I3.SHORT_HTML)
+                .openAiA().text(I3.OPEN_AI_HTML)
                 .claudeA().text(I3.CLAUDE_HTML)
                 .gcpA().text(I3.GCP_HTML)
                 .answerCircleColors(GREEN, GREEN, RED, GREEN)
@@ -81,9 +81,9 @@ class HotKeysTest extends BaseGptUiTest {
                 .focus(grammarAnswer().copyButton())
                 .clipboard(I3.GRAMMAR_HTML)
 
-                .work("Copy Short Answer By Alt-2", () -> press(ALT, DIGIT2).release(DIGIT2, ALT))
-                .focus(shortAnswer().copyButton())
-                .clipboard(I3.SHORT_HTML)
+                .work("Copy OpenAI Answer By Alt-2", () -> press(ALT, DIGIT2).release(DIGIT2, ALT))
+                .focus(openAiAnswer().copyButton())
+                .clipboard(I3.OPEN_AI_HTML)
 
                 .work("Copy Claude Answer By Alt-3", () -> press(ALT, DIGIT3).release(DIGIT3, ALT))
                 .focus(claudeAnswer().copyButton())

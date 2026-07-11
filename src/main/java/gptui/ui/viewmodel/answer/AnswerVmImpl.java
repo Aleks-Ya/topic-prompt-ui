@@ -16,7 +16,7 @@ import static gptui.core.storagefilesystem.AnswerState.NEW;
 import static gptui.core.storagefilesystem.AnswerType.CLAUDE;
 import static gptui.core.storagefilesystem.AnswerType.GCP;
 import static gptui.core.storagefilesystem.AnswerType.GRAMMAR;
-import static gptui.core.storagefilesystem.AnswerType.SHORT;
+import static gptui.core.storagefilesystem.AnswerType.OPEN_AI;
 import static javafx.scene.paint.Color.BLUE;
 import static javafx.scene.paint.Color.GREEN;
 import static javafx.scene.paint.Color.RED;
@@ -33,8 +33,8 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
     private AnswerMediator mediator;
     private String currentWebViewContent = "";
     private final AnswerType answerType;
-    private static final Map<AnswerType, Integer> hotkeyDigitMap = Map.of(GRAMMAR, 1, SHORT, 2, CLAUDE, 3, GCP, 4);
-    private static final Map<AnswerType, String> labelTextMap = Map.of(GRAMMAR, "Grammar\nanswer:", SHORT, "Short\nanswer:", CLAUDE, "Claude\nanswer:", GCP, "GCP\nanswer:");
+    private static final Map<AnswerType, Integer> hotkeyDigitMap = Map.of(GRAMMAR, 1, OPEN_AI, 2, CLAUDE, 3, GCP, 4);
+    private static final Map<AnswerType, String> labelTextMap = Map.of(GRAMMAR, "Grammar\nanswer:", OPEN_AI, "OpenAI\nanswer:", CLAUDE, "Claude\nanswer:", GCP, "GCP\nanswer:");
 
     @Override
     public void onCopyButtonClick() {

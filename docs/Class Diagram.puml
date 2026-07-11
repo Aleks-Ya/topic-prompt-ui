@@ -6,7 +6,7 @@ package view {
     together {
         class GptUiApplication
         class "AnswerController" as grammarAnswerController <<GRAMMAR>>
-        class "AnswerController" as shortAnswerController <<SHORT>>
+        class "AnswerController" as openAiAnswerController <<OPEN_AI>>
         class "AnswerController" as claudeAnswerController <<CLAUDE>>
         class "AnswerController" as gcpAnswerController <<GCP>>
         class HistoryController
@@ -17,7 +17,7 @@ package view {
 
 package viewmodel {
     class "AnswerVM" as grammarAnswerVM <<GRAMMAR>>
-    class "AnswerVM" as shortAnswerVM <<SHORT>>
+    class "AnswerVM" as openAiAnswerVM <<OPEN_AI>>
     class "AnswerVM" as claudeAnswerVM <<CLAUDE>>
     class "AnswerVM" as gcpAnswerVM <<GCP>>
     class GptUiVM
@@ -40,13 +40,13 @@ ThemeController ---> ThemeVM
 QuestionController ---> QuestionVM
 HistoryController ---> HistoryVM
 grammarAnswerController --> grammarAnswerVM
-shortAnswerController --> shortAnswerVM
+openAiAnswerController --> openAiAnswerVM
 claudeAnswerController --> claudeAnswerVM
 gcpAnswerController --> gcpAnswerVM
 GptUiApplication --> GptUiVM
 
 GptUiController --> grammarAnswerController
-GptUiController --> shortAnswerController
+GptUiController --> openAiAnswerController
 GptUiController --> claudeAnswerController
 GptUiController --> gcpAnswerController
 
@@ -55,7 +55,7 @@ QuestionVM <--> ViewModelMediator
 HistoryVM <--> ViewModelMediator
 GptUiVM --> ViewModelMediator
 grammarAnswerVM <--> ViewModelMediator
-shortAnswerVM <--> ViewModelMediator
+openAiAnswerVM <--> ViewModelMediator
 claudeAnswerVM <--> ViewModelMediator
 gcpAnswerVM <--> ViewModelMediator
 
@@ -66,17 +66,17 @@ QuestionVM ---> QuestionModel
 QuestionVM ---> ClipboardModel
 
 grammarAnswerVM --> StateModel
-shortAnswerVM --> StateModel
+openAiAnswerVM --> StateModel
 claudeAnswerVM --> StateModel
 gcpAnswerVM --> StateModel
 
 grammarAnswerVM --> QuestionModel
-shortAnswerVM --> QuestionModel
+openAiAnswerVM --> QuestionModel
 claudeAnswerVM --> QuestionModel
 gcpAnswerVM --> QuestionModel
 
 grammarAnswerVM --> ClipboardModel
-shortAnswerVM --> ClipboardModel
+openAiAnswerVM --> ClipboardModel
 claudeAnswerVM --> ClipboardModel
 gcpAnswerVM --> ClipboardModel
 

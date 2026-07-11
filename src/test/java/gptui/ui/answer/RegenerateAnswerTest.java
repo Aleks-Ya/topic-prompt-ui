@@ -38,7 +38,7 @@ class RegenerateAnswerTest extends BaseGptUiTest {
                 .modelEditedQuestion(I2.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I2.GRAMMAR_HTML)
-                .shortA().text(I2.SHORT_HTML)
+                .openAiA().text(I2.OPEN_AI_HTML)
                 .claudeA().text(I2.CLAUDE_HTML)
                 .gcpA().text(I2.GCP_HTML)
                 .answerCircleColors(GREEN, GREEN, RED, GREEN)
@@ -61,14 +61,14 @@ class RegenerateAnswerTest extends BaseGptUiTest {
                 .grammarA().text(I3.EXP_GRAMMAR_HTML_BODY)
                 .answerTextTemperatures(55, 60, 70, 80)
 
-                .work("regenerateShortAnswer", () -> {
-                    gptApi.clear().putShortResponse(I3.SHORT_HTML, ZERO);
-                    clickOn(shortAnswer().regenerateButton());
+                .work("regenerateOpenAiAnswer", () -> {
+                    gptApi.clear().putOpenAiResponse(I3.OPEN_AI_HTML, ZERO);
+                    clickOn(openAiAnswer().regenerateButton());
                     gptApi.waitUntilSent(1);
                 })
-                .focus(shortAnswer().regenerateButton())
+                .focus(openAiAnswer().regenerateButton())
                 .historyItems(storage.readInteraction(I2.INTERACTION.id()).orElseThrow(), I1.INTERACTION)
-                .shortA().text(I3.EXP_SHORT_HTML_BODY)
+                .openAiA().text(I3.EXP_OPEN_AI_HTML_BODY)
 
                 .work("Regenerate Claude Answer", () -> {
                     claudeApi.clear().putClaudeResponse(I3.CLAUDE_HTML, ZERO);
@@ -99,7 +99,7 @@ class RegenerateAnswerTest extends BaseGptUiTest {
                 .questionText(I1.QUESTION)
                 .modelEditedQuestion(I1.QUESTION)
                 .grammarA().text(I1.GRAMMAR_HTML)
-                .shortA().text(I1.SHORT_HTML)
+                .openAiA().text(I1.OPEN_AI_HTML)
                 .claudeA().text(I1.CLAUDE_HTML)
                 .gcpA().text(I1.GCP_HTML)
                 .answerTextTemperatures(50, 60, 70, 80)

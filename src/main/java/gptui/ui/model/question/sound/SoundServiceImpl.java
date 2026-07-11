@@ -23,7 +23,7 @@ class SoundServiceImpl implements SoundService {
     public synchronized void beenOnAnswer(AnswerType answerType) {
         switch (answerType) {
             case GRAMMAR -> beep1.play(volume);
-            case SHORT -> beep2.play(volume);
+            case OPEN_AI -> beep2.play(volume);
             case CLAUDE -> beep3.play(volume);
         }
     }

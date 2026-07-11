@@ -25,7 +25,7 @@ class DeleteInteractionNullTest extends BaseGptUiTest {
                 .modelEditedQuestion(null)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I0.GRAMMAR_HTML)
-                .shortA().text(I0.SHORT_HTML)
+                .openAiA().text(I0.OPEN_AI_HTML)
                 .claudeA().text(I0.CLAUDE_HTML)
                 .gcpA().text(I0.GCP_HTML)
                 .answerCircleColors(WHITE, WHITE, WHITE, WHITE)

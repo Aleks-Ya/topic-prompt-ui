@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static gptui.core.storagefilesystem.AnswerType.CLAUDE;
 import static gptui.core.storagefilesystem.AnswerType.GCP;
 import static gptui.core.storagefilesystem.AnswerType.GRAMMAR;
-import static gptui.core.storagefilesystem.AnswerType.SHORT;
+import static gptui.core.storagefilesystem.AnswerType.OPEN_AI;
 
 public class StorageUpdater {
 
@@ -26,7 +26,7 @@ public class StorageUpdater {
                     counter.incrementAndGet();
                     return interaction
                             .withAnswer(GRAMMAR, answer -> answer.withTemperature(temperature))
-                            .withAnswer(SHORT, answer -> answer.withTemperature(temperature))
+                            .withAnswer(OPEN_AI, answer -> answer.withTemperature(temperature))
                             .withAnswer(CLAUDE, answer -> answer.withTemperature(temperature))
                             .withAnswer(GCP, answer -> answer.withTemperature(temperature));
                 })

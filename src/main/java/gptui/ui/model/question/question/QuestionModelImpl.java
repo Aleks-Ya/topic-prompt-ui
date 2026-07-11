@@ -73,7 +73,7 @@ class QuestionModelImpl implements QuestionModel {
                 var answerMd = switch (answerType) {
                     case GCP -> gcpApi.send(prompt, temperature);
                     case CLAUDE -> claudeApi.send(prompt, temperature);
-                    case GRAMMAR, SHORT -> openAiApi.send(prompt, temperature);
+                    case GRAMMAR, OPEN_AI -> openAiApi.send(prompt, temperature);
                 };
                 var answerHtml = formatConverter.markdownToHtml(answerMd);
                 updateAnswer(interactionId, answerType, answer ->

@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import static gptui.core.storagefilesystem.AnswerType.CLAUDE;
 import static gptui.core.storagefilesystem.AnswerType.GCP;
 import static gptui.core.storagefilesystem.AnswerType.GRAMMAR;
-import static gptui.core.storagefilesystem.AnswerType.SHORT;
+import static gptui.core.storagefilesystem.AnswerType.OPEN_AI;
 
 @Singleton
 class GptUiVmImpl implements GptUiVmController {
@@ -23,7 +23,7 @@ class GptUiVmImpl implements GptUiVmController {
         mediator.chooseFirstInteractionAsCurrent();
         mediator.getCurrentInteractionOpt().ifPresent(currentInteraction -> {
             currentInteraction.getAnswer(GRAMMAR).ifPresent(answer -> mediator.setTemperature(GRAMMAR, answer.temperature()));
-            currentInteraction.getAnswer(SHORT).ifPresent(answer -> mediator.setTemperature(SHORT, answer.temperature()));
+            currentInteraction.getAnswer(OPEN_AI).ifPresent(answer -> mediator.setTemperature(OPEN_AI, answer.temperature()));
             currentInteraction.getAnswer(CLAUDE).ifPresent(answer -> mediator.setTemperature(CLAUDE, answer.temperature()));
             currentInteraction.getAnswer(GCP).ifPresent(answer -> mediator.setTemperature(GCP, answer.temperature()));
         });

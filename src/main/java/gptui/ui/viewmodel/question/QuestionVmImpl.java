@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import static gptui.core.storagefilesystem.AnswerType.CLAUDE;
 import static gptui.core.storagefilesystem.AnswerType.GCP;
 import static gptui.core.storagefilesystem.AnswerType.GRAMMAR;
-import static gptui.core.storagefilesystem.AnswerType.SHORT;
+import static gptui.core.storagefilesystem.AnswerType.OPEN_AI;
 import static gptui.core.storagefilesystem.InteractionType.DEFINITION;
 import static gptui.core.storagefilesystem.InteractionType.FACT;
 import static gptui.core.storagefilesystem.InteractionType.QUESTION;
@@ -55,7 +55,7 @@ class QuestionVmImpl implements QuestionVmController, QuestionVmMediator {
         Mdc.run(interactionId, () -> {
             log.info("Regenerate question: {}", interactionId);
             mediator.requestAnswer(interactionId, CLAUDE);
-            mediator.requestAnswer(interactionId, SHORT);
+            mediator.requestAnswer(interactionId, OPEN_AI);
             mediator.requestAnswer(interactionId, GRAMMAR);
             mediator.requestAnswer(interactionId, GCP);
         });
@@ -118,7 +118,7 @@ class QuestionVmImpl implements QuestionVmController, QuestionVmMediator {
         var interactionId = mediator.createInteraction(interactionType);
         mediator.requestAnswer(interactionId, GCP);
         mediator.requestAnswer(interactionId, CLAUDE);
-        mediator.requestAnswer(interactionId, SHORT);
+        mediator.requestAnswer(interactionId, OPEN_AI);
         mediator.requestAnswer(interactionId, GRAMMAR);
     }
 }

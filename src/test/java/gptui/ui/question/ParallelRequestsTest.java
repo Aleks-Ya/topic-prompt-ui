@@ -45,7 +45,7 @@ class ParallelRequestsTest extends BaseGptUiTest {
                 .modelEditedQuestion(null)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I0.GRAMMAR_HTML)
-                .shortA().text(I0.SHORT_HTML)
+                .openAiA().text(I0.OPEN_AI_HTML)
                 .claudeA().text(I0.CLAUDE_HTML)
                 .gcpA().text(I0.GCP_HTML)
                 .answerCircleColors(WHITE, WHITE, WHITE, WHITE)
@@ -73,7 +73,7 @@ class ParallelRequestsTest extends BaseGptUiTest {
                 .modelEditedQuestion(I1.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I0.GRAMMAR_HTML)
-                .shortA().text(I0.SHORT_HTML)
+                .openAiA().text(I0.OPEN_AI_HTML)
                 .claudeA().text(I0.CLAUDE_HTML)
                 .gcpA().text(I0.GCP_HTML)
                 .answerCircleColors(WHITE, WHITE, WHITE, WHITE)
@@ -83,7 +83,7 @@ class ParallelRequestsTest extends BaseGptUiTest {
 
         gptApi
                 .putGrammarResponse(I1.GRAMMAR_HTML, ofMillis(10000))
-                .putShortResponse(I1.SHORT_HTML, ofMillis(10500));
+                .putOpenAiResponse(I1.OPEN_AI_HTML, ofMillis(10500));
         claudeApi.putClaudeResponse(I1.CLAUDE_HTML, ofMillis(11000));
         gcpApi.putGcpResponse(I1.GCP_HTML, ofMillis(11500));
 
@@ -103,7 +103,7 @@ class ParallelRequestsTest extends BaseGptUiTest {
                 .modelEditedQuestion(I1.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I0.GRAMMAR_HTML)
-                .shortA().text(I0.SHORT_HTML)
+                .openAiA().text(I0.OPEN_AI_HTML)
                 .claudeA().text(I0.CLAUDE_HTML)
                 .gcpA().text(I0.GCP_HTML)
                 .answerCircleColors(BLUE, BLUE, BLUE, BLUE)
@@ -131,7 +131,7 @@ class ParallelRequestsTest extends BaseGptUiTest {
                 .modelEditedQuestion(I2.QUESTION)
                 .modelIsEnteringNewQuestion(true)
                 .grammarA().text(I0.GRAMMAR_HTML)
-                .shortA().text(I0.SHORT_HTML)
+                .openAiA().text(I0.OPEN_AI_HTML)
                 .claudeA().text(I0.CLAUDE_HTML)
                 .gcpA().text(I0.GCP_HTML)
                 .answerCircleColors(BLUE, BLUE, BLUE, BLUE)
@@ -141,7 +141,7 @@ class ParallelRequestsTest extends BaseGptUiTest {
 
         gptApi
                 .putGrammarResponse(I2.GRAMMAR_HTML, ofMillis(1000))
-                .putShortResponse(I2.SHORT_HTML, ofMillis(1500));
+                .putOpenAiResponse(I2.OPEN_AI_HTML, ofMillis(1500));
         claudeApi.putClaudeResponse(I2.CLAUDE_HTML, ofMillis(2000));
         gcpApi.putGcpResponse(I2.GCP_HTML, ofMillis(2500));
         clickOn(question().questionButton());
@@ -160,7 +160,7 @@ class ParallelRequestsTest extends BaseGptUiTest {
                 .modelEditedQuestion(I2.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I0.GRAMMAR_HTML)
-                .shortA().text(I0.SHORT_HTML)
+                .openAiA().text(I0.OPEN_AI_HTML)
                 .claudeA().text(I0.CLAUDE_HTML)
                 .gcpA().text(I0.GCP_HTML)
                 .answerCircleColors(BLUE, BLUE, BLUE, BLUE)
@@ -187,7 +187,7 @@ class ParallelRequestsTest extends BaseGptUiTest {
                 .modelEditedQuestion(I2.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I2.EXP_GRAMMAR_HTML_BODY)
-                .shortA().text(I2.EXP_SHORT_HTML_BODY)
+                .openAiA().text(I2.EXP_OPEN_AI_HTML_BODY)
                 .claudeA().text(I2.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I2.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
@@ -215,7 +215,7 @@ class ParallelRequestsTest extends BaseGptUiTest {
                 .modelEditedQuestion(I2.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I2.EXP_GRAMMAR_HTML_BODY)
-                .shortA().text(I2.EXP_SHORT_HTML_BODY)
+                .openAiA().text(I2.EXP_OPEN_AI_HTML_BODY)
                 .claudeA().text(I2.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I2.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)

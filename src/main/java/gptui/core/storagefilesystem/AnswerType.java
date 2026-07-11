@@ -1,5 +1,5 @@
 package gptui.core.storagefilesystem;
 
 public enum AnswerType {
-    SHORT, CLAUDE, GRAMMAR, GCP
+    OPEN_AI, CLAUDE, GRAMMAR, GCP
 }

@@ -36,7 +36,7 @@ class StartNotEmptyStorageTest extends BaseGptUiTest {
                 .modelEditedQuestion(I2.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I2.GRAMMAR_HTML)
-                .shortA().text(I2.SHORT_HTML)
+                .openAiA().text(I2.OPEN_AI_HTML)
                 .claudeA().text(I2.CLAUDE_HTML)
                 .gcpA().text(I2.GCP_HTML)
                 .answerCircleColors(GREEN, GREEN, RED, GREEN)
