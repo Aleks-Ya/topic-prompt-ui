@@ -8,7 +8,6 @@ import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.math.BigDecimal;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -16,8 +15,6 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.List;
 import java.util.Set;
-
-import static java.math.RoundingMode.HALF_UP;
 
 @Singleton
 class ClaudeApiImpl implements AiApi {
@@ -39,8 +36,8 @@ class ClaudeApiImpl implements AiApi {
     public String send(String content, Integer temperature) {
         log.info("Sending question: {}", content);
         try (var client = HttpClient.newHttpClient()) {
-            var bigDecimalTemperature = convertTemperature(temperature);
-            var body = new RequestBody(MODEL, MAX_TOKENS, List.of(new Message("user", content)), bigDecimalTemperature);
+            // `temperature` is deprecated/rejected by the Anthropic API for this model, so it is not forwarded.
+            var body = new RequestBody(MODEL, MAX_TOKENS, List.of(new Message("user", content)));
             var json = gson.toJson(body);
             log.trace("Request body: {}", json);
             var request = HttpRequest.newBuilder()
@@ -70,9 +67,5 @@ class ClaudeApiImpl implements AiApi {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
-    }
-
-    private BigDecimal convertTemperature(Integer temperature) {
-        return BigDecimal.valueOf(temperature).setScale(1, HALF_UP).divide(BigDecimal.valueOf(100), HALF_UP);
     }
 }
