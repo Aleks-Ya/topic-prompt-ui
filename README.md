@@ -11,6 +11,9 @@ Run unit-tests (skip integration tests): `./gradlew -PskipIntegrationTests test`
 ## Link
 `./gradlew -x test clean jlink`
 
+## Code quality
+SonarCloud project: https://sonarcloud.io/project/overview?id=Aleks-Ya_topic-prompt-ui
+
 ## Install on Ubuntu
 1. Upgrade version: `src/main/resources/gptui/version.txt`
 2. Use Java 25: `sdk use java 25.0.3-zulu`
