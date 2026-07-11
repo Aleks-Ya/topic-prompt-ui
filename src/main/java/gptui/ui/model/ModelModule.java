@@ -4,6 +4,7 @@ import com.google.inject.AbstractModule;
 import gptui.ui.model.clipboard.ClipboardModelModule;
 import gptui.ui.model.config.ConfigurationModule;
 import gptui.ui.model.file.FileModelModule;
+import gptui.core.ai.claude.ClaudeModule;
 import gptui.core.ai.gcp.GcpModule;
 import gptui.core.ai.openai.OpenAiModule;
 import gptui.ui.model.question.prompt.PromptModule;
@@ -19,6 +20,7 @@ public class ModelModule extends AbstractModule {
         install(new ConfigurationModule());
         install(new OpenAiModule());
         install(new GcpModule());
+        install(new ClaudeModule());
         install(new QuestionModule());
         install(new StorageModule());
         install(new StateModelModule());

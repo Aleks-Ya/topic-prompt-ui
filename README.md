@@ -28,4 +28,5 @@ Run unit-tests (skip integration tests): `./gradlew -PskipIntegrationTests test`
 7. Tokens: `~/.gpt/config.properties`. Properties:
     1. `openai.token`
     2. `gcp.api.key`
+    3. `claude.api.key`
 8. Log file: `~/.gpt/console.log`
