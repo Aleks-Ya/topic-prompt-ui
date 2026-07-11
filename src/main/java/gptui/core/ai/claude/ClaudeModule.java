@@ -7,7 +7,7 @@ import gptui.core.ai.AiApi;
 import static gptui.core.ai.AiModule.CLAUDE_AI;
 
 public class ClaudeModule extends AbstractModule {
-    private static final String MODEL = "claude-sonnet-5";
+    private static final String MODEL = "claude-opus-4-8";
 
     @Override
     protected void configure() {
