@@ -13,6 +13,7 @@ import gptui.ui.model.storage.StorageModule;
 import org.junit.jupiter.api.Test;
 
 import static gptui.core.ai.AiModule.OPEN_AI;
+import static gptui.core.ai.AiModule.OPEN_AI_GRAMMAR;
 import static gptui.core.storagefilesystem.InteractionType.DEFINITION;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -20,11 +21,18 @@ class OpenAiApiIT {
     private final Injector injector = Guice.createInjector(new OpenAiModule(), new ConfigurationModule(),
             new StorageModule(), new PromptModule());
     private final AiApi api = injector.getInstance(Key.get(AiApi.class, Names.named(OPEN_AI)));
+    private final AiApi grammarApi = injector.getInstance(Key.get(AiApi.class, Names.named(OPEN_AI_GRAMMAR)));
     private final PromptFactory promptFactory = injector.getInstance(PromptFactory.class);
 
     @Test
     void send() {
         var response = api.send("What is the last Java version?");
+        System.out.println(response);
+    }
+
+    @Test
+    void sendGrammar() {
+        var response = grammarApi.send("What is the last Java version?");
         System.out.println(response);
     }
 
@@ -36,8 +44,22 @@ class OpenAiApiIT {
     }
 
     @Test
+    void definitionGrammar() {
+        var prompt = promptFactory.getPrompt(DEFINITION, "AWS S3", "Bucket", AnswerType.GRAMMAR).orElseThrow();
+        var response = grammarApi.send(prompt);
+        System.out.println(response);
+    }
+
+    @Test
     void error() {
         assertThatThrownBy(() -> api.send(null))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("invalid_request_error");
+    }
+
+    @Test
+    void errorGrammar() {
+        assertThatThrownBy(() -> grammarApi.send(null))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("invalid_request_error");
     }

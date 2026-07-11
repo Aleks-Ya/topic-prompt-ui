@@ -8,8 +8,8 @@ import static gptui.core.ai.AiModule.OPEN_AI;
 import static gptui.core.ai.AiModule.OPEN_AI_GRAMMAR;
 
 public class OpenAiModule extends AbstractModule {
-    private static final String MODEL = "gpt-5.5";
-    private static final String GRAMMAR_MODEL = "gpt-5.5-mini";
+    private static final String MODEL = "gpt-5.6-sol";
+    private static final String GRAMMAR_MODEL = "gpt-5.6-luna";
 
     @Override
     protected void configure() {
