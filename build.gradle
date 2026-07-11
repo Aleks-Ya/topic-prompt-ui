@@ -85,6 +85,9 @@ jlink {
         name = 'GptUi'
     }
     addExtraDependencies("javafx", "slf4j")
+    // Avoids createMergedModule reading the jar's module descriptor with ModuleFinder, which fails
+    // because the Gradle daemon JVM can be older than the java toolchain used to compile the jar.
+    mergedModuleInfo.get().version = project.version.toString()
 }
 tasks.jlink.dependsOn tasks.test
 tasks.jlink.mustRunAfter tasks.clean, tasks.test
