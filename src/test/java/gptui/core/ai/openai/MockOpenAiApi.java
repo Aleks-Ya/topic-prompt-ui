@@ -19,18 +19,6 @@ public class MockOpenAiApi extends BaseMockApi implements AiApi {
         return this;
     }
 
-    @SuppressWarnings("UnusedReturnValue")
-    public MockOpenAiApi putLongResponse(String response, Duration timeout) {
-        put("I will ask you a question about", "a short response", response, timeout);
-        return this;
-    }
-
-    @SuppressWarnings("UnusedReturnValue")
-    public MockOpenAiApi putFactResponse(String response, Duration timeout) {
-        put("factually correct", null, response, timeout);
-        return this;
-    }
-
     public MockOpenAiApi clear() {
         super.clear();
         return this;

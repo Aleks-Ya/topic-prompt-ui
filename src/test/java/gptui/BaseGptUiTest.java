@@ -1,6 +1,7 @@
 package gptui;
 
 import com.google.inject.util.Modules;
+import gptui.core.ai.claude.MockClaudeApi;
 import gptui.core.ai.gcp.MockGcpApi;
 import gptui.core.ai.openai.MockOpenAiApi;
 import gptui.ui.model.clipboard.ClipboardModel;
@@ -37,6 +38,7 @@ public abstract class BaseGptUiTest extends ApplicationTest {
     protected final StateModel stateModel = app.getGuiceContext().getInstance(StateModel.class);
     protected final MockOpenAiApi gptApi = app.getGuiceContext().getInstance(MockOpenAiApi.class);
     protected final MockGcpApi gcpApi = app.getGuiceContext().getInstance(MockGcpApi.class);
+    protected final MockClaudeApi claudeApi = app.getGuiceContext().getInstance(MockClaudeApi.class);
     protected final StorageModel storage = app.getGuiceContext().getInstance(StorageModel.class);
     protected final HistorySearchModel search = app.getGuiceContext().getInstance(HistorySearchModel.class);
     protected final ClipboardModel clipboardModel = app.getGuiceContext().getInstance(ClipboardModel.class);

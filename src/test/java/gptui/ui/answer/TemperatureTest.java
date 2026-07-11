@@ -84,8 +84,8 @@ class TemperatureTest extends BaseGptUiTest {
         //TODO Fix: the test became unstable if set the same timeout for all 4 requests (e.g. 2000)
         gptApi.clear()
                 .putGrammarResponse(I1.GRAMMAR_HTML, ofMillis(500))
-                .putShortResponse(I1.SHORT_HTML, ofMillis(1000))
-                .putLongResponse(I1.LONG_HTML, ofMillis(1500));
+                .putShortResponse(I1.SHORT_HTML, ofMillis(1000));
+        claudeApi.clear().putLongResponse(I1.LONG_HTML, ofMillis(1500));
         gcpApi.clear().putGcpResponse(I1.GCP_HTML, ofMillis(2000));
 
         clickOn(question().questionButton());
@@ -112,7 +112,8 @@ class TemperatureTest extends BaseGptUiTest {
                 .answerSpinnerTemperaturesDefault()
                 .assertApp();
 
-        gptApi.waitUntilSent(3);
+        gptApi.waitUntilSent(2);
+        claudeApi.waitUntilSent(1);
         gcpApi.waitUntilSent(1);
         assertion()
                 .focus(question().questionButton())
@@ -247,8 +248,8 @@ class TemperatureTest extends BaseGptUiTest {
 
         gptApi.clear()
                 .putGrammarResponse(I2.GRAMMAR_HTML, ofMillis(500))
-                .putShortResponse(I2.SHORT_HTML, ofMillis(500))
-                .putLongResponse(I2.LONG_HTML, ofMillis(500));
+                .putShortResponse(I2.SHORT_HTML, ofMillis(500));
+        claudeApi.clear().putLongResponse(I2.LONG_HTML, ofMillis(500));
         gcpApi.clear().putGcpResponse(I2.GCP_HTML, ofMillis(500));
         clickOn(question().questionButton());
         assertion()
@@ -275,7 +276,8 @@ class TemperatureTest extends BaseGptUiTest {
                 .assertApp();
 
 
-        gptApi.waitUntilSent(3);
+        gptApi.waitUntilSent(2);
+        claudeApi.waitUntilSent(1);
         gcpApi.waitUntilSent(1);
         assertion()
                 .focus(question().questionButton())

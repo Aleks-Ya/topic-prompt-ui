@@ -71,9 +71,9 @@ class RegenerateAnswerTest extends BaseGptUiTest {
                 .shortA().text(I3.EXP_SHORT_HTML_BODY)
 
                 .work("Regenerate Long Answer", () -> {
-                    gptApi.clear().putLongResponse(I3.LONG_HTML, ZERO);
+                    claudeApi.clear().putLongResponse(I3.LONG_HTML, ZERO);
                     clickOn(longAnswer().regenerateButton());
-                    gptApi.waitUntilSent(1);
+                    claudeApi.waitUntilSent(1);
                 })
                 .focus(longAnswer().regenerateButton())
                 .historyItems(storage.readInteraction(I2.INTERACTION.id()).orElseThrow(), I1.INTERACTION)

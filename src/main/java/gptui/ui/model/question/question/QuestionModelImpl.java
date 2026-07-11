@@ -19,12 +19,12 @@ import org.slf4j.LoggerFactory;
 
 import java.util.function.Function;
 
+import static gptui.core.ai.AiModule.CLAUDE_AI;
 import static gptui.core.ai.AiModule.GCP_AI;
 import static gptui.core.ai.AiModule.OPEN_AI;
 import static gptui.core.storagefilesystem.AnswerState.FAIL;
 import static gptui.core.storagefilesystem.AnswerState.SENT;
 import static gptui.core.storagefilesystem.AnswerState.SUCCESS;
-import static gptui.core.storagefilesystem.AnswerType.GCP;
 import static java.util.concurrent.CompletableFuture.runAsync;
 
 @Singleton
@@ -42,6 +42,9 @@ class QuestionModelImpl implements QuestionModel {
     @Inject
     @Named(GCP_AI)
     private AiApi gcpApi;
+    @Inject
+    @Named(CLAUDE_AI)
+    private AiApi claudeApi;
     @Inject
     private SoundService soundService;
     @Inject
@@ -67,7 +70,11 @@ class QuestionModelImpl implements QuestionModel {
                     callback);
             runAsync(() -> Mdc.run(interactionId, () -> {
                 log.trace("requestAnswer async");
-                var answerMd = answerType != GCP ? openAiApi.send(prompt, temperature) : gcpApi.send(prompt, temperature);
+                var answerMd = switch (answerType) {
+                    case GCP -> gcpApi.send(prompt, temperature);
+                    case LONG -> claudeApi.send(prompt, temperature);
+                    case GRAMMAR, SHORT -> openAiApi.send(prompt, temperature);
+                };
                 var answerHtml = formatConverter.markdownToHtml(answerMd);
                 updateAnswer(interactionId, answerType, answer ->
                         answer.withAnswerMd(answerMd).withAnswerHtml(answerHtml).withState(SUCCESS), callback);

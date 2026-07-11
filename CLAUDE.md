@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-Topic Prompt UI (`GptUi`) is a JavaFX desktop client for sending prompts to OpenAI and GCP (Gemini) APIs, organizing the resulting Q&A into themed history, and rendering answers (grammar/short/long/GCP variants) side by side. Built as a Java Platform Module System (JPMS) application with Guice for dependency injection.
+Topic Prompt UI (`GptUi`) is a JavaFX desktop client for sending prompts to OpenAI, GCP (Gemini), and Claude APIs, organizing the resulting Q&A into themed history, and rendering answers (grammar/short/long/GCP variants) side by side. Built as a Java Platform Module System (JPMS) application with Guice for dependency injection.
 
 ## Commands
 

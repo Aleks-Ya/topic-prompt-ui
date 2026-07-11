@@ -51,8 +51,8 @@ class SendFactTest extends BaseGptUiTest {
                 .assertApp();
 
         gptApi.clear()
-                .putGrammarResponse("Grammar answer 4", ZERO)
-                .putFactResponse("Fact answer 4", ZERO);
+                .putGrammarResponse("Grammar answer 4", ZERO);
+        claudeApi.clear().putFactResponse("Fact answer 4", ZERO);
         gcpApi.clear().putFactResponse("Fact answer 4", ZERO);
         clickOn(question().textArea());
         overWrite("Question 4");

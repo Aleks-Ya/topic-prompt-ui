@@ -139,11 +139,14 @@ class HotKeysTest extends BaseGptUiTest {
     void resendByAltR() {
         gptApi.clear();
         gcpApi.clear();
+        claudeApi.clear();
         assertThat(gptApi.getSendHistory()).isEmpty();
         assertThat(gcpApi.getSendHistory()).isEmpty();
+        assertThat(claudeApi.getSendHistory()).isEmpty();
         press(ALT, R).release(R, ALT);
-        assertThat(gptApi.getSendHistory()).hasSize(3);
+        assertThat(gptApi.getSendHistory()).hasSize(2);
         assertThat(gcpApi.getSendHistory()).hasSize(1);
+        assertThat(claudeApi.getSendHistory()).hasSize(1);
     }
 
     @Test
