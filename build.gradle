@@ -3,6 +3,7 @@ plugins {
     id 'org.openjfx.javafxplugin' version '0.1.0'
     id 'org.gradlex.extra-java-module-info' version '1.14'
     id 'org.beryx.jlink' version '4.0.2'
+    id 'org.sonarqube' version '7.3.1.8318'
 }
 def javaVersion = 25
 java {
@@ -16,6 +17,13 @@ javafx {
 }
 repositories {
     mavenCentral()
+}
+sonar {
+    properties {
+        property "sonar.projectKey", "Aleks-Ya_topic-prompt-ui"
+        property "sonar.organization", "aleks-ya"
+        property "sonar.host.url", "https://sonarcloud.io"
+    }
 }
 application {
     mainClass = 'gptui.GptUiMain'
