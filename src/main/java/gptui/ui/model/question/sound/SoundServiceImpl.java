@@ -24,7 +24,7 @@ class SoundServiceImpl implements SoundService {
         switch (answerType) {
             case GRAMMAR -> beep1.play(volume);
             case SHORT -> beep2.play(volume);
-            case LONG -> beep3.play(volume);
+            case CLAUDE -> beep3.play(volume);
         }
     }
 }

@@ -27,11 +27,11 @@ class PromptFactoryImpl implements PromptFactory {
     private static final Logger log = LoggerFactory.getLogger(PromptFactoryImpl.class);
 
     private static final String QUESTION_SHORT_TEMPLATE = "question-short.ftl";
-    private static final String QUESTION_LONG_TEMPLATE = "question-long.ftl";
+    private static final String QUESTION_CLAUDE_TEMPLATE = "question-claude.ftl";
     private static final String QUESTION_GCP_TEMPLATE = "question-gcp.ftl";
     private static final String DEFINITION_GRAMMAR_TEMPLATE = "definition-grammar.ftl";
     private static final String DEFINITION_SHORT_TEMPLATE = "definition-short.ftl";
-    private static final String DEFINITION_LONG_TEMPLATE = "definition-long.ftl";
+    private static final String DEFINITION_CLAUDE_TEMPLATE = "definition-claude.ftl";
     private static final String DEFINITION_GCP_TEMPLATE = "definition-gcp.ftl";
     private static final String GRAMMAR_TEMPLATE = "grammar.ftl";
     private static final String FACT_GRAMMAR_FTL = "fact-grammar.ftl";
@@ -58,23 +58,23 @@ class PromptFactoryImpl implements PromptFactory {
             case QUESTION -> switch (answerType) {
                 case GRAMMAR -> render(GRAMMAR_TEMPLATE, data);
                 case SHORT -> render(QUESTION_SHORT_TEMPLATE, data);
-                case LONG -> render(QUESTION_LONG_TEMPLATE, data);
+                case CLAUDE -> render(QUESTION_CLAUDE_TEMPLATE, data);
                 case GCP -> render(QUESTION_GCP_TEMPLATE, data);
             };
             case DEFINITION -> switch (answerType) {
                 case GRAMMAR -> render(DEFINITION_GRAMMAR_TEMPLATE, data);
                 case SHORT -> render(DEFINITION_SHORT_TEMPLATE, data);
-                case LONG -> render(DEFINITION_LONG_TEMPLATE, data);
+                case CLAUDE -> render(DEFINITION_CLAUDE_TEMPLATE, data);
                 case GCP -> render(DEFINITION_GCP_TEMPLATE, data);
             };
             case GRAMMAR -> switch (answerType) {
                 case GRAMMAR -> render(GRAMMAR_TEMPLATE, data);
-                case SHORT, LONG, GCP -> Optional.empty();
+                case SHORT, CLAUDE, GCP -> Optional.empty();
             };
             case FACT -> switch (answerType) {
                 case GRAMMAR -> render(GRAMMAR_TEMPLATE, data);
                 case SHORT -> Optional.empty();
-                case LONG, GCP -> render(FACT_GRAMMAR_FTL, data);
+                case CLAUDE, GCP -> render(FACT_GRAMMAR_FTL, data);
             };
         };
     }

@@ -39,7 +39,7 @@ class FilterHistoryByOtherThemeTest extends BaseGptUiTest {
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I3.GRAMMAR_HTML)
                 .shortA().text(I3.SHORT_HTML)
-                .longA().text(I3.LONG_HTML)
+                .claudeA().text(I3.CLAUDE_HTML)
                 .gcpA().text(I3.GCP_HTML)
                 .answerCircleColors(GREEN, GREEN, RED, GREEN)
                 .answerTextTemperatures(50, 60, 70, 80)
@@ -60,7 +60,7 @@ class FilterHistoryByOtherThemeTest extends BaseGptUiTest {
                 .modelEditedQuestion(I1.QUESTION)
                 .grammarA().text(I1.GRAMMAR_HTML)
                 .shortA().text(I1.SHORT_HTML)
-                .longA().text(I1.LONG_HTML)
+                .claudeA().text(I1.CLAUDE_HTML)
                 .gcpA().text(I1.GCP_HTML)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
 

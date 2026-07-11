@@ -26,7 +26,7 @@ class StartEmptyStorageTest extends BaseGptUiTest {
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I0.GRAMMAR_HTML)
                 .shortA().text(I0.SHORT_HTML)
-                .longA().text(I0.LONG_HTML)
+                .claudeA().text(I0.CLAUDE_HTML)
                 .gcpA().text(I0.GCP_HTML)
                 .answerCircleColors(WHITE, WHITE, WHITE, WHITE)
                 .answerTextTemperaturesAllEmpty()

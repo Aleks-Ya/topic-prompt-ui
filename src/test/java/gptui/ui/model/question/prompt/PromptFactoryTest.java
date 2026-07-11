@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 
+import static gptui.core.storagefilesystem.AnswerType.CLAUDE;
 import static gptui.core.storagefilesystem.AnswerType.GCP;
 import static gptui.core.storagefilesystem.AnswerType.GRAMMAR;
-import static gptui.core.storagefilesystem.AnswerType.LONG;
 import static gptui.core.storagefilesystem.AnswerType.SHORT;
 import static gptui.core.storagefilesystem.InteractionType.DEFINITION;
 import static gptui.core.storagefilesystem.InteractionType.FACT;
@@ -43,7 +43,7 @@ class PromptFactoryTest extends BaseTest {
                 ```
                 Question A
                 ```""");
-        assertThat(factory.getPrompt(QUESTION, "Theme A", "Question A", LONG)).contains("""
+        assertThat(factory.getPrompt(QUESTION, "Theme A", "Question A", CLAUDE)).contains("""
                 I will ask you a question about "Theme A".
                 Do not repeat the question in your answer.
                 Format your answer into Markdown.
@@ -69,7 +69,7 @@ class PromptFactoryTest extends BaseTest {
                 Provide a single-sentence definition of `Question A` in the context of `Theme A`, as short as possible.
                 Format your answer as "Question A is/are".
                 Do not repeat the context in your answer if possible.""");
-        assertThat(factory.getPrompt(DEFINITION, "Theme A", "Question A", LONG)).contains("""
+        assertThat(factory.getPrompt(DEFINITION, "Theme A", "Question A", CLAUDE)).contains("""
                 Provide a detailed, single-sentence definition of `Question A` in the context of `Theme A`.
                 Format your answer as "Question A is/are".
                 Do not repeat the context in your answer if possible.""");
@@ -93,7 +93,7 @@ class PromptFactoryTest extends BaseTest {
                 Question A
                 ```""");
         assertThat(factory.getPrompt(InteractionType.GRAMMAR, "Theme A", "Question A", SHORT)).isEmpty();
-        assertThat(factory.getPrompt(InteractionType.GRAMMAR, "Theme A", "Question A", LONG)).isEmpty();
+        assertThat(factory.getPrompt(InteractionType.GRAMMAR, "Theme A", "Question A", CLAUDE)).isEmpty();
         assertThat(factory.getPrompt(InteractionType.GRAMMAR, "Theme A", "Question A", GCP)).isEmpty();
     }
 
@@ -111,7 +111,7 @@ class PromptFactoryTest extends BaseTest {
                 Question A
                 ```""");
         assertThat(factory.getPrompt(FACT, "Theme A", "Question A", SHORT)).isEmpty();
-        assertThat(factory.getPrompt(FACT, "Theme A", "Question A", LONG))
+        assertThat(factory.getPrompt(FACT, "Theme A", "Question A", CLAUDE))
                 .contains("""
                         Check is this sentence factually correct in context of `Theme A`: `Question A`?
                         Format your answer into Markdown.""");

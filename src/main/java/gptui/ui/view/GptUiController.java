@@ -18,7 +18,7 @@ public class GptUiController extends BaseController {
     private AnswerController grammarAnswerController;
     @FXML
     @SuppressWarnings("unused")
-    private AnswerController longAnswerController;
+    private AnswerController claudeAnswerController;
     @FXML
     @SuppressWarnings("unused")
     private AnswerController shortAnswerController;
@@ -32,8 +32,8 @@ public class GptUiController extends BaseController {
     @Named(AnswerVmModule.SHORT)
     private AnswerVmController shortAnswerVM;
     @Inject
-    @Named(AnswerVmModule.LONG)
-    private AnswerVmController longAnswerVM;
+    @Named(AnswerVmModule.CLAUDE)
+    private AnswerVmController claudeAnswerVM;
     @Inject
     @Named(AnswerVmModule.GCP)
     private AnswerVmController gcpAnswerVM;
@@ -43,7 +43,7 @@ public class GptUiController extends BaseController {
         log.trace("initialize");
         grammarAnswerController.initializeController(grammarAnswerVM);
         shortAnswerController.initializeController(shortAnswerVM);
-        longAnswerController.initializeController(longAnswerVM);
+        claudeAnswerController.initializeController(claudeAnswerVM);
         gcpAnswerController.initializeController(gcpAnswerVM);
         vm.initialize();
     }

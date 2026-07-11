@@ -39,7 +39,7 @@ class RegenerateAnswerTest extends BaseGptUiTest {
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I2.GRAMMAR_HTML)
                 .shortA().text(I2.SHORT_HTML)
-                .longA().text(I2.LONG_HTML)
+                .claudeA().text(I2.CLAUDE_HTML)
                 .gcpA().text(I2.GCP_HTML)
                 .answerCircleColors(GREEN, GREEN, RED, GREEN)
                 .answerTextTemperatures(50, 60, 70, 80)
@@ -70,14 +70,14 @@ class RegenerateAnswerTest extends BaseGptUiTest {
                 .historyItems(storage.readInteraction(I2.INTERACTION.id()).orElseThrow(), I1.INTERACTION)
                 .shortA().text(I3.EXP_SHORT_HTML_BODY)
 
-                .work("Regenerate Long Answer", () -> {
-                    claudeApi.clear().putLongResponse(I3.LONG_HTML, ZERO);
-                    clickOn(longAnswer().regenerateButton());
+                .work("Regenerate Claude Answer", () -> {
+                    claudeApi.clear().putClaudeResponse(I3.CLAUDE_HTML, ZERO);
+                    clickOn(claudeAnswer().regenerateButton());
                     claudeApi.waitUntilSent(1);
                 })
-                .focus(longAnswer().regenerateButton())
+                .focus(claudeAnswer().regenerateButton())
                 .historyItems(storage.readInteraction(I2.INTERACTION.id()).orElseThrow(), I1.INTERACTION)
-                .longA().text(I3.EXP_LONG_HTML_BODY)
+                .claudeA().text(I3.EXP_CLAUDE_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
 
                 .work("Regenerate GCP Answer", () -> {
@@ -100,7 +100,7 @@ class RegenerateAnswerTest extends BaseGptUiTest {
                 .modelEditedQuestion(I1.QUESTION)
                 .grammarA().text(I1.GRAMMAR_HTML)
                 .shortA().text(I1.SHORT_HTML)
-                .longA().text(I1.LONG_HTML)
+                .claudeA().text(I1.CLAUDE_HTML)
                 .gcpA().text(I1.GCP_HTML)
                 .answerTextTemperatures(50, 60, 70, 80)
 

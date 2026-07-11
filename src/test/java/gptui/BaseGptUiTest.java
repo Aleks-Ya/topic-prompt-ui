@@ -47,7 +47,7 @@ public abstract class BaseGptUiTest extends ApplicationTest {
     private final QuestionInfo question = new QuestionInfo();
     private final AnswerInfo answerGrammar = new AnswerInfo("#grammarAnswer");
     private final AnswerInfo answerShort = new AnswerInfo("#shortAnswer");
-    private final AnswerInfo answerLong = new AnswerInfo("#longAnswer");
+    private final AnswerInfo answerClaude = new AnswerInfo("#claudeAnswer");
     private final AnswerInfo answerGcp = new AnswerInfo("#gcpAnswer");
 
     @Override
@@ -79,8 +79,8 @@ public abstract class BaseGptUiTest extends ApplicationTest {
         return answerShort;
     }
 
-    protected AnswerInfo longAnswer() {
-        return answerLong;
+    protected AnswerInfo claudeAnswer() {
+        return answerClaude;
     }
 
     protected AnswerInfo gcpAnswer() {

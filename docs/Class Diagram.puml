@@ -7,7 +7,7 @@ package view {
         class GptUiApplication
         class "AnswerController" as grammarAnswerController <<GRAMMAR>>
         class "AnswerController" as shortAnswerController <<SHORT>>
-        class "AnswerController" as longAnswerController <<LONG>>
+        class "AnswerController" as claudeAnswerController <<CLAUDE>>
         class "AnswerController" as gcpAnswerController <<GCP>>
         class HistoryController
         class QuestionController
@@ -18,7 +18,7 @@ package view {
 package viewmodel {
     class "AnswerVM" as grammarAnswerVM <<GRAMMAR>>
     class "AnswerVM" as shortAnswerVM <<SHORT>>
-    class "AnswerVM" as longAnswerVM <<LONG>>
+    class "AnswerVM" as claudeAnswerVM <<CLAUDE>>
     class "AnswerVM" as gcpAnswerVM <<GCP>>
     class GptUiVM
     class HistoryVM
@@ -41,13 +41,13 @@ QuestionController ---> QuestionVM
 HistoryController ---> HistoryVM
 grammarAnswerController --> grammarAnswerVM
 shortAnswerController --> shortAnswerVM
-longAnswerController --> longAnswerVM
+claudeAnswerController --> claudeAnswerVM
 gcpAnswerController --> gcpAnswerVM
 GptUiApplication --> GptUiVM
 
 GptUiController --> grammarAnswerController
 GptUiController --> shortAnswerController
-GptUiController --> longAnswerController
+GptUiController --> claudeAnswerController
 GptUiController --> gcpAnswerController
 
 ThemeVM <--> ViewModelMediator
@@ -56,7 +56,7 @@ HistoryVM <--> ViewModelMediator
 GptUiVM --> ViewModelMediator
 grammarAnswerVM <--> ViewModelMediator
 shortAnswerVM <--> ViewModelMediator
-longAnswerVM <--> ViewModelMediator
+claudeAnswerVM <--> ViewModelMediator
 gcpAnswerVM <--> ViewModelMediator
 
 ThemeVM ---> StateModel
@@ -67,17 +67,17 @@ QuestionVM ---> ClipboardModel
 
 grammarAnswerVM --> StateModel
 shortAnswerVM --> StateModel
-longAnswerVM --> StateModel
+claudeAnswerVM --> StateModel
 gcpAnswerVM --> StateModel
 
 grammarAnswerVM --> QuestionModel
 shortAnswerVM --> QuestionModel
-longAnswerVM --> QuestionModel
+claudeAnswerVM --> QuestionModel
 gcpAnswerVM --> QuestionModel
 
 grammarAnswerVM --> ClipboardModel
 shortAnswerVM --> ClipboardModel
-longAnswerVM --> ClipboardModel
+claudeAnswerVM --> ClipboardModel
 gcpAnswerVM --> ClipboardModel
 
 

@@ -22,8 +22,8 @@ class SoundServiceIT {
     }
 
     @Test
-    void beenOnAnswerLong() throws InterruptedException {
-        soundService.beenOnAnswer(AnswerType.LONG);
+    void beenOnAnswerClaude() throws InterruptedException {
+        soundService.beenOnAnswer(AnswerType.CLAUDE);
         Thread.sleep(3000);
     }
 

@@ -40,7 +40,7 @@ class MultiLineQuestionTest extends BaseGptUiTest {
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I0.GRAMMAR_HTML)
                 .shortA().text(I0.SHORT_HTML)
-                .longA().text(I0.LONG_HTML)
+                .claudeA().text(I0.CLAUDE_HTML)
                 .gcpA().text(I0.GCP_HTML)
                 .answerCircleColors(WHITE, WHITE, WHITE, WHITE)
                 .answerTextTemperaturesAllEmpty()
@@ -59,7 +59,7 @@ class MultiLineQuestionTest extends BaseGptUiTest {
         gptApi.clear()
                 .putGrammarResponse(I1.GRAMMAR_HTML, ZERO)
                 .putShortResponse(I1.SHORT_HTML, ZERO);
-        claudeApi.clear().putLongResponse(I1.LONG_HTML, ZERO);
+        claudeApi.clear().putClaudeResponse(I1.CLAUDE_HTML, ZERO);
         gcpApi.clear().putGcpResponse(I1.GCP_HTML, ZERO);
         clickOn(question().questionButton());
 
@@ -83,7 +83,7 @@ class MultiLineQuestionTest extends BaseGptUiTest {
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I1.EXP_GRAMMAR_HTML_BODY)
                 .shortA().text(I1.EXP_SHORT_HTML_BODY)
-                .longA().text(I1.EXP_LONG_HTML_BODY)
+                .claudeA().text(I1.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I1.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
                 .answerTextTemperaturesDefault()

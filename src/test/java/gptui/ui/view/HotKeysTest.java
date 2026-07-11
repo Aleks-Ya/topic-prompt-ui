@@ -71,7 +71,7 @@ class HotKeysTest extends BaseGptUiTest {
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I3.GRAMMAR_HTML)
                 .shortA().text(I3.SHORT_HTML)
-                .longA().text(I3.LONG_HTML)
+                .claudeA().text(I3.CLAUDE_HTML)
                 .gcpA().text(I3.GCP_HTML)
                 .answerCircleColors(GREEN, GREEN, RED, GREEN)
                 .answerTextTemperatures(50, 60, 70, 80)
@@ -85,9 +85,9 @@ class HotKeysTest extends BaseGptUiTest {
                 .focus(shortAnswer().copyButton())
                 .clipboard(I3.SHORT_HTML)
 
-                .work("Copy Long Answer By Alt-3", () -> press(ALT, DIGIT3).release(DIGIT3, ALT))
-                .focus(longAnswer().copyButton())
-                .clipboard(I3.LONG_HTML)
+                .work("Copy Claude Answer By Alt-3", () -> press(ALT, DIGIT3).release(DIGIT3, ALT))
+                .focus(claudeAnswer().copyButton())
+                .clipboard(I3.CLAUDE_HTML)
 
                 .work("Copy GCP Answer By Alt-4", () -> press(ALT, DIGIT4).release(DIGIT4, ALT))
                 .focus(gcpAnswer().copyButton())
@@ -197,7 +197,7 @@ class HotKeysTest extends BaseGptUiTest {
     @Test
     void selectPreviousInteractionByCtrlAltDown_FocusOnWebView() {
         clickOn(history().comboBox()).clickOn(String.format("[Q] %s: %s", I3.THEME.title(), I3.QUESTION));
-        clickOn(longAnswer().webView());
+        clickOn(claudeAnswer().webView());
         assertThat(history().comboBox().getSelectionModel().getSelectedItem().interaction()).isEqualTo(I3.INTERACTION);
 
         press(CONTROL, ALT, DOWN).release(CONTROL, ALT, DOWN);
@@ -207,7 +207,7 @@ class HotKeysTest extends BaseGptUiTest {
     @Test
     void selectPreviousInteractionByCtrlAltUp_FocusOnWebView() {
         clickOn(history().comboBox()).clickOn(String.format("[Q] %s: %s", I2.THEME.title(), I2.QUESTION));
-        clickOn(longAnswer().webView());
+        clickOn(claudeAnswer().webView());
         scroll(10, VerticalDirection.DOWN);
         assertThat(history().comboBox().getSelectionModel().getSelectedItem().interaction()).isEqualTo(I2.INTERACTION);
 

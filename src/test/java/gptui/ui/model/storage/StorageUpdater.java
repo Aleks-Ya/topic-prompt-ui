@@ -5,9 +5,9 @@ import gptui.RootModule;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static gptui.core.storagefilesystem.AnswerType.CLAUDE;
 import static gptui.core.storagefilesystem.AnswerType.GCP;
 import static gptui.core.storagefilesystem.AnswerType.GRAMMAR;
-import static gptui.core.storagefilesystem.AnswerType.LONG;
 import static gptui.core.storagefilesystem.AnswerType.SHORT;
 
 public class StorageUpdater {
@@ -27,7 +27,7 @@ public class StorageUpdater {
                     return interaction
                             .withAnswer(GRAMMAR, answer -> answer.withTemperature(temperature))
                             .withAnswer(SHORT, answer -> answer.withTemperature(temperature))
-                            .withAnswer(LONG, answer -> answer.withTemperature(temperature))
+                            .withAnswer(CLAUDE, answer -> answer.withTemperature(temperature))
                             .withAnswer(GCP, answer -> answer.withTemperature(temperature));
                 })
                 .forEach(storageModel::saveInteraction);

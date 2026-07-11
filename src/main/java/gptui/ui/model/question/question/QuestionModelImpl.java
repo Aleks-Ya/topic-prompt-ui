@@ -72,7 +72,7 @@ class QuestionModelImpl implements QuestionModel {
                 log.trace("requestAnswer async");
                 var answerMd = switch (answerType) {
                     case GCP -> gcpApi.send(prompt, temperature);
-                    case LONG -> claudeApi.send(prompt, temperature);
+                    case CLAUDE -> claudeApi.send(prompt, temperature);
                     case GRAMMAR, SHORT -> openAiApi.send(prompt, temperature);
                 };
                 var answerHtml = formatConverter.markdownToHtml(answerMd);

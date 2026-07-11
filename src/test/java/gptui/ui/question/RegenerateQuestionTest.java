@@ -7,8 +7,8 @@ import gptui.core.storagefilesystem.Interaction;
 import org.junit.jupiter.api.Test;
 
 import static gptui.core.storagefilesystem.AnswerState.FAIL;
+import static gptui.core.storagefilesystem.AnswerType.CLAUDE;
 import static gptui.core.storagefilesystem.AnswerType.GCP;
-import static gptui.core.storagefilesystem.AnswerType.LONG;
 import static gptui.core.storagefilesystem.AnswerType.SHORT;
 import static gptui.ui.viewmodel.question.QuestionStyle.QUESTION_STYLE_EMPTY;
 import static java.time.Duration.ZERO;
@@ -18,7 +18,7 @@ import static javafx.scene.paint.Color.RED;
 class RegenerateQuestionTest extends BaseGptUiTest {
     private final Interaction interaction1 = I1.INTERACTION
             .withAnswer(SHORT, answer -> answer.withState(FAIL))
-            .withAnswer(LONG, answer -> answer.withState(FAIL))
+            .withAnswer(CLAUDE, answer -> answer.withState(FAIL))
             .withAnswer(GCP, answer -> answer.withState(FAIL));
 
     @Override
@@ -45,7 +45,7 @@ class RegenerateQuestionTest extends BaseGptUiTest {
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I1.GRAMMAR_HTML)
                 .shortA().text(I1.SHORT_HTML)
-                .longA().text(I1.LONG_HTML)
+                .claudeA().text(I1.CLAUDE_HTML)
                 .gcpA().text(I1.GCP_HTML)
                 .answerCircleColors(GREEN, RED, RED, RED)
                 .answerTextTemperatures(50, 60, 70, 80)
@@ -55,7 +55,7 @@ class RegenerateQuestionTest extends BaseGptUiTest {
         gptApi.clear()
                 .putGrammarResponse(I2.GRAMMAR_HTML, ZERO)
                 .putShortResponse(I2.SHORT_HTML, ZERO);
-        claudeApi.clear().putLongResponse(I2.LONG_HTML, ZERO);
+        claudeApi.clear().putClaudeResponse(I2.CLAUDE_HTML, ZERO);
         gcpApi.clear().putGcpResponse(I2.GCP_HTML, ZERO);
         clickOn(question().regenerateButton());
         gptApi.waitUntilSent(2);
@@ -78,7 +78,7 @@ class RegenerateQuestionTest extends BaseGptUiTest {
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I2.EXP_GRAMMAR_HTML_BODY)
                 .shortA().text(I2.EXP_SHORT_HTML_BODY)
-                .longA().text(I2.EXP_LONG_HTML_BODY)
+                .claudeA().text(I2.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I2.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
                 .answerTextTemperatures(50, 60, 70, 80)

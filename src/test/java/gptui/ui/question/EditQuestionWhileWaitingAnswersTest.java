@@ -44,7 +44,7 @@ class EditQuestionWhileWaitingAnswersTest extends BaseGptUiTest {
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I0.GRAMMAR_HTML)
                 .shortA().text(I0.SHORT_HTML)
-                .longA().text(I0.LONG_HTML)
+                .claudeA().text(I0.CLAUDE_HTML)
                 .gcpA().text(I0.GCP_HTML)
                 .answerCircleColors(WHITE, WHITE, WHITE, WHITE)
                 .answerTextTemperaturesAllEmpty()
@@ -72,7 +72,7 @@ class EditQuestionWhileWaitingAnswersTest extends BaseGptUiTest {
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I0.GRAMMAR_HTML)
                 .shortA().text(I0.SHORT_HTML)
-                .longA().text(I0.LONG_HTML)
+                .claudeA().text(I0.CLAUDE_HTML)
                 .gcpA().text(I0.GCP_HTML)
                 .answerCircleColors(WHITE, WHITE, WHITE, WHITE)
                 .answerTextTemperaturesAllEmpty()
@@ -82,7 +82,7 @@ class EditQuestionWhileWaitingAnswersTest extends BaseGptUiTest {
         gptApi.clear()
                 .putGrammarResponse(I1.GRAMMAR_HTML, ofMillis(5000))
                 .putShortResponse(I1.SHORT_HTML, ofMillis(5500));
-        claudeApi.clear().putLongResponse(I1.LONG_HTML, ofMillis(6000));
+        claudeApi.clear().putClaudeResponse(I1.CLAUDE_HTML, ofMillis(6000));
         gcpApi.putGcpResponse(I1.GCP_HTML, ofMillis(6500));
 
         clickOn(question().questionButton());
@@ -102,7 +102,7 @@ class EditQuestionWhileWaitingAnswersTest extends BaseGptUiTest {
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I0.GRAMMAR_HTML)
                 .shortA().text(I0.SHORT_HTML)
-                .longA().text(I0.LONG_HTML)
+                .claudeA().text(I0.CLAUDE_HTML)
                 .gcpA().text(I0.GCP_HTML)
                 .answerCircleColors(BLUE, BLUE, BLUE, BLUE)
                 .answerTextTemperaturesDefault()
@@ -130,7 +130,7 @@ class EditQuestionWhileWaitingAnswersTest extends BaseGptUiTest {
                 .modelIsEnteringNewQuestion(true)
                 .grammarA().text(I0.GRAMMAR_HTML)
                 .shortA().text(I0.SHORT_HTML)
-                .longA().text(I0.LONG_HTML)
+                .claudeA().text(I0.CLAUDE_HTML)
                 .gcpA().text(I0.GCP_HTML)
                 .answerCircleColors(BLUE, BLUE, BLUE, BLUE)
                 .answerTextTemperaturesDefault()
@@ -156,7 +156,7 @@ class EditQuestionWhileWaitingAnswersTest extends BaseGptUiTest {
                 .modelIsEnteringNewQuestion(true)
                 .grammarA().text(I1.EXP_GRAMMAR_HTML_BODY)
                 .shortA().text(I1.EXP_SHORT_HTML_BODY)
-                .longA().text(I1.EXP_LONG_HTML_BODY)
+                .claudeA().text(I1.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I1.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
                 .answerTextTemperaturesDefault()

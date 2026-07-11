@@ -13,9 +13,9 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 
 import static gptui.core.storagefilesystem.AnswerState.NEW;
+import static gptui.core.storagefilesystem.AnswerType.CLAUDE;
 import static gptui.core.storagefilesystem.AnswerType.GCP;
 import static gptui.core.storagefilesystem.AnswerType.GRAMMAR;
-import static gptui.core.storagefilesystem.AnswerType.LONG;
 import static gptui.core.storagefilesystem.AnswerType.SHORT;
 import static javafx.scene.paint.Color.BLUE;
 import static javafx.scene.paint.Color.GREEN;
@@ -33,8 +33,8 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
     private AnswerMediator mediator;
     private String currentWebViewContent = "";
     private final AnswerType answerType;
-    private static final Map<AnswerType, Integer> hotkeyDigitMap = Map.of(GRAMMAR, 1, SHORT, 2, LONG, 3, GCP, 4);
-    private static final Map<AnswerType, String> labelTextMap = Map.of(GRAMMAR, "Grammar\nanswer:", SHORT, "Short\nanswer:", LONG, "Long\nanswer:", GCP, "GCP\nanswer:");
+    private static final Map<AnswerType, Integer> hotkeyDigitMap = Map.of(GRAMMAR, 1, SHORT, 2, CLAUDE, 3, GCP, 4);
+    private static final Map<AnswerType, String> labelTextMap = Map.of(GRAMMAR, "Grammar\nanswer:", SHORT, "Short\nanswer:", CLAUDE, "Claude\nanswer:", GCP, "GCP\nanswer:");
 
     @Override
     public void onCopyButtonClick() {

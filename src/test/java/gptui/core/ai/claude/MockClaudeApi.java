@@ -10,7 +10,7 @@ import java.time.Duration;
 public class MockClaudeApi extends BaseMockApi implements AiApi {
 
     @SuppressWarnings("UnusedReturnValue")
-    public MockClaudeApi putLongResponse(String response, Duration timeout) {
+    public MockClaudeApi putClaudeResponse(String response, Duration timeout) {
         put("I will ask you a question about", "a short response", response, timeout);
         return this;
     }

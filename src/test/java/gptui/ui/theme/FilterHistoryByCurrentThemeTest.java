@@ -39,7 +39,7 @@ class FilterHistoryByCurrentThemeTest extends BaseGptUiTest {
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I3.GRAMMAR_HTML)
                 .shortA().text(I3.SHORT_HTML)
-                .longA().text(I3.LONG_HTML)
+                .claudeA().text(I3.CLAUDE_HTML)
                 .gcpA().text(I3.GCP_HTML)
                 .answerCircleColors(GREEN, GREEN, RED, GREEN)
                 .answerTextTemperatures(50, 60, 70, 80)
