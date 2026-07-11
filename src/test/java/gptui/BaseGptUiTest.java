@@ -30,9 +30,6 @@ import org.testfx.util.WaitForAsyncUtils;
 
 import java.util.concurrent.ExecutionException;
 
-import static javafx.scene.input.KeyCode.A;
-import static javafx.scene.input.KeyCode.CONTROL;
-
 public abstract class BaseGptUiTest extends ApplicationTest {
     private final GptUiApplication app = new GptUiApplication(Modules.override(new RootModule()).with(new TestRootModule()));
     protected final StateModel stateModel = app.getGuiceContext().getInstance(StateModel.class);
@@ -93,7 +90,8 @@ public abstract class BaseGptUiTest extends ApplicationTest {
 
     @SuppressWarnings("UnusedReturnValue")
     protected FxRobot overWrite(String text) {
-        return press(CONTROL, A).release(A, CONTROL).write(text);
+        interact(() -> question().textArea().clear());
+        return write(text);
     }
 
     void verifyWebViewBody(SoftAssertions soft, String as, WebView webView, String expContent) {

@@ -25,9 +25,18 @@ jobs:
       - name: Start virtual display
         run: |
           sudo apt update
-          sudo apt install -y xvfb
+          sudo apt install -y xvfb openbox
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
           echo "DISPLAY=:99" >> $GITHUB_ENV
+          sleep 2
+          # TestFX/JavaFX popups (ComboBox dropdowns) need a window manager to
+          # register mouse clicks correctly; plain Xvfb has none. Openbox's default
+          # keybindings (e.g. Ctrl+Alt+Up/Down) collide with the app's own hotkeys,
+          # so start it with an empty keyboard/mouse config.
+          mkdir -p /tmp/openbox-config
+          echo '<?xml version="1.0" encoding="UTF-8"?><openbox_config xmlns="http://openbox.org/3.4/rc"><keyboard></keyboard><mouse></mouse></openbox_config>' > /tmp/openbox-config/rc.xml
+          DISPLAY=:99 openbox --config-file /tmp/openbox-config/rc.xml > /dev/null 2>&1 &
+          sleep 2
 
       - name: Test
         run: ./gradlew -PskipIntegrationTests test

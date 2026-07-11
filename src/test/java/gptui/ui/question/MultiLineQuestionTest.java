@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 
 import static gptui.ui.viewmodel.question.QuestionStyle.QUESTION_STYLE_EMPTY;
 import static java.time.Duration.ZERO;
-import static javafx.scene.input.KeyCode.ENTER;
 import static javafx.scene.paint.Color.GREEN;
 import static javafx.scene.paint.Color.WHITE;
 
@@ -54,7 +53,7 @@ class MultiLineQuestionTest extends BaseGptUiTest {
         var questionLine1 = "Question line 1";
         var questionLine2 = "Question line 2";
         var questionLine3 = "Question line 3";
-        overWrite(questionLine1).type(ENTER).write(questionLine2).type(ENTER).write(questionLine3);
+        overWrite(questionLine1).write("\n").write(questionLine2).write("\n").write(questionLine3);
 
         gptApi.clear()
                 .putGrammarResponse(I1.GRAMMAR_HTML, ZERO)
