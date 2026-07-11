@@ -1,6 +1,5 @@
 package gptui.ui.model.state;
 
-import gptui.core.storagefilesystem.AnswerType;
 import gptui.core.storagefilesystem.Interaction;
 import gptui.core.storagefilesystem.InteractionId;
 import gptui.core.storagefilesystem.InteractionType;
@@ -44,10 +43,6 @@ public interface StateModel {
     String getEditedQuestion();
 
     void setEditedQuestion(String question);
-
-    Integer getTemperature(AnswerType answerType);
-
-    void setTemperature(AnswerType answerType, Integer temperature);
 
     Boolean isHistoryFilteringEnabled();
 

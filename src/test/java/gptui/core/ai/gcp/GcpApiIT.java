@@ -24,20 +24,20 @@ class GcpApiIT {
 
     @Test
     void send() {
-        var response = api.send("What is the last Java version?", 100);
+        var response = api.send("What is the last Java version?");
         System.out.println(response);
     }
 
     @Test
     void definition() {
         var prompt = promptFactory.getPrompt(DEFINITION, "AWS S3", "Bucket", GCP).orElseThrow();
-        var response = api.send(prompt, 100);
+        var response = api.send(prompt);
         System.out.println(response);
     }
 
     @Test
     void error() {
-        assertThatThrownBy(() -> api.send(null, 100))
+        assertThatThrownBy(() -> api.send(null))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("INVALID_ARGUMENT");
     }

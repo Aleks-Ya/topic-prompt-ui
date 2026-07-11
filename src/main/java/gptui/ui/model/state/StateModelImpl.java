@@ -1,7 +1,6 @@
 package gptui.ui.model.state;
 
 import gptui.core.storagefilesystem.Answer;
-import gptui.core.storagefilesystem.AnswerType;
 import gptui.core.storagefilesystem.Interaction;
 import gptui.core.storagefilesystem.InteractionId;
 import gptui.core.storagefilesystem.InteractionType;
@@ -15,7 +14,6 @@ import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -36,13 +34,6 @@ class StateModelImpl implements StateModel {
     private Theme currentTheme;
     private String editedQuestion;
     private Boolean isHistoryFilteringEnabled = false;
-    private final Map<AnswerType, Integer> temperatures = new HashMap<>(Map.of(
-            AnswerType.GRAMMAR, 50,
-            AnswerType.OPEN_AI, 60,
-            AnswerType.CLAUDE, 70,
-            //Gemini 3 recommends always use "1.0" https://ai.google.dev/gemini-api/docs/gemini-3?thinking=high#temperature
-            AnswerType.GCP, 100
-    ));
 
     @Override
     public synchronized boolean isEnteringNewQuestion() {
@@ -91,10 +82,10 @@ class StateModelImpl implements StateModel {
             var theme = getCurrentTheme();
             var question = getEditedQuestion();
             var interaction = new Interaction(interactionId, interactionType, theme.id(), question, Map.of(
-                    GRAMMAR, new Answer(GRAMMAR, "", getTemperature(GRAMMAR), "", "", NEW),
-                    OPEN_AI, new Answer(OPEN_AI, "", getTemperature(OPEN_AI), "", "", NEW),
-                    CLAUDE, new Answer(CLAUDE, "", getTemperature(CLAUDE), "", "", NEW),
-                    GCP, new Answer(GCP, "", getTemperature(GCP), "", "", NEW)
+                    GRAMMAR, new Answer(GRAMMAR, "", "", "", NEW),
+                    OPEN_AI, new Answer(OPEN_AI, "", "", "", NEW),
+                    CLAUDE, new Answer(CLAUDE, "", "", "", NEW),
+                    GCP, new Answer(GCP, "", "", "", NEW)
             ));
             storage.saveInteraction(interaction);
             setCurrentInteractionId(interactionId);
@@ -189,16 +180,6 @@ class StateModelImpl implements StateModel {
     public synchronized void setEditedQuestion(String question) {
         log.trace("setEditedQuestion: '{}'", question);
         this.editedQuestion = question;
-    }
-
-    @Override
-    public Integer getTemperature(AnswerType answerType) {
-        return temperatures.get(answerType);
-    }
-
-    @Override
-    public void setTemperature(AnswerType answerType, Integer temperature) {
-        temperatures.put(answerType, temperature);
     }
 
     @Override

@@ -50,8 +50,6 @@ public class WindowAssertion {
     public class AnswerInfo {
         private String text;
         private Color circleColor;
-        private Integer temperatureText;
-        private Integer temperatureSpinner;
 
         public WindowAssertion text(String text) {
             this.text = text;
@@ -60,14 +58,6 @@ public class WindowAssertion {
 
         public void circleColor(Color circleColor) {
             this.circleColor = circleColor;
-        }
-
-        public void temperatureText(Integer temperature) {
-            this.temperatureText = temperature;
-        }
-
-        public void temperatureSpinner(Integer temperature) {
-            this.temperatureSpinner = temperature;
         }
     }
 
@@ -188,37 +178,6 @@ public class WindowAssertion {
         return this;
     }
 
-    public WindowAssertion answerTextTemperatures(Integer grammarTemperature, Integer openAiTemperature,
-                                                  Integer claudeTemperature, Integer gcpTemperature) {
-        grammarA().temperatureText(grammarTemperature);
-        openAiA().temperatureText(openAiTemperature);
-        claudeA().temperatureText(claudeTemperature);
-        gcpA().temperatureText(gcpTemperature);
-        return this;
-    }
-
-    public WindowAssertion answerSpinnerTemperatures(Integer grammarTemperature, Integer openAiTemperature,
-                                                     Integer claudeTemperature, Integer gcpTemperature) {
-        grammarA().temperatureSpinner(grammarTemperature);
-        openAiA().temperatureSpinner(openAiTemperature);
-        claudeA().temperatureSpinner(claudeTemperature);
-        gcpA().temperatureSpinner(gcpTemperature);
-        return this;
-    }
-
-    public WindowAssertion answerTextTemperaturesAllEmpty() {
-        return answerTextTemperatures(null,
-                null, null, null);
-    }
-
-    public WindowAssertion answerTextTemperaturesDefault() {
-        return answerTextTemperatures(50, 60, 70, 100);
-    }
-
-    public WindowAssertion answerSpinnerTemperaturesDefault() {
-        return answerSpinnerTemperatures(50, 60, 70, 100);
-    }
-
     private static String nodeFullId(Node node) {
         var ids = new ArrayList<String>();
         while (node != null) {
@@ -293,10 +252,6 @@ public class WindowAssertion {
             soft.assertThat(answer.regenerateButton().getText()).as(descr("Answer/Grammar/RegenerateButton/Text")).isEqualTo("⟳");
             app.verifyWebViewBody(soft, descr("Answer/Grammar/WebView/Body"), answer.webView(), grammarAnswer.text);
             soft.assertThat(colorToString(answer.circle().getFill())).as(descr("Answer/Grammar/Circle/Fill")).isEqualTo(colorToString(grammarAnswer.circleColor));
-            soft.assertThat(answer.temperatureText().getText()).as(descr("Answer/Grammar/Temperature/Text"))
-                    .isEqualTo(temperatureToString(grammarA().temperatureText));
-            soft.assertThat(answer.temperatureSpinner().getValue()).as(descr("Answer/Grammar/TemperatureSpinner/Value"))
-                    .isEqualTo(temperatureToInteger(grammarA().temperatureSpinner));
         }
 
         {
@@ -306,10 +261,6 @@ public class WindowAssertion {
             soft.assertThat(answer.regenerateButton().getText()).as(descr("Answer/OpenAI/RegenerateButton/Text")).isEqualTo("⟳");
             app.verifyWebViewBody(soft, descr("Answer/OpenAI/WebView/Body"), answer.webView(), openAiA().text);
             soft.assertThat(colorToString(answer.circle().getFill())).as(descr("Answer/OpenAI/Circle/Fill")).isEqualTo(colorToString(openAiA().circleColor));
-            soft.assertThat(answer.temperatureText().getText()).as(descr("Answer/OpenAI/Temperature/Text"))
-                    .isEqualTo(temperatureToString(openAiA().temperatureText));
-            soft.assertThat(answer.temperatureSpinner().getValue()).as(descr("Answer/OpenAI/TemperatureSpinner/Value"))
-                    .isEqualTo(temperatureToInteger(openAiA().temperatureSpinner));
         }
 
         {
@@ -319,10 +270,6 @@ public class WindowAssertion {
             soft.assertThat(answer.regenerateButton().getText()).as(descr("Answer/Claude/RegenerateButton/Text")).isEqualTo("⟳");
             app.verifyWebViewBody(soft, descr("Answer/Claude/WebView/Body"), answer.webView(), claudeA().text);
             soft.assertThat(colorToString(answer.circle().getFill())).as(descr("Answer/Claude/Circle/Fill")).isEqualTo(colorToString(claudeA().circleColor));
-            soft.assertThat(answer.temperatureText().getText()).as(descr("Answer/Claude/Temperature/Text"))
-                    .isEqualTo(temperatureToString(claudeA().temperatureText));
-            soft.assertThat(answer.temperatureSpinner().getValue()).as(descr("Answer/Claude/TemperatureSpinner/Value"))
-                    .isEqualTo(temperatureToInteger(claudeA().temperatureSpinner));
         }
 
         {
@@ -332,10 +279,6 @@ public class WindowAssertion {
             soft.assertThat(answer.regenerateButton().getText()).as(descr("Answer/GCP/RegenerateButton/Text")).isEqualTo("⟳");
             app.verifyWebViewBody(soft, descr("Answer/GCP/WebView/Body"), answer.webView(), gcpA().text);
             soft.assertThat(colorToString(answer.circle().getFill())).as(descr("Answer/GCP/Circle/Fill")).isEqualTo(colorToString(gcpA().circleColor));
-            soft.assertThat(answer.temperatureText().getText()).as(descr("Answer/GCP/Temperature/Text"))
-                    .isEqualTo(temperatureToString(gcpA().temperatureText));
-            soft.assertThat(answer.temperatureSpinner().getValue()).as(descr("Answer/GCP/TemperatureSpinner/Value"))
-                    .isEqualTo(temperatureToInteger(gcpA().temperatureSpinner));
         }
 
         {
@@ -351,14 +294,6 @@ public class WindowAssertion {
         }
         soft.assertAll();
         return this;
-    }
-
-    private String temperatureToString(Integer temperature) {
-        return temperature != null ? temperature + "°" : "";
-    }
-
-    private Integer temperatureToInteger(Integer temperature) {
-        return temperature != null ? temperature : 0;
     }
 
     private final Map<Paint, String> colors = Map.of(

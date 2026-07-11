@@ -8,7 +8,6 @@ import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.math.BigDecimal;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -17,7 +16,6 @@ import java.time.Duration;
 import java.util.List;
 
 import static gptui.core.ai.gcp.ResponseBody.FinishReason.STOP;
-import static java.math.RoundingMode.HALF_UP;
 
 @Singleton
 class GcpApiImpl implements AiApi {
@@ -33,12 +31,11 @@ class GcpApiImpl implements AiApi {
     }
 
     @Override
-    public String send(String content, Integer temperature) {
+    public String send(String content) {
         log.info("Sending question: {}", content);
         try (var client = HttpClient.newHttpClient()) {
-            var bigDecimalTemperature = convertTemperature(temperature);
             var body = new RequestBody(List.of(new Content(List.of(new Part(content)), "user")),
-                    new GenerationConfig(bigDecimalTemperature, 1));
+                    new GenerationConfig(1));
             var json = gson.toJson(body);
             log.trace("Request body: {}", json);
             var request = HttpRequest.newBuilder()
@@ -68,9 +65,5 @@ class GcpApiImpl implements AiApi {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
-    }
-
-    private BigDecimal convertTemperature(Integer temperature) {
-        return BigDecimal.valueOf(temperature).setScale(1, HALF_UP).divide(BigDecimal.valueOf(100), HALF_UP);
     }
 }

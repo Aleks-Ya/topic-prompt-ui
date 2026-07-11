@@ -28,7 +28,7 @@ class OpenAiApiImpl implements AiApi {
     }
 
     @Override
-    public String send(String content, Integer temperature) {
+    public String send(String content) {
         log.info("Sending question: {}", content);
         var reasoning = new Reasoning(ReasoningEffort.HIGH);
         var body = new RequestBody(MODEL, content, reasoning);

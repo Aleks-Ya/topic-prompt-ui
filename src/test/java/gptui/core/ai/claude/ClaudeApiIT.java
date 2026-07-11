@@ -18,13 +18,13 @@ class ClaudeApiIT {
 
     @Test
     void send() {
-        var response = api.send("What is the last Java version?", 50);
+        var response = api.send("What is the last Java version?");
         System.out.println(response);
     }
 
     @Test
     void error() {
-        assertThatThrownBy(() -> api.send(null, 50))
+        assertThatThrownBy(() -> api.send(null))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("invalid_request_error");
     }

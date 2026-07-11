@@ -37,8 +37,6 @@ class DeleteInteractionOnlyTest extends BaseGptUiTest {
                 .claudeA().text(I1.CLAUDE_HTML)
                 .gcpA().text(I1.GCP_HTML)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
-                .answerTextTemperatures(50, 60, 70, 80)
-                .answerSpinnerTemperatures(50, 60, 70, 80)
                 .assertApp();
 
         clickOn(history().deleteButton());
@@ -62,8 +60,6 @@ class DeleteInteractionOnlyTest extends BaseGptUiTest {
                 .claudeA().text(I0.CLAUDE_HTML)
                 .gcpA().text(I0.GCP_HTML)
                 .answerCircleColors(WHITE, WHITE, WHITE, WHITE)
-                .answerTextTemperaturesAllEmpty()
-                .answerSpinnerTemperatures(50, 60, 70, 80)
                 .assertApp();
     }
 }

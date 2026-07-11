@@ -40,8 +40,6 @@ class DeleteInteractionBottomTest extends BaseGptUiTest {
                 .claudeA().text(I2.CLAUDE_HTML)
                 .gcpA().text(I2.GCP_HTML)
                 .answerCircleColors(GREEN, GREEN, RED, GREEN)
-                .answerTextTemperatures(50, 60, 70, 80)
-                .answerSpinnerTemperatures(50, 60, 70, 80)
                 .assertApp();
 
         clickOn(history().comboBox()).clickOn(format("[Q] %s: %s", I1.THEME.title(), I1.QUESTION));
@@ -66,8 +64,6 @@ class DeleteInteractionBottomTest extends BaseGptUiTest {
                 .claudeA().text(I2.CLAUDE_HTML)
                 .gcpA().text(I2.GCP_HTML)
                 .answerCircleColors(GREEN, GREEN, RED, GREEN)
-                .answerTextTemperatures(50, 60, 70, 80)
-                .answerSpinnerTemperatures(50, 60, 70, 80)
                 .assertApp();
     }
 }

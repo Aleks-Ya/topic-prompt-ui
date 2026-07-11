@@ -69,23 +69,17 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
                     currentWebViewContent = html;
                 }
                 properties.statusCircleFill.setValue(answerStateToColor(state));
-                var temperature = answerOpt.map(answer -> answer.temperature() + "°").orElse("");
-                properties.temperatureText.setValue(temperature);
-                properties.temperatureSpinner.setValue(mediator.getTemperature(answerType));
             }, () -> {
                 log.trace("Display empty answer");
                 currentWebViewContent = "";
                 properties.webViewContent.set("");
                 properties.statusCircleFill.setValue(WHITE);
-                properties.temperatureText.setValue("");
-                properties.temperatureSpinner.setValue(mediator.getTemperature(answerType));
             });
         });
     }
 
     @Override
     public void initialize() {
-        properties.temperatureSpinner.addListener((_, _, newValue) -> mediator.setTemperature(answerType, newValue));
         Mdc.run(answerType, () -> {
             log.trace("displayInitialState");
             properties.answerLabelText.setValue(labelTextMap.get(answerType));

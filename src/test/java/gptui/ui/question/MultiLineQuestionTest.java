@@ -42,8 +42,6 @@ class MultiLineQuestionTest extends BaseGptUiTest {
                 .claudeA().text(I0.CLAUDE_HTML)
                 .gcpA().text(I0.GCP_HTML)
                 .answerCircleColors(WHITE, WHITE, WHITE, WHITE)
-                .answerTextTemperaturesAllEmpty()
-                .answerSpinnerTemperaturesDefault()
                 .assertApp();
     }
 
@@ -85,8 +83,6 @@ class MultiLineQuestionTest extends BaseGptUiTest {
                 .claudeA().text(I1.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I1.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
-                .answerTextTemperaturesDefault()
-                .answerSpinnerTemperaturesDefault()
                 .assertApp();
     }
 }

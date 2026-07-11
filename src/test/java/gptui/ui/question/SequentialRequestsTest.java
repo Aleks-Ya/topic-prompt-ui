@@ -49,8 +49,6 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .claudeA().text(I0.CLAUDE_HTML)
                 .gcpA().text(I0.GCP_HTML)
                 .answerCircleColors(WHITE, WHITE, WHITE, WHITE)
-                .answerTextTemperaturesAllEmpty()
-                .answerSpinnerTemperaturesDefault()
                 .assertApp();
     }
 
@@ -77,8 +75,6 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .claudeA().text(I0.CLAUDE_HTML)
                 .gcpA().text(I0.GCP_HTML)
                 .answerCircleColors(WHITE, WHITE, WHITE, WHITE)
-                .answerTextTemperaturesAllEmpty()
-                .answerSpinnerTemperaturesDefault()
                 .assertApp();
 
         gptApi.clear()
@@ -107,8 +103,6 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .claudeA().text(I0.CLAUDE_HTML)
                 .gcpA().text(I0.GCP_HTML)
                 .answerCircleColors(BLUE, BLUE, BLUE, BLUE)
-                .answerTextTemperaturesDefault()
-                .answerSpinnerTemperaturesDefault()
                 .assertApp();
 
         gptApi.waitUntilSent(2);
@@ -133,8 +127,6 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .claudeA().text(I1.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I1.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
-                .answerTextTemperaturesDefault()
-                .answerSpinnerTemperaturesDefault()
                 .assertApp();
 
         clickOn(openAiAnswer().copyButton());
@@ -157,8 +149,6 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .claudeA().text(I1.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I1.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
-                .answerTextTemperaturesDefault()
-                .answerSpinnerTemperaturesDefault()
                 .clipboard(I1.EXP_OPEN_AI_HTML_BODY)
                 .assertApp();
 
@@ -182,8 +172,6 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .claudeA().text(I1.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I1.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
-                .answerTextTemperaturesDefault()
-                .answerSpinnerTemperaturesDefault()
                 .clipboard(I1.EXP_CLAUDE_HTML_BODY)
                 .assertApp();
 
@@ -207,8 +195,6 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .claudeA().text(I1.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I1.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
-                .answerTextTemperaturesDefault()
-                .answerSpinnerTemperaturesDefault()
                 .clipboard(I1.EXP_GCP_HTML_BODY)
                 .assertApp();
     }
@@ -236,8 +222,6 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .claudeA().text(I1.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I1.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
-                .answerTextTemperaturesDefault()
-                .answerSpinnerTemperaturesDefault()
                 .assertApp();
 
         gptApi.clear()
@@ -265,8 +249,6 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .claudeA().text(I0.CLAUDE_HTML)
                 .gcpA().text(I0.GCP_HTML)
                 .answerCircleColors(BLUE, BLUE, BLUE, BLUE)
-                .answerTextTemperaturesDefault()
-                .answerSpinnerTemperaturesDefault()
                 .assertApp();
 
 
@@ -292,8 +274,6 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .claudeA().text(I2.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I2.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
-                .answerTextTemperaturesDefault()
-                .answerSpinnerTemperaturesDefault()
                 .assertApp();
 
         clickOn(openAiAnswer().copyButton());
@@ -316,8 +296,6 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .claudeA().text(I2.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I2.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
-                .answerTextTemperaturesDefault()
-                .answerSpinnerTemperaturesDefault()
                 .clipboard(I2.EXP_OPEN_AI_HTML_BODY)
                 .assertApp();
 
@@ -341,8 +319,6 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .claudeA().text(I2.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I2.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
-                .answerTextTemperaturesDefault()
-                .answerSpinnerTemperaturesDefault()
                 .clipboard(I2.EXP_CLAUDE_HTML_BODY)
                 .assertApp();
 
@@ -366,8 +342,6 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .claudeA().text(I2.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I2.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
-                .answerTextTemperaturesDefault()
-                .answerSpinnerTemperaturesDefault()
                 .clipboard(I2.EXP_GCP_HTML_BODY)
                 .assertApp();
     }
@@ -392,8 +366,6 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .claudeA().text(I2.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I2.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
-                .answerTextTemperaturesDefault()
-                .answerSpinnerTemperaturesDefault()
                 .assertApp();
 
         clickOn(history().comboBox()).clickOn(String.format("[Q] %s: %s", I1.THEME.title(), I1.QUESTION));
@@ -416,8 +388,6 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .claudeA().text(I1.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I1.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
-                .answerTextTemperaturesDefault()
-                .answerSpinnerTemperaturesDefault()
                 .assertApp();
 
         clickOn(openAiAnswer().copyButton());
@@ -440,8 +410,6 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .claudeA().text(I1.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I1.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
-                .answerTextTemperaturesDefault()
-                .answerSpinnerTemperaturesDefault()
                 .clipboard(I1.EXP_OPEN_AI_HTML_BODY)
                 .assertApp();
 
@@ -465,8 +433,6 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .claudeA().text(I1.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I1.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
-                .answerTextTemperaturesDefault()
-                .answerSpinnerTemperaturesDefault()
                 .clipboard(I1.EXP_CLAUDE_HTML_BODY)
                 .assertApp();
 
@@ -490,8 +456,6 @@ class SequentialRequestsTest extends BaseGptUiTest {
                 .claudeA().text(I1.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I1.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
-                .answerTextTemperaturesDefault()
-                .answerSpinnerTemperaturesDefault()
                 .clipboard(I1.EXP_GCP_HTML_BODY)
                 .assertApp();
     }

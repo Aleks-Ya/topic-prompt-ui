@@ -29,8 +29,6 @@ class DeleteInteractionNullTest extends BaseGptUiTest {
                 .claudeA().text(I0.CLAUDE_HTML)
                 .gcpA().text(I0.GCP_HTML)
                 .answerCircleColors(WHITE, WHITE, WHITE, WHITE)
-                .answerTextTemperaturesAllEmpty()
-                .answerSpinnerTemperaturesDefault()
                 .assertApp();
     }
 }

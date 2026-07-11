@@ -266,16 +266,6 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, ThemeMediator, 
     }
 
     @Override
-    public Integer getTemperature(AnswerType answerType) {
-        return stateModel.getTemperature(answerType);
-    }
-
-    @Override
-    public void setTemperature(AnswerType answerType, Integer temperature) {
-        stateModel.setTemperature(answerType, temperature);
-    }
-
-    @Override
     public void chooseFirstInteractionAsCurrent() {
         stateModel.chooseFirstInteractionAsCurrent();
     }

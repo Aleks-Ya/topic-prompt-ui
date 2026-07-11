@@ -11,10 +11,6 @@ public interface AnswerMediator {
 
     void putHtmlToClipboard(String html);
 
-    Integer getTemperature(AnswerType answerType);
-
-    void setTemperature(AnswerType answerType, Integer temperature);
-
     InteractionId getCurrentInteractionId();
 
     Optional<Interaction> getCurrentInteractionOpt();

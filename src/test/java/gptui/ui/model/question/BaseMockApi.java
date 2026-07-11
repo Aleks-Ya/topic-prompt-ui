@@ -24,7 +24,7 @@ public abstract class BaseMockApi implements AiApi {
     protected final AtomicInteger receivedCounter = new AtomicInteger();
 
     @Override
-    public String send(String content, Integer temperature) {
+    public String send(String content) {
         sendHistory.add(content);
         if (Platform.isFxApplicationThread()) {
             throw new IllegalStateException("Should not run in the JavaFX Application Thread");
@@ -41,8 +41,8 @@ public abstract class BaseMockApi implements AiApi {
                 })
                 .findFirst()
                 .orElseThrow(() -> new NoSuchElementException(format(
-                        "Not found mock content: content='%s', temperature='%d', mapKeys='%s'",
-                        content, temperature, contentSubstringToResponseMap.keySet())))
+                        "Not found mock content: content='%s', mapKeys='%s'",
+                        content, contentSubstringToResponseMap.keySet())))
                 .getValue();
         try {
             Thread.sleep(info.timeout().toMillis());

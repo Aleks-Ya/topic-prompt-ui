@@ -24,20 +24,20 @@ class OpenAiApiIT {
 
     @Test
     void send() {
-        var response = api.send("What is the last Java version?", 50);
+        var response = api.send("What is the last Java version?");
         System.out.println(response);
     }
 
     @Test
     void definitionOpenAi() {
         var prompt = promptFactory.getPrompt(DEFINITION, "AWS S3", "Bucket", AnswerType.OPEN_AI).orElseThrow();
-        var response = api.send(prompt, 50);
+        var response = api.send(prompt);
         System.out.println(response);
     }
 
     @Test
     void error() {
-        assertThatThrownBy(() -> api.send(null, 50))
+        assertThatThrownBy(() -> api.send(null))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("invalid_request_error");
     }

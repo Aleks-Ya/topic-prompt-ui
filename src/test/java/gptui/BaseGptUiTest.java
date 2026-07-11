@@ -17,10 +17,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.Spinner;
 import javafx.scene.control.TextArea;
 import javafx.scene.shape.Circle;
-import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import org.assertj.core.api.SoftAssertions;
@@ -202,22 +200,6 @@ public abstract class BaseGptUiTest extends ApplicationTest {
 
         public Circle circle() {
             return lookup(tag + " #statusCircle").queryAs(Circle.class);
-        }
-
-        public Text temperatureText() {
-            return lookup(tag + " #temperatureText").queryText();
-        }
-
-        public Spinner<Integer> temperatureSpinner() {
-            return lookup(tag + " #temperatureSpinner").query();
-        }
-
-        public Node temperatureIncrementButton() {
-            return lookup(tag + " #temperatureSpinner .increment-arrow-button").query();
-        }
-
-        public Node temperatureDecrementButton() {
-            return lookup(tag + " #temperatureSpinner .decrement-arrow-button").query();
         }
     }
 }

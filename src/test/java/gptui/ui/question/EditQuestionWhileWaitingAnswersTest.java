@@ -47,8 +47,6 @@ class EditQuestionWhileWaitingAnswersTest extends BaseGptUiTest {
                 .claudeA().text(I0.CLAUDE_HTML)
                 .gcpA().text(I0.GCP_HTML)
                 .answerCircleColors(WHITE, WHITE, WHITE, WHITE)
-                .answerTextTemperaturesAllEmpty()
-                .answerSpinnerTemperaturesDefault()
                 .assertApp();
     }
 
@@ -75,8 +73,6 @@ class EditQuestionWhileWaitingAnswersTest extends BaseGptUiTest {
                 .claudeA().text(I0.CLAUDE_HTML)
                 .gcpA().text(I0.GCP_HTML)
                 .answerCircleColors(WHITE, WHITE, WHITE, WHITE)
-                .answerTextTemperaturesAllEmpty()
-                .answerSpinnerTemperaturesDefault()
                 .assertApp();
 
         gptApi.clear()
@@ -105,8 +101,6 @@ class EditQuestionWhileWaitingAnswersTest extends BaseGptUiTest {
                 .claudeA().text(I0.CLAUDE_HTML)
                 .gcpA().text(I0.GCP_HTML)
                 .answerCircleColors(BLUE, BLUE, BLUE, BLUE)
-                .answerTextTemperaturesDefault()
-                .answerSpinnerTemperaturesDefault()
                 .assertApp();
     }
 
@@ -133,8 +127,6 @@ class EditQuestionWhileWaitingAnswersTest extends BaseGptUiTest {
                 .claudeA().text(I0.CLAUDE_HTML)
                 .gcpA().text(I0.GCP_HTML)
                 .answerCircleColors(BLUE, BLUE, BLUE, BLUE)
-                .answerTextTemperaturesDefault()
-                .answerSpinnerTemperaturesDefault()
                 .assertApp();
 
         gptApi.waitUntilSent(2);
@@ -159,8 +151,6 @@ class EditQuestionWhileWaitingAnswersTest extends BaseGptUiTest {
                 .claudeA().text(I1.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I1.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
-                .answerTextTemperaturesDefault()
-                .answerSpinnerTemperaturesDefault()
                 .assertApp();
     }
 }

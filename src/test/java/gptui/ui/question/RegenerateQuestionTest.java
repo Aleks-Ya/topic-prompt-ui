@@ -48,8 +48,6 @@ class RegenerateQuestionTest extends BaseGptUiTest {
                 .claudeA().text(I1.CLAUDE_HTML)
                 .gcpA().text(I1.GCP_HTML)
                 .answerCircleColors(GREEN, RED, RED, RED)
-                .answerTextTemperatures(50, 60, 70, 80)
-                .answerSpinnerTemperatures(50, 60, 70, 80)
                 .assertApp();
 
         gptApi.clear()
@@ -81,8 +79,6 @@ class RegenerateQuestionTest extends BaseGptUiTest {
                 .claudeA().text(I2.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I2.EXP_GCP_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
-                .answerTextTemperatures(50, 60, 70, 80)
-                .answerSpinnerTemperatures(50, 60, 70, 80)
                 .assertApp();
     }
 }

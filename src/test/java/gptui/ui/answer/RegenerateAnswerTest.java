@@ -42,24 +42,15 @@ class RegenerateAnswerTest extends BaseGptUiTest {
                 .claudeA().text(I2.CLAUDE_HTML)
                 .gcpA().text(I2.GCP_HTML)
                 .answerCircleColors(GREEN, GREEN, RED, GREEN)
-                .answerTextTemperatures(50, 60, 70, 80)
-                .answerSpinnerTemperatures(50, 60, 70, 80)
-
-                .work("Click Regenerate Grammar Answer Button", () -> {
-                    gptApi.clear().putGrammarResponse(I3.GRAMMAR_HTML, ZERO);
-                    clickOn(grammarAnswer().temperatureIncrementButton());
-                })
-                .focus(grammarAnswer().temperatureSpinner())
-                .answerSpinnerTemperatures(55, 60, 70, 80)
 
                 .work("Wait for Regenerate Grammar Answer Response", () -> {
+                    gptApi.clear().putGrammarResponse(I3.GRAMMAR_HTML, ZERO);
                     clickOn(grammarAnswer().regenerateButton());
                     gptApi.waitUntilSent(1);
                 })
                 .focus(grammarAnswer().regenerateButton())
                 .historyItems(storage.readInteraction(I2.INTERACTION.id()).orElseThrow(), I1.INTERACTION)
                 .grammarA().text(I3.EXP_GRAMMAR_HTML_BODY)
-                .answerTextTemperatures(55, 60, 70, 80)
 
                 .work("regenerateOpenAiAnswer", () -> {
                     gptApi.clear().putOpenAiResponse(I3.OPEN_AI_HTML, ZERO);
@@ -102,7 +93,6 @@ class RegenerateAnswerTest extends BaseGptUiTest {
                 .openAiA().text(I1.OPEN_AI_HTML)
                 .claudeA().text(I1.CLAUDE_HTML)
                 .gcpA().text(I1.GCP_HTML)
-                .answerTextTemperatures(50, 60, 70, 80)
 
                 .work("Regenerate GCP Answer", () -> {
                     gcpApi.clear().putGcpResponse(I3.GCP_HTML, ZERO);

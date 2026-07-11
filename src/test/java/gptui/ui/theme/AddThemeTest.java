@@ -32,8 +32,6 @@ class AddThemeTest extends BaseGptUiTest {
                 .claudeA().text(I0.CLAUDE_HTML)
                 .gcpA().text(I0.GCP_HTML)
                 .answerCircleColors(WHITE, WHITE, WHITE, WHITE)
-                .answerTextTemperaturesAllEmpty()
-                .answerSpinnerTemperaturesDefault()
 
                 .work("Add Theme 1", () ->
                         clickOn(theme().addThemeButton()).write(I1.THEME.title()).type(KeyCode.ENTER))

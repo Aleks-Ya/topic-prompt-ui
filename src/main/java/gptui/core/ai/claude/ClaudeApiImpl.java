@@ -34,10 +34,9 @@ class ClaudeApiImpl implements AiApi {
     }
 
     @Override
-    public String send(String content, Integer temperature) {
+    public String send(String content) {
         log.info("Sending question: {}", content);
         try (var client = HttpClient.newHttpClient()) {
-            // `temperature` is deprecated/rejected by the Anthropic API for this model, so it is not forwarded.
             var body = new RequestBody(MODEL, MAX_TOKENS, List.of(new Message("user", content)));
             var json = gson.toJson(body);
             log.trace("Request body: {}", json);

@@ -7,9 +7,6 @@ title QuestionModel interface
 interface QuestionModel {
     requestAnswer()
 }
-interface StateModel {
-    getTemperature()
-}
 interface StorageModel {
     readInteraction()
     getTheme()
@@ -31,7 +28,6 @@ interface FormatConverter {
     markdownToHtml()
 }
 
-QuestionModel --> StateModel
 QuestionModel --> StorageModel
 QuestionModel --> PromptFactory
 QuestionModel --> GptApi

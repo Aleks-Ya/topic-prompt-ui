@@ -48,8 +48,6 @@ class DeleteInteractionMiddleTest extends BaseGptUiTest {
                 .claudeA().text(I3.CLAUDE_HTML)
                 .gcpA().text(I3.GCP_HTML)
                 .answerCircleColors(GREEN, GREEN, RED, GREEN)
-                .answerTextTemperatures(50, 60, 70, 80)
-                .answerSpinnerTemperatures(50, 60, 70, 80)
                 .assertApp();
     }
 
@@ -75,8 +73,6 @@ class DeleteInteractionMiddleTest extends BaseGptUiTest {
                 .claudeA().text(I3.CLAUDE_HTML)
                 .gcpA().text(I3.GCP_HTML)
                 .answerCircleColors(GREEN, GREEN, RED, GREEN)
-                .answerTextTemperatures(50, 60, 70, 80)
-                .answerSpinnerTemperatures(50, 60, 70, 80)
                 .assertApp();
     }
 }

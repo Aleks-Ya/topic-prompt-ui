@@ -4,7 +4,6 @@ import gptui.core.ai.AiApi;
 import gptui.ui.model.question.QuestionModel;
 import gptui.ui.model.question.prompt.PromptFactory;
 import gptui.ui.model.question.sound.SoundService;
-import gptui.ui.model.state.StateModel;
 import gptui.core.storagefilesystem.Answer;
 import gptui.core.storagefilesystem.AnswerType;
 import gptui.core.storagefilesystem.InteractionId;
@@ -37,8 +36,6 @@ class QuestionModelImpl implements QuestionModel {
     // serialize them on machines with few cores (e.g. CI runners).
     private static final ExecutorService EXECUTOR = Executors.newCachedThreadPool();
     @Inject
-    private StateModel stateModel;
-    @Inject
     private StorageModel storage;
     @Inject
     private PromptFactory promptFactory;
@@ -68,18 +65,16 @@ class QuestionModelImpl implements QuestionModel {
         if (promptOpt.isPresent()) {
             var prompt = promptOpt.get();
             log.trace("Prompt: {}", prompt);
-            var temperature = stateModel.getTemperature(answerType);
             updateAnswer(interactionId, answerType, answer -> answer
                             .withPrompt(prompt)
-                            .withState(SENT)
-                            .withTemperature(temperature),
+                            .withState(SENT),
                     callback);
             runAsync(() -> Mdc.run(interactionId, () -> {
                 log.trace("requestAnswer async");
                 var answerMd = switch (answerType) {
-                    case GCP -> gcpApi.send(prompt, temperature);
-                    case CLAUDE -> claudeApi.send(prompt, temperature);
-                    case GRAMMAR, OPEN_AI -> openAiApi.send(prompt, temperature);
+                    case GCP -> gcpApi.send(prompt);
+                    case CLAUDE -> claudeApi.send(prompt);
+                    case GRAMMAR, OPEN_AI -> openAiApi.send(prompt);
                 };
                 var answerHtml = formatConverter.markdownToHtml(answerMd);
                 updateAnswer(interactionId, answerType, answer ->
