@@ -26,3 +26,6 @@ fi
 
 echo "Building and installing..."
 ./gradlew -x test installLocally
+
+echo "Starting GptUi..."
+nohup "$HOME/installed/GptUI/bin/GptUi" >/dev/null 2>&1 &
