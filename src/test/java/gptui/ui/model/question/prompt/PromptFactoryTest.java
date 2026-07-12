@@ -24,7 +24,7 @@ class PromptFactoryTest extends BaseTest {
     @Test
     void question() {
         assertThat(factory.getPrompt(QUESTION, "Theme A", "Question A", GRAMMAR)).contains("""
-                I will give you a sentence or phrase.
+                I will give you a sentence or phrase in the context of `Theme A`.
                 Check if the sentence or phrase has grammatical mistakes.
                 It is not a mistake if the sentence or phrase starts with `How to`.
                 If the given sentence or phrase is correct, just answer `Correct`.
@@ -82,7 +82,7 @@ class PromptFactoryTest extends BaseTest {
     @Test
     void grammar() {
         assertThat(factory.getPrompt(InteractionType.GRAMMAR, "Theme A", "Question A", GRAMMAR)).contains("""
-                I will give you a sentence or phrase.
+                I will give you a sentence or phrase in the context of `Theme A`.
                 Check if the sentence or phrase has grammatical mistakes.
                 It is not a mistake if the sentence or phrase starts with `How to`.
                 If the given sentence or phrase is correct, just answer `Correct`.
@@ -100,7 +100,7 @@ class PromptFactoryTest extends BaseTest {
     @Test
     void fact() {
         assertThat(factory.getPrompt(FACT, "Theme A", "Question A", GRAMMAR)).contains("""
-                I will give you a sentence or phrase.
+                I will give you a sentence or phrase in the context of `Theme A`.
                 Check if the sentence or phrase has grammatical mistakes.
                 It is not a mistake if the sentence or phrase starts with `How to`.
                 If the given sentence or phrase is correct, just answer `Correct`.
