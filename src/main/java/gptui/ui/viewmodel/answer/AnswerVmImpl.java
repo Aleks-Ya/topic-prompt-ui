@@ -28,7 +28,7 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
     }
 
     private static final Logger log = LoggerFactory.getLogger(AnswerVmImpl.class);
-    public final AnswerVmProperties properties = new AnswerVmProperties();
+    public final AnswerVmProperties vmProperties = new AnswerVmProperties();
     @Inject
     private AnswerMediator mediator;
     private String currentWebViewContent = "";
@@ -40,7 +40,7 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
     public void onCopyButtonClick() {
         Mdc.run(answerType, () -> {
             log.trace("onCopyButtonClick");
-            var content = properties.webViewContent.get();
+            var content = vmProperties.webViewContent.get();
             mediator.putHtmlToClipboard(content);
         });
     }
@@ -53,7 +53,7 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
 
     @Override
     public AnswerVmProperties properties() {
-        return properties;
+        return vmProperties;
     }
 
     @Override
@@ -65,15 +65,15 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
                 var html = answerOpt.isPresent() ? answerOpt.get().answerHtml() : "";
                 var state = answerOpt.isPresent() ? answerOpt.get().answerState() : NEW;
                 if (!currentWebViewContent.equals(html)) {
-                    properties.webViewContent.set(html);
+                    vmProperties.webViewContent.set(html);
                     currentWebViewContent = html;
                 }
-                properties.statusCircleFill.setValue(answerStateToColor(state));
+                vmProperties.statusCircleFill.setValue(answerStateToColor(state));
             }, () -> {
                 log.trace("Display empty answer");
                 currentWebViewContent = "";
-                properties.webViewContent.set("");
-                properties.statusCircleFill.setValue(WHITE);
+                vmProperties.webViewContent.set("");
+                vmProperties.statusCircleFill.setValue(WHITE);
             });
         });
     }
@@ -82,8 +82,8 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
     public void initialize() {
         Mdc.run(answerType, () -> {
             log.trace("displayInitialState");
-            properties.answerLabelText.setValue(labelTextMap.get(answerType));
-            properties.copyButtonText.setValue(properties.copyButtonText.getValue() + " _" + hotkeyDigitMap.get(answerType));
+            vmProperties.answerLabelText.setValue(labelTextMap.get(answerType));
+            vmProperties.copyButtonText.setValue(vmProperties.copyButtonText.getValue() + " _" + hotkeyDigitMap.get(answerType));
         });
     }
 

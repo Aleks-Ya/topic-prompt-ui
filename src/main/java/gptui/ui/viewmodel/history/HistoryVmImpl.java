@@ -19,7 +19,7 @@ import static javafx.collections.FXCollections.observableArrayList;
 @Singleton
 class HistoryVmImpl implements HistoryVmController, HistoryVmMediator {
     private static final Logger log = LoggerFactory.getLogger(HistoryVmImpl.class);
-    public final HistoryVmProperties properties = new HistoryVmProperties();
+    public final HistoryVmProperties vmProperties = new HistoryVmProperties();
     private final HistoryComboBoxFacade historyCbFacade = new HistoryComboBoxFacade();
     private final StateModelFacade stateModelFacade = new StateModelFacade();
     @Inject
@@ -40,7 +40,7 @@ class HistoryVmImpl implements HistoryVmController, HistoryVmMediator {
 
     @Override
     public HistoryVmProperties properties() {
-        return properties;
+        return vmProperties;
     }
 
     @Override
@@ -65,7 +65,7 @@ class HistoryVmImpl implements HistoryVmController, HistoryVmMediator {
     }
 
     private void enableDeleteButton() {
-        properties.historyDeleteButtonDisable.setValue(stateModelFacade.isCurrentInteractionEmpty());
+        vmProperties.historyDeleteButtonDisable.setValue(stateModelFacade.isCurrentInteractionEmpty());
     }
 
     private void setLabel() {
@@ -74,7 +74,7 @@ class HistoryVmImpl implements HistoryVmController, HistoryVmMediator {
         var allInteractionSize = stateModelFacade.getAllInteractionsSize();
         var label = format("Question history (%d/%d):", historySize, allInteractionSize);
         log.trace("Set label: {}", label);
-        properties.historyLabelText.setValue(label);
+        vmProperties.historyLabelText.setValue(label);
     }
 
     private class StateModelFacade {
@@ -117,24 +117,24 @@ class HistoryVmImpl implements HistoryVmController, HistoryVmMediator {
 
         private Interaction getSelectedItem() {
             log.trace("getSelectedItem");
-            return properties.historyCbSelectionModel.getValue().getSelectedItem().interaction();
+            return vmProperties.historyCbSelectionModel.getValue().getSelectedItem().interaction();
         }
 
         private void selectPreviousItem() {
             log.trace("selectPreviousItem");
-            properties.historyCbSelectionModel.getValue().selectPrevious();
+            vmProperties.historyCbSelectionModel.getValue().selectPrevious();
         }
 
         private void selectNextItem() {
             log.trace("selectNextItem");
-            properties.historyCbSelectionModel.getValue().selectNext();
+            vmProperties.historyCbSelectionModel.getValue().selectNext();
         }
 
         private void setItems() {
             log.trace("setItems");
             var modelItems = mediator.getFilteredHistory();
             log.trace("modelItems: {}", modelItems.size());
-            var comboBoxItems = properties.historyCbItems.getValue();
+            var comboBoxItems = vmProperties.historyCbItems.getValue();
             log.trace("comboBoxItems: {}", comboBoxItems.size());
             var comboBoxItemInteractions = comboBoxItems.stream().map(InteractionItem::interaction).toList();
             if (!Objects.equals(modelItems, comboBoxItemInteractions)) {
@@ -142,27 +142,27 @@ class HistoryVmImpl implements HistoryVmController, HistoryVmMediator {
                 var interactionItems = modelItems.stream()
                         .map(interaction -> new InteractionItem(mediator.getTheme(interaction.themeId()), interaction))
                         .toList();
-                updateCbSilently(() -> properties.historyCbItems.setValue(observableArrayList(interactionItems)),
-                        properties.historyCbOnAction);
+                updateCbSilently(() -> vmProperties.historyCbItems.setValue(observableArrayList(interactionItems)),
+                        vmProperties.historyCbOnAction);
             }
         }
 
         private void selectCurrentInteraction() {
             log.trace("selectCurrentInteraction");
             var modelCurrentInteractionIdOpt = mediator.getCurrentInteractionOpt();
-            var comboBoxCurrentInteraction = properties.historyCbSelectionModel.getValue().getSelectedItem();
+            var comboBoxCurrentInteraction = vmProperties.historyCbSelectionModel.getValue().getSelectedItem();
             var cmCurrentInteraction = comboBoxCurrentInteraction != null ? comboBoxCurrentInteraction.interaction() : null;
             if (!Objects.equals(modelCurrentInteractionIdOpt.orElse(null), cmCurrentInteraction)) {
                 if (modelCurrentInteractionIdOpt.isPresent()) {
                     var modelCurrentValue = modelCurrentInteractionIdOpt.get();
                     log.debug("Select interaction: '{}'", shorten(modelCurrentValue));
                     var interactionItem = new InteractionItem(mediator.getCurrentTheme(), modelCurrentValue);
-                    updateCbSilently(() -> properties.historyCbSelectionModel.getValue().select(interactionItem),
-                            properties.historyCbOnAction);
+                    updateCbSilently(() -> vmProperties.historyCbSelectionModel.getValue().select(interactionItem),
+                            vmProperties.historyCbOnAction);
                 } else {
                     log.debug("Clear selection");
-                    updateCbSilently(() -> properties.historyCbSelectionModel.getValue().clearSelection(),
-                            properties.historyCbOnAction);
+                    updateCbSilently(() -> vmProperties.historyCbSelectionModel.getValue().clearSelection(),
+                            vmProperties.historyCbOnAction);
                 }
             } else {
                 log.debug("Selection is unchanged: '{}'", modelCurrentInteractionIdOpt.map(LogUtils::shorten));

@@ -15,7 +15,7 @@ import java.util.Objects;
 @Singleton
 class ThemeVmImpl implements ThemeVmController, ThemeVmMediator {
     private static final Logger log = LoggerFactory.getLogger(ThemeVmImpl.class);
-    public final ThemeVmProperties properties = new ThemeVmProperties();
+    public final ThemeVmProperties vmProperties = new ThemeVmProperties();
     @Inject
     private ThemeMediator mediator;
 
@@ -28,7 +28,7 @@ class ThemeVmImpl implements ThemeVmController, ThemeVmMediator {
     @Override
     public void onThemeFilterHistoryCheckBoxClicked() {
         log.trace("onThemeFilterHistoryCheckBoxClicked");
-        var cbValue = properties.filterHistoryCheckBoxSelected.getValue();
+        var cbValue = vmProperties.filterHistoryCheckBoxSelected.getValue();
         var modelValue = mediator.isHistoryFilteringEnabled();
         log.trace("cbValue={}, modelValue={}", cbValue, modelValue);
         if (!Objects.equals(cbValue, modelValue)) {
@@ -40,7 +40,7 @@ class ThemeVmImpl implements ThemeVmController, ThemeVmMediator {
 
     @Override
     public ThemeVmProperties properties() {
-        return properties;
+        return vmProperties;
     }
 
     @Override
@@ -58,33 +58,33 @@ class ThemeVmImpl implements ThemeVmController, ThemeVmMediator {
                 .map(mediator::getTheme)
                 .orElse(null);
         mediator.setCurrentTheme(themeTitle);
-        properties.themeCbValue.setValue(themeTitle);
+        vmProperties.themeCbValue.setValue(themeTitle);
     }
 
     @Override
     public void updateComboBoxSelectedItemFromStateModel() {
-        properties.themeCbValue.setValue(mediator.getCurrentTheme());
+        vmProperties.themeCbValue.setValue(mediator.getCurrentTheme());
     }
 
     @Override
     public void updateComboBoxItems() {
         var currentModelItems = FXCollections.observableArrayList(mediator.getThemes());
-        var currentComboBoxItems = properties.themeCbItems.getValue();
+        var currentComboBoxItems = vmProperties.themeCbItems.getValue();
         if (!Objects.equals(currentModelItems, currentComboBoxItems)) {
             log.trace("Set themeCbItems: {}", currentModelItems);
-            properties.themeCbItems.setValue(currentModelItems);
+            vmProperties.themeCbItems.setValue(currentModelItems);
             setLabel();
         }
     }
 
     @Override
     public void setLabel() {
-        properties.themeLabelText.setValue(String.format("_Theme (%d):", mediator.getThemes().size()));
+        vmProperties.themeLabelText.setValue(String.format("_Theme (%d):", mediator.getThemes().size()));
     }
 
     @Override
     public void initialize() {
-        properties.themeCbCellFactory.setValue(_ -> new ListCell<>() {
+        vmProperties.themeCbCellFactory.setValue(_ -> new ListCell<>() {
             @Override
             protected void updateItem(Theme item, boolean empty) {
                 super.updateItem(item, empty);
@@ -99,7 +99,7 @@ class ThemeVmImpl implements ThemeVmController, ThemeVmMediator {
 
     private void chooseThemeFromCb() {
         log.trace("chooseThemeFromCb");
-        var currentComboBoxValue = properties.themeCbValue.getValue();
+        var currentComboBoxValue = vmProperties.themeCbValue.getValue();
         log.trace("currentComboBoxValue: '{}'", currentComboBoxValue);
         var currentModelValue = mediator.getCurrentTheme();
         log.trace("currentModelValue: '{}'", currentModelValue);
