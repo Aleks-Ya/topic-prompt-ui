@@ -56,23 +56,7 @@ class ClaudeApiImpl implements AiApi {
             var response = client.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() == 200) {
                 var responseBody = gson.fromJson(response.body(), ResponseBody.class);
-                if (!GOOD_STOP_REASON.equals(responseBody.stop_reason())) {
-                    var message = String.format("Wrong stop reason in response: %s", responseBody);
-                    throw new RuntimeException(message);
-                }
-                var text = responseBody.content().stream()
-                        .filter(block -> "text".equals(block.type()))
-                        .map(ResponseBody.ContentBlock::text)
-                        .collect(Collectors.joining());
-                var usage = responseBody.usage();
-                Integer totalTokens = usage != null && usage.input_tokens() != null && usage.output_tokens() != null
-                        ? usage.input_tokens() + usage.output_tokens() : null;
-                return new AiResponse(text, responseBody.id(), model,
-                        effort != null ? effort.name() : null,
-                        responseBody.stop_reason(),
-                        usage != null ? usage.input_tokens() : null,
-                        usage != null ? usage.output_tokens() : null,
-                        totalTokens);
+                return parseResponse(responseBody);
             } else {
                 log.error("Claude API error status {}: {}", response.statusCode(), response.body());
                 throw new RuntimeException(response.body());
@@ -83,6 +67,26 @@ class ClaudeApiImpl implements AiApi {
             Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         }
+    }
+
+    AiResponse parseResponse(ResponseBody responseBody) {
+        if (!GOOD_STOP_REASON.equals(responseBody.stop_reason())) {
+            var message = String.format("Wrong stop reason in response: %s", responseBody);
+            throw new RuntimeException(message);
+        }
+        var text = responseBody.content().stream()
+                .filter(block -> "text".equals(block.type()))
+                .map(ResponseBody.ContentBlock::text)
+                .collect(Collectors.joining());
+        var usage = responseBody.usage();
+        Integer totalTokens = usage != null && usage.input_tokens() != null && usage.output_tokens() != null
+                ? usage.input_tokens() + usage.output_tokens() : null;
+        return new AiResponse(text, responseBody.id(), model,
+                effort != null ? effort.name() : null,
+                responseBody.stop_reason(),
+                usage != null ? usage.input_tokens() : null,
+                usage != null ? usage.output_tokens() : null,
+                totalTokens);
     }
 
     private static String role(ConversationTurn.Speaker speaker) {

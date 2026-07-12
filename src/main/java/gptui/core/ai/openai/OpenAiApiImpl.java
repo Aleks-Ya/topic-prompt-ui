@@ -55,31 +55,35 @@ class OpenAiApiImpl implements AiApi {
         }
         if (response.statusCode() == 200) {
             var responseBody = gson.fromJson(response.body(), ResponseBody.class);
-            var outputs = responseBody.output();
-            var completedOutputs = outputs.stream()
-                    .filter(output -> "completed".equalsIgnoreCase(output.status()))
-                    .toList();
-            if (completedOutputs.isEmpty()) {
-                throw new RuntimeException("No completed output in response: " + outputs);
-            }
-            if (completedOutputs.size() > 1) {
-                throw new RuntimeException("Multiple outputs in response: " + outputs);
-            }
-            var contents = completedOutputs.getFirst().content();
-            if (contents.size() > 1) {
-                throw new RuntimeException("Multiple contents in output: " + contents);
-            }
-            var usage = responseBody.usage();
-            return new AiResponse(contents.getFirst().text(), responseBody.id(), model,
-                    effort != null ? effort.name() : null,
-                    completedOutputs.getFirst().status(),
-                    usage != null ? usage.input_tokens() : null,
-                    usage != null ? usage.output_tokens() : null,
-                    usage != null ? usage.total_tokens() : null);
+            return parseResponse(responseBody);
         } else {
             log.error("GPT API error status {}: {}", response.statusCode(), response.body());
             throw new RuntimeException(response.body());
         }
+    }
+
+    AiResponse parseResponse(ResponseBody responseBody) {
+        var outputs = responseBody.output();
+        var completedOutputs = outputs.stream()
+                .filter(output -> "completed".equalsIgnoreCase(output.status()))
+                .toList();
+        if (completedOutputs.isEmpty()) {
+            throw new RuntimeException("No completed output in response: " + outputs);
+        }
+        if (completedOutputs.size() > 1) {
+            throw new RuntimeException("Multiple outputs in response: " + outputs);
+        }
+        var contents = completedOutputs.getFirst().content();
+        if (contents.size() > 1) {
+            throw new RuntimeException("Multiple contents in output: " + contents);
+        }
+        var usage = responseBody.usage();
+        return new AiResponse(contents.getFirst().text(), responseBody.id(), model,
+                effort != null ? effort.name() : null,
+                completedOutputs.getFirst().status(),
+                usage != null ? usage.input_tokens() : null,
+                usage != null ? usage.output_tokens() : null,
+                usage != null ? usage.total_tokens() : null);
     }
 
     private static String role(ConversationTurn.Speaker speaker) {

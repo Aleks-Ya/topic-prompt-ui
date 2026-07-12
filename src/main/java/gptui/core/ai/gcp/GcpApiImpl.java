@@ -57,17 +57,7 @@ class GcpApiImpl implements AiApi {
             var response = client.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() == 200) {
                 var responseBody = gson.fromJson(response.body(), ResponseBody.class);
-                var candidate = responseBody.candidates().getFirst();
-                if (candidate.finishReason() != STOP) {
-                    var message = String.format("Wrong finish reason in candidate: %s", candidate);
-                    throw new RuntimeException(message);
-                }
-                var usage = responseBody.usageMetadata();
-                return new AiResponse(candidate.content().parts().getFirst().text(), responseBody.responseId(),
-                        model, effort != null ? effort.name() : null, candidate.finishReason().name(),
-                        usage != null ? usage.promptTokenCount() : null,
-                        usage != null ? usage.candidatesTokenCount() : null,
-                        usage != null ? usage.totalTokenCount() : null);
+                return parseResponse(responseBody);
             } else {
                 log.error("GCP API error status {}: {}", response.statusCode(), response.body());
                 throw new RuntimeException(response.body());
@@ -79,6 +69,20 @@ class GcpApiImpl implements AiApi {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
+    }
+
+    AiResponse parseResponse(ResponseBody responseBody) {
+        var candidate = responseBody.candidates().getFirst();
+        if (candidate.finishReason() != STOP) {
+            var message = String.format("Wrong finish reason in candidate: %s", candidate);
+            throw new RuntimeException(message);
+        }
+        var usage = responseBody.usageMetadata();
+        return new AiResponse(candidate.content().parts().getFirst().text(), responseBody.responseId(),
+                model, effort != null ? effort.name() : null, candidate.finishReason().name(),
+                usage != null ? usage.promptTokenCount() : null,
+                usage != null ? usage.candidatesTokenCount() : null,
+                usage != null ? usage.totalTokenCount() : null);
     }
 
     private static String role(ConversationTurn.Speaker speaker) {
