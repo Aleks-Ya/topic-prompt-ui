@@ -115,7 +115,8 @@ class QuestionVmImpl implements QuestionVmController, QuestionVmMediator {
 
     public synchronized void createNewInteractionAndRequestAnswers(InteractionType interactionType) {
         log.debug("createNewInteractionAndRequestAnswers: interactionType={}", interactionType);
-        var interactionId = mediator.createInteraction(interactionType);
+        var parentInteractionId = properties.followUpCheckBoxSelected.get() ? mediator.getCurrentInteractionId() : null;
+        var interactionId = mediator.createInteraction(interactionType, parentInteractionId);
         mediator.requestAnswer(interactionId, GCP);
         mediator.requestAnswer(interactionId, CLAUDE);
         mediator.requestAnswer(interactionId, OPEN_AI);

@@ -19,6 +19,9 @@ public record InteractionItem(Theme theme, Interaction interaction) {
             };
             typeStr = String.format("[%s] ", typeSymbol);
         }
+        if (interaction.parentInteractionId() != null) {
+            typeStr = "↳ " + typeStr;
+        }
         var s = String.format("%s%s: %s", typeStr, theme.title(), interaction.question());
         if (s.length() > MAX_LENGTH) {
             s = s.substring(0, MAX_LENGTH - SUFFIX.length()) + SUFFIX;

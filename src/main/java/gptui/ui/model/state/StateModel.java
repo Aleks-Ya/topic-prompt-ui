@@ -22,7 +22,7 @@ public interface StateModel {
 
     void setCurrentInteractionId(InteractionId currentInteractionId);
 
-    InteractionId createInteraction(InteractionType interactionType);
+    InteractionId createInteraction(InteractionType interactionType, InteractionId parentInteractionId);
 
     void deleteCurrentInteraction();
 

@@ -31,6 +31,7 @@ import static gptui.core.ai.AiModule.OPEN_AI_GRAMMAR;
 import static gptui.core.storagefilesystem.AnswerState.FAIL;
 import static gptui.core.storagefilesystem.AnswerState.SENT;
 import static gptui.core.storagefilesystem.AnswerState.SUCCESS;
+import static gptui.core.storagefilesystem.AnswerType.GRAMMAR;
 import static java.util.concurrent.CompletableFuture.runAsync;
 
 @Singleton
@@ -123,6 +124,10 @@ class QuestionModelImpl implements QuestionModel {
     public void requestAnswer(InteractionId interactionId, AnswerType answerType, Runnable callback) {
         log.info("Sending request for {}...", answerType);
         var interaction = storage.readInteraction(interactionId).orElseThrow();
+        if (interaction.parentInteractionId() != null && answerType != GRAMMAR) {
+            requestFollowUpAnswer(interactionId, answerType, callback);
+            return;
+        }
         var promptOpt = promptFactory.getPrompt(
                 interaction.type(),
                 storage.getTheme(interaction.themeId()).title(),

@@ -245,8 +245,8 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, ThemeMediator, 
     }
 
     @Override
-    public InteractionId createInteraction(InteractionType interactionType) {
-        var interaction = stateModel.createInteraction(interactionType);
+    public InteractionId createInteraction(InteractionType interactionType, InteractionId parentInteractionId) {
+        var interaction = stateModel.createInteraction(interactionType, parentInteractionId);
         themeVM.updateComboBoxItems();
         grammarAnswerVM.displayCurrentAnswer();
         openAiAnswerVM.displayCurrentAnswer();

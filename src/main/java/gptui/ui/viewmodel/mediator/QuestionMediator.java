@@ -18,7 +18,7 @@ public interface QuestionMediator {
 
     void requestAnswer(InteractionId interactionId, AnswerType answerType);
 
-    InteractionId createInteraction(InteractionType interactionType);
+    InteractionId createInteraction(InteractionType interactionType, InteractionId parentInteractionId);
 
     String getTextFromClipboard();
 }

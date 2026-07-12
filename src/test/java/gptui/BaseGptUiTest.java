@@ -173,6 +173,10 @@ public abstract class BaseGptUiTest extends ApplicationTest {
         public Button regenerateButton() {
             return lookup("#regenerateButton").queryButton();
         }
+
+        public CheckBox followUpCheckBox() {
+            return lookup("#followUpCheckBox").queryAs(CheckBox.class);
+        }
     }
 
     protected class AnswerInfo {

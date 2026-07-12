@@ -76,7 +76,7 @@ class StateModelImpl implements StateModel {
     }
 
     @Override
-    public InteractionId createInteraction(InteractionType interactionType) {
+    public InteractionId createInteraction(InteractionType interactionType, InteractionId parentInteractionId) {
         var interactionId = storage.newInteractionId();
         Mdc.run(interactionId, () -> {
             var theme = getCurrentTheme();
@@ -86,7 +86,7 @@ class StateModelImpl implements StateModel {
                     OPEN_AI, new Answer(OPEN_AI, "", "", "", NEW, null),
                     CLAUDE, new Answer(CLAUDE, "", "", "", NEW, null),
                     GCP, new Answer(GCP, "", "", "", NEW, null)
-            ), null);
+            ), parentInteractionId);
             storage.saveInteraction(interaction);
             setCurrentInteractionId(interactionId);
         });

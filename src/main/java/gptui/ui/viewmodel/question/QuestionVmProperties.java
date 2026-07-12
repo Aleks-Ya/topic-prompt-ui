@@ -11,4 +11,5 @@ public class QuestionVmProperties {
     public final BooleanProperty questionTaFocused = new SimpleBooleanProperty();
     public final BooleanProperty questionTaSelectAll = new SimpleBooleanProperty();
     public final BooleanProperty questionTaPositionCaretToEnd = new SimpleBooleanProperty();
+    public final BooleanProperty followUpCheckBoxSelected = new SimpleBooleanProperty();
 }

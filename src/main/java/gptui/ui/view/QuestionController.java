@@ -5,6 +5,7 @@ import jakarta.inject.Inject;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyEvent;
 import org.slf4j.Logger;
@@ -16,6 +17,8 @@ public class QuestionController extends BaseController {
     private QuestionVmController vm;
     @FXML
     private TextArea questionTextArea;
+    @FXML
+    private CheckBox followUpCheckBox;
 
     @FXML
     void sendQuestion(ActionEvent ignoredEvent) {
@@ -55,6 +58,7 @@ public class QuestionController extends BaseController {
 
     @Override
     protected void initialize() {
+        vm.properties().followUpCheckBoxSelected.bindBidirectional(followUpCheckBox.selectedProperty());
         vm.properties().questionTaText.bindBidirectional(questionTextArea.textProperty());
         vm.properties().questionTaStyle.bindBidirectional(questionTextArea.styleProperty());
         vm.properties().questionTaFocused.addListener((observable, oldValue, newValue) -> {
