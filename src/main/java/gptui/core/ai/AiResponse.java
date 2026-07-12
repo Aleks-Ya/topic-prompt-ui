@@ -1,5 +1,5 @@
 package gptui.core.ai;
 
-public record AiResponse(String text, String responseId, String modelId, String modelParams,
+public record AiResponse(String text, String responseId, String modelId, String modelParams, String finishReason,
                          Integer inputTokens, Integer outputTokens, Integer totalTokens) {
 }

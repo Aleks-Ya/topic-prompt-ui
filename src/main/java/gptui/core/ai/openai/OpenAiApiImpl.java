@@ -72,6 +72,7 @@ class OpenAiApiImpl implements AiApi {
             var usage = responseBody.usage();
             return new AiResponse(contents.getFirst().text(), responseBody.id(), model,
                     effort != null ? effort.name() : null,
+                    completedOutputs.getFirst().status(),
                     usage != null ? usage.input_tokens() : null,
                     usage != null ? usage.output_tokens() : null,
                     usage != null ? usage.total_tokens() : null);

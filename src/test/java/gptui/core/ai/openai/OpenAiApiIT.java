@@ -37,12 +37,14 @@ class OpenAiApiIT {
         System.out.println("responseId: " + response.responseId());
         System.out.println("modelId: " + response.modelId());
         System.out.println("modelParams: " + response.modelParams());
+        System.out.println("finishReason: " + response.finishReason());
         System.out.println("tokens: input=" + response.inputTokens() + " output=" + response.outputTokens()
                 + " total=" + response.totalTokens());
         assertThat(response.text()).isNotBlank();
         assertThat(response.responseId()).isNotBlank();
         assertThat(response.modelId()).isNotBlank();
         assertThat(response.modelParams()).isNotBlank();
+        assertThat(response.finishReason()).isEqualTo("completed");
         assertThat(response.inputTokens()).isPositive();
         assertThat(response.outputTokens()).isPositive();
         assertThat(response.totalTokens()).isPositive();
@@ -55,12 +57,14 @@ class OpenAiApiIT {
         System.out.println("responseId: " + response.responseId());
         System.out.println("modelId: " + response.modelId());
         System.out.println("modelParams: " + response.modelParams());
+        System.out.println("finishReason: " + response.finishReason());
         System.out.println("tokens: input=" + response.inputTokens() + " output=" + response.outputTokens()
                 + " total=" + response.totalTokens());
         assertThat(response.text()).isNotBlank();
         assertThat(response.responseId()).isNotBlank();
         assertThat(response.modelId()).isNotBlank();
         assertThat(response.modelParams()).isNotBlank();
+        assertThat(response.finishReason()).isEqualTo("completed");
         assertThat(response.inputTokens()).isPositive();
         assertThat(response.outputTokens()).isPositive();
         assertThat(response.totalTokens()).isPositive();

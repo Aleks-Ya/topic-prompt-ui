@@ -64,7 +64,7 @@ class GcpApiImpl implements AiApi {
                 }
                 var usage = responseBody.usageMetadata();
                 return new AiResponse(candidate.content().parts().getFirst().text(), responseBody.responseId(),
-                        model, effort != null ? effort.name() : null,
+                        model, effort != null ? effort.name() : null, candidate.finishReason().name(),
                         usage != null ? usage.promptTokenCount() : null,
                         usage != null ? usage.candidatesTokenCount() : null,
                         usage != null ? usage.totalTokenCount() : null);

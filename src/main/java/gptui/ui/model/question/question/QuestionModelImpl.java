@@ -100,7 +100,7 @@ class QuestionModelImpl implements QuestionModel {
             updateAnswer(interactionId, answerType, answer ->
                     answer.withAnswerMd(response.text()).withAnswerHtml(answerHtml)
                             .withResponseId(response.responseId())
-                            .withModelInfo(response.modelId(), response.modelParams(),
+                            .withModelInfo(response.modelId(), response.modelParams(), response.finishReason(),
                                     response.inputTokens(), response.outputTokens(), response.totalTokens())
                             .withState(SUCCESS), callback);
             soundService.beenOnAnswer(answerType);
@@ -153,7 +153,7 @@ class QuestionModelImpl implements QuestionModel {
                 updateAnswer(interactionId, answerType, answer ->
                         answer.withAnswerMd(response.text()).withAnswerHtml(answerHtml)
                                 .withResponseId(response.responseId())
-                                .withModelInfo(response.modelId(), response.modelParams(),
+                                .withModelInfo(response.modelId(), response.modelParams(), response.finishReason(),
                                         response.inputTokens(), response.outputTokens(), response.totalTokens())
                                 .withState(SUCCESS), callback);
                 soundService.beenOnAnswer(answerType);

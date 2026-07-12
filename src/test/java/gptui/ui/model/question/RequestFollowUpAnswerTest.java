@@ -43,13 +43,13 @@ class RequestFollowUpAnswerTest extends ApplicationTest {
         storage.saveInteraction(new Interaction(parentId, InteractionType.QUESTION, theme.id(), "What is Java?",
                 Map.of(OPEN_AI, new Answer(OPEN_AI, "Explain Java briefly", "Java is a language.",
                         "<p>Java is a language.</p>", AnswerState.SUCCESS, "resp_1",
-                        null, null, null, null, null)),
+                        null, null, null, null, null, null)),
                 null));
 
         var followUpId = new InteractionId(2L);
         storage.saveInteraction(new Interaction(followUpId, InteractionType.QUESTION, theme.id(), "Who created it?",
                 Map.of(OPEN_AI, new Answer(OPEN_AI, "", "", "", AnswerState.NEW, null,
-                        null, null, null, null, null)),
+                        null, null, null, null, null, null)),
                 parentId));
 
         openAiApi.clear().putResponse("Who created it?", "James Gosling created Java.", Duration.ZERO);
@@ -76,7 +76,7 @@ class RequestFollowUpAnswerTest extends ApplicationTest {
         var standaloneId = storage.newInteractionId();
         storage.saveInteraction(new Interaction(standaloneId, InteractionType.QUESTION, theme.id(), "A question",
                 Map.of(OPEN_AI, new Answer(OPEN_AI, "", "", "", AnswerState.NEW, null,
-                        null, null, null, null, null)), null));
+                        null, null, null, null, null, null)), null));
 
         assertThatThrownBy(() -> questionModel.requestFollowUpAnswer(standaloneId, OPEN_AI, () -> {
         })).isInstanceOf(IllegalStateException.class);
@@ -88,12 +88,12 @@ class RequestFollowUpAnswerTest extends ApplicationTest {
         var parentId = new InteractionId(1L);
         storage.saveInteraction(new Interaction(parentId, InteractionType.QUESTION, theme.id(), "Q1",
                 Map.of(GRAMMAR, new Answer(GRAMMAR, "p1", "a1", "<p>a1</p>", AnswerState.SUCCESS, null,
-                        null, null, null, null, null)), null));
+                        null, null, null, null, null, null)), null));
 
         var followUpId = new InteractionId(2L);
         storage.saveInteraction(new Interaction(followUpId, InteractionType.QUESTION, theme.id(), "Q2",
                 Map.of(GRAMMAR, new Answer(GRAMMAR, "", "", "", AnswerState.NEW, null,
-                        null, null, null, null, null)), parentId));
+                        null, null, null, null, null, null)), parentId));
 
         questionModel.requestFollowUpAnswer(followUpId, GRAMMAR, () -> {
         });

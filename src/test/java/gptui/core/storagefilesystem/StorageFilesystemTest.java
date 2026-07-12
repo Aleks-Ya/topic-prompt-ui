@@ -36,7 +36,7 @@ class StorageFilesystemTest extends BaseTest {
         var parent = new Interaction(new InteractionId(1L), QUESTION, new ThemeId(1L), "question1", null, null);
         var followUp = new Interaction(new InteractionId(2L), QUESTION, new ThemeId(1L), "question2", Map.of(
                 OPEN_AI, new Answer(OPEN_AI, "prompt2", "answerMd2", "answerHtml2", SUCCESS, "resp_123",
-                        null, null, null, null, null)),
+                        null, null, null, null, null, null)),
                 parent.id());
         storageFileSystem.saveInteraction(parent);
         storageFileSystem.saveInteraction(followUp);

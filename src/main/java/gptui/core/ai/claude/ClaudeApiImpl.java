@@ -69,6 +69,7 @@ class ClaudeApiImpl implements AiApi {
                         ? usage.input_tokens() + usage.output_tokens() : null;
                 return new AiResponse(text, responseBody.id(), model,
                         effort != null ? effort.name() : null,
+                        responseBody.stop_reason(),
                         usage != null ? usage.input_tokens() : null,
                         usage != null ? usage.output_tokens() : null,
                         totalTokens);
