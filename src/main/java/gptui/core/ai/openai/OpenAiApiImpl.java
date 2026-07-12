@@ -59,6 +59,9 @@ class OpenAiApiImpl implements AiApi {
             var completedOutputs = outputs.stream()
                     .filter(output -> "completed".equalsIgnoreCase(output.status()))
                     .toList();
+            if (completedOutputs.isEmpty()) {
+                throw new RuntimeException("No completed output in response: " + outputs);
+            }
             if (completedOutputs.size() > 1) {
                 throw new RuntimeException("Multiple outputs in response: " + outputs);
             }
