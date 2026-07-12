@@ -85,7 +85,7 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, ThemeMediator, 
     @Override
     public void themeWasChosen() {
         log.trace("themeWasChosen");
-        if (stateModel.isHistoryFilteringEnabled()) {
+        if (Boolean.TRUE.equals(stateModel.isHistoryFilteringEnabled())) {
             stateModel.chooseFirstInteractionAsCurrent();
         }
         themeVM.updateComboBoxItems();
@@ -113,7 +113,7 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, ThemeMediator, 
     @Override
     public void isThemeFilterHistoryChanged() {
         log.trace("isThemeFilterHistoryChanged");
-        if (stateModel.isHistoryFilteringEnabled()) {
+        if (Boolean.TRUE.equals(stateModel.isHistoryFilteringEnabled())) {
             stateModel.chooseFirstInteractionAsCurrent();
         }
         historyVM.displayCurrentInteraction();

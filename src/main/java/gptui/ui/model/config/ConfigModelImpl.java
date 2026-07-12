@@ -20,7 +20,9 @@ class ConfigModelImpl implements ConfigModel {
             appDataPath = fileSystem.getPath(System.getProperty("user.home"), ".gpt");
             var configPath = appDataPath.resolve("config.properties");
             if (Files.exists(configPath)) {
-                properties.load(Files.newInputStream(configPath));
+                try (var inputStream = Files.newInputStream(configPath)) {
+                    properties.load(inputStream);
+                }
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

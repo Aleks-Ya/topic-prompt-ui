@@ -110,9 +110,9 @@ class StateModelImpl implements StateModel {
                 var newCurrentTheme = storage.getTheme(newCurrentInteraction.themeId());
                 setCurrentTheme(newCurrentTheme);
             } else {
-                var currentTheme = getCurrentTheme();
-                if (currentTheme != null) {
-                    var oldCurrentThemeIndex = getThemes().indexOf(currentTheme);
+                var oldCurrentTheme = getCurrentTheme();
+                if (oldCurrentTheme != null) {
+                    var oldCurrentThemeIndex = getThemes().indexOf(oldCurrentTheme);
                     if (getThemes().size() > 1) {
                         Theme newCurrentTheme;
                         if (oldCurrentThemeIndex == 0) {

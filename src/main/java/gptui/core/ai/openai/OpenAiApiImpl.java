@@ -49,6 +49,10 @@ class OpenAiApiImpl implements AiApi {
                 .build();
         try (var client = HttpClient.newHttpClient()) {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);

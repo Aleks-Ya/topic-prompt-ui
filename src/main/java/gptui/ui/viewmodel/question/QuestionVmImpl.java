@@ -98,7 +98,7 @@ class QuestionVmImpl implements QuestionVmController, QuestionVmMediator {
     }
 
     private void updateQuestionTextAreaBackgroundColor() {
-        if (mediator.isEnteringNewQuestion()) {
+        if (Boolean.TRUE.equals(mediator.isEnteringNewQuestion())) {
             properties.questionTaStyle.set(QUESTION_STYLE_EDITED);
         } else {
             properties.questionTaStyle.set(QuestionStyle.QUESTION_STYLE_EMPTY);

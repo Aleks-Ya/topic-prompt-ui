@@ -65,6 +65,10 @@ class GcpApiImpl implements AiApi {
         } catch (RuntimeException e) {
             log.error(e.getMessage(), e);
             throw e;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);

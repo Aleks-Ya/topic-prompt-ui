@@ -62,19 +62,19 @@ public class QuestionController extends BaseController {
         vm.properties().questionTaText.bindBidirectional(questionTextArea.textProperty());
         vm.properties().questionTaStyle.bindBidirectional(questionTextArea.styleProperty());
         vm.properties().questionTaFocused.addListener((observable, oldValue, newValue) -> {
-                    if (newValue) {
+                    if (Boolean.TRUE.equals(newValue)) {
                         Platform.runLater(() -> questionTextArea.requestFocus());
                     }
                 }
         );
         vm.properties().questionTaSelectAll.addListener((observable, oldValue, newValue) -> {
-                    if (newValue) {
+                    if (Boolean.TRUE.equals(newValue)) {
                         Platform.runLater(() -> questionTextArea.selectAll());
                     }
                 }
         );
         vm.properties().questionTaPositionCaretToEnd.addListener((observable, oldValue, newValue) -> {
-                    if (newValue) {
+                    if (Boolean.TRUE.equals(newValue)) {
                         Platform.runLater(() -> questionTextArea.positionCaret(questionTextArea.getText().length()));
                     }
                 }
