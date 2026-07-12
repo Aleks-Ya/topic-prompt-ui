@@ -27,12 +27,14 @@ class FollowUpHistoryBuilderTest extends BaseTest {
         var theme = storage.addTheme("Theme");
         var rootId = new InteractionId(1L);
         storage.saveInteraction(new Interaction(rootId, InteractionType.QUESTION, theme.id(), "root question",
-                Map.of(OPEN_AI, new Answer(OPEN_AI, "root prompt", "root answer", "<p>root answer</p>", AnswerState.SUCCESS, null)),
+                Map.of(OPEN_AI, new Answer(OPEN_AI, "root prompt", "root answer", "<p>root answer</p>", AnswerState.SUCCESS, null,
+                        null, null, null, null, null)),
                 null));
 
         var midId = new InteractionId(2L);
         storage.saveInteraction(new Interaction(midId, InteractionType.QUESTION, theme.id(), "mid question",
-                Map.of(OPEN_AI, new Answer(OPEN_AI, "mid prompt", "mid answer", "<p>mid answer</p>", AnswerState.SUCCESS, null)),
+                Map.of(OPEN_AI, new Answer(OPEN_AI, "mid prompt", "mid answer", "<p>mid answer</p>", AnswerState.SUCCESS, null,
+                        null, null, null, null, null)),
                 rootId));
 
         var turns = builder.buildHistory(midId, OPEN_AI);
@@ -60,7 +62,8 @@ class FollowUpHistoryBuilderTest extends BaseTest {
         var theme = storage.addTheme("Theme 3");
         var rootId = storage.newInteractionId();
         storage.saveInteraction(new Interaction(rootId, InteractionType.QUESTION, theme.id(), "root question",
-                Map.of(OPEN_AI, new Answer(OPEN_AI, "p", "a", "<p>a</p>", AnswerState.FAIL, null)), null));
+                Map.of(OPEN_AI, new Answer(OPEN_AI, "p", "a", "<p>a</p>", AnswerState.FAIL, null,
+                        null, null, null, null, null)), null));
 
         assertThatThrownBy(() -> builder.buildHistory(rootId, OPEN_AI))
                 .isInstanceOf(IllegalStateException.class);

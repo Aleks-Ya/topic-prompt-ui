@@ -2,7 +2,7 @@ package gptui.core.ai.openai;
 
 import java.util.List;
 
-record ResponseBody(String id, String model, List<Outputs> output, Error error) {
+record ResponseBody(String id, String model, List<Outputs> output, Error error, Usage usage) {
     public record Content(String text) {
     }
 
@@ -10,5 +10,8 @@ record ResponseBody(String id, String model, List<Outputs> output, Error error) 
     }
 
     record Error(String message, String type, String param, String code) {
+    }
+
+    record Usage(Integer input_tokens, Integer output_tokens, Integer total_tokens) {
     }
 }

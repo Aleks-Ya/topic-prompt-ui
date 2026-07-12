@@ -35,8 +35,17 @@ class OpenAiApiIT {
         var response = api.send("What is the last Java version?");
         System.out.println(response.text());
         System.out.println("responseId: " + response.responseId());
+        System.out.println("modelId: " + response.modelId());
+        System.out.println("modelParams: " + response.modelParams());
+        System.out.println("tokens: input=" + response.inputTokens() + " output=" + response.outputTokens()
+                + " total=" + response.totalTokens());
         assertThat(response.text()).isNotBlank();
         assertThat(response.responseId()).isNotBlank();
+        assertThat(response.modelId()).isNotBlank();
+        assertThat(response.modelParams()).isNotBlank();
+        assertThat(response.inputTokens()).isPositive();
+        assertThat(response.outputTokens()).isPositive();
+        assertThat(response.totalTokens()).isPositive();
     }
 
     @Test
@@ -44,8 +53,17 @@ class OpenAiApiIT {
         var response = grammarApi.send("What is the last Java version?");
         System.out.println(response.text());
         System.out.println("responseId: " + response.responseId());
+        System.out.println("modelId: " + response.modelId());
+        System.out.println("modelParams: " + response.modelParams());
+        System.out.println("tokens: input=" + response.inputTokens() + " output=" + response.outputTokens()
+                + " total=" + response.totalTokens());
         assertThat(response.text()).isNotBlank();
         assertThat(response.responseId()).isNotBlank();
+        assertThat(response.modelId()).isNotBlank();
+        assertThat(response.modelParams()).isNotBlank();
+        assertThat(response.inputTokens()).isPositive();
+        assertThat(response.outputTokens()).isPositive();
+        assertThat(response.totalTokens()).isPositive();
     }
 
     @Test

@@ -65,7 +65,14 @@ class ClaudeApiImpl implements AiApi {
                         .filter(block -> "text".equals(block.type()))
                         .map(ResponseBody.ContentBlock::text)
                         .collect(Collectors.joining());
-                return new AiResponse(text, responseBody.id());
+                var usage = responseBody.usage();
+                Integer totalTokens = usage != null && usage.input_tokens() != null && usage.output_tokens() != null
+                        ? usage.input_tokens() + usage.output_tokens() : null;
+                return new AiResponse(text, responseBody.id(), model,
+                        effort != null ? effort.name() : null,
+                        usage != null ? usage.input_tokens() : null,
+                        usage != null ? usage.output_tokens() : null,
+                        totalTokens);
             } else {
                 log.error("Claude API error status {}: {}", response.statusCode(), response.body());
                 throw new RuntimeException(response.body());

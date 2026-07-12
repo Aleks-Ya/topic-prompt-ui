@@ -56,7 +56,7 @@ public abstract class BaseMockApi implements AiApi {
         }
         var newValue = receivedCounter.incrementAndGet();
         log.trace("receivedCounter was incremented: {}", newValue);
-        return new AiResponse(info.content(), null);
+        return new AiResponse(info.content(), null, null, null, null, null, null);
     }
 
     public void waitUntilSent(int counter) {

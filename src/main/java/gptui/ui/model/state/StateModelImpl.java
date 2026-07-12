@@ -82,10 +82,10 @@ class StateModelImpl implements StateModel {
             var theme = getCurrentTheme();
             var question = getEditedQuestion();
             var interaction = new Interaction(interactionId, interactionType, theme.id(), question, Map.of(
-                    GRAMMAR, new Answer(GRAMMAR, "", "", "", NEW, null),
-                    OPEN_AI, new Answer(OPEN_AI, "", "", "", NEW, null),
-                    CLAUDE, new Answer(CLAUDE, "", "", "", NEW, null),
-                    GCP, new Answer(GCP, "", "", "", NEW, null)
+                    GRAMMAR, new Answer(GRAMMAR, "", "", "", NEW, null, null, null, null, null, null),
+                    OPEN_AI, new Answer(OPEN_AI, "", "", "", NEW, null, null, null, null, null, null),
+                    CLAUDE, new Answer(CLAUDE, "", "", "", NEW, null, null, null, null, null, null),
+                    GCP, new Answer(GCP, "", "", "", NEW, null, null, null, null, null, null)
             ), parentInteractionId);
             storage.saveInteraction(interaction);
             setCurrentInteractionId(interactionId);

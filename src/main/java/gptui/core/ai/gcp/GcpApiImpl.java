@@ -23,12 +23,14 @@ class GcpApiImpl implements AiApi {
     private static final Gson gson = new Gson();
     private static final String ENDPOINT_TEMPLATE =
             "https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent";
+    private final String model;
     private final URI endpoint;
     private final ThinkingLevel effort;
     @Inject
     private ConfigModel configModel;
 
     GcpApiImpl(String model, ThinkingLevel effort) {
+        this.model = model;
         this.endpoint = URI.create(String.format(ENDPOINT_TEMPLATE, model));
         this.effort = effort;
     }
@@ -60,7 +62,12 @@ class GcpApiImpl implements AiApi {
                     var message = String.format("Wrong finish reason in candidate: %s", candidate);
                     throw new RuntimeException(message);
                 }
-                return new AiResponse(candidate.content().parts().getFirst().text(), responseBody.responseId());
+                var usage = responseBody.usageMetadata();
+                return new AiResponse(candidate.content().parts().getFirst().text(), responseBody.responseId(),
+                        model, effort != null ? effort.name() : null,
+                        usage != null ? usage.promptTokenCount() : null,
+                        usage != null ? usage.candidatesTokenCount() : null,
+                        usage != null ? usage.totalTokenCount() : null);
             } else {
                 log.error("GCP API error status {}: {}", response.statusCode(), response.body());
                 throw new RuntimeException(response.body());

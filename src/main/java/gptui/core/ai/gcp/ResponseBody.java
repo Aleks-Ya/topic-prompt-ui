@@ -2,7 +2,7 @@ package gptui.core.ai.gcp;
 
 import java.util.List;
 
-record ResponseBody(List<Candidate> candidates, String responseId) {
+record ResponseBody(List<Candidate> candidates, String responseId, UsageMetadata usageMetadata) {
     record Candidate(Content content, FinishReason finishReason) {
     }
 
@@ -14,5 +14,8 @@ record ResponseBody(List<Candidate> candidates, String responseId) {
         SAFETY,
         RECITATION,
         OTHER
+    }
+
+    record UsageMetadata(Integer promptTokenCount, Integer candidatesTokenCount, Integer totalTokenCount) {
     }
 }

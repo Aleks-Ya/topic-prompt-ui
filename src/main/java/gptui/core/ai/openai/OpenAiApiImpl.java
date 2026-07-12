@@ -66,7 +66,12 @@ class OpenAiApiImpl implements AiApi {
             if (contents.size() > 1) {
                 throw new RuntimeException("Multiple contents in output: " + contents);
             }
-            return new AiResponse(contents.getFirst().text(), responseBody.id());
+            var usage = responseBody.usage();
+            return new AiResponse(contents.getFirst().text(), responseBody.id(), model,
+                    effort != null ? effort.name() : null,
+                    usage != null ? usage.input_tokens() : null,
+                    usage != null ? usage.output_tokens() : null,
+                    usage != null ? usage.total_tokens() : null);
         } else {
             log.error("GPT API error status {}: {}", response.statusCode(), response.body());
             throw new RuntimeException(response.body());

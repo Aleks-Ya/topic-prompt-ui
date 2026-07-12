@@ -99,7 +99,10 @@ class QuestionModelImpl implements QuestionModel {
             var answerHtml = formatConverter.markdownToHtml(response.text());
             updateAnswer(interactionId, answerType, answer ->
                     answer.withAnswerMd(response.text()).withAnswerHtml(answerHtml)
-                            .withResponseId(response.responseId()).withState(SUCCESS), callback);
+                            .withResponseId(response.responseId())
+                            .withModelInfo(response.modelId(), response.modelParams(),
+                                    response.inputTokens(), response.outputTokens(), response.totalTokens())
+                            .withState(SUCCESS), callback);
             soundService.beenOnAnswer(answerType);
             log.info("The follow-up answer request finished.");
         }), EXECUTOR).handle((res, e) -> {
@@ -149,7 +152,10 @@ class QuestionModelImpl implements QuestionModel {
                 var answerHtml = formatConverter.markdownToHtml(response.text());
                 updateAnswer(interactionId, answerType, answer ->
                         answer.withAnswerMd(response.text()).withAnswerHtml(answerHtml)
-                                .withResponseId(response.responseId()).withState(SUCCESS), callback);
+                                .withResponseId(response.responseId())
+                                .withModelInfo(response.modelId(), response.modelParams(),
+                                        response.inputTokens(), response.outputTokens(), response.totalTokens())
+                                .withState(SUCCESS), callback);
                 soundService.beenOnAnswer(answerType);
                 log.info("The short answer request finished.");
             }), EXECUTOR).handle((res, e) -> {
