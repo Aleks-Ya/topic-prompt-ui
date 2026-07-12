@@ -6,6 +6,7 @@ plugins {
     id 'org.beryx.jlink' version '4.0.2'
     id 'org.sonarqube' version '7.3.1.8318'
 }
+version = new File(projectDir, 'src/main/resources/gptui/version.txt').text.trim() - '-SNAPSHOT'
 def javaVersion = 25
 java {
     toolchain {
