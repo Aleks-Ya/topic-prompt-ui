@@ -53,6 +53,12 @@ The user is not a native English speaker, so the app always grammar-checks their
 
 There are 4 question-submission buttons in the UI: **Question**, **Definition**, **Fact**, **Grammar**. `Grammar` sends only a grammar-check request. `Question`, `Definition`, and `Fact` each send two things: a grammar-check request, and the question request (original text, unmodified) fanned out to all 3 AI models (OpenAI, Claude, GCP). A separate **Resend** button repeats the last request, for recovering from failures.
 
+### Follow-up requests (storage prepared, feature not yet built)
+
+`Interaction` has a nullable `parentInteractionId` field and `Answer` has a nullable `responseId` field, both currently unset by any code path — they exist to support a future "continue this conversation" feature without a schema migration. `AiApi.send()` returns an `AiResponse(String text, String responseId)` record instead of a bare `String`; each provider impl populates `responseId` from its response's id-like field (OpenAI `ResponseBody.id` → `resp_...`, Claude `ResponseBody.id` → `msg_...`, GCP `ResponseBody.responseId`, confirmed present on real `generateContent` responses).
+
+Design decision: `responseId` is captured purely as informational/debugging metadata, **not** used for conversation continuation. OpenAI's Responses API supports resuming via `previous_response_id`, but OpenAI's server-side response retention is time-limited (~30 days), so relying on it would silently break follow-ups to older interactions. The planned mechanism for all three providers is instead to walk the `parentInteractionId` chain and reconstruct full conversation history from each ancestor `Answer`'s existing `prompt` (exact text sent) and `answerMd` (exact raw text returned) — both already persisted today. The thread model is a chain of separate linked `Interaction`s (one per turn, `parentInteractionId` pointing at the previous turn), not a multi-turn container inside a single `Interaction` — this keeps the 1-file-per-interaction storage layout and the 4-parallel-`AnswerVm` architecture unchanged.
+
 ### JPMS module-info
 
 `src/main/java/module-info.java` explicitly `exports`/`opens` every package that Guice, Gson, or FXML need reflective/runtime access to. **When adding a new package, or a new class that Guice/Gson/FXML must reach reflectively, add the corresponding `exports`/`opens` entry** or the app will fail at runtime with module-access errors, not compile errors.

@@ -75,15 +75,16 @@ class QuestionModelImpl implements QuestionModel {
                     callback);
             runAsync(() -> Mdc.run(interactionId, () -> {
                 log.trace("requestAnswer async");
-                var answerMd = switch (answerType) {
+                var response = switch (answerType) {
                     case GCP -> gcpApi.send(prompt);
                     case CLAUDE -> claudeApi.send(prompt);
                     case OPEN_AI -> openAiApi.send(prompt);
                     case GRAMMAR -> openAiGrammarApi.send(prompt);
                 };
-                var answerHtml = formatConverter.markdownToHtml(answerMd);
+                var answerHtml = formatConverter.markdownToHtml(response.text());
                 updateAnswer(interactionId, answerType, answer ->
-                        answer.withAnswerMd(answerMd).withAnswerHtml(answerHtml).withState(SUCCESS), callback);
+                        answer.withAnswerMd(response.text()).withAnswerHtml(answerHtml)
+                                .withResponseId(response.responseId()).withState(SUCCESS), callback);
                 soundService.beenOnAnswer(answerType);
                 log.info("The short answer request finished.");
             }), EXECUTOR).handle((res, e) -> {

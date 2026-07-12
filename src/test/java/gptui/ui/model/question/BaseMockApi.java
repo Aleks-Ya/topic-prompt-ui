@@ -1,6 +1,7 @@
 package gptui.ui.model.question;
 
 import gptui.core.ai.AiApi;
+import gptui.core.ai.AiResponse;
 import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +25,7 @@ public abstract class BaseMockApi implements AiApi {
     protected final AtomicInteger receivedCounter = new AtomicInteger();
 
     @Override
-    public String send(String content) {
+    public AiResponse send(String content) {
         sendHistory.add(content);
         if (Platform.isFxApplicationThread()) {
             throw new IllegalStateException("Should not run in the JavaFX Application Thread");
@@ -51,7 +52,7 @@ public abstract class BaseMockApi implements AiApi {
         }
         var newValue = receivedCounter.incrementAndGet();
         log.trace("receivedCounter was incremented: {}", newValue);
-        return info.content();
+        return new AiResponse(info.content(), null);
     }
 
     public void waitUntilSent(int counter) {

@@ -9,15 +9,17 @@ public record Interaction(InteractionId id,
                           InteractionType type,
                           ThemeId themeId,
                           String question,
-                          Map<AnswerType, Answer> answers) {
+                          Map<AnswerType, Answer> answers,
+                          InteractionId parentInteractionId) {
 
     public Interaction(InteractionId id, InteractionType type, ThemeId themeId, String question,
-                       Map<AnswerType, Answer> answers) {
+                       Map<AnswerType, Answer> answers, InteractionId parentInteractionId) {
         this.id = id;
         this.type = type;
         this.themeId = themeId;
         this.question = question;
         this.answers = answers != null ? answers : new TreeMap<>();
+        this.parentInteractionId = parentInteractionId;
     }
 
     public Optional<Answer> getAnswer(AnswerType answerType) {
@@ -27,12 +29,12 @@ public record Interaction(InteractionId id,
     public Interaction withAnswer(Answer answer) {
         var map = new TreeMap<>(answers);
         map.put(answer.answerType(), answer);
-        return new Interaction(id, type, themeId, question, Map.copyOf(map));
+        return new Interaction(id, type, themeId, question, Map.copyOf(map), parentInteractionId);
     }
 
     public Interaction withAnswer(AnswerType answerType, Function<Answer, Answer> update) {
         var currentAnswer = answers.getOrDefault(answerType,
-                new Answer(answerType, null, null, null, null));
+                new Answer(answerType, null, null, null, null, null));
         var newAnswer = update.apply(currentAnswer);
         return withAnswer(newAnswer);
     }
@@ -41,7 +43,11 @@ public record Interaction(InteractionId id,
     public Interaction withAnswerDeleted(AnswerType answerType) {
         var map = new TreeMap<>(answers);
         map.remove(answerType);
-        return new Interaction(id, type, themeId, question, Map.copyOf(map));
+        return new Interaction(id, type, themeId, question, Map.copyOf(map), parentInteractionId);
+    }
+
+    public Interaction withParentInteractionId(InteractionId parentInteractionId) {
+        return new Interaction(id, type, themeId, question, answers, parentInteractionId);
     }
 
     @Override
@@ -52,6 +58,7 @@ public record Interaction(InteractionId id,
                 ", themeId='" + themeId + '\'' +
                 ", question='" + question + '\'' +
                 ", answers=" + answers +
+                ", parentInteractionId=" + parentInteractionId +
                 '}';
     }
 }

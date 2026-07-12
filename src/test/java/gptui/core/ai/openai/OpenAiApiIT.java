@@ -27,27 +27,31 @@ class OpenAiApiIT {
     @Test
     void send() {
         var response = api.send("What is the last Java version?");
-        System.out.println(response);
+        System.out.println(response.text());
+        System.out.println("responseId: " + response.responseId());
     }
 
     @Test
     void sendGrammar() {
         var response = grammarApi.send("What is the last Java version?");
-        System.out.println(response);
+        System.out.println(response.text());
+        System.out.println("responseId: " + response.responseId());
     }
 
     @Test
     void definitionOpenAi() {
         var prompt = promptFactory.getPrompt(DEFINITION, "AWS S3", "Bucket", AnswerType.OPEN_AI).orElseThrow();
         var response = api.send(prompt);
-        System.out.println(response);
+        System.out.println(response.text());
+        System.out.println("responseId: " + response.responseId());
     }
 
     @Test
     void definitionGrammar() {
         var prompt = promptFactory.getPrompt(DEFINITION, "AWS S3", "Bucket", AnswerType.GRAMMAR).orElseThrow();
         var response = grammarApi.send(prompt);
-        System.out.println(response);
+        System.out.println(response.text());
+        System.out.println("responseId: " + response.responseId());
     }
 
     @Test

@@ -2,6 +2,7 @@ package gptui.core.ai.claude;
 
 import com.google.gson.Gson;
 import gptui.core.ai.AiApi;
+import gptui.core.ai.AiResponse;
 import gptui.ui.model.config.ConfigModel;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
@@ -34,7 +35,7 @@ class ClaudeApiImpl implements AiApi {
     }
 
     @Override
-    public String send(String content) {
+    public AiResponse send(String content) {
         log.info("Sending question: {}", content);
         var apiKey = configModel.getProperty("claude.api.key");
         try (var client = HttpClient.newHttpClient()) {
@@ -57,10 +58,11 @@ class ClaudeApiImpl implements AiApi {
                     var message = String.format("Wrong stop reason in response: %s", responseBody);
                     throw new RuntimeException(message);
                 }
-                return responseBody.content().stream()
+                var text = responseBody.content().stream()
                         .filter(block -> "text".equals(block.type()))
                         .map(ResponseBody.ContentBlock::text)
                         .collect(Collectors.joining());
+                return new AiResponse(text, responseBody.id());
             } else {
                 log.error("Claude API error status {}: {}", response.statusCode(), response.body());
                 throw new RuntimeException(response.body());

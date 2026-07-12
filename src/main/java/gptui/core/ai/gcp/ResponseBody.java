@@ -2,7 +2,7 @@ package gptui.core.ai.gcp;
 
 import java.util.List;
 
-record ResponseBody(List<Candidate> candidates) {
+record ResponseBody(List<Candidate> candidates, String responseId) {
     record Candidate(Content content, FinishReason finishReason) {
     }
 

@@ -2,6 +2,7 @@ package gptui.core.ai.gcp;
 
 import com.google.gson.Gson;
 import gptui.core.ai.AiApi;
+import gptui.core.ai.AiResponse;
 import gptui.ui.model.config.ConfigModel;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
@@ -32,7 +33,7 @@ class GcpApiImpl implements AiApi {
     }
 
     @Override
-    public String send(String content) {
+    public AiResponse send(String content) {
         log.info("Sending question: {}", content);
         var apiKey = configModel.getProperty("gcp.api.key");
         try (var client = HttpClient.newHttpClient()) {
@@ -56,7 +57,7 @@ class GcpApiImpl implements AiApi {
                     var message = String.format("Wrong finish reason in candidate: %s", candidate);
                     throw new RuntimeException(message);
                 }
-                return candidate.content().parts().getFirst().text();
+                return new AiResponse(candidate.content().parts().getFirst().text(), responseBody.responseId());
             } else {
                 log.error("GCP API error status {}: {}", response.statusCode(), response.body());
                 throw new RuntimeException(response.body());

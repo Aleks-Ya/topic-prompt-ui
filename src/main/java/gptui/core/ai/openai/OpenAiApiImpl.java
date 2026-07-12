@@ -2,6 +2,7 @@ package gptui.core.ai.openai;
 
 import com.google.gson.Gson;
 import gptui.core.ai.AiApi;
+import gptui.core.ai.AiResponse;
 import gptui.ui.model.config.ConfigModel;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
@@ -28,7 +29,7 @@ class OpenAiApiImpl implements AiApi {
     }
 
     @Override
-    public String send(String content) {
+    public AiResponse send(String content) {
         log.info("Sending question: {}", content);
         var token = configModel.getProperty("openai.token");
         var reasoning = effort != null ? new Reasoning(effort) : null;
@@ -62,7 +63,7 @@ class OpenAiApiImpl implements AiApi {
             if (contents.size() > 1) {
                 throw new RuntimeException("Multiple contents in output: " + contents);
             }
-            return contents.getFirst().text();
+            return new AiResponse(contents.getFirst().text(), responseBody.id());
         } else {
             log.error("GPT API error status {}: {}", response.statusCode(), response.body());
             throw new RuntimeException(response.body());

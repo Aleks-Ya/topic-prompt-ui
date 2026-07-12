@@ -1,5 +1,5 @@
 package gptui.core.ai;
 
 public interface AiApi {
-    String send(String content);
+    AiResponse send(String content);
 }

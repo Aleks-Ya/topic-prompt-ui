@@ -2,7 +2,7 @@ package gptui.core.ai.openai;
 
 import java.util.List;
 
-record ResponseBody(String model, List<Outputs> output, Error error) {
+record ResponseBody(String id, String model, List<Outputs> output, Error error) {
     public record Content(String text) {
     }
 

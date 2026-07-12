@@ -25,14 +25,16 @@ class GcpApiIT {
     @Test
     void send() {
         var response = api.send("What is the last Java version?");
-        System.out.println(response);
+        System.out.println(response.text());
+        System.out.println("responseId: " + response.responseId());
     }
 
     @Test
     void definition() {
         var prompt = promptFactory.getPrompt(DEFINITION, "AWS S3", "Bucket", GCP).orElseThrow();
         var response = api.send(prompt);
-        System.out.println(response);
+        System.out.println(response.text());
+        System.out.println("responseId: " + response.responseId());
     }
 
     @Test

@@ -19,7 +19,8 @@ class ClaudeApiIT {
     @Test
     void send() {
         var response = api.send("What is the last Java version?");
-        System.out.println(response);
+        System.out.println(response.text());
+        System.out.println("responseId: " + response.responseId());
     }
 
     @Test
