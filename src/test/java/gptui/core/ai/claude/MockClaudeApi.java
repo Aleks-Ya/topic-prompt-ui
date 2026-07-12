@@ -21,6 +21,7 @@ public class MockClaudeApi extends BaseMockApi implements AiApi {
         return this;
     }
 
+    @Override
     public MockClaudeApi clear() {
         super.clear();
         return this;

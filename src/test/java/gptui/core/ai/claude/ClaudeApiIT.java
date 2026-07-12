@@ -27,6 +27,8 @@ class ClaudeApiIT {
         var response = api.send("What is the last Java version?");
         System.out.println(response.text());
         System.out.println("responseId: " + response.responseId());
+        assertThat(response.text()).isNotBlank();
+        assertThat(response.responseId()).isNotBlank();
     }
 
     @Test

@@ -9,6 +9,7 @@ import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -69,11 +70,10 @@ class ClaudeApiImpl implements AiApi {
                 log.error("Claude API error status {}: {}", response.statusCode(), response.body());
                 throw new RuntimeException(response.body());
             }
-        } catch (RuntimeException e) {
-            log.error(e.getMessage(), e);
-            throw e;
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         }
     }

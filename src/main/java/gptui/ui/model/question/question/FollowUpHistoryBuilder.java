@@ -19,8 +19,12 @@ import static gptui.core.ai.ConversationTurn.Speaker.USER;
 
 @Singleton
 class FollowUpHistoryBuilder {
+    private final StorageModel storage;
+
     @Inject
-    private StorageModel storage;
+    FollowUpHistoryBuilder(StorageModel storage) {
+        this.storage = storage;
+    }
 
     List<ConversationTurn> buildHistory(InteractionId parentInteractionId, AnswerType answerType) {
         Deque<Interaction> ancestors = new ArrayDeque<>();

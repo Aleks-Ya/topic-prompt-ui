@@ -7,6 +7,9 @@ import static java.util.Objects.requireNonNull;
 
 public class ResourceUtils {
 
+    private ResourceUtils() {
+    }
+
     public static URL resourceUrl(Class<?> clazz, String resource) {
         return requireNonNull(clazz.getResource(resource));
     }

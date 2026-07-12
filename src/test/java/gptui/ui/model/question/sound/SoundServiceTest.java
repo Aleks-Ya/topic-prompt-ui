@@ -4,11 +4,13 @@ import gptui.BaseTest;
 import gptui.core.storagefilesystem.AnswerType;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+
 class SoundServiceTest extends BaseTest {
     private final SoundService soundService = injector.getInstance(SoundService.class);
 
     @Test
     void beenOnAnswer() {
-        soundService.beenOnAnswer(AnswerType.GRAMMAR);
+        assertThatCode(() -> soundService.beenOnAnswer(AnswerType.GRAMMAR)).doesNotThrowAnyException();
     }
 }

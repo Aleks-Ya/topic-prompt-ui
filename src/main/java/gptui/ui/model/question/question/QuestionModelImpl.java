@@ -41,28 +41,32 @@ class QuestionModelImpl implements QuestionModel {
     // must not be limited by ForkJoinPool.commonPool()'s CPU-core-based sizing, which can
     // serialize them on machines with few cores (e.g. CI runners).
     private static final ExecutorService EXECUTOR = Executors.newCachedThreadPool();
+    private final StorageModel storage;
+    private final PromptFactory promptFactory;
+    private final AiApi openAiApi;
+    private final AiApi openAiGrammarApi;
+    private final AiApi gcpApi;
+    private final AiApi claudeApi;
+    private final SoundService soundService;
+    private final FormatConverter formatConverter;
+    private final FollowUpHistoryBuilder followUpHistoryBuilder;
+
     @Inject
-    private StorageModel storage;
-    @Inject
-    private PromptFactory promptFactory;
-    @Inject
-    @Named(OPEN_AI)
-    private AiApi openAiApi;
-    @Inject
-    @Named(OPEN_AI_GRAMMAR)
-    private AiApi openAiGrammarApi;
-    @Inject
-    @Named(GCP_AI)
-    private AiApi gcpApi;
-    @Inject
-    @Named(CLAUDE_AI)
-    private AiApi claudeApi;
-    @Inject
-    private SoundService soundService;
-    @Inject
-    private FormatConverter formatConverter;
-    @Inject
-    private FollowUpHistoryBuilder followUpHistoryBuilder;
+    QuestionModelImpl(StorageModel storage, PromptFactory promptFactory,
+                       @Named(OPEN_AI) AiApi openAiApi, @Named(OPEN_AI_GRAMMAR) AiApi openAiGrammarApi,
+                       @Named(GCP_AI) AiApi gcpApi, @Named(CLAUDE_AI) AiApi claudeApi,
+                       SoundService soundService, FormatConverter formatConverter,
+                       FollowUpHistoryBuilder followUpHistoryBuilder) {
+        this.storage = storage;
+        this.promptFactory = promptFactory;
+        this.openAiApi = openAiApi;
+        this.openAiGrammarApi = openAiGrammarApi;
+        this.gcpApi = gcpApi;
+        this.claudeApi = claudeApi;
+        this.soundService = soundService;
+        this.formatConverter = formatConverter;
+        this.followUpHistoryBuilder = followUpHistoryBuilder;
+    }
 
     @Override
     public void requestFollowUpAnswer(InteractionId interactionId, AnswerType answerType, Runnable callback) {
