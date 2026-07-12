@@ -33,6 +33,7 @@ import static javafx.scene.input.KeyCode.Q;
 import static javafx.scene.input.KeyCode.R;
 import static javafx.scene.input.KeyCode.SPACE;
 import static javafx.scene.input.KeyCode.T;
+import static javafx.scene.input.KeyCode.U;
 import static javafx.scene.input.KeyCode.UP;
 import static javafx.scene.input.KeyCode.V;
 import static javafx.scene.paint.Color.GREEN;
@@ -145,6 +146,17 @@ class HotKeysTest extends BaseGptUiTest {
         assertThat(gptApi.getSendHistory()).hasSize(2);
         assertThat(gcpApi.getSendHistory()).hasSize(1);
         assertThat(claudeApi.getSendHistory()).hasSize(1);
+    }
+
+    @Test
+    void toggleFollowUpByAltU() {
+        assertThat(question().followUpCheckBox().isSelected()).isFalse();
+        press(ALT, U).release(U, ALT);
+        WaitForAsyncUtils.waitForFxEvents();
+        assertThat(question().followUpCheckBox().isSelected()).isTrue();
+        press(ALT, U).release(U, ALT);
+        WaitForAsyncUtils.waitForFxEvents();
+        assertThat(question().followUpCheckBox().isSelected()).isFalse();
     }
 
     @Test

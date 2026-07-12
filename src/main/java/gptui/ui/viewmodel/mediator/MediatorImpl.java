@@ -33,6 +33,7 @@ import static gptui.core.storagefilesystem.InteractionType.QUESTION;
 import static javafx.scene.input.KeyCode.DOWN;
 import static javafx.scene.input.KeyCode.ENTER;
 import static javafx.scene.input.KeyCode.ESCAPE;
+import static javafx.scene.input.KeyCode.U;
 import static javafx.scene.input.KeyCode.UP;
 import static javafx.scene.input.KeyCode.V;
 import static javafx.scene.input.KeyCombination.ALT_DOWN;
@@ -143,6 +144,7 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, ThemeMediator, 
         accelerators.put(new KeyCodeCombination(V, CONTROL_DOWN, ALT_DOWN), () -> questionVM.pasteQuestionFromClipboard());
         accelerators.put(new KeyCodeCombination(ESCAPE), () -> questionVM.focusOnQuestionAndSelect());
         accelerators.put(new KeyCodeCombination(ENTER, CONTROL_DOWN), () -> questionVM.createNewInteractionAndRequestAnswers(QUESTION));
+        accelerators.put(new KeyCodeCombination(U, ALT_DOWN), questionVM::toggleFollowUp);
     }
 
     void selectPreviousHistoryItem() {

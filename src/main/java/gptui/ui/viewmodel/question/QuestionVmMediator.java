@@ -10,4 +10,6 @@ public interface QuestionVmMediator {
     void pasteQuestionFromClipboard();
 
     void createNewInteractionAndRequestAnswers(InteractionType interactionType);
+
+    void toggleFollowUp();
 }

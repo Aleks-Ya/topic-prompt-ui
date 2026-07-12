@@ -122,5 +122,11 @@ class QuestionVmImpl implements QuestionVmController, QuestionVmMediator {
         mediator.requestAnswer(interactionId, OPEN_AI);
         mediator.requestAnswer(interactionId, GRAMMAR);
     }
+
+    @Override
+    public void toggleFollowUp() {
+        log.trace("toggleFollowUp");
+        properties.followUpCheckBoxSelected.set(!properties.followUpCheckBoxSelected.get());
+    }
 }
 
