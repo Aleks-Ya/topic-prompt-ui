@@ -47,6 +47,12 @@ Strict layered MVVM, one-way dependency flow: **view → viewmodel → mediator 
 
 `AnswerType` (`GRAMMAR`, `OPEN_AI`, `CLAUDE`, `GCP`) drives parallel behavior throughout the stack: 4 `AnswerVm` bindings, 4 answer panes in the FXML, and 4 Freemarker prompt templates in `src/main/resources/gptui/ui/model/question/prompt/` (`definition-*.ftl`, `question-*.ftl`, plus `grammar.ftl`/`fact-grammar.ftl`). `PromptFactory` builds the actual prompt text sent to `AiApi` from these templates.
 
+### Grammar checking
+
+The user is not a native English speaker, so the app always grammar-checks their questions. The app never auto-corrects the question before sending it — the original text is what's sent to the AI models; the corrected version is only ever displayed in the `Grammar` answer panel for reference, and the user can choose to manually re-send the corrected version as a new question if they want.
+
+There are 4 question-submission buttons in the UI: **Question**, **Definition**, **Fact**, **Grammar**. `Grammar` sends only a grammar-check request. `Question`, `Definition`, and `Fact` each send two things: a grammar-check request, and the question request (original text, unmodified) fanned out to all 3 AI models (OpenAI, Claude, GCP). A separate **Resend** button repeats the last request, for recovering from failures.
+
 ### JPMS module-info
 
 `src/main/java/module-info.java` explicitly `exports`/`opens` every package that Guice, Gson, or FXML need reflective/runtime access to. **When adding a new package, or a new class that Guice/Gson/FXML must reach reflectively, add the corresponding `exports`/`opens` entry** or the app will fail at runtime with module-access errors, not compile errors.
