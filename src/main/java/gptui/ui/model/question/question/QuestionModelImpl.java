@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import static gptui.core.ai.ConversationTurn.Speaker.USER;
 
@@ -177,8 +177,8 @@ class QuestionModelImpl implements QuestionModel {
         }
     }
 
-    private synchronized void updateAnswer(InteractionId interactionId, AnswerType answerType, Function<Answer,
-            Answer> update, Runnable callback) {
+    private synchronized void updateAnswer(InteractionId interactionId, AnswerType answerType,
+            UnaryOperator<Answer> update, Runnable callback) {
         log.trace("updateAnswer: interactionId={}, answerType={}", interactionId, answerType);
         storage.updateInteraction(interactionId, interaction ->
                 interaction.withAnswer(update.apply(interaction.getAnswer(answerType).orElseThrow())));

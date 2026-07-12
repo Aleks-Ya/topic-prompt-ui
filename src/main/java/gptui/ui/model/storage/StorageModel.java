@@ -7,12 +7,12 @@ import gptui.core.storagefilesystem.ThemeId;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public interface StorageModel {
     InteractionId newInteractionId();
 
-    void updateInteraction(InteractionId interactionId, Function<Interaction, Interaction> update);
+    void updateInteraction(InteractionId interactionId, UnaryOperator<Interaction> update);
 
     void saveInteraction(Interaction interaction);
 

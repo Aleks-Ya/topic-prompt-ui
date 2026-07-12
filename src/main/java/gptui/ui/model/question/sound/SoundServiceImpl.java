@@ -25,6 +25,9 @@ class SoundServiceImpl implements SoundService {
             case GRAMMAR -> beep1.play(VOLUME);
             case OPEN_AI -> beep2.play(VOLUME);
             case CLAUDE -> beep3.play(VOLUME);
+            case GCP -> {
+                // No dedicated beep sound for GCP answers.
+            }
         }
     }
 }

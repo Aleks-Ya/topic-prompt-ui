@@ -77,6 +77,10 @@ public class AnswerController extends BaseController {
 
     @Override
     protected void initialize() {
+        // Intentionally empty: unlike the other controllers, AnswerController is instantiated 4 times by
+        // FXML (one per AnswerType) and can't be wired to its AnswerVmController here, since FXML calls
+        // this with no way to pass which of the 4 VMs to use. Real setup happens in initializeController(vm),
+        // called explicitly by GptUiController once it knows which VM belongs to which pane.
     }
 
 }

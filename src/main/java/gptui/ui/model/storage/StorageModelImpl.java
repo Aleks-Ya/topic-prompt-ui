@@ -17,7 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
@@ -59,7 +59,7 @@ class StorageModelImpl implements StorageModel {
     }
 
     @Override
-    public synchronized void updateInteraction(InteractionId interactionId, Function<Interaction, Interaction> update) {
+    public synchronized void updateInteraction(InteractionId interactionId, UnaryOperator<Interaction> update) {
         var interactionOpt = readInteraction(interactionId);
         Interaction interaction;
         if (interactionOpt.isEmpty()) {

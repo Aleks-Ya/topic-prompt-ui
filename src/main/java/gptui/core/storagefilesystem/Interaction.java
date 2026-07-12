@@ -3,7 +3,7 @@ package gptui.core.storagefilesystem;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public record Interaction(InteractionId id,
                           InteractionType type,
@@ -32,7 +32,7 @@ public record Interaction(InteractionId id,
         return new Interaction(id, type, themeId, question, Map.copyOf(map), parentInteractionId);
     }
 
-    public Interaction withAnswer(AnswerType answerType, Function<Answer, Answer> update) {
+    public Interaction withAnswer(AnswerType answerType, UnaryOperator<Answer> update) {
         var currentAnswer = answers.getOrDefault(answerType,
                 new Answer(answerType, null, null, null, null, null, null, null, null, null, null, null));
         var newAnswer = update.apply(currentAnswer);
