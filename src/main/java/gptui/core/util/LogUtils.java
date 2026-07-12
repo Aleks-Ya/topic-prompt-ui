@@ -7,6 +7,9 @@ import java.util.Map;
 public class LogUtils {
     private static final int MAX_LENGTH = 30;
 
+    private LogUtils() {
+    }
+
     public static String shorten(String s) {
         if (s == null) {
             return null;

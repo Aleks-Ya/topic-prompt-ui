@@ -5,6 +5,9 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
 public class CbHelper {
+    private CbHelper() {
+    }
+
     public static void updateCbSilently(Runnable run, ObjectProperty<EventHandler<ActionEvent>> onAction) {
         var oldOnAction = onAction.getValue();
         onAction.setValue(null);

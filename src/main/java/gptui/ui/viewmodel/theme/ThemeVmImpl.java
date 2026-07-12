@@ -31,7 +31,7 @@ class ThemeVmImpl implements ThemeVmController, ThemeVmMediator {
         var cbValue = properties.filterHistoryCheckBoxSelected.getValue();
         var modelValue = mediator.isHistoryFilteringEnabled();
         log.trace("cbValue={}, modelValue={}", cbValue, modelValue);
-        if (cbValue != modelValue) {
+        if (!Objects.equals(cbValue, modelValue)) {
             log.trace("Setting ThemeFilterHistoryCheckBox to {}", cbValue);
             mediator.setIsHistoryFilteringEnabled(cbValue);
             mediator.isThemeFilterHistoryChanged();

@@ -25,6 +25,7 @@ public class MockOpenAiApi extends BaseMockApi implements AiApi {
         return this;
     }
 
+    @Override
     public MockOpenAiApi clear() {
         super.clear();
         return this;

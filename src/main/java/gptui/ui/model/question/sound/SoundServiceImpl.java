@@ -8,7 +8,7 @@ import static gptui.core.util.ResourceUtils.resourcePath;
 
 @Singleton
 class SoundServiceImpl implements SoundService {
-    private static final Double volume = 0.1;
+    private static final Double VOLUME = 0.1;
     private final AudioClip beep1;
     private final AudioClip beep2;
     private final AudioClip beep3;
@@ -22,9 +22,9 @@ class SoundServiceImpl implements SoundService {
     @Override
     public synchronized void beenOnAnswer(AnswerType answerType) {
         switch (answerType) {
-            case GRAMMAR -> beep1.play(volume);
-            case OPEN_AI -> beep2.play(volume);
-            case CLAUDE -> beep3.play(volume);
+            case GRAMMAR -> beep1.play(VOLUME);
+            case OPEN_AI -> beep2.play(VOLUME);
+            case CLAUDE -> beep3.play(VOLUME);
         }
     }
 }

@@ -9,7 +9,7 @@ class LogUtilsTest {
     void shorten() {
         var maxSize = 30;
         assertThat(LogUtils.shorten((String) null))
-                .isEqualTo(null);
+                .isNull();
         assertThat(LogUtils.shorten(""))
                 .isEqualTo("")
                 .hasSizeLessThanOrEqualTo(maxSize);
