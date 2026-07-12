@@ -26,8 +26,8 @@ class PromptFactoryTest extends BaseTest {
         assertThat(factory.getPrompt(QUESTION, "Theme A", "Question A", GRAMMAR)).contains("""
                 I will give you a sentence or phrase.
                 Check if the sentence or phrase has grammatical mistakes.
-                It is not a mistake if the sentence or phrase starts with "How to".
-                If the given sentence or phrase is correct, just answer "Correct".
+                It is not a mistake if the sentence or phrase starts with `How to`.
+                If the given sentence or phrase is correct, just answer `Correct`.
                 If the sentence or phrase has mistakes, just answer with the correct sentence.
                 Make the changed fragments bold.
                 The sentence or phrase is:
@@ -35,8 +35,7 @@ class PromptFactoryTest extends BaseTest {
                 Question A
                 ```""");
         assertThat(factory.getPrompt(QUESTION, "Theme A", "Question A", OPEN_AI)).contains("""
-                I will ask you a question about "Theme A".
-                You should answer with a short response.
+                I will ask you a question about `Theme A`.
                 Do not repeat the question in your answer.
                 Format your answer into Markdown.
                 The question is:
@@ -44,7 +43,7 @@ class PromptFactoryTest extends BaseTest {
                 Question A
                 ```""");
         assertThat(factory.getPrompt(QUESTION, "Theme A", "Question A", CLAUDE)).contains("""
-                I will ask you a question about "Theme A".
+                I will ask you a question about `Theme A`.
                 Do not repeat the question in your answer.
                 Format your answer into Markdown.
                 The question is:
@@ -52,8 +51,9 @@ class PromptFactoryTest extends BaseTest {
                 Question A
                 ```""");
         assertThat(factory.getPrompt(QUESTION, "Theme A", "Question A", GCP)).contains("""
-                I will ask you a question about "Theme A".
+                I will ask you a question about `Theme A`.
                 Do not repeat the question in your answer.
+                Format your answer into Markdown.
                 The question is:
                 ```
                 Question A
@@ -66,16 +66,16 @@ class PromptFactoryTest extends BaseTest {
                 Check grammar of text `Question A` in the context of `Theme A`.
                 If the text is correct, answer `Correct`.""");
         assertThat(factory.getPrompt(DEFINITION, "Theme A", "Question A", OPEN_AI)).contains("""
-                Provide a single-sentence definition of `Question A` in the context of `Theme A`, as short as possible.
-                Format your answer as "Question A is/are".
+                Provide a concise single-sentence definition of `Question A` in the context of `Theme A`.
+                Format your answer as `Question A is/are`.
                 Do not repeat the context in your answer if possible.""");
         assertThat(factory.getPrompt(DEFINITION, "Theme A", "Question A", CLAUDE)).contains("""
-                Provide a detailed, single-sentence definition of `Question A` in the context of `Theme A`.
-                Format your answer as "Question A is/are".
+                Provide a concise single-sentence definition of `Question A` in the context of `Theme A`.
+                Format your answer as `Question A is/are`.
                 Do not repeat the context in your answer if possible.""");
         assertThat(factory.getPrompt(DEFINITION, "Theme A", "Question A", GCP)).contains("""
-                Provide a single-sentence definition of `Question A` in the context of `Theme A`.
-                Format your answer as "Question A is/are".
+                Provide a concise single-sentence definition of `Question A` in the context of `Theme A`.
+                Format your answer as `Question A is/are`.
                 Do not repeat the context in your answer if possible.""");
     }
 
@@ -84,8 +84,8 @@ class PromptFactoryTest extends BaseTest {
         assertThat(factory.getPrompt(InteractionType.GRAMMAR, "Theme A", "Question A", GRAMMAR)).contains("""
                 I will give you a sentence or phrase.
                 Check if the sentence or phrase has grammatical mistakes.
-                It is not a mistake if the sentence or phrase starts with "How to".
-                If the given sentence or phrase is correct, just answer "Correct".
+                It is not a mistake if the sentence or phrase starts with `How to`.
+                If the given sentence or phrase is correct, just answer `Correct`.
                 If the sentence or phrase has mistakes, just answer with the correct sentence.
                 Make the changed fragments bold.
                 The sentence or phrase is:
@@ -102,15 +102,18 @@ class PromptFactoryTest extends BaseTest {
         assertThat(factory.getPrompt(FACT, "Theme A", "Question A", GRAMMAR)).contains("""
                 I will give you a sentence or phrase.
                 Check if the sentence or phrase has grammatical mistakes.
-                It is not a mistake if the sentence or phrase starts with "How to".
-                If the given sentence or phrase is correct, just answer "Correct".
+                It is not a mistake if the sentence or phrase starts with `How to`.
+                If the given sentence or phrase is correct, just answer `Correct`.
                 If the sentence or phrase has mistakes, just answer with the correct sentence.
                 Make the changed fragments bold.
                 The sentence or phrase is:
                 ```
                 Question A
                 ```""");
-        assertThat(factory.getPrompt(FACT, "Theme A", "Question A", OPEN_AI)).isEmpty();
+        assertThat(factory.getPrompt(FACT, "Theme A", "Question A", OPEN_AI))
+                .contains("""
+                        Check is this sentence factually correct in context of `Theme A`: `Question A`?
+                        Format your answer into Markdown.""");
         assertThat(factory.getPrompt(FACT, "Theme A", "Question A", CLAUDE))
                 .contains("""
                         Check is this sentence factually correct in context of `Theme A`: `Question A`?
@@ -124,8 +127,8 @@ class PromptFactoryTest extends BaseTest {
     @Test
     void userModifiesTemplate() throws IOException {
         var expDefaultPrompt = """
-                Provide a single-sentence definition of `Question A` in the context of `Theme A`.
-                Format your answer as "Question A is/are".
+                Provide a concise single-sentence definition of `Question A` in the context of `Theme A`.
+                Format your answer as `Question A is/are`.
                 Do not repeat the context in your answer if possible.""";
 
         var templateFile = configModel.getAppDataPath().resolve("templates").resolve("definition-gcp.ftl");

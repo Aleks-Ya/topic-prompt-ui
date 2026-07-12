@@ -34,6 +34,7 @@ class PromptFactoryImpl implements PromptFactory {
     private static final String DEFINITION_CLAUDE_TEMPLATE = "definition-claude.ftl";
     private static final String DEFINITION_GCP_TEMPLATE = "definition-gcp.ftl";
     private static final String GRAMMAR_TEMPLATE = "grammar.ftl";
+    private static final String FACT_OPEN_AI_TEMPLATE = "fact-openai.ftl";
     private static final String FACT_GRAMMAR_FTL = "fact-grammar.ftl";
 
     private static final StringTemplateLoader STRING_TEMPLATE_LOADER = new StringTemplateLoader();
@@ -73,7 +74,7 @@ class PromptFactoryImpl implements PromptFactory {
             };
             case FACT -> switch (answerType) {
                 case GRAMMAR -> render(GRAMMAR_TEMPLATE, data);
-                case OPEN_AI -> Optional.empty();
+                case OPEN_AI -> render(FACT_OPEN_AI_TEMPLATE, data);
                 case CLAUDE, GCP -> render(FACT_GRAMMAR_FTL, data);
             };
         };

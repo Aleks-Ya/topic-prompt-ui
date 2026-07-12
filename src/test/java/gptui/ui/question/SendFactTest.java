@@ -1,7 +1,6 @@
 package gptui.ui.question;
 
 import gptui.BaseGptUiTest;
-import gptui.ui.TestingData.I0;
 import gptui.ui.TestingData.I1;
 import gptui.ui.TestingData.I2;
 import gptui.ui.TestingData.I3;
@@ -12,7 +11,6 @@ import static gptui.ui.viewmodel.question.QuestionStyle.QUESTION_STYLE_EMPTY;
 import static java.time.Duration.ZERO;
 import static javafx.scene.paint.Color.GREEN;
 import static javafx.scene.paint.Color.RED;
-import static javafx.scene.paint.Color.WHITE;
 
 class SendFactTest extends BaseGptUiTest {
     @Override
@@ -49,7 +47,8 @@ class SendFactTest extends BaseGptUiTest {
                 .assertApp();
 
         gptApi.clear()
-                .putGrammarResponse("Grammar answer 4", ZERO);
+                .putGrammarResponse("Grammar answer 4", ZERO)
+                .putFactResponse("Fact answer 4", ZERO);
         claudeApi.clear().putFactResponse("Fact answer 4", ZERO);
         gcpApi.clear().putFactResponse("Fact answer 4", ZERO);
         clickOn(question().textArea());
@@ -71,10 +70,10 @@ class SendFactTest extends BaseGptUiTest {
                 .modelEditedQuestion("Question 4")
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text("<p>Grammar answer 4</p>\n")
-                .openAiA().text(I0.OPEN_AI_HTML)
+                .openAiA().text("<p>Fact answer 4</p>\n")
                 .claudeA().text("<p>Fact answer 4</p>\n")
                 .gcpA().text("<p>Fact answer 4</p>\n")
-                .answerCircleColors(GREEN, WHITE, GREEN, GREEN)
+                .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
                 .assertApp();
     }
 }
