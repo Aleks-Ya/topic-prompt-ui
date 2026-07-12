@@ -28,14 +28,14 @@ class ClaudeApiIT {
         System.out.println(response.text());
         System.out.println("responseId: " + response.responseId());
         System.out.println("modelId: " + response.modelId());
-        System.out.println("modelParams: " + response.modelParams());
+        System.out.println("effortLevel: " + response.effortLevel());
         System.out.println("finishReason: " + response.finishReason());
         System.out.println("tokens: input=" + response.inputTokens() + " output=" + response.outputTokens()
                 + " total=" + response.totalTokens());
         assertThat(response.text()).isNotBlank();
         assertThat(response.responseId()).isNotBlank();
         assertThat(response.modelId()).isNotBlank();
-        assertThat(response.modelParams()).isNotBlank();
+        assertThat(response.effortLevel()).isNotBlank();
         assertThat(response.finishReason()).isEqualTo("end_turn");
         assertThat(response.inputTokens()).isPositive();
         assertThat(response.outputTokens()).isPositive();
