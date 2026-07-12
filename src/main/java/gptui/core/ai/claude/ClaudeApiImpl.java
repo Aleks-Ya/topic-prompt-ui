@@ -24,11 +24,13 @@ class ClaudeApiImpl implements AiApi {
     private static final Gson gson = new Gson();
     private static final URI endpoint = URI.create("https://api.anthropic.com/v1/messages");
     private final String model;
+    private final Effort effort;
     @Inject
     private ConfigModel configModel;
 
-    ClaudeApiImpl(String model) {
+    ClaudeApiImpl(String model, Effort effort) {
         this.model = model;
+        this.effort = effort;
     }
 
     @Override
@@ -36,7 +38,8 @@ class ClaudeApiImpl implements AiApi {
         log.info("Sending question: {}", content);
         var apiKey = configModel.getProperty("claude.api.key");
         try (var client = HttpClient.newHttpClient()) {
-            var body = new RequestBody(model, MAX_TOKENS, List.of(new Message("user", content)));
+            var outputConfig = effort != null ? new OutputConfig(effort) : null;
+            var body = new RequestBody(model, MAX_TOKENS, List.of(new Message("user", content)), outputConfig);
             var json = gson.toJson(body);
             log.trace("Request body: {}", json);
             var request = HttpRequest.newBuilder()

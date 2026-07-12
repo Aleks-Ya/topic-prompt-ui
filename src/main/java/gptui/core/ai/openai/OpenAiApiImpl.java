@@ -18,18 +18,20 @@ class OpenAiApiImpl implements AiApi {
     private static final Gson gson = new Gson();
     private static final URI endpoint = URI.create("https://api.openai.com/v1/responses");
     private final String model;
+    private final ReasoningEffort effort;
     @Inject
     private ConfigModel configModel;
 
-    OpenAiApiImpl(String model) {
+    OpenAiApiImpl(String model, ReasoningEffort effort) {
         this.model = model;
+        this.effort = effort;
     }
 
     @Override
     public String send(String content) {
         log.info("Sending question: {}", content);
         var token = configModel.getProperty("openai.token");
-        var reasoning = new Reasoning(ReasoningEffort.HIGH);
+        var reasoning = effort != null ? new Reasoning(effort) : null;
         var body = new RequestBody(model, content, reasoning);
         var json = gson.toJson(body);
         log.trace("Request body: {}", json);

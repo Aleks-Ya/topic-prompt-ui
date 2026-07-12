@@ -22,11 +22,13 @@ class GcpApiImpl implements AiApi {
     private static final String ENDPOINT_TEMPLATE =
             "https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent";
     private final URI endpoint;
+    private final ThinkingLevel effort;
     @Inject
     private ConfigModel configModel;
 
-    GcpApiImpl(String model) {
+    GcpApiImpl(String model, ThinkingLevel effort) {
         this.endpoint = URI.create(String.format(ENDPOINT_TEMPLATE, model));
+        this.effort = effort;
     }
 
     @Override
@@ -34,8 +36,9 @@ class GcpApiImpl implements AiApi {
         log.info("Sending question: {}", content);
         var apiKey = configModel.getProperty("gcp.api.key");
         try (var client = HttpClient.newHttpClient()) {
+            var thinkingConfig = effort != null ? new ThinkingConfig(effort) : null;
             var body = new RequestBody(List.of(new Content(List.of(new Part(content)), "user")),
-                    new GenerationConfig(1));
+                    new GenerationConfig(1, thinkingConfig));
             var json = gson.toJson(body);
             log.trace("Request body: {}", json);
             var request = HttpRequest.newBuilder()

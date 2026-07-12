@@ -8,9 +8,10 @@ import static gptui.core.ai.AiModule.GCP_AI;
 
 public class GcpModule extends AbstractModule {
     private static final String MODEL = "gemini-3.1-pro-preview";
+    private static final ThinkingLevel EFFORT = ThinkingLevel.HIGH;
 
     @Override
     protected void configure() {
-        bind(AiApi.class).annotatedWith(Names.named(GCP_AI)).toInstance(new GcpApiImpl(MODEL));
+        bind(AiApi.class).annotatedWith(Names.named(GCP_AI)).toInstance(new GcpApiImpl(MODEL, EFFORT));
     }
 }
