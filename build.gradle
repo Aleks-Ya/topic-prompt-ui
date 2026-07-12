@@ -1,5 +1,6 @@
 plugins {
     id 'application'
+    id 'jacoco'
     id 'org.openjfx.javafxplugin' version '0.1.0'
     id 'org.gradlex.extra-java-module-info' version '1.14'
     id 'org.beryx.jlink' version '4.0.2'
@@ -18,11 +19,15 @@ javafx {
 repositories {
     mavenCentral()
 }
+jacoco {
+    toolVersion = '0.8.14' // Java 25 class files (major version 69) need 0.8.14+
+}
 sonar {
     properties {
         property "sonar.projectKey", "Aleks-Ya_topic-prompt-ui"
         property "sonar.organization", "aleks-ya"
         property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml"
     }
 }
 application {
@@ -61,7 +66,16 @@ test {
     if (project.hasProperty('skipIntegrationTests')) {
         exclude '**/*IT.class'
     }
+    finalizedBy jacocoTestReport
 }
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+tasks.sonar.dependsOn jacocoTestReport
 extraJavaModuleInfo {
     automaticModule("com.vladsch.flexmark:flexmark", "flexmark")
     automaticModule("com.vladsch.flexmark:flexmark-util-ast", "flexmark.util.ast")
