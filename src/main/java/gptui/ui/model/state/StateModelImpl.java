@@ -96,41 +96,38 @@ class StateModelImpl implements StateModel {
     @Override
     public synchronized void deleteCurrentInteraction() {
         var currentInteractionOpt = getCurrentInteractionOpt();
-        if (currentInteractionOpt.isPresent()) {
-            var currentInteraction = currentInteractionOpt.get();
-            var history = getFilteredHistory();
-            var oldCurrentInteractionIndex = history.indexOf(currentInteraction);
-            Interaction newCurrentInteraction = null;
-            if (history.size() > 1) {
-                if (oldCurrentInteractionIndex == 0) {
-                    newCurrentInteraction = history.get(oldCurrentInteractionIndex + 1);
-                } else {
-                    newCurrentInteraction = history.get(oldCurrentInteractionIndex - 1);
-                }
-                var newCurrentTheme = storage.getTheme(newCurrentInteraction.themeId());
-                setCurrentTheme(newCurrentTheme);
-            } else {
-                var oldCurrentTheme = getCurrentTheme();
-                if (oldCurrentTheme != null) {
-                    var oldCurrentThemeIndex = getThemes().indexOf(oldCurrentTheme);
-                    if (getThemes().size() > 1) {
-                        Theme newCurrentTheme;
-                        if (oldCurrentThemeIndex == 0) {
-                            newCurrentTheme = getThemes().get(oldCurrentThemeIndex + 1);
-                        } else {
-                            newCurrentTheme = getThemes().get(oldCurrentThemeIndex - 1);
-                        }
-                        setCurrentTheme(newCurrentTheme);
-                        var history2 = getFilteredHistory();
-                        if (!history2.isEmpty()) {
-                            newCurrentInteraction = history2.getFirst();
-                        }
-                    }
-                }
-            }
-            storage.deleteInteraction(currentInteraction.id());
-            setCurrentInteractionId(newCurrentInteraction != null ? newCurrentInteraction.id() : null);
+        if (currentInteractionOpt.isEmpty()) {
+            return;
         }
+        var currentInteraction = currentInteractionOpt.get();
+        var newCurrentInteraction = pickNextCurrentInteractionAfterDeletion(currentInteraction);
+        storage.deleteInteraction(currentInteraction.id());
+        setCurrentInteractionId(newCurrentInteraction != null ? newCurrentInteraction.id() : null);
+    }
+
+    private Interaction pickNextCurrentInteractionAfterDeletion(Interaction currentInteraction) {
+        var history = getFilteredHistory();
+        if (history.size() > 1) {
+            var neighborInteraction = adjacentItem(history, history.indexOf(currentInteraction));
+            setCurrentTheme(storage.getTheme(neighborInteraction.themeId()));
+            return neighborInteraction;
+        }
+        return switchToAdjacentThemeAndPickFirstInteraction();
+    }
+
+    private Interaction switchToAdjacentThemeAndPickFirstInteraction() {
+        var oldCurrentTheme = getCurrentTheme();
+        var themes = getThemes();
+        if (oldCurrentTheme == null || themes.size() <= 1) {
+            return null;
+        }
+        setCurrentTheme(adjacentItem(themes, themes.indexOf(oldCurrentTheme)));
+        var newHistory = getFilteredHistory();
+        return newHistory.isEmpty() ? null : newHistory.getFirst();
+    }
+
+    private static <T> T adjacentItem(List<T> list, int index) {
+        return list.get(index == 0 ? index + 1 : index - 1);
     }
 
     @Override
