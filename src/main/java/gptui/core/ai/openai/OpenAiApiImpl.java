@@ -3,6 +3,7 @@ package gptui.core.ai.openai;
 import com.google.gson.Gson;
 import gptui.core.ai.AiApi;
 import gptui.core.ai.AiResponse;
+import gptui.core.ai.ConversationTurn;
 import gptui.ui.model.config.ConfigModel;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.util.List;
 
 class OpenAiApiImpl implements AiApi {
     private static final Logger log = LoggerFactory.getLogger(OpenAiApiImpl.class);
@@ -29,11 +31,12 @@ class OpenAiApiImpl implements AiApi {
     }
 
     @Override
-    public AiResponse send(String content) {
-        log.info("Sending question: {}", content);
+    public AiResponse send(List<ConversationTurn> turns) {
+        log.info("Sending question: {}", turns);
         var token = configModel.getProperty("openai.token");
         var reasoning = effort != null ? new Reasoning(effort) : null;
-        var body = new RequestBody(model, content, reasoning);
+        var input = turns.stream().map(turn -> new InputItem(role(turn.speaker()), turn.content())).toList();
+        var body = new RequestBody(model, input, reasoning);
         var json = gson.toJson(body);
         log.trace("Request body: {}", json);
         HttpResponse<String> response;
@@ -70,4 +73,10 @@ class OpenAiApiImpl implements AiApi {
         }
     }
 
+    private static String role(ConversationTurn.Speaker speaker) {
+        return switch (speaker) {
+            case USER -> "user";
+            case MODEL -> "assistant";
+        };
+    }
 }

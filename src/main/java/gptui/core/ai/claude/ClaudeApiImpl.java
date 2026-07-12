@@ -3,6 +3,7 @@ package gptui.core.ai.claude;
 import com.google.gson.Gson;
 import gptui.core.ai.AiApi;
 import gptui.core.ai.AiResponse;
+import gptui.core.ai.ConversationTurn;
 import gptui.ui.model.config.ConfigModel;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
@@ -35,12 +36,13 @@ class ClaudeApiImpl implements AiApi {
     }
 
     @Override
-    public AiResponse send(String content) {
-        log.info("Sending question: {}", content);
+    public AiResponse send(List<ConversationTurn> turns) {
+        log.info("Sending question: {}", turns);
         var apiKey = configModel.getProperty("claude.api.key");
         try (var client = HttpClient.newHttpClient()) {
             var outputConfig = effort != null ? new OutputConfig(effort) : null;
-            var body = new RequestBody(model, MAX_TOKENS, List.of(new Message("user", content)), outputConfig);
+            var messages = turns.stream().map(turn -> new Message(role(turn.speaker()), turn.content())).toList();
+            var body = new RequestBody(model, MAX_TOKENS, messages, outputConfig);
             var json = gson.toJson(body);
             log.trace("Request body: {}", json);
             var request = HttpRequest.newBuilder()
@@ -74,5 +76,12 @@ class ClaudeApiImpl implements AiApi {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
+    }
+
+    private static String role(ConversationTurn.Speaker speaker) {
+        return switch (speaker) {
+            case USER -> "user";
+            case MODEL -> "assistant";
+        };
     }
 }

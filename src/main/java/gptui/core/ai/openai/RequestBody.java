@@ -2,7 +2,12 @@ package gptui.core.ai.openai;
 
 import com.google.gson.annotations.SerializedName;
 
-record RequestBody(String model, String input, Reasoning reasoning) {
+import java.util.List;
+
+record RequestBody(String model, List<InputItem> input, Reasoning reasoning) {
+}
+
+record InputItem(String role, String content) {
 }
 
 record Reasoning(ReasoningEffort effort) {

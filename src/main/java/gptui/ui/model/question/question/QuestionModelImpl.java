@@ -1,6 +1,7 @@
 package gptui.ui.model.question.question;
 
 import gptui.core.ai.AiApi;
+import gptui.core.ai.ConversationTurn;
 import gptui.ui.model.question.QuestionModel;
 import gptui.ui.model.question.prompt.PromptFactory;
 import gptui.ui.model.question.sound.SoundService;
@@ -16,9 +17,12 @@ import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Function;
+
+import static gptui.core.ai.ConversationTurn.Speaker.USER;
 
 import static gptui.core.ai.AiModule.CLAUDE_AI;
 import static gptui.core.ai.AiModule.GCP_AI;
@@ -56,6 +60,64 @@ class QuestionModelImpl implements QuestionModel {
     private SoundService soundService;
     @Inject
     private FormatConverter formatConverter;
+    @Inject
+    private FollowUpHistoryBuilder followUpHistoryBuilder;
+
+    @Override
+    public void requestFollowUpAnswer(InteractionId interactionId, AnswerType answerType, Runnable callback) {
+        log.info("Sending follow-up request for {}...", answerType);
+        var interaction = storage.readInteraction(interactionId).orElseThrow();
+        var parentInteractionId = interaction.parentInteractionId();
+        if (parentInteractionId == null) {
+            throw new IllegalStateException("Interaction has no parentInteractionId, it's not a follow-up: " + interactionId);
+        }
+        var promptOpt = promptFactory.getPrompt(
+                interaction.type(),
+                storage.getTheme(interaction.themeId()).title(),
+                interaction.question(),
+                answerType);
+        if (promptOpt.isPresent()) {
+            var prompt = promptOpt.get();
+            log.trace("Prompt: {}", prompt);
+            updateAnswer(interactionId, answerType, answer -> answer
+                            .withPrompt(prompt)
+                            .withState(SENT),
+                    callback);
+            runAsync(() -> Mdc.run(interactionId, () -> {
+                log.trace("requestFollowUpAnswer async");
+                var turns = new ArrayList<>(followUpHistoryBuilder.buildHistory(parentInteractionId, answerType));
+                turns.add(new ConversationTurn(USER, prompt));
+                var response = switch (answerType) {
+                    case GCP -> gcpApi.send(turns);
+                    case CLAUDE -> claudeApi.send(turns);
+                    case OPEN_AI -> openAiApi.send(turns);
+                    case GRAMMAR -> throw new IllegalArgumentException(
+                            "Grammar checks don't support follow-up conversations");
+                };
+                var answerHtml = formatConverter.markdownToHtml(response.text());
+                updateAnswer(interactionId, answerType, answer ->
+                        answer.withAnswerMd(response.text()).withAnswerHtml(answerHtml)
+                                .withResponseId(response.responseId()).withState(SUCCESS), callback);
+                soundService.beenOnAnswer(answerType);
+                log.info("The follow-up answer request finished.");
+            }), EXECUTOR).handle((res, e) -> {
+                if (e != null) {
+                    log.error("Sending follow-up question exception", e);
+                    Mdc.run(interactionId, () -> {
+                        var message = e.getCause().getMessage();
+                        updateAnswer(interactionId, answerType, answer ->
+                                answer.withAnswerMd(message).withAnswerHtml(message).withState(FAIL), callback);
+                        soundService.beenOnAnswer(answerType);
+                    });
+                    return e;
+                } else {
+                    return res;
+                }
+            });
+        } else {
+            log.info("The follow-up answer was skipped.");
+        }
+    }
 
     @Override
     public void requestAnswer(InteractionId interactionId, AnswerType answerType, Runnable callback) {

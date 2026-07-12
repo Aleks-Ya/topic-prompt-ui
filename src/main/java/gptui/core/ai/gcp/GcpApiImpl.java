@@ -3,6 +3,7 @@ package gptui.core.ai.gcp;
 import com.google.gson.Gson;
 import gptui.core.ai.AiApi;
 import gptui.core.ai.AiResponse;
+import gptui.core.ai.ConversationTurn;
 import gptui.ui.model.config.ConfigModel;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
@@ -33,13 +34,15 @@ class GcpApiImpl implements AiApi {
     }
 
     @Override
-    public AiResponse send(String content) {
-        log.info("Sending question: {}", content);
+    public AiResponse send(List<ConversationTurn> turns) {
+        log.info("Sending question: {}", turns);
         var apiKey = configModel.getProperty("gcp.api.key");
         try (var client = HttpClient.newHttpClient()) {
             var thinkingConfig = effort != null ? new ThinkingConfig(effort) : null;
-            var body = new RequestBody(List.of(new Content(List.of(new Part(content)), "user")),
-                    new GenerationConfig(1, thinkingConfig));
+            var contents = turns.stream()
+                    .map(turn -> new Content(List.of(new Part(turn.content())), role(turn.speaker())))
+                    .toList();
+            var body = new RequestBody(contents, new GenerationConfig(1, thinkingConfig));
             var json = gson.toJson(body);
             log.trace("Request body: {}", json);
             var request = HttpRequest.newBuilder()
@@ -69,5 +72,12 @@ class GcpApiImpl implements AiApi {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
+    }
+
+    private static String role(ConversationTurn.Speaker speaker) {
+        return switch (speaker) {
+            case USER -> "user";
+            case MODEL -> "model";
+        };
     }
 }

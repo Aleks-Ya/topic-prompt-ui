@@ -2,6 +2,7 @@ package gptui.ui.model.question;
 
 import gptui.core.ai.AiApi;
 import gptui.core.ai.AiResponse;
+import gptui.core.ai.ConversationTurn;
 import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,11 +23,14 @@ public abstract class BaseMockApi implements AiApi {
     private static final Logger log = LoggerFactory.getLogger(BaseMockApi.class);
     protected final Map<RequestInfo, ResponseInfo> contentSubstringToResponseMap = new HashMap<>();
     protected final List<String> sendHistory = new ArrayList<>();
+    protected final List<List<ConversationTurn>> turnsSendHistory = new ArrayList<>();
     protected final AtomicInteger receivedCounter = new AtomicInteger();
 
     @Override
-    public AiResponse send(String content) {
+    public AiResponse send(List<ConversationTurn> turns) {
+        var content = turns.getLast().content();
         sendHistory.add(content);
+        turnsSendHistory.add(turns);
         if (Platform.isFxApplicationThread()) {
             throw new IllegalStateException("Should not run in the JavaFX Application Thread");
         }
@@ -65,6 +69,10 @@ public abstract class BaseMockApi implements AiApi {
         return sendHistory;
     }
 
+    public List<List<ConversationTurn>> getTurnsSendHistory() {
+        return turnsSendHistory;
+    }
+
     protected void put(String containsSubstring, String notContainSubstring, String response, Duration timeout) {
         var requestInfo = new RequestInfo(Optional.ofNullable(containsSubstring), Optional.ofNullable(notContainSubstring));
         var responseInfo = new ResponseInfo(response, timeout);
@@ -75,6 +83,7 @@ public abstract class BaseMockApi implements AiApi {
         receivedCounter.set(0);
         contentSubstringToResponseMap.clear();
         sendHistory.clear();
+        turnsSendHistory.clear();
         return this;
     }
 
