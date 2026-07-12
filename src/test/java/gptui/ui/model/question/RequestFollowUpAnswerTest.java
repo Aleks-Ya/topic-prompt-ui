@@ -50,7 +50,7 @@ class RequestFollowUpAnswerTest extends ApplicationTest {
                 Map.of(OPEN_AI, new Answer(OPEN_AI, "", "", "", AnswerState.NEW, null)),
                 parentId));
 
-        openAiApi.clear().putOpenAiResponse("James Gosling created Java.", Duration.ZERO);
+        openAiApi.clear().putResponse("Who created it?", "James Gosling created Java.", Duration.ZERO);
 
         questionModel.requestFollowUpAnswer(followUpId, OPEN_AI, () -> {
         });
@@ -58,13 +58,14 @@ class RequestFollowUpAnswerTest extends ApplicationTest {
 
         var answer = storage.readInteraction(followUpId).orElseThrow().getAnswer(OPEN_AI).orElseThrow();
         assertThat(answer.answerState()).isEqualTo(AnswerState.SUCCESS);
+        assertThat(answer.prompt()).isEqualTo("Who created it?");
         assertThat(answer.answerMd()).isEqualTo("James Gosling created Java.");
 
         var turns = openAiApi.getTurnsSendHistory().getLast();
         assertThat(turns).hasSize(3);
         assertThat(turns.get(0).content()).isEqualTo("Explain Java briefly");
         assertThat(turns.get(1).content()).isEqualTo("Java is a language.");
-        assertThat(turns.get(2).content()).contains("Who created it?");
+        assertThat(turns.get(2).content()).isEqualTo("Who created it?");
     }
 
     @Test

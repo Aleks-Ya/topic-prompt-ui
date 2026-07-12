@@ -72,52 +72,46 @@ class QuestionModelImpl implements QuestionModel {
         if (parentInteractionId == null) {
             throw new IllegalStateException("Interaction has no parentInteractionId, it's not a follow-up: " + interactionId);
         }
-        var promptOpt = promptFactory.getPrompt(
-                interaction.type(),
-                storage.getTheme(interaction.themeId()).title(),
-                interaction.question(),
-                answerType);
-        if (promptOpt.isPresent()) {
-            var prompt = promptOpt.get();
-            log.trace("Prompt: {}", prompt);
-            updateAnswer(interactionId, answerType, answer -> answer
-                            .withPrompt(prompt)
-                            .withState(SENT),
-                    callback);
-            runAsync(() -> Mdc.run(interactionId, () -> {
-                log.trace("requestFollowUpAnswer async");
-                var turns = new ArrayList<>(followUpHistoryBuilder.buildHistory(parentInteractionId, answerType));
-                turns.add(new ConversationTurn(USER, prompt));
-                var response = switch (answerType) {
-                    case GCP -> gcpApi.send(turns);
-                    case CLAUDE -> claudeApi.send(turns);
-                    case OPEN_AI -> openAiApi.send(turns);
-                    case GRAMMAR -> throw new IllegalArgumentException(
-                            "Grammar checks don't support follow-up conversations");
-                };
-                var answerHtml = formatConverter.markdownToHtml(response.text());
-                updateAnswer(interactionId, answerType, answer ->
-                        answer.withAnswerMd(response.text()).withAnswerHtml(answerHtml)
-                                .withResponseId(response.responseId()).withState(SUCCESS), callback);
-                soundService.beenOnAnswer(answerType);
-                log.info("The follow-up answer request finished.");
-            }), EXECUTOR).handle((res, e) -> {
-                if (e != null) {
-                    log.error("Sending follow-up question exception", e);
-                    Mdc.run(interactionId, () -> {
-                        var message = e.getCause().getMessage();
-                        updateAnswer(interactionId, answerType, answer ->
-                                answer.withAnswerMd(message).withAnswerHtml(message).withState(FAIL), callback);
-                        soundService.beenOnAnswer(answerType);
-                    });
-                    return e;
-                } else {
-                    return res;
-                }
-            });
-        } else {
-            log.info("The follow-up answer was skipped.");
-        }
+        // Follow-up messages skip PromptFactory/FreeMarker templating on purpose: the templated
+        // framing (theme, instructions) was already established in the first message of the
+        // conversation, so a follow-up only needs to send the raw text the user typed.
+        var prompt = interaction.question();
+        log.trace("Prompt: {}", prompt);
+        updateAnswer(interactionId, answerType, answer -> answer
+                        .withPrompt(prompt)
+                        .withState(SENT),
+                callback);
+        runAsync(() -> Mdc.run(interactionId, () -> {
+            log.trace("requestFollowUpAnswer async");
+            var turns = new ArrayList<>(followUpHistoryBuilder.buildHistory(parentInteractionId, answerType));
+            turns.add(new ConversationTurn(USER, prompt));
+            var response = switch (answerType) {
+                case GCP -> gcpApi.send(turns);
+                case CLAUDE -> claudeApi.send(turns);
+                case OPEN_AI -> openAiApi.send(turns);
+                case GRAMMAR -> throw new IllegalArgumentException(
+                        "Grammar checks don't support follow-up conversations");
+            };
+            var answerHtml = formatConverter.markdownToHtml(response.text());
+            updateAnswer(interactionId, answerType, answer ->
+                    answer.withAnswerMd(response.text()).withAnswerHtml(answerHtml)
+                            .withResponseId(response.responseId()).withState(SUCCESS), callback);
+            soundService.beenOnAnswer(answerType);
+            log.info("The follow-up answer request finished.");
+        }), EXECUTOR).handle((res, e) -> {
+            if (e != null) {
+                log.error("Sending follow-up question exception", e);
+                Mdc.run(interactionId, () -> {
+                    var message = e.getCause().getMessage();
+                    updateAnswer(interactionId, answerType, answer ->
+                            answer.withAnswerMd(message).withAnswerHtml(message).withState(FAIL), callback);
+                    soundService.beenOnAnswer(answerType);
+                });
+                return e;
+            } else {
+                return res;
+            }
+        });
     }
 
     @Override

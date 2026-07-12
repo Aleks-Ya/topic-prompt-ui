@@ -17,9 +17,9 @@ class FollowUpQuestionTest extends BaseGptUiTest {
 
     @Test
     void followUpCheckboxLinksNewInteractionAndSendsHistory() {
-        gptApi.clear().putGrammarResponse("Correct", ZERO).putOpenAiResponse("James Gosling created it.", ZERO);
-        claudeApi.clear().putClaudeResponse("James Gosling created it.", ZERO);
-        gcpApi.clear().putGcpResponse("James Gosling created it.", ZERO);
+        gptApi.clear().putGrammarResponse("Correct", ZERO).putResponse("Who created it?", "James Gosling created it.", ZERO);
+        claudeApi.clear().putResponse("Who created it?", "James Gosling created it.", ZERO);
+        gcpApi.clear().putResponse("Who created it?", "James Gosling created it.", ZERO);
 
         clickOn(question().followUpCheckBox());
         clickOn(question().textArea());
@@ -39,7 +39,7 @@ class FollowUpQuestionTest extends BaseGptUiTest {
         assertThat(turns).hasSize(3);
         assertThat(turns.get(0).content()).isEqualTo(openAiAncestorAnswer.prompt());
         assertThat(turns.get(1).content()).isEqualTo(openAiAncestorAnswer.answerMd());
-        assertThat(turns.get(2).content()).contains("Who created it?");
+        assertThat(turns.get(2).content()).isEqualTo("Who created it?");
 
         assertThat(claudeApi.getTurnsSendHistory().getLast()).hasSize(3);
         assertThat(gcpApi.getTurnsSendHistory().getLast()).hasSize(3);

@@ -79,6 +79,13 @@ public abstract class BaseMockApi implements AiApi {
         contentSubstringToResponseMap.put(requestInfo, responseInfo);
     }
 
+    // Follow-up requests send the raw user-entered text (no FreeMarker template wrapping),
+    // so unlike putXxxResponse (which match a fixed template phrase), this matches arbitrary text.
+    public BaseMockApi putResponse(String containsSubstring, String response, Duration timeout) {
+        put(containsSubstring, null, response, timeout);
+        return this;
+    }
+
     public BaseMockApi clear() {
         receivedCounter.set(0);
         contentSubstringToResponseMap.clear();
