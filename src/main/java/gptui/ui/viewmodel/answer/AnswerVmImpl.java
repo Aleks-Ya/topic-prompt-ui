@@ -34,7 +34,7 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
     private String currentWebViewContent = "";
     private final AnswerType answerType;
     private static final Map<AnswerType, Integer> hotkeyDigitMap = Map.of(GRAMMAR, 1, OPEN_AI, 2, CLAUDE, 3, GCP, 4);
-    private static final Map<AnswerType, String> labelTextMap = Map.of(GRAMMAR, "Grammar\nanswer:", OPEN_AI, "OpenAI\nanswer:", CLAUDE, "Claude\nanswer:", GCP, "GCP\nanswer:");
+    private static final Map<AnswerType, String> buttonTextMap = Map.of(GRAMMAR, "Grammar\nanswer:", OPEN_AI, "OpenAI\nanswer:", CLAUDE, "Claude\nanswer:", GCP, "GCP\nanswer:");
 
     @Override
     public void onCopyButtonClick() {
@@ -54,6 +54,15 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
     @Override
     public AnswerVmProperties properties() {
         return vmProperties;
+    }
+
+    @Override
+    public AnswerDetails getAnswerDetails() {
+        return mediator.getCurrentInteractionOpt()
+                .flatMap(interaction -> interaction.getAnswer(answerType))
+                .map(a -> new AnswerDetails(a.answerType(), a.modelId(), a.effortLevel(), a.finishReason(),
+                        a.inputTokens(), a.outputTokens(), a.totalTokens(), a.prompt()))
+                .orElse(new AnswerDetails(answerType, null, null, null, null, null, null, null));
     }
 
     @Override
@@ -82,7 +91,7 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
     public void initialize() {
         Mdc.run(answerType, () -> {
             log.trace("displayInitialState");
-            vmProperties.answerLabelText.setValue(labelTextMap.get(answerType));
+            vmProperties.answerButtonText.setValue(buttonTextMap.get(answerType));
             vmProperties.copyButtonText.setValue(vmProperties.copyButtonText.getValue() + " _" + hotkeyDigitMap.get(answerType));
         });
     }

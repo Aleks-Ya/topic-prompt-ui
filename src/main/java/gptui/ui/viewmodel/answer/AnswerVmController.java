@@ -7,6 +7,8 @@ public interface AnswerVmController {
 
     AnswerVmProperties properties();
 
+    AnswerDetails getAnswerDetails();
+
     void ctrlAltUpHotkeyPressed();
 
     void ctrlAltDownHotkeyPressed();

@@ -8,7 +8,7 @@ import javafx.scene.paint.Paint;
 
 public class AnswerVmProperties {
     public final StringProperty webViewContent = new SimpleStringProperty();
-    public final StringProperty answerLabelText = new SimpleStringProperty();
+    public final StringProperty answerButtonText = new SimpleStringProperty();
     public final StringProperty copyButtonText = new SimpleStringProperty();
     public final ObjectProperty<Paint> statusCircleFill = new SimpleObjectProperty<>();
 }

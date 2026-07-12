@@ -18,6 +18,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.shape.Circle;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
@@ -190,8 +191,8 @@ public abstract class BaseGptUiTest extends ApplicationTest {
             this.tag = tag;
         }
 
-        public Label label() {
-            return lookup(tag + " #answerLabel").queryAs(Label.class);
+        public Button button() {
+            return lookup(tag + " #answerButton").queryButton();
         }
 
         public Button copyButton() {
@@ -208,6 +209,44 @@ public abstract class BaseGptUiTest extends ApplicationTest {
 
         public Circle circle() {
             return lookup(tag + " #statusCircle").queryAs(Circle.class);
+        }
+    }
+
+    protected AnswerDetailsDialog answerDetailsDialog() {
+        return new AnswerDetailsDialog();
+    }
+
+    protected class AnswerDetailsDialog {
+        public TextField answerTypeField() {
+            return lookup("#answerTypeField").queryAs(TextField.class);
+        }
+
+        public TextField modelIdField() {
+            return lookup("#modelIdField").queryAs(TextField.class);
+        }
+
+        public TextField effortLevelField() {
+            return lookup("#effortLevelField").queryAs(TextField.class);
+        }
+
+        public TextField finishReasonField() {
+            return lookup("#finishReasonField").queryAs(TextField.class);
+        }
+
+        public TextField inputTokensField() {
+            return lookup("#inputTokensField").queryAs(TextField.class);
+        }
+
+        public TextField outputTokensField() {
+            return lookup("#outputTokensField").queryAs(TextField.class);
+        }
+
+        public TextField totalTokensField() {
+            return lookup("#totalTokensField").queryAs(TextField.class);
+        }
+
+        public TextArea promptArea() {
+            return lookup("#promptArea").queryAs(TextArea.class);
         }
     }
 }
