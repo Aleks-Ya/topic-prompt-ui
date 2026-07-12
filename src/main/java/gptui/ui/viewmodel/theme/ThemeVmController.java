@@ -7,5 +7,7 @@ public interface ThemeVmController {
 
     void addNewTheme(String theme);
 
+    void renameCurrentTheme(String newTitle);
+
     ThemeVmProperties properties();
 }

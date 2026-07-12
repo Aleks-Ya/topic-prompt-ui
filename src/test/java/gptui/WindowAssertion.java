@@ -35,6 +35,7 @@ public class WindowAssertion {
     private int themeSize;
     private Theme themeSelectedItem;
     private List<Theme> themeItems;
+    private boolean themeRenameButtonDisabled;
     private Boolean filterHistorySelected;
     private String questionText;
     private String questionStyle;
@@ -125,6 +126,11 @@ public class WindowAssertion {
 
     public WindowAssertion themeItems(Theme... themeItems) {
         this.themeItems = Arrays.asList(themeItems);
+        return this;
+    }
+
+    public WindowAssertion themeRenameButtonDisabled(boolean themeRenameButtonDisabled) {
+        this.themeRenameButtonDisabled = themeRenameButtonDisabled;
         return this;
     }
 
@@ -227,6 +233,7 @@ public class WindowAssertion {
                     .isEqualTo(themeSelectedItem);
             soft.assertThat(theme.comboBox().getItems()).as(descr("Theme/ComboBox/Items")).containsExactlyElementsOf(themeItems);
             soft.assertThat(theme.filterHistoryCheckBox().isSelected()).as(descr("Theme/Label/Text")).isEqualTo(filterHistorySelected);
+            soft.assertThat(theme.renameButton().isDisabled()).as(descr("Theme/RenameButton/Disabled")).isEqualTo(themeRenameButtonDisabled);
             var themeTitle = app.stateModel.getCurrentTheme() != null ? app.stateModel.getCurrentTheme().title() : null;
             soft.assertThat(themeTitle).as(descr("Theme/Model/CurrentTheme")).isEqualTo(themeSelectedItemTitle);
         }

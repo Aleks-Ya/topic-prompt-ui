@@ -26,6 +26,8 @@ public interface StorageModel {
 
     Theme addTheme(String theme);
 
+    Theme renameTheme(ThemeId themeId, String newTitle);
+
     void saveTheme(Theme theme);
 
     Theme getTheme(ThemeId themeId);

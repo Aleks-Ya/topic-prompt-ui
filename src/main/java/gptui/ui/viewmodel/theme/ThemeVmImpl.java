@@ -52,6 +52,15 @@ class ThemeVmImpl implements ThemeVmController, ThemeVmMediator {
     }
 
     @Override
+    public void renameCurrentTheme(String newTitle) {
+        log.trace("renameCurrentTheme");
+        var currentTheme = mediator.getCurrentTheme();
+        var renamedOrTargetTheme = mediator.renameTheme(currentTheme.id(), newTitle);
+        mediator.setCurrentTheme(renamedOrTargetTheme);
+        mediator.themeWasChosen();
+    }
+
+    @Override
     public void updateComboBoxSelectedItemFromCurrentInteraction() {
         var themeTitle = mediator.getCurrentInteractionOpt()
                 .map(Interaction::themeId)
@@ -59,11 +68,17 @@ class ThemeVmImpl implements ThemeVmController, ThemeVmMediator {
                 .orElse(null);
         mediator.setCurrentTheme(themeTitle);
         vmProperties.themeCbValue.setValue(themeTitle);
+        updateRenameButtonDisable();
     }
 
     @Override
     public void updateComboBoxSelectedItemFromStateModel() {
         vmProperties.themeCbValue.setValue(mediator.getCurrentTheme());
+        updateRenameButtonDisable();
+    }
+
+    private void updateRenameButtonDisable() {
+        vmProperties.renameButtonDisable.setValue(mediator.getCurrentTheme() == null);
     }
 
     @Override

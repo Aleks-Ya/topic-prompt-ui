@@ -50,6 +50,10 @@ public record Interaction(InteractionId id,
         return new Interaction(id, type, themeId, question, answers, parentInteractionId);
     }
 
+    public Interaction withThemeId(ThemeId themeId) {
+        return new Interaction(id, type, themeId, question, answers, parentInteractionId);
+    }
+
     @Override
     public String toString() {
         return "Interaction{" +

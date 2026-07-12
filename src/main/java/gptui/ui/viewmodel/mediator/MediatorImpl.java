@@ -80,6 +80,7 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, ThemeMediator, 
         historyVM.displayCurrentInteraction();
         themeVM.initialize();
         themeVM.setLabel();
+        themeVM.updateComboBoxSelectedItemFromStateModel();
     }
 
     @Override
@@ -224,6 +225,11 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, ThemeMediator, 
     @Override
     public Theme addTheme(String theme) {
         return stateModel.addTheme(theme);
+    }
+
+    @Override
+    public Theme renameTheme(ThemeId themeId, String newTitle) {
+        return stateModel.renameTheme(themeId, newTitle);
     }
 
     @Override

@@ -22,6 +22,8 @@ public interface ThemeMediator {
 
     Theme addTheme(String theme);
 
+    Theme renameTheme(ThemeId themeId, String newTitle);
+
     Long getInteractionCountInTheme(String theme);
 
     Optional<Interaction> getCurrentInteractionOpt();

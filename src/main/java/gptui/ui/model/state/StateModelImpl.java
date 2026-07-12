@@ -144,6 +144,11 @@ class StateModelImpl implements StateModel {
     }
 
     @Override
+    public Theme renameTheme(ThemeId themeId, String newTitle) {
+        return storage.renameTheme(themeId, newTitle);
+    }
+
+    @Override
     public Theme getTheme(ThemeId themeId) {
         return storage.getTheme(themeId);
     }

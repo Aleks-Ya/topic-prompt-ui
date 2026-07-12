@@ -140,6 +140,10 @@ public abstract class BaseGptUiTest extends ApplicationTest {
             return lookup("#addButton").queryButton();
         }
 
+        public Button renameButton() {
+            return lookup("#renameButton").queryButton();
+        }
+
         public CheckBox filterHistoryCheckBox() {
             return lookup("#filterHistoryCheckBox").queryAs(CheckBox.class);
         }

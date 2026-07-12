@@ -132,6 +132,44 @@ class StorageModelImpl implements StorageModel {
         }
     }
 
+    @Override
+    public synchronized Theme renameTheme(ThemeId themeId, String newTitle) {
+        log.trace("Renaming theme {} to '{}'", themeId, newTitle);
+        var trimmed = newTitle.trim();
+        var currentTheme = getTheme(themeId);
+        if (trimmed.equals(currentTheme.title())) {
+            log.trace("New title equals current title, no-op: {}", currentTheme);
+            return currentTheme;
+        }
+        var existingThemes = storageFilesystem.readThemes();
+        var targetOpt = existingThemes.stream()
+                .filter(theme -> theme.title().equals(trimmed) && !theme.id().equals(themeId))
+                .findFirst();
+        if (targetOpt.isEmpty()) {
+            var renamedTheme = new Theme(themeId, trimmed);
+            var themes = existingThemes.stream()
+                    .map(theme -> theme.id().equals(themeId) ? renamedTheme : theme)
+                    .toList();
+            storageFilesystem.saveThemes(themes);
+            updateThemeCaches(themes);
+            log.trace("Theme was renamed: {}", renamedTheme);
+            return renamedTheme;
+        } else {
+            var targetTheme = targetOpt.get();
+            log.trace("Merging theme {} into existing theme {}", currentTheme, targetTheme);
+            readAllInteractions().stream()
+                    .filter(interaction -> interaction.themeId().equals(themeId))
+                    .forEach(interaction -> updateInteraction(interaction.id(), i -> i.withThemeId(targetTheme.id())));
+            var themes = existingThemes.stream()
+                    .filter(theme -> !theme.id().equals(themeId))
+                    .toList();
+            storageFilesystem.saveThemes(themes);
+            updateThemeCaches(themes);
+            log.trace("Theme was merged and removed: {}", currentTheme);
+            return targetTheme;
+        }
+    }
+
     private void updateThemeCaches(List<Theme> themes) {
         themeList.clear();
         themeList.addAll(themes);

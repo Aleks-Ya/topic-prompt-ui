@@ -20,4 +20,5 @@ public class ThemeVmProperties {
     public final ObjectProperty<Callback<ListView<Theme>, ListCell<Theme>>> themeCbCellFactory = new SimpleObjectProperty<>();
     public final BooleanProperty filterHistoryCheckBoxSelected = new SimpleBooleanProperty();
     public final StringProperty themeLabelText = new SimpleStringProperty();
+    public final BooleanProperty renameButtonDisable = new SimpleBooleanProperty();
 }

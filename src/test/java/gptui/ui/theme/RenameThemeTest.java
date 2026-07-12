@@ -1,15 +1,16 @@
-package gptui.ui.history;
+package gptui.ui.theme;
 
 import gptui.BaseGptUiTest;
-import gptui.ui.TestingData.I0;
+import gptui.core.storagefilesystem.Theme;
 import gptui.ui.TestingData.I1;
+import javafx.scene.input.KeyCode;
 import org.junit.jupiter.api.Test;
 
 import static gptui.ui.viewmodel.question.QuestionStyle.QUESTION_STYLE_EMPTY;
 import static javafx.scene.paint.Color.GREEN;
-import static javafx.scene.paint.Color.WHITE;
+import static org.assertj.core.api.Assertions.assertThat;
 
-class DeleteInteractionOnlyTest extends BaseGptUiTest {
+class RenameThemeTest extends BaseGptUiTest {
     @Override
     public void init() {
         storage.saveTheme(I1.THEME);
@@ -17,7 +18,8 @@ class DeleteInteractionOnlyTest extends BaseGptUiTest {
     }
 
     @Test
-    void currentInteractionIsTheOnly() {
+    void renameTheme() {
+        var renamedTheme = new Theme(I1.THEME_ID, "Renamed Theme 1");
         assertion()
                 .focus(history().comboBox())
                 .historySize(1, 1)
@@ -38,30 +40,19 @@ class DeleteInteractionOnlyTest extends BaseGptUiTest {
                 .claudeA().text(I1.CLAUDE_HTML)
                 .gcpA().text(I1.GCP_HTML)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
+
+                .work("Rename Theme", () ->
+                        clickOn(theme().renameButton()).write(renamedTheme.title()).type(KeyCode.ENTER))
+                .focus(question().textArea())
+                .themeSelectedItem(renamedTheme)
+                .themeItems(renamedTheme)
+
+                .work("Rename To Same Title Is No-op", () ->
+                        clickOn(theme().renameButton()).type(KeyCode.ENTER))
+                .themeSelectedItem(renamedTheme)
+                .themeItems(renamedTheme)
                 .assertApp();
 
-        clickOn(history().deleteButton());
-
-        assertion()
-                .focus(theme().comboBox())
-                .historySize(0, 0)
-                .historyDeleteButtonDisabled(true)
-                .historySelectedItem(I0.HISTORY_SELECTED_ITEM)
-                .historyItems()
-                .themeSize(1)
-                .themeSelectedItem(I0.THEME_SELECTED_ITEM)
-                .themeItems(I1.THEME)
-                .themeFilterHistorySelected(false)
-                .themeRenameButtonDisabled(true)
-                .questionText(I1.QUESTION)
-                .questionStyle(QUESTION_STYLE_EMPTY)
-                .modelEditedQuestion(I1.QUESTION)
-                .modelIsEnteringNewQuestion(false)
-                .grammarA().text(I0.GRAMMAR_HTML)
-                .openAiA().text(I0.OPEN_AI_HTML)
-                .claudeA().text(I0.CLAUDE_HTML)
-                .gcpA().text(I0.GCP_HTML)
-                .answerCircleColors(WHITE, WHITE, WHITE, WHITE)
-                .assertApp();
+        assertThat(storage.readInteraction(I1.INTERACTION.id()).orElseThrow().themeId()).isEqualTo(I1.THEME_ID);
     }
 }

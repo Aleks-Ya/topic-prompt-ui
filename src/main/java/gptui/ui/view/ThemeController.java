@@ -24,9 +24,12 @@ public class ThemeController extends BaseController {
     private CheckBox filterHistoryCheckBox;
     @FXML
     private Button addButton;
+    @FXML
+    private Button renameButton;
     @Inject
     private ThemeVmController vm;
     private final TextInputDialog newThemeDialog = new TextInputDialog();
+    private final TextInputDialog renameThemeDialog = new TextInputDialog();
 
     @FXML
     void themeFilterHistoryCheckBoxClicked(ActionEvent ignore) {
@@ -48,6 +51,7 @@ public class ThemeController extends BaseController {
         vm.properties().themeCbEditor.bindBidirectional(themeComboBox.getEditor().textProperty());
         vm.properties().themeCbCellFactory.bindBidirectional(themeComboBox.cellFactoryProperty());
         vm.properties().filterHistoryCheckBoxSelected.bindBidirectional(filterHistoryCheckBox.selectedProperty());
+        vm.properties().renameButtonDisable.bindBidirectional(renameButton.disableProperty());
 
         newThemeDialog.setTitle("Add new theme");
         newThemeDialog.setHeaderText("New theme:");
@@ -57,6 +61,18 @@ public class ThemeController extends BaseController {
             newThemeDialog.getEditor().requestFocus();
             newThemeDialog.hide();
             newThemeDialog.showAndWait().ifPresent(theme -> vm.addNewTheme(theme));
+        });
+
+        renameThemeDialog.setTitle("Rename theme");
+        renameThemeDialog.setHeaderText("New theme name:");
+        renameButton.setOnAction(_ -> {
+            var currentTheme = themeComboBox.getValue();
+            renameThemeDialog.show();
+            renameThemeDialog.getEditor().setText(currentTheme != null ? currentTheme.title() : "");
+            renameThemeDialog.getEditor().selectAll();
+            renameThemeDialog.getEditor().requestFocus();
+            renameThemeDialog.hide();
+            renameThemeDialog.showAndWait().ifPresent(newTitle -> vm.renameCurrentTheme(newTitle));
         });
         themeLabel.setLabelFor(themeComboBox);
         themeComboBox.showingProperty()

@@ -202,6 +202,42 @@ class StorageModelTest extends BaseTest {
         assertThat(storage.getTheme(theme2.id())).isEqualTo(theme2);
     }
 
+    @Test
+    void renameThemeNoCollision() {
+        var theme = storage.addTheme("Java");
+        var renamed = storage.renameTheme(theme.id(), "Kotlin");
+        assertThat(renamed).isEqualTo(new Theme(theme.id(), "Kotlin"));
+        assertThat(storage.getTheme(theme.id())).isEqualTo(renamed);
+    }
+
+    @Test
+    void renameThemeNoOpSameTitle() {
+        var theme = storage.addTheme("Java");
+        var result = storage.renameTheme(theme.id(), "Java");
+        assertThat(result).isEqualTo(theme);
+    }
+
+    @Test
+    void renameThemeMergesOnCollision() {
+        var theme1 = storage.addTheme("Java");
+        var theme2 = storage.addTheme("Kotlin");
+        storage.saveInteraction(newInteraction(1L, theme1));
+        storage.saveInteraction(newInteraction(2L, theme1));
+        var result = storage.renameTheme(theme1.id(), "Kotlin");
+        assertThat(result).isEqualTo(theme2);
+        assertThat(storage.readInteraction(new InteractionId(1L)).orElseThrow().themeId()).isEqualTo(theme2.id());
+        assertThat(storage.readInteraction(new InteractionId(2L)).orElseThrow().themeId()).isEqualTo(theme2.id());
+        assertThatThrownBy(() -> storage.getTheme(theme1.id())).isInstanceOf(IllegalStateException.class);
+        assertThat(storage.getThemes()).containsExactly(theme2);
+    }
+
+    @Test
+    void renameThemeTrimsInput() {
+        var theme = storage.addTheme("Java");
+        var renamed = storage.renameTheme(theme.id(), "  Kotlin  ");
+        assertThat(renamed.title()).isEqualTo("Kotlin");
+    }
+
     private static Interaction newInteraction(long id, Theme theme) {
         return new Interaction(new InteractionId(id), null, theme.id(), null, null, null);
     }

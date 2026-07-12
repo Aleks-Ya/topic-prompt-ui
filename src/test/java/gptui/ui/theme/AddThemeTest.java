@@ -23,6 +23,7 @@ class AddThemeTest extends BaseGptUiTest {
                 .themeSelectedItem(I0.THEME_SELECTED_ITEM)
                 .themeItems(I0.THEME_ITEMS)
                 .themeFilterHistorySelected(false)
+                .themeRenameButtonDisabled(true)
                 .questionText(I0.QUESTION)
                 .questionStyle(QUESTION_STYLE_EMPTY)
                 .modelEditedQuestion(null)
@@ -39,6 +40,7 @@ class AddThemeTest extends BaseGptUiTest {
                 .themeSize(1)
                 .themeSelectedItem(I1.THEME)
                 .themeItems(I1.THEME)
+                .themeRenameButtonDisabled(false)
 
                 .work("Add Theme 2", () ->
                         clickOn(theme().addThemeButton()).write(I2.THEME.title()).type(KeyCode.ENTER))

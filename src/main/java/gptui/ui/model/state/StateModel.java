@@ -30,6 +30,8 @@ public interface StateModel {
 
     Theme addTheme(String theme);
 
+    Theme renameTheme(ThemeId themeId, String newTitle);
+
     Theme getTheme(ThemeId themeId);
 
     Long getInteractionCountInTheme(String theme);

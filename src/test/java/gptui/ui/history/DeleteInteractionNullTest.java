@@ -20,6 +20,7 @@ class DeleteInteractionNullTest extends BaseGptUiTest {
                 .themeSelectedItem(I0.THEME_SELECTED_ITEM)
                 .themeItems(I0.THEME_ITEMS)
                 .themeFilterHistorySelected(false)
+                .themeRenameButtonDisabled(true)
                 .questionText(I0.QUESTION)
                 .questionStyle(QUESTION_STYLE_EMPTY)
                 .modelEditedQuestion(null)
