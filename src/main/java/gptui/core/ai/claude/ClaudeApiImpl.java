@@ -16,12 +16,11 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 class ClaudeApiImpl implements AiApi {
     private static final Logger log = LoggerFactory.getLogger(ClaudeApiImpl.class);
-    private static final Set<String> BAD_STOP_REASONS = Set.of("max_tokens", "refusal");
+    private static final String GOOD_STOP_REASON = "end_turn";
     private static final String ANTHROPIC_VERSION = "2023-06-01";
     private static final Integer MAX_TOKENS = 8192;
     private static final Gson gson = new Gson();
@@ -57,7 +56,7 @@ class ClaudeApiImpl implements AiApi {
             var response = client.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() == 200) {
                 var responseBody = gson.fromJson(response.body(), ResponseBody.class);
-                if (BAD_STOP_REASONS.contains(responseBody.stop_reason())) {
+                if (!GOOD_STOP_REASON.equals(responseBody.stop_reason())) {
                     var message = String.format("Wrong stop reason in response: %s", responseBody);
                     throw new RuntimeException(message);
                 }
