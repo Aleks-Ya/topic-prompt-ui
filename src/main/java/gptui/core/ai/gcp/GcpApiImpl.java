@@ -2,6 +2,7 @@ package gptui.core.ai.gcp;
 
 import com.google.gson.Gson;
 import gptui.core.ai.AiApi;
+import gptui.core.ai.AiApiException;
 import gptui.core.ai.AiResponse;
 import gptui.core.ai.ConversationTurn;
 import gptui.ui.model.config.ConfigModel;
@@ -9,6 +10,7 @@ import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -60,18 +62,15 @@ class GcpApiImpl implements AiApi {
                 return parseResponse(responseBody);
             } else {
                 log.error("GCP API error status {}: {}", response.statusCode(), response.body());
-                throw new RuntimeException(response.body());
+                throw new AiApiException(response.body());
             }
-        } catch (RuntimeException e) {
+        } catch (IOException e) {
             log.error(e.getMessage(), e);
-            throw e;
+            throw new AiApiException(e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             log.error(e.getMessage(), e);
-            throw new RuntimeException(e);
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new RuntimeException(e);
+            throw new AiApiException(e);
         }
     }
 
@@ -79,7 +78,7 @@ class GcpApiImpl implements AiApi {
         var candidate = responseBody.candidates().getFirst();
         if (candidate.finishReason() != STOP) {
             var message = String.format("Wrong finish reason in candidate: %s", candidate);
-            throw new RuntimeException(message);
+            throw new AiApiException(message);
         }
         var usage = responseBody.usageMetadata();
         return new AiResponse(candidate.content().parts().getFirst().text(), responseBody.responseId(),

@@ -227,7 +227,8 @@ class StorageModelTest extends BaseTest {
         assertThat(result).isEqualTo(theme2);
         assertThat(storage.readInteraction(new InteractionId(1L)).orElseThrow().themeId()).isEqualTo(theme2.id());
         assertThat(storage.readInteraction(new InteractionId(2L)).orElseThrow().themeId()).isEqualTo(theme2.id());
-        assertThatThrownBy(() -> storage.getTheme(theme1.id())).isInstanceOf(IllegalStateException.class);
+        var theme1Id = theme1.id();
+        assertThatThrownBy(() -> storage.getTheme(theme1Id)).isInstanceOf(IllegalStateException.class);
         assertThat(storage.getThemes()).containsExactly(theme2);
     }
 

@@ -2,6 +2,7 @@ package gptui.core.ai.claude;
 
 import com.google.gson.Gson;
 import gptui.core.ai.AiApi;
+import gptui.core.ai.AiApiException;
 import gptui.core.ai.AiResponse;
 import gptui.core.ai.ConversationTurn;
 import gptui.ui.model.config.ConfigModel;
@@ -59,20 +60,20 @@ class ClaudeApiImpl implements AiApi {
                 return parseResponse(responseBody);
             } else {
                 log.error("Claude API error status {}: {}", response.statusCode(), response.body());
-                throw new RuntimeException(response.body());
+                throw new AiApiException(response.body());
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new AiApiException(e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new RuntimeException(e);
+            throw new AiApiException(e);
         }
     }
 
     AiResponse parseResponse(ResponseBody responseBody) {
         if (!GOOD_STOP_REASON.equals(responseBody.stop_reason())) {
             var message = String.format("Wrong stop reason in response: %s", responseBody);
-            throw new RuntimeException(message);
+            throw new AiApiException(message);
         }
         var text = responseBody.content().stream()
                 .filter(block -> "text".equals(block.type()))

@@ -43,7 +43,7 @@ public class GptUiApplication extends Application {
             vm.stageShowed(scene.getAccelerators());
         } catch (Exception e) {
             log.error("Starting application error", e);
-            throw e;
+            throw new IllegalStateException("Failed to start application", e);
         }
     }
 

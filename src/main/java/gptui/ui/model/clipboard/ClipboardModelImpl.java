@@ -19,7 +19,7 @@ class ClipboardModelImpl implements ClipboardModel {
         content.putHtml(html);
         var result = clipboard.setContent(content);
         if (!result) {
-            throw new RuntimeException("Failed to set clipboard content");
+            throw new IllegalStateException("Failed to set clipboard content");
         }
         log.debug("Copied to clipboard {} characters", html.length());
     }

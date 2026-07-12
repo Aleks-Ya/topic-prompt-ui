@@ -5,10 +5,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.shape.Circle;
 import javafx.scene.web.WebView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
 
 import static gptui.core.util.LogUtils.shorten;
 import static javafx.scene.input.KeyCode.DOWN;
@@ -42,37 +44,46 @@ public class AnswerController extends BaseController {
     void initializeController(AnswerVmController vm) {
         log.trace("initializeController");
         this.vm = vm;
-        webView.getEngine().documentProperty().addListener((_, _, newValue) -> {
-            if (newValue != null) {
-                var currentContent = vm.properties().webViewContent.getValue();
-                var newContent = (String) webView.getEngine().executeScript("document.documentElement.outerHTML");
-                if (!newContent.equals(currentContent)) {
-                    log.trace("Set value to webViewContent from WebView Engine: {}", shorten(newContent));
-                    vm.properties().webViewContent.set(newContent);
-                }
-            }
-        });
-        vm.properties().webViewContent.addListener((_, _, newValue) -> {
-            if (newValue != null) {
-                log.trace("Load content to WebView Engine: {}", shorten(newValue));
-                webView.getEngine().loadContent(newValue);
-            }
-        });
+        webView.getEngine().documentProperty().addListener((_, _, newValue) -> onDocumentChanged(newValue));
+        vm.properties().webViewContent.addListener((_, _, newValue) -> onWebViewContentChanged(newValue));
         vm.properties().statusCircleFill.bindBidirectional(statusCircle.fillProperty());
         vm.properties().answerLabelText.bindBidirectional(answerLabel.textProperty());
         vm.properties().copyButtonText.bindBidirectional(copyButton.textProperty());
-        webView.addEventFilter(KEY_PRESSED, event -> {
-            if (event.isControlDown() && event.isAltDown()) {
-                if (event.getCode() == DOWN) {
-                    event.consume();
-                    vm.ctrlAltDownHotkeyPressed();
-                }
-                if (event.getCode() == UP) {
-                    event.consume();
-                    vm.ctrlAltUpHotkeyPressed();
-                }
-            }
-        });
+        webView.addEventFilter(KEY_PRESSED, this::onWebViewKeyPressed);
+    }
+
+    private void onDocumentChanged(Document newValue) {
+        if (newValue == null) {
+            return;
+        }
+        var currentContent = vm.properties().webViewContent.getValue();
+        var newContent = (String) webView.getEngine().executeScript("document.documentElement.outerHTML");
+        if (!newContent.equals(currentContent)) {
+            log.trace("Set value to webViewContent from WebView Engine: {}", shorten(newContent));
+            vm.properties().webViewContent.set(newContent);
+        }
+    }
+
+    private void onWebViewContentChanged(String newValue) {
+        if (newValue == null) {
+            return;
+        }
+        log.trace("Load content to WebView Engine: {}", shorten(newValue));
+        webView.getEngine().loadContent(newValue);
+    }
+
+    private void onWebViewKeyPressed(KeyEvent event) {
+        if (!event.isControlDown() || !event.isAltDown()) {
+            return;
+        }
+        if (event.getCode() == DOWN) {
+            event.consume();
+            vm.ctrlAltDownHotkeyPressed();
+        }
+        if (event.getCode() == UP) {
+            event.consume();
+            vm.ctrlAltUpHotkeyPressed();
+        }
     }
 
     @Override

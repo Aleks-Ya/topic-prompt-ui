@@ -2,6 +2,7 @@ package gptui.core.ai.openai;
 
 import com.google.gson.Gson;
 import gptui.core.ai.AiApi;
+import gptui.core.ai.AiApiException;
 import gptui.core.ai.AiResponse;
 import gptui.core.ai.ConversationTurn;
 import gptui.ui.model.config.ConfigModel;
@@ -52,17 +53,17 @@ class OpenAiApiImpl implements AiApi {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             log.error(e.getMessage(), e);
-            throw new RuntimeException(e);
+            throw new AiApiException(e);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            throw new RuntimeException(e);
+            throw new AiApiException(e);
         }
         if (response.statusCode() == 200) {
             var responseBody = gson.fromJson(response.body(), ResponseBody.class);
             return parseResponse(responseBody);
         } else {
             log.error("GPT API error status {}: {}", response.statusCode(), response.body());
-            throw new RuntimeException(response.body());
+            throw new AiApiException(response.body());
         }
     }
 
@@ -72,14 +73,14 @@ class OpenAiApiImpl implements AiApi {
                 .filter(output -> "completed".equalsIgnoreCase(output.status()))
                 .toList();
         if (completedOutputs.isEmpty()) {
-            throw new RuntimeException("No completed output in response: " + outputs);
+            throw new AiApiException("No completed output in response: " + outputs);
         }
         if (completedOutputs.size() > 1) {
-            throw new RuntimeException("Multiple outputs in response: " + outputs);
+            throw new AiApiException("Multiple outputs in response: " + outputs);
         }
         var contents = completedOutputs.getFirst().content();
         if (contents.size() > 1) {
-            throw new RuntimeException("Multiple contents in output: " + contents);
+            throw new AiApiException("Multiple contents in output: " + contents);
         }
         var usage = responseBody.usage();
         return new AiResponse(contents.getFirst().text(), responseBody.id(), model,
