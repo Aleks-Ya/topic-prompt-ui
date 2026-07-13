@@ -88,6 +88,15 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
     }
 
     @Override
+    public void displayPartialAnswer(String html) {
+        Mdc.run(answerType, () -> {
+            log.trace("displayPartialAnswer: {} chars", html.length());
+            vmProperties.webViewContent.set(html);
+            currentWebViewContent = html;
+        });
+    }
+
+    @Override
     public void initialize() {
         Mdc.run(answerType, () -> {
             log.trace("displayInitialState");

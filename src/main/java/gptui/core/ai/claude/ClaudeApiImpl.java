@@ -5,19 +5,22 @@ import gptui.core.ai.AiApi;
 import gptui.core.ai.AiApiException;
 import gptui.core.ai.AiResponse;
 import gptui.core.ai.ConversationTurn;
+import gptui.core.ai.SseParser;
 import gptui.ui.model.config.ConfigModel;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 class ClaudeApiImpl implements AiApi {
     private static final Logger log = LoggerFactory.getLogger(ClaudeApiImpl.class);
@@ -37,13 +40,13 @@ class ClaudeApiImpl implements AiApi {
     }
 
     @Override
-    public AiResponse send(List<ConversationTurn> turns) {
+    public AiResponse send(List<ConversationTurn> turns, Consumer<String> onTextDelta) {
         log.info("Sending question: {}", turns);
         var apiKey = configModel.getProperty("claude.api.key");
         try (var client = HttpClient.newHttpClient()) {
             var outputConfig = effort != null ? new OutputConfig(effort) : null;
             var messages = turns.stream().map(turn -> new Message(role(turn.speaker()), turn.content())).toList();
-            var body = new RequestBody(model, MAX_TOKENS, messages, outputConfig);
+            var body = new RequestBody(model, MAX_TOKENS, messages, outputConfig, true);
             var json = gson.toJson(body);
             log.trace("Request body: {}", json);
             var request = HttpRequest.newBuilder()
@@ -54,15 +57,16 @@ class ClaudeApiImpl implements AiApi {
                     .POST(HttpRequest.BodyPublishers.ofString(json))
                     .timeout(Duration.ofMinutes(1))
                     .build();
-            var response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            if (response.statusCode() == 200) {
-                var responseBody = gson.fromJson(response.body(), ResponseBody.class);
-                return parseResponse(responseBody);
-            } else {
-                log.error("Claude API error status {}: {}", response.statusCode(), response.body());
-                throw new AiApiException(response.body());
+            var response = client.send(request, HttpResponse.BodyHandlers.ofLines());
+            try (var lines = response.body()) {
+                if (response.statusCode() == 200) {
+                    return assemble(lines, onTextDelta);
+                }
+                var errorBody = SseParser.joinLines(lines);
+                log.error("Claude API error status {}: {}", response.statusCode(), errorBody);
+                throw new AiApiException(errorBody);
             }
-        } catch (IOException e) {
+        } catch (IOException | UncheckedIOException e) {
             throw new AiApiException(e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -70,24 +74,56 @@ class ClaudeApiImpl implements AiApi {
         }
     }
 
-    AiResponse parseResponse(ResponseBody responseBody) {
-        if (!GOOD_STOP_REASON.equals(responseBody.stop_reason())) {
-            var message = String.format("Wrong stop reason in response: %s", responseBody);
-            throw new AiApiException(message);
+    AiResponse assemble(Stream<String> lines, Consumer<String> onTextDelta) {
+        var state = new StreamState();
+        SseParser.forEachEvent(lines, sseEvent -> {
+            var event = gson.fromJson(sseEvent.data(), StreamEvent.class);
+            var type = event.type() != null ? event.type() : sseEvent.event();
+            switch (type) {
+                case "message_start" -> {
+                    if (event.message() != null) {
+                        state.responseId = event.message().id();
+                        if (event.message().usage() != null) {
+                            state.inputTokens = event.message().usage().input_tokens();
+                        }
+                    }
+                }
+                case "content_block_delta" -> {
+                    if (event.delta() != null && "text_delta".equals(event.delta().type())
+                            && event.delta().text() != null) {
+                        state.text.append(event.delta().text());
+                        onTextDelta.accept(event.delta().text());
+                    }
+                }
+                case "message_delta" -> {
+                    if (event.delta() != null && event.delta().stop_reason() != null) {
+                        state.stopReason = event.delta().stop_reason();
+                    }
+                    if (event.usage() != null && event.usage().output_tokens() != null) {
+                        state.outputTokens = event.usage().output_tokens();
+                    }
+                }
+                case "error" -> throw new AiApiException(sseEvent.data());
+                default -> { // message_stop, content_block_start/stop, ping
+                }
+            }
+        });
+        if (!GOOD_STOP_REASON.equals(state.stopReason)) {
+            throw new AiApiException(String.format("Wrong stop reason in response: %s", state.stopReason));
         }
-        var text = responseBody.content().stream()
-                .filter(block -> "text".equals(block.type()))
-                .map(ResponseBody.ContentBlock::text)
-                .collect(Collectors.joining());
-        var usage = responseBody.usage();
-        Integer totalTokens = usage != null && usage.input_tokens() != null && usage.output_tokens() != null
-                ? usage.input_tokens() + usage.output_tokens() : null;
-        return new AiResponse(text, responseBody.id(), model,
+        Integer totalTokens = state.inputTokens != null && state.outputTokens != null
+                ? state.inputTokens + state.outputTokens : null;
+        return new AiResponse(state.text.toString(), state.responseId, model,
                 effort != null ? effort.name() : null,
-                responseBody.stop_reason(),
-                usage != null ? usage.input_tokens() : null,
-                usage != null ? usage.output_tokens() : null,
-                totalTokens);
+                state.stopReason, state.inputTokens, state.outputTokens, totalTokens);
+    }
+
+    private static class StreamState {
+        final StringBuilder text = new StringBuilder();
+        String responseId;
+        String stopReason;
+        Integer inputTokens;
+        Integer outputTokens;
     }
 
     private static String role(ConversationTurn.Speaker speaker) {

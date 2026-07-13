@@ -111,6 +111,20 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, ThemeMediator, 
         historyVM.displayCurrentInteraction();
     }
 
+    private void answerProgress(InteractionId interactionId, AnswerType answerType, String html) {
+        // A stream may still be running after the user navigated to another interaction —
+        // its partial output must not overwrite the pane showing the current interaction.
+        if (!interactionId.equals(stateModel.getCurrentInteractionId())) {
+            return;
+        }
+        switch (answerType) {
+            case GRAMMAR -> grammarAnswerVM.displayPartialAnswer(html);
+            case OPEN_AI -> openAiAnswerVM.displayPartialAnswer(html);
+            case CLAUDE -> claudeAnswerVM.displayPartialAnswer(html);
+            case GCP -> gcpAnswerVM.displayPartialAnswer(html);
+        }
+    }
+
     @Override
     public void isThemeFilterHistoryChanged() {
         log.trace("isThemeFilterHistoryChanged");
@@ -249,7 +263,8 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, ThemeMediator, 
 
     @Override
     public void requestAnswer(InteractionId interactionId, AnswerType answerType) {
-        questionModel.requestAnswer(interactionId, answerType, () -> answerUpdated(answerType));
+        questionModel.requestAnswer(interactionId, answerType, () -> answerUpdated(answerType),
+                html -> answerProgress(interactionId, answerType, html));
     }
 
     @Override

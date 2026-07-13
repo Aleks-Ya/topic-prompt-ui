@@ -5,18 +5,22 @@ import gptui.core.ai.AiApi;
 import gptui.core.ai.AiApiException;
 import gptui.core.ai.AiResponse;
 import gptui.core.ai.ConversationTurn;
+import gptui.core.ai.SseParser;
 import gptui.ui.model.config.ConfigModel;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import static gptui.core.ai.gcp.ResponseBody.FinishReason.STOP;
 
@@ -24,7 +28,7 @@ class GcpApiImpl implements AiApi {
     private static final Logger log = LoggerFactory.getLogger(GcpApiImpl.class);
     private static final Gson gson = new Gson();
     private static final String ENDPOINT_TEMPLATE =
-            "https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent";
+            "https://generativelanguage.googleapis.com/v1beta/models/%s:streamGenerateContent?alt=sse";
     private final String model;
     private final URI endpoint;
     private final ThinkingLevel effort;
@@ -38,7 +42,7 @@ class GcpApiImpl implements AiApi {
     }
 
     @Override
-    public AiResponse send(List<ConversationTurn> turns) {
+    public AiResponse send(List<ConversationTurn> turns, Consumer<String> onTextDelta) {
         log.info("Sending question: {}", turns);
         var apiKey = configModel.getProperty("gcp.api.key");
         try (var client = HttpClient.newHttpClient()) {
@@ -56,15 +60,16 @@ class GcpApiImpl implements AiApi {
                     .POST(HttpRequest.BodyPublishers.ofString(json))
                     .timeout(Duration.ofMinutes(1))
                     .build();
-            var response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            if (response.statusCode() == 200) {
-                var responseBody = gson.fromJson(response.body(), ResponseBody.class);
-                return parseResponse(responseBody);
-            } else {
-                log.error("GCP API error status {}: {}", response.statusCode(), response.body());
-                throw new AiApiException(response.body());
+            var response = client.send(request, HttpResponse.BodyHandlers.ofLines());
+            try (var lines = response.body()) {
+                if (response.statusCode() == 200) {
+                    return assemble(lines, onTextDelta);
+                }
+                var errorBody = SseParser.joinLines(lines);
+                log.error("GCP API error status {}: {}", response.statusCode(), errorBody);
+                throw new AiApiException(errorBody);
             }
-        } catch (IOException e) {
+        } catch (IOException | UncheckedIOException e) {
             log.error(e.getMessage(), e);
             throw new AiApiException(e);
         } catch (InterruptedException e) {
@@ -74,18 +79,47 @@ class GcpApiImpl implements AiApi {
         }
     }
 
-    AiResponse parseResponse(ResponseBody responseBody) {
-        var candidate = responseBody.candidates().getFirst();
-        if (candidate.finishReason() != STOP) {
-            var message = String.format("Wrong finish reason in candidate: %s", candidate);
-            throw new AiApiException(message);
+    AiResponse assemble(Stream<String> lines, Consumer<String> onTextDelta) {
+        var state = new StreamState();
+        SseParser.forEachEvent(lines, sseEvent -> {
+            var fragment = gson.fromJson(sseEvent.data(), ResponseBody.class);
+            if (fragment.responseId() != null) {
+                state.responseId = fragment.responseId();
+            }
+            if (fragment.usageMetadata() != null) {
+                state.usage = fragment.usageMetadata();
+            }
+            if (fragment.candidates() == null || fragment.candidates().isEmpty()) {
+                return;
+            }
+            var candidate = fragment.candidates().getFirst();
+            if (candidate.finishReason() != null) {
+                state.finishReason = candidate.finishReason();
+            }
+            if (candidate.content() != null && candidate.content().parts() != null) {
+                for (var part : candidate.content().parts()) {
+                    if (part.text() != null) {
+                        state.text.append(part.text());
+                        onTextDelta.accept(part.text());
+                    }
+                }
+            }
+        });
+        if (state.finishReason != STOP) {
+            throw new AiApiException(String.format("Wrong finish reason in candidate: %s", state.finishReason));
         }
-        var usage = responseBody.usageMetadata();
-        return new AiResponse(candidate.content().parts().getFirst().text(), responseBody.responseId(),
-                model, effort != null ? effort.name() : null, candidate.finishReason().name(),
-                usage != null ? usage.promptTokenCount() : null,
-                usage != null ? usage.candidatesTokenCount() : null,
-                usage != null ? usage.totalTokenCount() : null);
+        return new AiResponse(state.text.toString(), state.responseId,
+                model, effort != null ? effort.name() : null, state.finishReason.name(),
+                state.usage != null ? state.usage.promptTokenCount() : null,
+                state.usage != null ? state.usage.candidatesTokenCount() : null,
+                state.usage != null ? state.usage.totalTokenCount() : null);
+    }
+
+    private static class StreamState {
+        final StringBuilder text = new StringBuilder();
+        String responseId;
+        ResponseBody.FinishReason finishReason;
+        ResponseBody.UsageMetadata usage;
     }
 
     private static String role(ConversationTurn.Speaker speaker) {

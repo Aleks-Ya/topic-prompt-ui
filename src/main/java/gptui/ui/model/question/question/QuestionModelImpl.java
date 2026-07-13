@@ -1,6 +1,7 @@
 package gptui.ui.model.question.question;
 
 import gptui.core.ai.AiApi;
+import gptui.core.ai.AiResponse;
 import gptui.core.ai.ConversationTurn;
 import gptui.ui.model.question.QuestionModel;
 import gptui.ui.model.question.prompt.PromptFactory;
@@ -17,9 +18,12 @@ import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 import static gptui.core.ai.ConversationTurn.Speaker.USER;
@@ -41,6 +45,7 @@ class QuestionModelImpl implements QuestionModel {
     // must not be limited by ForkJoinPool.commonPool()'s CPU-core-based sizing, which can
     // serialize them on machines with few cores (e.g. CI runners).
     private static final ExecutorService EXECUTOR = Executors.newCachedThreadPool();
+    private static final Duration PROGRESS_INTERVAL = Duration.ofMillis(250);
     private final StorageModel storage;
     private final PromptFactory promptFactory;
     private final AiApi openAiApi;
@@ -69,7 +74,8 @@ class QuestionModelImpl implements QuestionModel {
     }
 
     @Override
-    public void requestFollowUpAnswer(InteractionId interactionId, AnswerType answerType, Runnable callback) {
+    public void requestFollowUpAnswer(InteractionId interactionId, AnswerType answerType, Runnable callback,
+                                      Consumer<String> progressHtml) {
         log.info("Sending follow-up request for {}...", answerType);
         var interaction = storage.readInteraction(interactionId).orElseThrow();
         var parentInteractionId = interaction.parentInteractionId();
@@ -85,48 +91,26 @@ class QuestionModelImpl implements QuestionModel {
                         .withPrompt(prompt)
                         .withState(SENT),
                 callback);
-        runAsync(() -> Mdc.run(interactionId, () -> {
-            log.trace("requestFollowUpAnswer async");
+        sendAsync(interactionId, answerType, callback, progressHtml, onTextDelta -> {
             var turns = new ArrayList<>(followUpHistoryBuilder.buildHistory(parentInteractionId, answerType));
             turns.add(new ConversationTurn(USER, prompt));
-            var response = switch (answerType) {
-                case GCP -> gcpApi.send(turns);
-                case CLAUDE -> claudeApi.send(turns);
-                case OPEN_AI -> openAiApi.send(turns);
+            return switch (answerType) {
+                case GCP -> gcpApi.send(turns, onTextDelta);
+                case CLAUDE -> claudeApi.send(turns, onTextDelta);
+                case OPEN_AI -> openAiApi.send(turns, onTextDelta);
                 case GRAMMAR -> throw new IllegalArgumentException(
                         "Grammar checks don't support follow-up conversations");
             };
-            var answerHtml = formatConverter.markdownToHtml(response.text());
-            updateAnswer(interactionId, answerType, answer ->
-                    answer.withAnswerMd(response.text()).withAnswerHtml(answerHtml)
-                            .withResponseId(response.responseId())
-                            .withModelInfo(response.modelId(), response.effortLevel(), response.finishReason(),
-                                    response.inputTokens(), response.outputTokens(), response.totalTokens())
-                            .withState(SUCCESS), callback);
-            soundService.beenOnAnswer(answerType);
-            log.info("The follow-up answer request finished.");
-        }), EXECUTOR).handle((res, e) -> {
-            if (e != null) {
-                log.error("Sending follow-up question exception", e);
-                Mdc.run(interactionId, () -> {
-                    var message = e.getCause().getMessage();
-                    updateAnswer(interactionId, answerType, answer ->
-                            answer.withAnswerMd(message).withAnswerHtml(message).withState(FAIL), callback);
-                    soundService.beenOnAnswer(answerType);
-                });
-                return e;
-            } else {
-                return res;
-            }
-        });
+        }, "The follow-up answer request finished.");
     }
 
     @Override
-    public void requestAnswer(InteractionId interactionId, AnswerType answerType, Runnable callback) {
+    public void requestAnswer(InteractionId interactionId, AnswerType answerType, Runnable callback,
+                              Consumer<String> progressHtml) {
         log.info("Sending request for {}...", answerType);
         var interaction = storage.readInteraction(interactionId).orElseThrow();
         if (interaction.parentInteractionId() != null && answerType != GRAMMAR) {
-            requestFollowUpAnswer(interactionId, answerType, callback);
+            requestFollowUpAnswer(interactionId, answerType, callback, progressHtml);
             return;
         }
         var promptOpt = promptFactory.getPrompt(
@@ -141,39 +125,76 @@ class QuestionModelImpl implements QuestionModel {
                             .withPrompt(prompt)
                             .withState(SENT),
                     callback);
-            runAsync(() -> Mdc.run(interactionId, () -> {
-                log.trace("requestAnswer async");
-                var response = switch (answerType) {
-                    case GCP -> gcpApi.send(prompt);
-                    case CLAUDE -> claudeApi.send(prompt);
-                    case OPEN_AI -> openAiApi.send(prompt);
-                    case GRAMMAR -> openAiGrammarApi.send(prompt);
-                };
-                var answerHtml = formatConverter.markdownToHtml(response.text());
-                updateAnswer(interactionId, answerType, answer ->
-                        answer.withAnswerMd(response.text()).withAnswerHtml(answerHtml)
-                                .withResponseId(response.responseId())
-                                .withModelInfo(response.modelId(), response.effortLevel(), response.finishReason(),
-                                        response.inputTokens(), response.outputTokens(), response.totalTokens())
-                                .withState(SUCCESS), callback);
-                soundService.beenOnAnswer(answerType);
-                log.info("The short answer request finished.");
-            }), EXECUTOR).handle((res, e) -> {
-                if (e != null) {
-                    log.error("Sending question exception", e);
-                    Mdc.run(interactionId, () -> {
-                        var message = e.getCause().getMessage();
-                        updateAnswer(interactionId, answerType, answer ->
-                                answer.withAnswerMd(message).withAnswerHtml(message).withState(FAIL), callback);
-                        soundService.beenOnAnswer(answerType);
-                    });
-                    return e;
-                } else {
-                    return res;
-                }
-            });
+            sendAsync(interactionId, answerType, callback, progressHtml, onTextDelta -> switch (answerType) {
+                case GCP -> gcpApi.send(prompt, onTextDelta);
+                case CLAUDE -> claudeApi.send(prompt, onTextDelta);
+                case OPEN_AI -> openAiApi.send(prompt, onTextDelta);
+                case GRAMMAR -> openAiGrammarApi.send(prompt, onTextDelta);
+            }, "The short answer request finished.");
         } else {
             log.info("The short answer was skipped.");
+        }
+    }
+
+    private void sendAsync(InteractionId interactionId, AnswerType answerType, Runnable callback,
+                           Consumer<String> progressHtml, Function<Consumer<String>, AiResponse> send,
+                           String finishedMessage) {
+        runAsync(() -> Mdc.run(interactionId, () -> {
+            log.trace("sendAsync");
+            var throttler = new ProgressThrottler(progressHtml);
+            var response = send.apply(throttler::onTextDelta);
+            var answerHtml = formatConverter.markdownToHtml(response.text());
+            updateAnswer(interactionId, answerType, answer ->
+                    answer.withAnswerMd(response.text()).withAnswerHtml(answerHtml)
+                            .withResponseId(response.responseId())
+                            .withModelInfo(response.modelId(), response.effortLevel(), response.finishReason(),
+                                    response.inputTokens(), response.outputTokens(), response.totalTokens())
+                            .withState(SUCCESS), callback);
+            soundService.beenOnAnswer(answerType);
+            log.info(finishedMessage);
+        }), EXECUTOR).handle((res, e) -> {
+            if (e != null) {
+                log.error("Sending question exception", e);
+                Mdc.run(interactionId, () -> {
+                    var message = e.getCause().getMessage();
+                    updateAnswer(interactionId, answerType, answer ->
+                            answer.withAnswerMd(message).withAnswerHtml(message).withState(FAIL), callback);
+                    soundService.beenOnAnswer(answerType);
+                });
+                return e;
+            } else {
+                return res;
+            }
+        });
+    }
+
+    /**
+     * Accumulates streamed markdown deltas and, at most once per {@link #PROGRESS_INTERVAL},
+     * renders the partial markdown to HTML and hands it to {@code progressHtml} on the JavaFX
+     * Application Thread. All appends happen on the single executor thread that owns the
+     * blocking send, so no locking is needed; only the immutable HTML string crosses threads.
+     * Partial text is never persisted — the final answer goes through the usual storage path.
+     */
+    private class ProgressThrottler {
+        private final StringBuilder partialMd = new StringBuilder();
+        private final Consumer<String> progressHtml;
+        private long lastTickNanos;
+
+        private ProgressThrottler(Consumer<String> progressHtml) {
+            this.progressHtml = progressHtml;
+            // System.nanoTime() has an arbitrary (possibly negative) origin, so start one
+            // interval in the past to make the very first delta paint immediately.
+            this.lastTickNanos = System.nanoTime() - PROGRESS_INTERVAL.toNanos();
+        }
+
+        private void onTextDelta(String delta) {
+            partialMd.append(delta);
+            var now = System.nanoTime();
+            if (now - lastTickNanos >= PROGRESS_INTERVAL.toNanos()) {
+                lastTickNanos = now;
+                var html = formatConverter.markdownToHtml(partialMd.toString());
+                Platform.runLater(() -> progressHtml.accept(html));
+            }
         }
     }
 

@@ -4,7 +4,8 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-record RequestBody(String model, Integer max_tokens, List<Message> messages, OutputConfig output_config) {
+record RequestBody(String model, Integer max_tokens, List<Message> messages, OutputConfig output_config,
+                   Boolean stream) {
 }
 
 record Message(String role, String content) {
