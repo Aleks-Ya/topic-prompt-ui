@@ -9,6 +9,11 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+// S5976 suggests merging the 3 assembleThrowsXXX tests below into one @ParameterizedTest. Left
+// as-is for consistency with the identical one-test-per-scenario style used in the sibling
+// ClaudeApiImplTest/OpenAiApiImplTest (not flagged there only because their assertions differ
+// slightly per test); the descriptive method names document distinct real-world failure modes.
+@SuppressWarnings("java:S5976")
 class GcpApiImplTest {
     private final GcpApiImpl api = new GcpApiImpl("gemini-pro", null);
 
