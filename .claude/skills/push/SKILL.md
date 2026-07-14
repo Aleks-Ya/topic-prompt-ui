@@ -15,8 +15,10 @@ Push the current `main` branch to `origin` and make sure GitHub Actions goes gre
 
 ## 2. Push
 
+Push `main` along with any local tags that aren't on `origin` yet (e.g. the lightweight `vN` release tags created by `release.sh`, which `--follow-tags` alone would miss since that flag only covers annotated tags):
+
 ```bash
-git push origin main
+git push origin main --tags
 ```
 
 ## 3. Wait for GitHub Actions
