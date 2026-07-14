@@ -5,6 +5,8 @@ import gptui.ui.TestingData.I1;
 import org.junit.jupiter.api.Test;
 
 import static gptui.core.storagefilesystem.AnswerType.OPEN_AI;
+import static gptui.ui.viewmodel.question.QuestionStyle.QUESTION_STYLE_EMPTY;
+import static gptui.ui.viewmodel.question.QuestionStyle.QUESTION_STYLE_FOLLOW_UP;
 import static java.time.Duration.ZERO;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -43,5 +45,16 @@ class FollowUpQuestionTest extends BaseGptUiTest {
 
         assertThat(claudeApi.getTurnsSendHistory().getLast()).hasSize(3);
         assertThat(gcpApi.getTurnsSendHistory().getLast()).hasSize(3);
+    }
+
+    @Test
+    void followUpCheckboxTurnsQuestionBackgroundLightBlue() {
+        assertThat(question().textArea().getStyle()).isEqualTo(QUESTION_STYLE_EMPTY);
+
+        clickOn(question().followUpCheckBox());
+        assertThat(question().textArea().getStyle()).isEqualTo(QUESTION_STYLE_FOLLOW_UP);
+
+        clickOn(question().followUpCheckBox());
+        assertThat(question().textArea().getStyle()).isEqualTo(QUESTION_STYLE_EMPTY);
     }
 }

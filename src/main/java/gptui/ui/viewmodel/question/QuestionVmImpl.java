@@ -17,6 +17,7 @@ import static gptui.core.storagefilesystem.InteractionType.DEFINITION;
 import static gptui.core.storagefilesystem.InteractionType.FACT;
 import static gptui.core.storagefilesystem.InteractionType.QUESTION;
 import static gptui.ui.viewmodel.question.QuestionStyle.QUESTION_STYLE_EDITED;
+import static gptui.ui.viewmodel.question.QuestionStyle.QUESTION_STYLE_FOLLOW_UP;
 
 @Singleton
 class QuestionVmImpl implements QuestionVmController, QuestionVmMediator {
@@ -24,6 +25,10 @@ class QuestionVmImpl implements QuestionVmController, QuestionVmMediator {
     private final QuestionVmProperties properties = new QuestionVmProperties();
     @Inject
     private QuestionMediator mediator;
+
+    {
+        properties.followUpCheckBoxSelected.addListener((observable, oldValue, newValue) -> updateQuestionTextAreaBackgroundColor());
+    }
 
     @Override
     public void displayCurrentInteraction() {
@@ -98,7 +103,9 @@ class QuestionVmImpl implements QuestionVmController, QuestionVmMediator {
     }
 
     private void updateQuestionTextAreaBackgroundColor() {
-        if (Boolean.TRUE.equals(mediator.isEnteringNewQuestion())) {
+        if (properties.followUpCheckBoxSelected.get()) {
+            properties.questionTaStyle.set(QUESTION_STYLE_FOLLOW_UP);
+        } else if (Boolean.TRUE.equals(mediator.isEnteringNewQuestion())) {
             properties.questionTaStyle.set(QUESTION_STYLE_EDITED);
         } else {
             properties.questionTaStyle.set(QuestionStyle.QUESTION_STYLE_EMPTY);
