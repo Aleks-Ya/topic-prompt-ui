@@ -27,12 +27,16 @@ import static gptui.core.storagefilesystem.AnswerType.OPEN_AI;
 @Singleton
 class StateModelImpl implements StateModel {
     private static final Logger log = LoggerFactory.getLogger(StateModelImpl.class);
-    @Inject
-    private StorageModel storage;
+    private final StorageModel storage;
     private InteractionId currentInteractionId;
     private Theme currentTheme;
     private String editedQuestion;
     private Boolean isHistoryFilteringEnabled = false;
+
+    @Inject
+    StateModelImpl(StorageModel storage) {
+        this.storage = storage;
+    }
 
     @Override
     public synchronized boolean isEnteringNewQuestion() {

@@ -54,14 +54,15 @@ class ClaudeApiImplTest {
 
     @Test
     void assembleThrowsWhenTruncatedByTokenLimit() {
-        assertThatThrownBy(() -> api.assemble(sse(
+        var lines = sse(
                 "message_start", """
                         {"type": "message_start", "message": {"id": "msg_1", "usage": {"input_tokens": 10}}}""",
                 "content_block_delta", """
                         {"type": "content_block_delta", "delta": {"type": "text_delta", "text": "partial"}}""",
                 "message_delta", """
                         {"type": "message_delta", "delta": {"stop_reason": "max_tokens"}, "usage": {"output_tokens": 8192}}"""
-        ), delta -> {
+        );
+        assertThatThrownBy(() -> api.assemble(lines, delta -> {
         }))
                 .isInstanceOf(AiApiException.class)
                 .hasMessageContaining("Wrong stop reason");
@@ -69,10 +70,11 @@ class ClaudeApiImplTest {
 
     @Test
     void assembleThrowsWhenRefused() {
-        assertThatThrownBy(() -> api.assemble(sse(
+        var lines = sse(
                 "message_delta", """
                         {"type": "message_delta", "delta": {"stop_reason": "refusal"}, "usage": {"output_tokens": 1}}"""
-        ), delta -> {
+        );
+        assertThatThrownBy(() -> api.assemble(lines, delta -> {
         }))
                 .isInstanceOf(AiApiException.class)
                 .hasMessageContaining("Wrong stop reason");
@@ -80,12 +82,13 @@ class ClaudeApiImplTest {
 
     @Test
     void assembleThrowsOnMidStreamErrorEvent() {
-        assertThatThrownBy(() -> api.assemble(sse(
+        var lines = sse(
                 "message_start", """
                         {"type": "message_start", "message": {"id": "msg_1", "usage": {"input_tokens": 10}}}""",
                 "error", """
                         {"type": "error", "error": {"type": "overloaded_error", "message": "Overloaded"}}"""
-        ), delta -> {
+        );
+        assertThatThrownBy(() -> api.assemble(lines, delta -> {
         }))
                 .isInstanceOf(AiApiException.class)
                 .hasMessageContaining("overloaded_error");

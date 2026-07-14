@@ -15,7 +15,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO Remove "public" modifier (added just for StorageModelTest)
+// The "public" modifier is required: StorageModelTest lives in a different package
+// (gptui.ui.model.storage) and constructs this class directly.
 @Singleton
 public class StorageFilesystemImpl implements StorageFilesystem {
     private static final Logger log = LoggerFactory.getLogger(StorageFilesystemImpl.class);

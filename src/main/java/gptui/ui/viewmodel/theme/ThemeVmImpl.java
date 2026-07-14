@@ -16,8 +16,12 @@ import java.util.Objects;
 class ThemeVmImpl implements ThemeVmController, ThemeVmMediator {
     private static final Logger log = LoggerFactory.getLogger(ThemeVmImpl.class);
     public final ThemeVmProperties vmProperties = new ThemeVmProperties();
+    private final ThemeMediator mediator;
+
     @Inject
-    private ThemeMediator mediator;
+    ThemeVmImpl(ThemeMediator mediator) {
+        this.mediator = mediator;
+    }
 
     @Override
     public void onThemeComboBoxAction() {

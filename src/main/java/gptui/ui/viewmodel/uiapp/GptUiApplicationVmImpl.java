@@ -14,8 +14,12 @@ import java.net.URL;
 @Singleton
 class GptUiApplicationVmImpl implements GptUiApplicationVmController {
     private static final Logger log = LoggerFactory.getLogger(GptUiApplicationVmImpl.class);
+    private final GptUiApplicationMediator mediator;
+
     @Inject
-    private GptUiApplicationMediator mediator;
+    GptUiApplicationVmImpl(GptUiApplicationMediator mediator) {
+        this.mediator = mediator;
+    }
 
     public Image getApplicationIcon() {
         log.info("Loading application icon...");

@@ -9,8 +9,12 @@ import org.slf4j.LoggerFactory;
 @Singleton
 class GptUiVmImpl implements GptUiVmController {
     private static final Logger log = LoggerFactory.getLogger(GptUiVmImpl.class);
+    private final GptUiMediator mediator;
+
     @Inject
-    private GptUiMediator mediator;
+    GptUiVmImpl(GptUiMediator mediator) {
+        this.mediator = mediator;
+    }
 
     @Override
     public void initialize() {

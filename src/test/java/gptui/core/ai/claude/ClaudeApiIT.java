@@ -58,7 +58,7 @@ class ClaudeApiIT {
         var deltas = new java.util.concurrent.CopyOnWriteArrayList<String>();
         var response = api.send("List the last 5 Java LTS versions with one sentence about each.", deltas::add);
         System.out.println("deltas: " + deltas.size());
-        assertThat(deltas.size()).isGreaterThan(1);
+        assertThat(deltas).hasSizeGreaterThan(1);
         assertThat(String.join("", deltas)).isEqualTo(response.text());
         assertThat(response.responseId()).isNotBlank();
         assertThat(response.finishReason()).isEqualTo("end_turn");

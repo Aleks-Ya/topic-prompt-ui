@@ -76,38 +76,7 @@ class ClaudeApiImpl implements AiApi {
 
     AiResponse assemble(Stream<String> lines, Consumer<String> onTextDelta) {
         var state = new StreamState();
-        SseParser.forEachEvent(lines, sseEvent -> {
-            var event = gson.fromJson(sseEvent.data(), StreamEvent.class);
-            var type = event.type() != null ? event.type() : sseEvent.event();
-            switch (type) {
-                case "message_start" -> {
-                    if (event.message() != null) {
-                        state.responseId = event.message().id();
-                        if (event.message().usage() != null) {
-                            state.inputTokens = event.message().usage().input_tokens();
-                        }
-                    }
-                }
-                case "content_block_delta" -> {
-                    if (event.delta() != null && "text_delta".equals(event.delta().type())
-                            && event.delta().text() != null) {
-                        state.text.append(event.delta().text());
-                        onTextDelta.accept(event.delta().text());
-                    }
-                }
-                case "message_delta" -> {
-                    if (event.delta() != null && event.delta().stop_reason() != null) {
-                        state.stopReason = event.delta().stop_reason();
-                    }
-                    if (event.usage() != null && event.usage().output_tokens() != null) {
-                        state.outputTokens = event.usage().output_tokens();
-                    }
-                }
-                case "error" -> throw new AiApiException(sseEvent.data());
-                default -> { // message_stop, content_block_start/stop, ping
-                }
-            }
-        });
+        SseParser.forEachEvent(lines, sseEvent -> applyEvent(state, sseEvent, onTextDelta));
         if (!GOOD_STOP_REASON.equals(state.stopReason)) {
             throw new AiApiException(String.format("Wrong stop reason in response: %s", state.stopReason));
         }
@@ -116,6 +85,39 @@ class ClaudeApiImpl implements AiApi {
         return new AiResponse(state.text.toString(), state.responseId, model,
                 effort != null ? effort.name() : null,
                 state.stopReason, state.inputTokens, state.outputTokens, totalTokens);
+    }
+
+    private void applyEvent(StreamState state, SseParser.SseEvent sseEvent, Consumer<String> onTextDelta) {
+        var event = gson.fromJson(sseEvent.data(), StreamEvent.class);
+        var type = event.type() != null ? event.type() : sseEvent.event();
+        switch (type) {
+            case "message_start" -> {
+                if (event.message() != null) {
+                    state.responseId = event.message().id();
+                    if (event.message().usage() != null) {
+                        state.inputTokens = event.message().usage().input_tokens();
+                    }
+                }
+            }
+            case "content_block_delta" -> {
+                if (event.delta() != null && "text_delta".equals(event.delta().type())
+                        && event.delta().text() != null) {
+                    state.text.append(event.delta().text());
+                    onTextDelta.accept(event.delta().text());
+                }
+            }
+            case "message_delta" -> {
+                if (event.delta() != null && event.delta().stop_reason() != null) {
+                    state.stopReason = event.delta().stop_reason();
+                }
+                if (event.usage() != null && event.usage().output_tokens() != null) {
+                    state.outputTokens = event.usage().output_tokens();
+                }
+            }
+            case "error" -> throw new AiApiException(sseEvent.data());
+            default -> { // message_stop, content_block_start/stop, ping
+            }
+        }
     }
 
     private static class StreamState {

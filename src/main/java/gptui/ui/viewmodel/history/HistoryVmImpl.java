@@ -20,8 +20,12 @@ class HistoryVmImpl implements HistoryVmController, HistoryVmMediator {
     public final HistoryVmProperties vmProperties = new HistoryVmProperties();
     private final HistoryComboBoxFacade historyCbFacade = new HistoryComboBoxFacade();
     private final StateModelFacade stateModelFacade = new StateModelFacade();
+    private final HistoryMediator mediator;
+
     @Inject
-    private HistoryMediator mediator;
+    HistoryVmImpl(HistoryMediator mediator) {
+        this.mediator = mediator;
+    }
 
     @Override
     public void onHistoryComboBoxAction() {
@@ -83,7 +87,9 @@ class HistoryVmImpl implements HistoryVmController, HistoryVmMediator {
             var comboBoxCurrentInteraction = historyCbFacade.getSelectedItem();
             var modelCurrentInteraction = mediator.getCurrentInteraction();
             if (comboBoxCurrentInteraction != null && !Objects.equals(modelCurrentInteraction, comboBoxCurrentInteraction)) {
-                log.debug("setCurrentInteraction from historyComboBox: {}", comboBoxCurrentInteraction.toShortString());
+                if (log.isDebugEnabled()) {
+                    log.debug("setCurrentInteraction from historyComboBox: {}", comboBoxCurrentInteraction.toShortString());
+                }
                 mediator.setCurrentInteractionId(comboBoxCurrentInteraction.id());
                 mediator.displayCurrentInteraction();
             }
@@ -153,7 +159,9 @@ class HistoryVmImpl implements HistoryVmController, HistoryVmMediator {
             if (!Objects.equals(modelCurrentInteractionIdOpt.orElse(null), cmCurrentInteraction)) {
                 if (modelCurrentInteractionIdOpt.isPresent()) {
                     var modelCurrentValue = modelCurrentInteractionIdOpt.get();
-                    log.debug("Select interaction: '{}'", modelCurrentValue.toShortString());
+                    if (log.isDebugEnabled()) {
+                        log.debug("Select interaction: '{}'", modelCurrentValue.toShortString());
+                    }
                     var interactionItem = new InteractionItem(mediator.getCurrentTheme(), modelCurrentValue);
                     updateCbSilently(() -> vmProperties.historyCbSelectionModel.getValue().select(interactionItem),
                             vmProperties.historyCbOnAction);

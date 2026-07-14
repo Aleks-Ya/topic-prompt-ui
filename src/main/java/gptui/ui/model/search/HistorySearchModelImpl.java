@@ -34,10 +34,11 @@ class HistorySearchModelImpl implements HistorySearchModel {
     private final IndexWriter writer;
     private boolean indexUpdated = true;
     private IndexSearcher searcher;
-    @Inject
-    private StorageModel storageModel;
+    private final StorageModel storageModel;
 
-    public HistorySearchModelImpl() {
+    @Inject
+    public HistorySearchModelImpl(StorageModel storageModel) {
+        this.storageModel = storageModel;
         try {
             var analyzer = new EnglishAnalyzer();
             var conf = new IndexWriterConfig(analyzer);

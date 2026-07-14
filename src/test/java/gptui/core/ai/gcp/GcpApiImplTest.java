@@ -44,12 +44,13 @@ class GcpApiImplTest {
 
     @Test
     void assembleThrowsWhenTruncatedByTokenLimit() {
-        assertThatThrownBy(() -> api.assemble(sse(
+        var lines = sse(
                 """
                         {"candidates": [{"content": {"parts": [{"text": "partial"}], "role": "model"}, \
                         "finishReason": "MAX_TOKENS"}], "responseId": "resp_1", \
                         "usageMetadata": {"promptTokenCount": 10, "candidatesTokenCount": 100, "totalTokenCount": 110}}"""
-        ), delta -> {
+        );
+        assertThatThrownBy(() -> api.assemble(lines, delta -> {
         }))
                 .isInstanceOf(AiApiException.class)
                 .hasMessageContaining("Wrong finish reason");
@@ -57,12 +58,13 @@ class GcpApiImplTest {
 
     @Test
     void assembleThrowsWhenBlockedBySafety() {
-        assertThatThrownBy(() -> api.assemble(sse(
+        var lines = sse(
                 """
                         {"candidates": [{"content": {"parts": [{"text": ""}], "role": "model"}, \
                         "finishReason": "SAFETY"}], "responseId": "resp_2", \
                         "usageMetadata": {"promptTokenCount": 10, "candidatesTokenCount": 0, "totalTokenCount": 10}}"""
-        ), delta -> {
+        );
+        assertThatThrownBy(() -> api.assemble(lines, delta -> {
         }))
                 .isInstanceOf(AiApiException.class)
                 .hasMessageContaining("Wrong finish reason");
@@ -70,10 +72,11 @@ class GcpApiImplTest {
 
     @Test
     void assembleThrowsWhenStreamEndsWithoutFinishReason() {
-        assertThatThrownBy(() -> api.assemble(sse(
+        var lines = sse(
                 """
                         {"candidates": [{"content": {"parts": [{"text": "partial"}], "role": "model"}}]}"""
-        ), delta -> {
+        );
+        assertThatThrownBy(() -> api.assemble(lines, delta -> {
         }))
                 .isInstanceOf(AiApiException.class)
                 .hasMessageContaining("Wrong finish reason");

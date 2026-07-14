@@ -48,10 +48,11 @@ class OpenAiApiImplTest {
 
     @Test
     void assembleThrowsOnFailedEvent() {
-        assertThatThrownBy(() -> api.assemble(sse(
+        var lines = sse(
                 "response.failed", """
                         {"type": "response.failed", "response": {"id": "resp_4", "output": []}}"""
-        ), delta -> {
+        );
+        assertThatThrownBy(() -> api.assemble(lines, delta -> {
         }))
                 .isInstanceOf(AiApiException.class)
                 .hasMessageContaining("response.failed");
@@ -59,10 +60,11 @@ class OpenAiApiImplTest {
 
     @Test
     void assembleThrowsWhenStreamEndsWithoutCompletedEvent() {
-        assertThatThrownBy(() -> api.assemble(sse(
+        var lines = sse(
                 "response.output_text.delta", """
                         {"type": "response.output_text.delta", "delta": "Full "}"""
-        ), delta -> {
+        );
+        assertThatThrownBy(() -> api.assemble(lines, delta -> {
         }))
                 .isInstanceOf(AiApiException.class)
                 .hasMessageContaining("without a response.completed");

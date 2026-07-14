@@ -18,34 +18,41 @@ public final class SseParser {
     public static void forEachEvent(Stream<String> lines, Consumer<SseEvent> handler) {
         var eventName = new StringBuilder();
         var data = new StringBuilder();
-        Runnable dispatch = () -> {
-            if (!data.isEmpty()) {
-                var payload = data.toString();
-                if (!"[DONE]".equals(payload)) {
-                    handler.accept(new SseEvent(eventName.isEmpty() ? null : eventName.toString(), payload));
-                }
-            }
-            eventName.setLength(0);
-            data.setLength(0);
-        };
         for (var iterator = lines.iterator(); iterator.hasNext(); ) {
             var line = iterator.next();
             if (line.isEmpty()) {
-                dispatch.run();
-            } else if (line.startsWith(":")) {
-                // comment line, e.g. OpenAI keep-alive
-            } else if (line.startsWith("event:")) {
-                eventName.setLength(0);
-                eventName.append(stripFieldValue(line, "event:"));
-            } else if (line.startsWith("data:")) {
-                if (!data.isEmpty()) {
-                    data.append('\n');
-                }
-                data.append(stripFieldValue(line, "data:"));
+                dispatchEvent(eventName, data, handler);
+            } else {
+                appendField(line, eventName, data);
             }
-            // other SSE fields (id:, retry:) are irrelevant for these providers
         }
-        dispatch.run(); // trailing event without a final blank line
+        dispatchEvent(eventName, data, handler); // trailing event without a final blank line
+    }
+
+    private static void appendField(String line, StringBuilder eventName, StringBuilder data) {
+        if (line.startsWith(":")) {
+            // comment line, e.g. OpenAI keep-alive
+        } else if (line.startsWith("event:")) {
+            eventName.setLength(0);
+            eventName.append(stripFieldValue(line, "event:"));
+        } else if (line.startsWith("data:")) {
+            if (!data.isEmpty()) {
+                data.append('\n');
+            }
+            data.append(stripFieldValue(line, "data:"));
+        }
+        // other SSE fields (id:, retry:) are irrelevant for these providers
+    }
+
+    private static void dispatchEvent(StringBuilder eventName, StringBuilder data, Consumer<SseEvent> handler) {
+        if (!data.isEmpty()) {
+            var payload = data.toString();
+            if (!"[DONE]".equals(payload)) {
+                handler.accept(new SseEvent(eventName.isEmpty() ? null : eventName.toString(), payload));
+            }
+        }
+        eventName.setLength(0);
+        data.setLength(0);
     }
 
     private static String stripFieldValue(String line, String field) {

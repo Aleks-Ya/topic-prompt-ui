@@ -112,7 +112,9 @@ public class AnswerController extends BaseController {
         var currentContent = vm.properties().webViewContent.getValue();
         var newContent = (String) webView.getEngine().executeScript("document.documentElement.outerHTML");
         if (!newContent.equals(currentContent)) {
-            log.trace("Set value to webViewContent from WebView Engine: {}", shorten(newContent));
+            if (log.isTraceEnabled()) {
+                log.trace("Set value to webViewContent from WebView Engine: {}", shorten(newContent));
+            }
             vm.properties().webViewContent.set(newContent);
         }
     }
@@ -121,7 +123,9 @@ public class AnswerController extends BaseController {
         if (newValue == null) {
             return;
         }
-        log.trace("Load content to WebView Engine: {}", shorten(newValue));
+        if (log.isTraceEnabled()) {
+            log.trace("Load content to WebView Engine: {}", shorten(newValue));
+        }
         webView.getEngine().loadContent(newValue);
     }
 

@@ -81,30 +81,8 @@ class GcpApiImpl implements AiApi {
 
     AiResponse assemble(Stream<String> lines, Consumer<String> onTextDelta) {
         var state = new StreamState();
-        SseParser.forEachEvent(lines, sseEvent -> {
-            var fragment = gson.fromJson(sseEvent.data(), ResponseBody.class);
-            if (fragment.responseId() != null) {
-                state.responseId = fragment.responseId();
-            }
-            if (fragment.usageMetadata() != null) {
-                state.usage = fragment.usageMetadata();
-            }
-            if (fragment.candidates() == null || fragment.candidates().isEmpty()) {
-                return;
-            }
-            var candidate = fragment.candidates().getFirst();
-            if (candidate.finishReason() != null) {
-                state.finishReason = candidate.finishReason();
-            }
-            if (candidate.content() != null && candidate.content().parts() != null) {
-                for (var part : candidate.content().parts()) {
-                    if (part.text() != null) {
-                        state.text.append(part.text());
-                        onTextDelta.accept(part.text());
-                    }
-                }
-            }
-        });
+        SseParser.forEachEvent(lines, sseEvent ->
+                applyFragment(state, gson.fromJson(sseEvent.data(), ResponseBody.class), onTextDelta));
         if (state.finishReason != STOP) {
             throw new AiApiException(String.format("Wrong finish reason in candidate: %s", state.finishReason));
         }
@@ -113,6 +91,30 @@ class GcpApiImpl implements AiApi {
                 state.usage != null ? state.usage.promptTokenCount() : null,
                 state.usage != null ? state.usage.candidatesTokenCount() : null,
                 state.usage != null ? state.usage.totalTokenCount() : null);
+    }
+
+    private static void applyFragment(StreamState state, ResponseBody fragment, Consumer<String> onTextDelta) {
+        if (fragment.responseId() != null) {
+            state.responseId = fragment.responseId();
+        }
+        if (fragment.usageMetadata() != null) {
+            state.usage = fragment.usageMetadata();
+        }
+        if (fragment.candidates() == null || fragment.candidates().isEmpty()) {
+            return;
+        }
+        var candidate = fragment.candidates().getFirst();
+        if (candidate.finishReason() != null) {
+            state.finishReason = candidate.finishReason();
+        }
+        if (candidate.content() != null && candidate.content().parts() != null) {
+            for (var part : candidate.content().parts()) {
+                if (part.text() != null) {
+                    state.text.append(part.text());
+                    onTextDelta.accept(part.text());
+                }
+            }
+        }
     }
 
     private static class StreamState {

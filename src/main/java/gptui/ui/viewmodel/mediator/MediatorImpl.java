@@ -43,32 +43,42 @@ import static javafx.scene.input.KeyCombination.CONTROL_DOWN;
 class MediatorImpl implements HistoryMediator, QuestionMediator, ThemeMediator, AnswerMediator,
         GptUiMediator, GptUiApplicationMediator {
     private static final Logger log = LoggerFactory.getLogger(MediatorImpl.class);
+    private final AnswerVmMediator grammarAnswerVM;
+    private final AnswerVmMediator openAiAnswerVM;
+    private final AnswerVmMediator claudeAnswerVM;
+    private final AnswerVmMediator gcpAnswerVM;
+    private final HistoryVmMediator historyVM;
+    private final QuestionVmMediator questionVM;
+    private final ThemeVmMediator themeVM;
+    private final StateModel stateModel;
+    private final QuestionModel questionModel;
+    private final ClipboardModel clipboardModel;
+    private final FileModel fileModel;
+
     @Inject
-    @Named(AnswerVmModule.GRAMMAR)
-    private AnswerVmMediator grammarAnswerVM;
-    @Inject
-    @Named(AnswerVmModule.OPEN_AI)
-    private AnswerVmMediator openAiAnswerVM;
-    @Inject
-    @Named(AnswerVmModule.CLAUDE)
-    private AnswerVmMediator claudeAnswerVM;
-    @Inject
-    @Named(AnswerVmModule.GCP)
-    private AnswerVmMediator gcpAnswerVM;
-    @Inject
-    private HistoryVmMediator historyVM;
-    @Inject
-    private QuestionVmMediator questionVM;
-    @Inject
-    private ThemeVmMediator themeVM;
-    @Inject
-    private StateModel stateModel;
-    @Inject
-    private QuestionModel questionModel;
-    @Inject
-    private ClipboardModel clipboardModel;
-    @Inject
-    private FileModel fileModel;
+    MediatorImpl(@Named(AnswerVmModule.GRAMMAR) AnswerVmMediator grammarAnswerVM,
+                 @Named(AnswerVmModule.OPEN_AI) AnswerVmMediator openAiAnswerVM,
+                 @Named(AnswerVmModule.CLAUDE) AnswerVmMediator claudeAnswerVM,
+                 @Named(AnswerVmModule.GCP) AnswerVmMediator gcpAnswerVM,
+                 HistoryVmMediator historyVM,
+                 QuestionVmMediator questionVM,
+                 ThemeVmMediator themeVM,
+                 StateModel stateModel,
+                 QuestionModel questionModel,
+                 ClipboardModel clipboardModel,
+                 FileModel fileModel) {
+        this.grammarAnswerVM = grammarAnswerVM;
+        this.openAiAnswerVM = openAiAnswerVM;
+        this.claudeAnswerVM = claudeAnswerVM;
+        this.gcpAnswerVM = gcpAnswerVM;
+        this.historyVM = historyVM;
+        this.questionVM = questionVM;
+        this.themeVM = themeVM;
+        this.stateModel = stateModel;
+        this.questionModel = questionModel;
+        this.clipboardModel = clipboardModel;
+        this.fileModel = fileModel;
+    }
 
     @Override
     public void stageShowed() {

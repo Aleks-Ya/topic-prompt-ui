@@ -23,10 +23,11 @@ import static gptui.ui.viewmodel.question.QuestionStyle.QUESTION_STYLE_FOLLOW_UP
 class QuestionVmImpl implements QuestionVmController, QuestionVmMediator {
     private static final Logger log = LoggerFactory.getLogger(QuestionVmImpl.class);
     private final QuestionVmProperties properties = new QuestionVmProperties();
-    @Inject
-    private QuestionMediator mediator;
+    private final QuestionMediator mediator;
 
-    {
+    @Inject
+    QuestionVmImpl(QuestionMediator mediator) {
+        this.mediator = mediator;
         properties.followUpCheckBoxSelected.addListener((observable, oldValue, newValue) -> updateQuestionTextAreaBackgroundColor());
     }
 
