@@ -57,7 +57,7 @@ class QuestionVmImpl implements QuestionVmController, QuestionVmMediator {
     public void onRegenerateButtonClick() {
         log.trace("onRegenerateButtonClick");
         var interactionId = mediator.getCurrentInteractionId();
-        Mdc.run(interactionId, () -> {
+        Mdc.run(interactionId.id(), () -> {
             log.info("Regenerate question: {}", interactionId);
             mediator.requestAnswer(interactionId, CLAUDE);
             mediator.requestAnswer(interactionId, OPEN_AI);

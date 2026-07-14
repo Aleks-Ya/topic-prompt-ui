@@ -7,7 +7,6 @@ import gptui.core.storagefilesystem.InteractionType;
 import gptui.ui.model.storage.StorageModel;
 import gptui.core.storagefilesystem.Theme;
 import gptui.core.storagefilesystem.ThemeId;
-import gptui.core.util.LogUtils;
 import gptui.core.util.Mdc;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -65,7 +64,7 @@ class StateModelImpl implements StateModel {
     @Override
     public synchronized Optional<Interaction> getCurrentInteractionOpt() {
         var interaction = storage.readInteraction(currentInteractionId);
-        log.trace("getCurrentInteractionOpt: '{}'", interaction.map(LogUtils::shorten));
+        log.trace("getCurrentInteractionOpt: '{}'", interaction.map(Interaction::toShortString));
         return interaction;
     }
 
@@ -78,7 +77,7 @@ class StateModelImpl implements StateModel {
     @Override
     public InteractionId createInteraction(InteractionType interactionType, InteractionId parentInteractionId) {
         var interactionId = storage.newInteractionId();
-        Mdc.run(interactionId, () -> {
+        Mdc.run(interactionId.id(), () -> {
             var theme = getCurrentTheme();
             var question = getEditedQuestion();
             var interaction = new Interaction(interactionId, interactionType, theme.id(), question, Map.of(

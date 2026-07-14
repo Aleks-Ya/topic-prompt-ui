@@ -23,7 +23,6 @@ viewmodel --> util
 model --> ai
 model --> storagefilesystem
 model --> util
-util --> storagefilesystem
-storagefilesystem ..> util : LogUtils.shorten
+storagefilesystem --> util
 
 @enduml

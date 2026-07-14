@@ -1,7 +1,5 @@
 package gptui.core.util;
 
-import gptui.core.storagefilesystem.AnswerType;
-import gptui.core.storagefilesystem.InteractionId;
 import org.slf4j.MDC;
 
 public class Mdc {
@@ -11,13 +9,13 @@ public class Mdc {
     private Mdc() {
     }
 
-    public static void run(InteractionId interactionId, Runnable runnable) {
-        MDC.put(INTERACTION_ID_MDC, interactionId.id().toString() + " ");
+    public static void run(long interactionId, Runnable runnable) {
+        MDC.put(INTERACTION_ID_MDC, interactionId + " ");
         runnable.run();
         MDC.remove(INTERACTION_ID_MDC);
     }
 
-    public static void run(AnswerType answerType, Runnable runnable) {
+    public static void run(String answerType, Runnable runnable) {
         MDC.put(ANSWER_TYPE_MDC, " " + answerType);
         runnable.run();
         MDC.remove(ANSWER_TYPE_MDC);

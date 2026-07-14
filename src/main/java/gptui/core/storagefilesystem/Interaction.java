@@ -5,6 +5,8 @@ import java.util.Optional;
 import java.util.TreeMap;
 import java.util.function.UnaryOperator;
 
+import static gptui.core.util.LogUtils.shorten;
+
 public record Interaction(InteractionId id,
                           InteractionType type,
                           ThemeId themeId,
@@ -63,6 +65,19 @@ public record Interaction(InteractionId id,
                 ", question='" + question + '\'' +
                 ", answers=" + answers +
                 ", parentInteractionId=" + parentInteractionId +
+                '}';
+    }
+
+    public String toShortString() {
+        var shortAnswers = answers.entrySet().stream()
+                .map(entry -> Map.entry(entry.getKey(), entry.getValue().toShortString()))
+                .toList();
+        return "Interaction{" +
+                "id=" + id +
+                ", type=" + type +
+                ", themeId='" + themeId + '\'' +
+                ", question='" + shorten(question) + '\'' +
+                ", answers=" + shortAnswers +
                 '}';
     }
 }

@@ -38,7 +38,7 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
 
     @Override
     public void onCopyButtonClick() {
-        Mdc.run(answerType, () -> {
+        Mdc.run(answerType.toString(), () -> {
             log.trace("onCopyButtonClick");
             var content = vmProperties.webViewContent.get();
             mediator.putHtmlToClipboard(content);
@@ -67,7 +67,7 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
 
     @Override
     public void displayCurrentAnswer() {
-        Mdc.run(answerType, () -> {
+        Mdc.run(answerType.toString(), () -> {
             log.trace("displayCurrentAnswer");
             mediator.getCurrentInteractionOpt().map(interaction -> interaction.getAnswer(answerType)).ifPresentOrElse(answerOpt -> {
                 log.trace("Display answer: {}", answerOpt.map(Answer::toShortString));
@@ -89,7 +89,7 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
 
     @Override
     public void displayPartialAnswer(String html) {
-        Mdc.run(answerType, () -> {
+        Mdc.run(answerType.toString(), () -> {
             log.trace("displayPartialAnswer: {} chars", html.length());
             vmProperties.webViewContent.set(html);
             currentWebViewContent = html;
@@ -98,7 +98,7 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
 
     @Override
     public void initialize() {
-        Mdc.run(answerType, () -> {
+        Mdc.run(answerType.toString(), () -> {
             log.trace("displayInitialState");
             vmProperties.answerButtonText.setValue(buttonTextMap.get(answerType));
             vmProperties.copyButtonText.setValue(vmProperties.copyButtonText.getValue() + " _" + hotkeyDigitMap.get(answerType));

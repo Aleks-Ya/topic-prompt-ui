@@ -1,7 +1,6 @@
 package gptui.ui.viewmodel.history;
 
 import com.google.inject.Singleton;
-import gptui.core.util.LogUtils;
 import gptui.core.storagefilesystem.Interaction;
 import gptui.ui.viewmodel.InteractionItem;
 import gptui.ui.viewmodel.mediator.HistoryMediator;
@@ -11,7 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
-import static gptui.core.util.LogUtils.shorten;
 import static gptui.ui.viewmodel.CbHelper.updateCbSilently;
 import static java.lang.String.format;
 import static javafx.collections.FXCollections.observableArrayList;
@@ -85,7 +83,7 @@ class HistoryVmImpl implements HistoryVmController, HistoryVmMediator {
             var comboBoxCurrentInteraction = historyCbFacade.getSelectedItem();
             var modelCurrentInteraction = mediator.getCurrentInteraction();
             if (comboBoxCurrentInteraction != null && !Objects.equals(modelCurrentInteraction, comboBoxCurrentInteraction)) {
-                log.debug("setCurrentInteraction from historyComboBox: {}", shorten(comboBoxCurrentInteraction));
+                log.debug("setCurrentInteraction from historyComboBox: {}", comboBoxCurrentInteraction.toShortString());
                 mediator.setCurrentInteractionId(comboBoxCurrentInteraction.id());
                 mediator.displayCurrentInteraction();
             }
@@ -155,7 +153,7 @@ class HistoryVmImpl implements HistoryVmController, HistoryVmMediator {
             if (!Objects.equals(modelCurrentInteractionIdOpt.orElse(null), cmCurrentInteraction)) {
                 if (modelCurrentInteractionIdOpt.isPresent()) {
                     var modelCurrentValue = modelCurrentInteractionIdOpt.get();
-                    log.debug("Select interaction: '{}'", shorten(modelCurrentValue));
+                    log.debug("Select interaction: '{}'", modelCurrentValue.toShortString());
                     var interactionItem = new InteractionItem(mediator.getCurrentTheme(), modelCurrentValue);
                     updateCbSilently(() -> vmProperties.historyCbSelectionModel.getValue().select(interactionItem),
                             vmProperties.historyCbOnAction);
@@ -165,7 +163,7 @@ class HistoryVmImpl implements HistoryVmController, HistoryVmMediator {
                             vmProperties.historyCbOnAction);
                 }
             } else {
-                log.debug("Selection is unchanged: '{}'", modelCurrentInteractionIdOpt.map(LogUtils::shorten));
+                log.debug("Selection is unchanged: '{}'", modelCurrentInteractionIdOpt.map(Interaction::toShortString));
             }
         }
     }

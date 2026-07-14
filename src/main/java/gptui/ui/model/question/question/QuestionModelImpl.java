@@ -139,7 +139,7 @@ class QuestionModelImpl implements QuestionModel {
     private void sendAsync(InteractionId interactionId, AnswerType answerType, Runnable callback,
                            Consumer<String> progressHtml, Function<Consumer<String>, AiResponse> send,
                            String finishedMessage) {
-        runAsync(() -> Mdc.run(interactionId, () -> {
+        runAsync(() -> Mdc.run(interactionId.id(), () -> {
             log.trace("sendAsync");
             var throttler = new ProgressThrottler(progressHtml);
             var response = send.apply(throttler::onTextDelta);
@@ -155,7 +155,7 @@ class QuestionModelImpl implements QuestionModel {
         }), EXECUTOR).handle((res, e) -> {
             if (e != null) {
                 log.error("Sending question exception", e);
-                Mdc.run(interactionId, () -> {
+                Mdc.run(interactionId.id(), () -> {
                     var message = e.getCause().getMessage();
                     updateAnswer(interactionId, answerType, answer ->
                             answer.withAnswerMd(message).withAnswerHtml(message).withState(FAIL), callback);
