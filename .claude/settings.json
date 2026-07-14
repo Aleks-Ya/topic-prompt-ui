@@ -2,11 +2,31 @@
   "hooks": {
     "PostToolUse": [
       {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq . > ${CLAUDE_PROJECT_DIR}/build/PostToolUse-log.json"
+          }
+        ]
+      },
+      {
         "matcher": "Edit|Write",
         "hooks": [
           {
             "type": "command",
             "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/render-puml-diagram.sh"
+          }
+        ]
+      }
+    ],
+    "FileChanged": [
+      {
+        "matcher": "src|docs|.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq . > ${CLAUDE_PROJECT_DIR}/build/FileChanged-log.json"
           }
         ]
       }

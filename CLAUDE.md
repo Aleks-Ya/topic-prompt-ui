@@ -30,6 +30,12 @@ Integration tests (`*IT.java`, e.g. `OpenAiApiIT`, `ClaudeApiIT`, `GcpApiIT`, `S
 
 SonarCloud project: https://sonarcloud.io/project/overview?id=Aleks-Ya_topic-prompt-ui — check here for code quality/coverage metrics and issues.
 
+## Claude Code hooks
+
+`.claude/settings.json` logs hook payloads to `build/PostToolUse-log.json` / `build/FileChanged-log.json` and auto-renders edited PlantUML diagrams.
+
+**`FileChanged` hook matcher semantics are unusual** (verified against Claude Code 2.1.202 internals): the `matcher` string does double duty. It is split on `|` and each piece is used as a **literal filesystem path to watch** (absolute, or relative to the project root; no glob support — the bundled chokidar v4 treats `*` as a literal filename), and the whole string is *also* re-used as a regex filter against the changed file's **basename** at dispatch time. Hence the matcher `"src|docs|.*"`: `src` and `docs` are the watched directories (recursive), and the `.*` alternative makes the dispatch regex match every changed file (it contributes a harmless nonexistent watch path). A bare `"*"` matcher never fires — it watches a literal file named `*`. Two more gotchas: the watch list is built **once at session startup**, so matcher changes need a session restart (unlike other hooks, which hot-reload); and never watch `build/` or the project root, or the hook's own log write would re-trigger it in a loop.
+
 ## Architecture
 
 Strict layered MVVM, one-way dependency flow: **view → viewmodel → mediator → model → core**. Each layer only talks to the layer directly below/adjacent to it.
