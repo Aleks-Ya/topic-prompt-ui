@@ -33,6 +33,7 @@ package model{
     class FileModel
     class QuestionModel
     class StorageModel
+    class HistorySearchModel
 }
 
 ThemeController ---> ThemeVM
@@ -48,6 +49,12 @@ GptUiController --> grammarAnswerController
 GptUiController --> openAiAnswerController
 GptUiController --> claudeAnswerController
 GptUiController --> gcpAnswerController
+
+GptUiController --> GptUiVM
+GptUiController --> grammarAnswerVM
+GptUiController --> openAiAnswerVM
+GptUiController --> claudeAnswerVM
+GptUiController --> gcpAnswerVM
 
 ThemeVM <--> ViewModelMediator
 QuestionVM <--> ViewModelMediator

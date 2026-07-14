@@ -6,6 +6,7 @@ title QuestionModel interface
 
 interface QuestionModel {
     requestAnswer()
+    requestFollowUpAnswer()
 }
 interface StorageModel {
     readInteraction()
@@ -15,10 +16,7 @@ interface StorageModel {
 interface PromptFactory {
     getPrompt()
 }
-interface GptApi {
-    send()
-}
-interface GcpApi {
+interface AiApi {
     send()
 }
 interface SoundService {
@@ -27,12 +25,17 @@ interface SoundService {
 interface FormatConverter {
     markdownToHtml()
 }
+interface FollowUpHistoryBuilder {
+    buildHistory()
+}
 
 QuestionModel --> StorageModel
 QuestionModel --> PromptFactory
-QuestionModel --> GptApi
-QuestionModel --> GcpApi
+QuestionModel "1" --> "4" AiApi: GRAMMAR, OPEN_AI, CLAUDE, GCP
 QuestionModel --> SoundService
 QuestionModel --> FormatConverter
+QuestionModel --> FollowUpHistoryBuilder
+
+FollowUpHistoryBuilder --> StorageModel
 
 @enduml

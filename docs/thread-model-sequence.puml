@@ -13,15 +13,21 @@ participant GptUiApplication
 participant QuestionModel as QuestionModelFx
 end box
 
-box Fork Join Pool
+box Cached Thread Pool (EXECUTOR)
 participant QuestionModel as QuestionModelPool
 end box
 
 GptUiMain --> GptUiApplication **
 GptUiApplication -> QuestionModelFx: requestAnswer()
-QuestionModelFx -> QuestionModelPool: runAsync()
+QuestionModelFx -> QuestionModelPool: runAsync(send)
 QuestionModelFx <-- QuestionModelPool
 GptUiApplication <-- QuestionModelFx
 
+...answer streams over SSE on the pool thread...
+loop each throttled progress tick (~250ms)
+QuestionModelPool ->> GptUiApplication: Platform.runLater(progressHtml)
+end
+
+QuestionModelPool ->> GptUiApplication: Platform.runLater(callback)
 
 @enduml
