@@ -166,8 +166,8 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, ThemeMediator, 
         log.trace("addShortcuts");
         accelerators.put(new KeyCodeCombination(UP, CONTROL_DOWN, ALT_DOWN), this::selectPreviousHistoryItem);
         accelerators.put(new KeyCodeCombination(DOWN, CONTROL_DOWN, ALT_DOWN), this::selectNextHistoryItem);
-        accelerators.put(new KeyCodeCombination(V, CONTROL_DOWN, ALT_DOWN), () -> questionVM.pasteQuestionFromClipboard());
-        accelerators.put(new KeyCodeCombination(ESCAPE), () -> questionVM.focusOnQuestionAndSelect());
+        accelerators.put(new KeyCodeCombination(V, CONTROL_DOWN, ALT_DOWN), questionVM::pasteQuestionFromClipboard);
+        accelerators.put(new KeyCodeCombination(ESCAPE), questionVM::focusOnQuestionAndSelect);
         accelerators.put(new KeyCodeCombination(ENTER, CONTROL_DOWN), () -> questionVM.createNewInteractionAndRequestAnswers(QUESTION));
         accelerators.put(new KeyCodeCombination(U, ALT_DOWN), questionVM::toggleFollowUp);
     }

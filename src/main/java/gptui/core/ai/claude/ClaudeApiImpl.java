@@ -99,32 +99,37 @@ class ClaudeApiImpl implements AiApi {
         var event = gson.fromJson(sseEvent.data(), StreamEvent.class);
         var type = event.type() != null ? event.type() : sseEvent.event();
         switch (type) {
-            case "message_start" -> {
-                if (event.message() != null) {
-                    state.responseId = event.message().id();
-                    if (event.message().usage() != null) {
-                        state.inputTokens = event.message().usage().input_tokens();
-                    }
-                }
-            }
-            case "content_block_delta" -> {
-                if (event.delta() != null && "text_delta".equals(event.delta().type())
-                        && event.delta().text() != null) {
-                    state.text.append(event.delta().text());
-                    onTextDelta.accept(event.delta().text());
-                }
-            }
-            case "message_delta" -> {
-                if (event.delta() != null && event.delta().stop_reason() != null) {
-                    state.stopReason = event.delta().stop_reason();
-                }
-                if (event.usage() != null && event.usage().output_tokens() != null) {
-                    state.outputTokens = event.usage().output_tokens();
-                }
-            }
+            case "message_start" -> applyMessageStart(state, event);
+            case "content_block_delta" -> applyContentBlockDelta(state, event, onTextDelta);
+            case "message_delta" -> applyMessageDelta(state, event);
             case "error" -> throw new AiApiException(sseEvent.data());
             default -> { // message_stop, content_block_start/stop, ping
             }
+        }
+    }
+
+    private static void applyMessageStart(StreamState state, StreamEvent event) {
+        if (event.message() != null) {
+            state.responseId = event.message().id();
+            if (event.message().usage() != null) {
+                state.inputTokens = event.message().usage().input_tokens();
+            }
+        }
+    }
+
+    private static void applyContentBlockDelta(StreamState state, StreamEvent event, Consumer<String> onTextDelta) {
+        if (event.delta() != null && "text_delta".equals(event.delta().type()) && event.delta().text() != null) {
+            state.text.append(event.delta().text());
+            onTextDelta.accept(event.delta().text());
+        }
+    }
+
+    private static void applyMessageDelta(StreamState state, StreamEvent event) {
+        if (event.delta() != null && event.delta().stop_reason() != null) {
+            state.stopReason = event.delta().stop_reason();
+        }
+        if (event.usage() != null && event.usage().output_tokens() != null) {
+            state.outputTokens = event.usage().output_tokens();
         }
     }
 
