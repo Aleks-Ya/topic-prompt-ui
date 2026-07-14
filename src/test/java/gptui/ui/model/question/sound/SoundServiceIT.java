@@ -7,6 +7,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 
+// Thread.sleep calls below are intentional, not a substitute for polling: see the comment
+// on the first test.
+@SuppressWarnings("java:S2925")
 class SoundServiceIT {
     private final Injector injector = Guice.createInjector(new SoundModule());
     private final SoundService soundService = injector.getInstance(SoundService.class);

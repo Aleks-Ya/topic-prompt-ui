@@ -20,6 +20,10 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+// OpenAiModule builds this instance manually (new OpenAiApiImpl(model, effort)) and binds it via
+// toInstance(...) so the hardcoded model/effort constants stay per-binding; Guice therefore never
+// calls this constructor and can only supply configModel via member injection.
+@SuppressWarnings("java:S6813")
 class OpenAiApiImpl implements AiApi {
     private static final Logger log = LoggerFactory.getLogger(OpenAiApiImpl.class);
     private static final Gson gson = new Gson();
@@ -72,6 +76,10 @@ class OpenAiApiImpl implements AiApi {
         }
     }
 
+    // S6916 ("use a pattern-match guard") is a false positive on switch cases with constant
+    // (String) labels: guards are only valid on type-pattern case labels per JLS 14.11.1,
+    // so the suggested rewrite wouldn't compile. Confirmed rule bug: SONARJAVA-4962.
+    @SuppressWarnings("java:S6916")
     AiResponse assemble(Stream<String> lines, Consumer<String> onTextDelta) {
         ResponseBody[] finalBody = new ResponseBody[1];
         SseParser.forEachEvent(lines, sseEvent -> {

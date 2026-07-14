@@ -27,7 +27,10 @@ public abstract class BaseMockApi implements AiApi {
     protected final List<List<ConversationTurn>> turnsSendHistory = new ArrayList<>();
     protected final AtomicInteger receivedCounter = new AtomicInteger();
 
+    // Thread.sleep here simulates provider latency and the per-chunk delay of a real streaming
+    // response for tests (see putStreamingResponse), not a substitute for polling.
     @Override
+    @SuppressWarnings("java:S2925")
     public AiResponse send(List<ConversationTurn> turns, Consumer<String> onTextDelta) {
         var content = turns.getLast().content();
         sendHistory.add(content);

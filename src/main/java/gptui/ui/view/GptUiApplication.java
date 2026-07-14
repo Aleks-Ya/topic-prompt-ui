@@ -17,6 +17,10 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.List;
 
+// JavaFX's Application lifecycle requires a public no-arg constructor and instantiates this class
+// itself (not Guice), so dependencies can only arrive via GuiceContext.init() member injection,
+// not constructor injection.
+@SuppressWarnings("java:S6813")
 public class GptUiApplication extends Application {
     private static final Logger log = LoggerFactory.getLogger(GptUiApplication.class);
     private final GuiceContext context;

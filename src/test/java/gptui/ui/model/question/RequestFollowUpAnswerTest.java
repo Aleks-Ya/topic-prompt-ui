@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.awaitility.Awaitility.await;
 
 class RequestFollowUpAnswerTest extends ApplicationTest {
-    // Needs a live JavaFX toolkit, since QuestionModelImpl.updateAnswer calls Platform.runLater;
+    // Needs a live JavaFX toolkit, since QuestionModelImpl.updateAnswer calls Platform.runLater; NOSONAR
     // extend ApplicationTest directly (like ClipboardModelTest) rather than BaseTest, without
     // booting the full GptUiApplication/FXML scene like BaseGptUiTest does.
     private final Injector injector = Guice.createInjector(Modules.override(new RootModule()).with(new TestRootModule()));

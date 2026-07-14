@@ -22,6 +22,10 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+// ClaudeModule builds this instance manually (new ClaudeApiImpl(model, effort)) and binds it via
+// toInstance(...) so the hardcoded model/effort constants stay per-binding; Guice therefore never
+// calls this constructor and can only supply configModel via member injection.
+@SuppressWarnings("java:S6813")
 class ClaudeApiImpl implements AiApi {
     private static final Logger log = LoggerFactory.getLogger(ClaudeApiImpl.class);
     private static final String GOOD_STOP_REASON = "end_turn";
@@ -87,6 +91,10 @@ class ClaudeApiImpl implements AiApi {
                 state.stopReason, state.inputTokens, state.outputTokens, totalTokens);
     }
 
+    // S6916 ("use a pattern-match guard") is a false positive on switch cases with constant
+    // (String) labels: guards are only valid on type-pattern case labels per JLS 14.11.1,
+    // so the suggested rewrite wouldn't compile. Confirmed rule bug: SONARJAVA-4962.
+    @SuppressWarnings("java:S6916")
     private void applyEvent(StreamState state, SseParser.SseEvent sseEvent, Consumer<String> onTextDelta) {
         var event = gson.fromJson(sseEvent.data(), StreamEvent.class);
         var type = event.type() != null ? event.type() : sseEvent.event();

@@ -24,6 +24,10 @@ import java.util.stream.Stream;
 
 import static gptui.core.ai.gcp.ResponseBody.FinishReason.STOP;
 
+// GcpModule builds this instance manually (new GcpApiImpl(model, effort)) and binds it via
+// toInstance(...) so the hardcoded model/effort constants stay per-binding; Guice therefore never
+// calls this constructor and can only supply configModel via member injection.
+@SuppressWarnings("java:S6813")
 class GcpApiImpl implements AiApi {
     private static final Logger log = LoggerFactory.getLogger(GcpApiImpl.class);
     private static final Gson gson = new Gson();

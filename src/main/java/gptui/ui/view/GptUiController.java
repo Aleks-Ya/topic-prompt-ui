@@ -9,6 +9,10 @@ import javafx.fxml.FXML;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// FXMLLoader instantiates this controller itself (via its no-arg constructor) and Gluon Ignite's
+// GuiceContext only performs member injection on it afterward, so constructor injection isn't an
+// option here — same reasoning applies to every *Controller class in this package.
+@SuppressWarnings("java:S6813")
 public class GptUiController extends BaseController {
     private static final Logger log = LoggerFactory.getLogger(GptUiController.class);
     @Inject

@@ -11,6 +11,9 @@ import javafx.scene.control.Label;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// FXMLLoader instantiates this controller itself, so only member injection is possible;
+// see GptUiController for the full rationale.
+@SuppressWarnings("java:S6813")
 public class HistoryController extends BaseController {
     private static final Logger log = LoggerFactory.getLogger(HistoryController.class);
     @FXML

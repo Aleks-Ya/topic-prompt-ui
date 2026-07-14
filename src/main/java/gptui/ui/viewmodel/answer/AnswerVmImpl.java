@@ -22,6 +22,10 @@ import static javafx.scene.paint.Color.GREEN;
 import static javafx.scene.paint.Color.RED;
 import static javafx.scene.paint.Color.WHITE;
 
+// AnswerVmModule builds the 4 parallel instances manually (new AnswerVmImpl(answerType)) and binds
+// them via toInstance(...) so each is wired to its own @Named AnswerType; Guice therefore never
+// calls this constructor and can only supply mediator via member injection.
+@SuppressWarnings("java:S6813")
 class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
     public AnswerVmImpl(AnswerType answerType) {
         this.answerType = answerType;

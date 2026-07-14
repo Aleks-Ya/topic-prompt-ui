@@ -34,7 +34,9 @@ jobs:
           # keybindings (e.g. Ctrl+Alt+Up/Down) collide with the app's own hotkeys,
           # so start it with an empty keyboard/mouse config.
           mkdir -p /tmp/openbox-config
-          echo '<?xml version="1.0" encoding="UTF-8"?><openbox_config xmlns="http://openbox.org/3.4/rc"><keyboard></keyboard><mouse></mouse></openbox_config>' > /tmp/openbox-config/rc.xml
+          # xmlns="http://openbox.org/3.4/rc" is openbox's fixed XML namespace URI, matched
+          # literally by openbox's config parser, never dereferenced over the network.
+          echo '<?xml version="1.0" encoding="UTF-8"?><openbox_config xmlns="http://openbox.org/3.4/rc"><keyboard></keyboard><mouse></mouse></openbox_config>' > /tmp/openbox-config/rc.xml # NOSONAR
           DISPLAY=:99 openbox --config-file /tmp/openbox-config/rc.xml > /dev/null 2>&1 &
           sleep 2
 
