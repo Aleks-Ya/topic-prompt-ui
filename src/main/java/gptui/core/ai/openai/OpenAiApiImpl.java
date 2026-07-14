@@ -6,7 +6,7 @@ import gptui.core.ai.AiApiException;
 import gptui.core.ai.AiResponse;
 import gptui.core.ai.ConversationTurn;
 import gptui.core.ai.SseParser;
-import gptui.ui.model.config.ConfigModel;
+import gptui.core.config.ConfigModel;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

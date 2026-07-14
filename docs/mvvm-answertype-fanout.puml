@@ -30,7 +30,6 @@ package viewmodel {
 package model{
     class StateModel
     class ClipboardModel
-    class ConfigModel
     class FileModel
     class QuestionModel
     class StorageModel

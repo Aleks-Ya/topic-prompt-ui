@@ -15,11 +15,15 @@ package gptui {
 }
 
 view --> viewmodel
-view --> model
+view --> storagefilesystem
+view --> util
 viewmodel --> model
+viewmodel --> storagefilesystem
 viewmodel --> util
+model --> ai
+model --> storagefilesystem
 model --> util
 util --> storagefilesystem
-model --> ai
+storagefilesystem ..> util : LogUtils.shorten
 
 @enduml

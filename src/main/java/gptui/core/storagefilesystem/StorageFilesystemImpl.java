@@ -3,7 +3,7 @@ package gptui.core.storagefilesystem;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import gptui.ui.model.config.ConfigModel;
+import gptui.core.config.ConfigModel;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;

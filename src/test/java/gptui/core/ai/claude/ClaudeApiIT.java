@@ -6,7 +6,7 @@ import com.google.inject.Key;
 import com.google.inject.name.Names;
 import gptui.core.ai.AiApi;
 import gptui.core.ai.ConversationTurn;
-import gptui.ui.model.config.ConfigurationModule;
+import gptui.core.config.ConfigurationModule;
 import gptui.ui.model.storage.StorageModule;
 import org.junit.jupiter.api.Test;
 

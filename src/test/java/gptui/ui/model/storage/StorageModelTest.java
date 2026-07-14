@@ -9,7 +9,7 @@ import gptui.core.storagefilesystem.ThemeId;
 import gptui.ui.TestingData.I1;
 import gptui.ui.TestingData.I2;
 import gptui.ui.TestingData.I3;
-import gptui.ui.model.config.ConfigModel;
+import gptui.core.config.ConfigModel;
 import org.junit.jupiter.api.Test;
 
 import static gptui.core.storagefilesystem.AnswerType.GRAMMAR;

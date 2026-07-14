@@ -7,7 +7,7 @@ import com.google.inject.name.Names;
 import gptui.core.ai.AiApi;
 import gptui.core.ai.ConversationTurn;
 import gptui.core.storagefilesystem.AnswerType;
-import gptui.ui.model.config.ConfigurationModule;
+import gptui.core.config.ConfigurationModule;
 import gptui.ui.model.question.prompt.PromptFactory;
 import gptui.ui.model.question.prompt.PromptModule;
 import gptui.ui.model.storage.StorageModule;

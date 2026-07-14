@@ -4,7 +4,6 @@ hide empty members
 package model{
     class StateModel
     class ClipboardModel
-    class ConfigModel
     class FileModel
     class QuestionModel
     class StorageModel
@@ -83,7 +82,6 @@ GptUiVM --> ViewModelMediator
 
 StateModel --> StorageModel
 QuestionModel --> StorageModel
-QuestionModel --> ConfigModel
 
 ViewModelMediator --> StateModel
 ViewModelMediator --> QuestionModel

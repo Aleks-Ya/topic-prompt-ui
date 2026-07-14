@@ -35,7 +35,6 @@ module GptUi.main {
     exports gptui.ui.model.question.question;
     exports gptui.ui.model.question.prompt;
     exports gptui.ui.model.question.sound;
-    exports gptui.ui.model.config;
     exports gptui.ui.model.state;
     exports gptui.ui.model.file;
     exports gptui.ui.model.clipboard;
@@ -48,7 +47,6 @@ module GptUi.main {
     opens gptui.core.ai.gcp to com.google.gson, com.google.guice;
     opens gptui.core.ai.claude to com.google.gson, com.google.guice;
     opens gptui.ui.model.question.question to com.google.gson, com.google.guice;
-    opens gptui.ui.model.config to com.google.guice, javafx.fxml;
     opens gptui.ui.view to com.google.gson, com.google.guice, javafx.fxml;
     opens gptui.ui.model to com.google.gson, com.google.guice, javafx.fxml;
     opens gptui.ui.viewmodel to com.google.gson, com.google.guice, javafx.fxml;
@@ -69,4 +67,6 @@ module GptUi.main {
     opens gptui.ui.model.question.sound to com.google.gson, com.google.guice;
     exports gptui.core.storagefilesystem;
     opens gptui.core.storagefilesystem to com.google.guice;
+    exports gptui.core.config;
+    opens gptui.core.config to com.google.guice;
 }

@@ -1,7 +1,7 @@
 package gptui.ui.model.question.prompt;
 
 import gptui.BaseTest;
-import gptui.ui.model.config.ConfigModel;
+import gptui.core.config.ConfigModel;
 import gptui.core.storagefilesystem.InteractionType;
 import org.junit.jupiter.api.Test;
 

@@ -3,7 +3,7 @@ package gptui.ui.model.question.prompt;
 import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
-import gptui.ui.model.config.ConfigModel;
+import gptui.core.config.ConfigModel;
 import gptui.core.storagefilesystem.AnswerType;
 import gptui.core.storagefilesystem.InteractionType;
 import gptui.core.util.ResourceUtils;

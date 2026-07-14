@@ -1,4 +1,4 @@
-package gptui.ui.model.config;
+package gptui.core.config;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

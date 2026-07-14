@@ -2,7 +2,7 @@ package gptui.ui.model;
 
 import com.google.inject.AbstractModule;
 import gptui.ui.model.clipboard.ClipboardModelModule;
-import gptui.ui.model.config.ConfigurationModule;
+import gptui.core.config.ConfigurationModule;
 import gptui.ui.model.file.FileModelModule;
 import gptui.core.ai.claude.ClaudeModule;
 import gptui.core.ai.gcp.GcpModule;
