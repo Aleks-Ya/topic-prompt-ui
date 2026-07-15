@@ -58,7 +58,7 @@ public class TopicPromptUiApplication extends Application {
     }
 
     private void createStage(Stage stage, String version, Scene scene) {
-        stage.setTitle("GPT-4 Question Client v" + version);
+        stage.setTitle("TopicPromptUI v" + version);
         stage.setScene(scene);
         stage.setMaximized(true);
         var applicationIcon = vm.getApplicationIcon();
