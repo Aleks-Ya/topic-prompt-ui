@@ -80,5 +80,6 @@ public class ThemeController extends BaseController {
         themeLabel.setLabelFor(themeComboBox);
         themeComboBox.showingProperty()
                 .addListener((_, _, _) -> vm.onThemeComboBoxAction());
+        SearchableComboBoxShortestFirst.attach(themeComboBox);
     }
 }

@@ -137,6 +137,11 @@ public abstract class BaseGptUiTest extends ApplicationTest {
             return comboBox().lookup(".arrow-button");
         }
 
+        /** The SearchableComboBox skin's internal filtered combo box; exists only after the skin is created. */
+        public ComboBox<Theme> popupFilteredComboBox() {
+            return lookup("#filtered").queryComboBox();
+        }
+
         public Button addThemeButton() {
             return lookup("#addButton").queryButton();
         }
