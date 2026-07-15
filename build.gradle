@@ -2,7 +2,7 @@ plugins {
     id 'application'
     id 'jacoco'
     id 'org.openjfx.javafxplugin' version '0.1.0'
-    id 'org.gradlex.extra-java-module-info' version '1.14'
+    id 'org.gradlex.extra-java-module-info' version '1.14.2'
     id 'org.beryx.jlink' version '4.0.2'
     id 'org.sonarqube' version '7.3.1.8318'
 }
@@ -38,7 +38,7 @@ application {
 dependencies {
     implementation 'com.google.code.gson:gson:2.14.0',
             'com.vladsch.flexmark:flexmark-ext-tables:0.64.8',
-            'ch.qos.logback:logback-classic:1.5.34',
+            'ch.qos.logback:logback-classic:1.5.38',
             'org.slf4j:jul-to-slf4j:2.0.18',
             'com.gluonhq:ignite-guice:1.2.2',
             'com.google.inject:guice:7.0.0',
