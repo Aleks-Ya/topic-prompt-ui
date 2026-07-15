@@ -5,11 +5,11 @@ autonumber
 autoactivate on
 
 box Main Thread
-participant GptUiMain
+participant TopicPromptUiMain
 end box
 
 box JavaFX Application Thread
-participant GptUiApplication
+participant TopicPromptUiApplication
 participant QuestionModel as QuestionModelFx
 end box
 
@@ -17,17 +17,17 @@ box Cached Thread Pool (EXECUTOR)
 participant QuestionModel as QuestionModelPool
 end box
 
-GptUiMain --> GptUiApplication **
-GptUiApplication -> QuestionModelFx: requestAnswer()
+TopicPromptUiMain --> TopicPromptUiApplication **
+TopicPromptUiApplication -> QuestionModelFx: requestAnswer()
 QuestionModelFx -> QuestionModelPool: runAsync(send)
 QuestionModelFx <-- QuestionModelPool
-GptUiApplication <-- QuestionModelFx
+TopicPromptUiApplication <-- QuestionModelFx
 
 ...answer streams over SSE on the pool thread...
 loop each throttled progress tick (~250ms)
-QuestionModelPool ->> GptUiApplication: Platform.runLater(progressHtml)
+QuestionModelPool ->> TopicPromptUiApplication: Platform.runLater(progressHtml)
 end
 
-QuestionModelPool ->> GptUiApplication: Platform.runLater(callback)
+QuestionModelPool ->> TopicPromptUiApplication: Platform.runLater(callback)
 
 @enduml

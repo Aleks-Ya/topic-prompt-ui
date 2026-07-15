@@ -6,7 +6,7 @@ plugins {
     id 'org.beryx.jlink' version '4.0.2'
     id 'org.sonarqube' version '7.3.1.8318'
 }
-version = new File(projectDir, 'src/main/resources/gptui/version.txt').text.trim() - '-SNAPSHOT'
+version = new File(projectDir, 'src/main/resources/topicpromptui/version.txt').text.trim() - '-SNAPSHOT'
 def javaVersion = 25
 java {
     toolchain {
@@ -32,8 +32,8 @@ sonar {
     }
 }
 application {
-    mainClass = 'gptui.GptUiMain'
-    mainModule = 'GptUi.main'
+    mainClass = 'topicpromptui.TopicPromptUiMain'
+    mainModule = 'TopicPromptUi.main'
 }
 dependencies {
     implementation 'com.google.code.gson:gson:2.14.0',
@@ -106,7 +106,7 @@ extraJavaModuleInfo {
 jlink {
     options = ['--strip-debug', '--compress', 'zip-6', '--no-header-files', '--no-man-pages']
     launcher {
-        name = 'GptUi'
+        name = 'TopicPromptUI'
     }
     addExtraDependencies("javafx", "slf4j")
     // Avoids createMergedModule reading the jar's module descriptor with ModuleFinder, which fails
@@ -116,10 +116,10 @@ jlink {
 tasks.jlink.dependsOn tasks.test
 tasks.jlink.mustRunAfter tasks.clean, tasks.test
 
-def installDir = System.properties.getProperty('user.home') + '/installed/GptUI'
+def installDir = System.properties.getProperty('user.home') + '/installed/TopicPromptUI'
 tasks.register('addIconToImage', Copy) {
     mustRunAfter tasks.jlink
-    from layout.projectDirectory.dir('src/main/resources/gptui/ui/model/file').file('icon.png')
+    from layout.projectDirectory.dir('src/main/resources/topicpromptui/ui/model/file').file('icon.png')
     into layout.projectDirectory.dir('build/image/bin')
 }
 tasks.register('deleteInstalledApp', Delete) {

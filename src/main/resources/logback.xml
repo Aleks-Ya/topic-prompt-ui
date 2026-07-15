@@ -16,6 +16,6 @@
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE"/>
     </root>
-    <logger name="gptui" level="TRACE"/>
+    <logger name="topicpromptui" level="TRACE"/>
     <logger name="jdk.httpclient.HttpClient" level="WARN"/>
 </configuration>

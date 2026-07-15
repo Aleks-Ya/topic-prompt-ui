@@ -5,7 +5,7 @@ set -eu
 SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 cd "$SCRIPT_DIR"
 
-VERSION_FILE="src/main/resources/gptui/version.txt"
+VERSION_FILE="src/main/resources/topicpromptui/version.txt"
 
 if [ -n "$(git status --porcelain)" ]; then
     echo "Error: working tree is not clean. Commit or stash changes before releasing." >&2

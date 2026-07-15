@@ -2,9 +2,9 @@
 hide empty members
 
 package view {
-    class GptUiController
+    class TopicPromptUiController
     together {
-        class GptUiApplication
+        class TopicPromptUiApplication
         class HistoryController
         class QuestionController
         class TopicController
@@ -13,9 +13,9 @@ package view {
 }
 
 package viewmodel {
-    class GptUiApplicationVM
+    class TopicPromptUiApplicationVM
     class AnswerVM
-    class GptUiVM
+    class TopicPromptUiVM
     class HistoryVM
     class QuestionVM
     class TopicVM
@@ -31,23 +31,23 @@ package model{
     class HistorySearchModel
 }
 
-GptUiApplication --> GptUiApplicationVM
+TopicPromptUiApplication --> TopicPromptUiApplicationVM
 
-GptUiApplicationVM --> ViewModelMediator
+TopicPromptUiApplicationVM --> ViewModelMediator
 
 TopicController ---> TopicVM
 QuestionController ---> QuestionVM
 HistoryController ---> HistoryVM
 AnswerController --> AnswerVM
 
-GptUiController "1" --> "4" AnswerController: initialize
-GptUiController --> AnswerVM
-GptUiController --> GptUiVM
+TopicPromptUiController "1" --> "4" AnswerController: initialize
+TopicPromptUiController --> AnswerVM
+TopicPromptUiController --> TopicPromptUiVM
 
 TopicVM <--> ViewModelMediator
 QuestionVM <--> ViewModelMediator
 HistoryVM <--> ViewModelMediator
-GptUiVM --> ViewModelMediator
+TopicPromptUiVM --> ViewModelMediator
 AnswerVM <--> ViewModelMediator
 
 StateModel --> StorageModel

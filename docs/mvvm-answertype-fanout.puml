@@ -2,9 +2,9 @@
 hide empty members
 
 package view {
-    class GptUiController
+    class TopicPromptUiController
     together {
-        class GptUiApplication
+        class TopicPromptUiApplication
         class "AnswerController" as grammarAnswerController <<GRAMMAR>>
         class "AnswerController" as openAiAnswerController <<OPEN_AI>>
         class "AnswerController" as claudeAnswerController <<CLAUDE>>
@@ -20,7 +20,7 @@ package viewmodel {
     class "AnswerVM" as openAiAnswerVM <<OPEN_AI>>
     class "AnswerVM" as claudeAnswerVM <<CLAUDE>>
     class "AnswerVM" as gcpAnswerVM <<GCP>>
-    class GptUiVM
+    class TopicPromptUiVM
     class HistoryVM
     class QuestionVM
     class TopicVM
@@ -43,23 +43,23 @@ grammarAnswerController --> grammarAnswerVM
 openAiAnswerController --> openAiAnswerVM
 claudeAnswerController --> claudeAnswerVM
 gcpAnswerController --> gcpAnswerVM
-GptUiApplication --> GptUiVM
+TopicPromptUiApplication --> TopicPromptUiVM
 
-GptUiController --> grammarAnswerController
-GptUiController --> openAiAnswerController
-GptUiController --> claudeAnswerController
-GptUiController --> gcpAnswerController
+TopicPromptUiController --> grammarAnswerController
+TopicPromptUiController --> openAiAnswerController
+TopicPromptUiController --> claudeAnswerController
+TopicPromptUiController --> gcpAnswerController
 
-GptUiController --> GptUiVM
-GptUiController --> grammarAnswerVM
-GptUiController --> openAiAnswerVM
-GptUiController --> claudeAnswerVM
-GptUiController --> gcpAnswerVM
+TopicPromptUiController --> TopicPromptUiVM
+TopicPromptUiController --> grammarAnswerVM
+TopicPromptUiController --> openAiAnswerVM
+TopicPromptUiController --> claudeAnswerVM
+TopicPromptUiController --> gcpAnswerVM
 
 TopicVM <--> ViewModelMediator
 QuestionVM <--> ViewModelMediator
 HistoryVM <--> ViewModelMediator
-GptUiVM --> ViewModelMediator
+TopicPromptUiVM --> ViewModelMediator
 grammarAnswerVM <--> ViewModelMediator
 openAiAnswerVM <--> ViewModelMediator
 claudeAnswerVM <--> ViewModelMediator

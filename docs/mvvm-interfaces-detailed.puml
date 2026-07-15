@@ -20,16 +20,16 @@ package viewmodel {
     interface HistoryVmMediator
     interface AnswerVmController
     interface AnswerVmMediator
-    interface GptUiVmController
+    interface TopicPromptUiVmController
 
-    class GptUiVmImpl
+    class TopicPromptUiVmImpl
 
-    interface GptUiApplicationVmController
-    class GptUiApplicationVmImpl
+    interface TopicPromptUiApplicationVmController
+    class TopicPromptUiApplicationVmImpl
 
     interface AnswerMediator
-    interface GptUiApplicationMediator
-    interface GptUiMediator
+    interface TopicPromptUiApplicationMediator
+    interface TopicPromptUiMediator
     interface HistoryMediator
     interface QuestionMediator
     interface TopicMediator
@@ -37,23 +37,23 @@ package viewmodel {
 }
 
 package view {
-    class GptUiApplication
+    class TopicPromptUiApplication
     class AnswerController
-    class GptUiApplication
-    class GptUiController
+    class TopicPromptUiApplication
+    class TopicPromptUiController
     class HistoryController
     class QuestionController
     class TopicController
 }
 
-GptUiApplication --> GptUiApplicationVmController
+TopicPromptUiApplication --> TopicPromptUiApplicationVmController
 
-GptUiApplicationVmImpl ..|> GptUiApplicationVmController
-GptUiApplicationVmImpl --> GptUiApplicationMediator
+TopicPromptUiApplicationVmImpl ..|> TopicPromptUiApplicationVmController
+TopicPromptUiApplicationVmImpl --> TopicPromptUiApplicationMediator
 
 ViewModelMediatorImpl ..|> AnswerMediator
-ViewModelMediatorImpl ..|> GptUiApplicationMediator
-ViewModelMediatorImpl ..|> GptUiMediator
+ViewModelMediatorImpl ..|> TopicPromptUiApplicationMediator
+ViewModelMediatorImpl ..|> TopicPromptUiMediator
 ViewModelMediatorImpl ..|> HistoryMediator
 ViewModelMediatorImpl ..|> QuestionMediator
 ViewModelMediatorImpl ..|> TopicMediator
@@ -67,17 +67,17 @@ QuestionVmImpl ..|> QuestionVmController
 QuestionVmImpl ..|> QuestionVmMediator
 QuestionVmImpl --> QuestionMediator
 
-GptUiVmImpl ..|> GptUiVmController
-GptUiVmImpl --> GptUiMediator
+TopicPromptUiVmImpl ..|> TopicPromptUiVmController
+TopicPromptUiVmImpl --> TopicPromptUiMediator
 
 TopicController ---> TopicVmController
 QuestionController ---> QuestionVmController
 HistoryController ---> HistoryVmController
 AnswerController --> AnswerVmController
 
-GptUiController "1" --> "4" AnswerController: initialize
-GptUiController --> AnswerVmController
-GptUiController --> GptUiVmController
+TopicPromptUiController "1" --> "4" AnswerController: initialize
+TopicPromptUiController --> AnswerVmController
+TopicPromptUiController --> TopicPromptUiVmController
 
 StateModel --> StorageModel
 QuestionModel --> StorageModel

@@ -1,12 +1,12 @@
 ---
 name: deploy
 description: >-
-  Deploy GptUi locally: `/deploy` - current version, `/deploy 66` - tag `v66`.
+  Deploy TopicPromptUI locally: `/deploy` - current version, `/deploy 66` - tag `v66`.
 ---
 
 # Deploy
 
-Deploy GptUi locally. An optional version argument (e.g. `66`) selects the git tag `v66` to
+Deploy TopicPromptUI locally. An optional version argument (e.g. `66`) selects the git tag `v66` to
 deploy instead of whatever's currently checked out.
 
 ## No argument
