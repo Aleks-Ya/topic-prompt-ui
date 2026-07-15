@@ -17,7 +17,7 @@ class ConfigModelImpl implements ConfigModel {
     @Inject
     public ConfigModelImpl(FileSystem fileSystem) {
         try {
-            appDataPath = fileSystem.getPath(System.getProperty("user.home"), ".gpt");
+            appDataPath = fileSystem.getPath(System.getProperty("user.home"), ".topic-prompt-ui");
             var configPath = appDataPath.resolve("config.properties");
             if (Files.exists(configPath)) {
                 try (var inputStream = Files.newInputStream(configPath)) {

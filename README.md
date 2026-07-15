@@ -28,8 +28,8 @@ SonarCloud project: https://sonarcloud.io/project/overview?id=Aleks-Ya_topic-pro
     3. Command: `/home/aleks/installed/TopicPromptUI/bin/TopicPromptUI`
     4. Advanced:
         1. Start VM Class: `topicpromptui.ui.view.TopicPromptUiApplication`
-6. Tokens: `~/.gpt/config.properties`. Properties:
+6. Tokens: `~/.topic-prompt-ui/config.properties`. Properties:
     1. `openai.token`
     2. `gcp.api.key`
     3. `claude.api.key`
-7. Log file: `~/.gpt/console.log`
+7. Log file: `~/.topic-prompt-ui/console.log`
