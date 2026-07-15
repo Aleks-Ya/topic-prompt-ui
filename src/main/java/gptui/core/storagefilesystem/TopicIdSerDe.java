@@ -10,14 +10,14 @@ import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
 
-class ThemeIdSerDe implements JsonSerializer<ThemeId>, JsonDeserializer<ThemeId> {
+class TopicIdSerDe implements JsonSerializer<TopicId>, JsonDeserializer<TopicId> {
     @Override
-    public JsonElement serialize(ThemeId themeId, Type typeOfSrc, JsonSerializationContext context) {
-        return new JsonPrimitive(themeId.id());
+    public JsonElement serialize(TopicId topicId, Type typeOfSrc, JsonSerializationContext context) {
+        return new JsonPrimitive(topicId.id());
     }
 
     @Override
-    public ThemeId deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        return new ThemeId(json.getAsLong());
+    public TopicId deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        return new TopicId(json.getAsLong());
     }
 }

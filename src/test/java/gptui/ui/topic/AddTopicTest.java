@@ -1,4 +1,4 @@
-package gptui.ui.theme;
+package gptui.ui.topic;
 
 import gptui.BaseGptUiTest;
 import gptui.ui.TestingData.I0;
@@ -10,20 +10,20 @@ import org.junit.jupiter.api.Test;
 import static gptui.ui.viewmodel.question.QuestionStyle.QUESTION_STYLE_EMPTY;
 import static javafx.scene.paint.Color.WHITE;
 
-class AddThemeTest extends BaseGptUiTest {
+class AddTopicTest extends BaseGptUiTest {
     @Test
-    void addThemes() {
+    void addTopics() {
         assertion()
                 .focus(history().comboBox())
                 .historySize(0, 0)
                 .historyDeleteButtonDisabled(true)
                 .historySelectedItem(I0.HISTORY_SELECTED_ITEM)
                 .historyItems(I0.HISTORY_ITEMS)
-                .themeSize(I0.THEME_SIZE)
-                .themeSelectedItem(I0.THEME_SELECTED_ITEM)
-                .themeItems(I0.THEME_ITEMS)
-                .themeFilterHistorySelected(false)
-                .themeRenameButtonDisabled(true)
+                .topicSize(I0.TOPIC_SIZE)
+                .topicSelectedItem(I0.TOPIC_SELECTED_ITEM)
+                .topicItems(I0.TOPIC_ITEMS)
+                .topicFilterHistorySelected(false)
+                .topicRenameButtonDisabled(true)
                 .questionText(I0.QUESTION)
                 .questionStyle(QUESTION_STYLE_EMPTY)
                 .modelEditedQuestion(null)
@@ -34,22 +34,22 @@ class AddThemeTest extends BaseGptUiTest {
                 .gcpA().text(I0.GCP_HTML)
                 .answerCircleColors(WHITE, WHITE, WHITE, WHITE)
 
-                .work("Add Theme 1", () ->
-                        clickOn(theme().addThemeButton()).write(I1.THEME.title()).type(KeyCode.ENTER))
+                .work("Add Topic 1", () ->
+                        clickOn(topic().addTopicButton()).write(I1.TOPIC.title()).type(KeyCode.ENTER))
                 .focus(question().textArea())
-                .themeSize(1)
-                .themeSelectedItem(I1.THEME)
-                .themeItems(I1.THEME)
-                .themeRenameButtonDisabled(false)
+                .topicSize(1)
+                .topicSelectedItem(I1.TOPIC)
+                .topicItems(I1.TOPIC)
+                .topicRenameButtonDisabled(false)
 
-                .work("Add Theme 2", () ->
-                        clickOn(theme().addThemeButton()).write(I2.THEME.title()).type(KeyCode.ENTER))
-                .themeSize(2)
-                .themeSelectedItem(I2.THEME)
-                .themeItems(I1.THEME, I2.THEME)
+                .work("Add Topic 2", () ->
+                        clickOn(topic().addTopicButton()).write(I2.TOPIC.title()).type(KeyCode.ENTER))
+                .topicSize(2)
+                .topicSelectedItem(I2.TOPIC)
+                .topicItems(I1.TOPIC, I2.TOPIC)
 
-                .work("Add Duplicating Theme", () ->
-                        clickOn(theme().addThemeButton()).write(I2.THEME.title()).type(KeyCode.ENTER))
+                .work("Add Duplicating Topic", () ->
+                        clickOn(topic().addTopicButton()).write(I2.TOPIC.title()).type(KeyCode.ENTER))
                 .assertApp();
     }
 }

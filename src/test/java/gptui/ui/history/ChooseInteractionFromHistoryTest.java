@@ -14,8 +14,8 @@ class ChooseInteractionFromHistoryTest extends BaseGptUiTest {
 
     @Override
     public void init() {
-        storage.saveTheme(I1.THEME);
-        storage.saveTheme(I2.THEME);
+        storage.saveTopic(I1.TOPIC);
+        storage.saveTopic(I2.TOPIC);
         storage.saveInteraction(I1.INTERACTION);
         storage.saveInteraction(I2.INTERACTION);
     }
@@ -28,10 +28,10 @@ class ChooseInteractionFromHistoryTest extends BaseGptUiTest {
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(I2.INTERACTION)
                 .historyItems(I2.INTERACTION, I1.INTERACTION)
-                .themeSize(2)
-                .themeSelectedItem(I2.THEME)
-                .themeItems(I2.THEME, I1.THEME)
-                .themeFilterHistorySelected(false)
+                .topicSize(2)
+                .topicSelectedItem(I2.TOPIC)
+                .topicItems(I2.TOPIC, I1.TOPIC)
+                .topicFilterHistorySelected(false)
                 .questionText(I2.QUESTION)
                 .questionStyle(QUESTION_STYLE_EMPTY)
                 .modelEditedQuestion(I2.QUESTION)
@@ -43,7 +43,7 @@ class ChooseInteractionFromHistoryTest extends BaseGptUiTest {
                 .answerCircleColors(GREEN, GREEN, RED, GREEN)
                 .assertApp();
 
-        clickOn(history().comboBox()).clickOn(format("[Q] %s: %s", I1.THEME.title(), I1.QUESTION));
+        clickOn(history().comboBox()).clickOn(format("[Q] %s: %s", I1.TOPIC.title(), I1.QUESTION));
 
         assertion()
                 .focus(history().comboBox())
@@ -51,10 +51,10 @@ class ChooseInteractionFromHistoryTest extends BaseGptUiTest {
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(I1.INTERACTION)
                 .historyItems(I2.INTERACTION, I1.INTERACTION)
-                .themeSize(2)
-                .themeSelectedItem(I1.THEME)
-                .themeItems(I2.THEME, I1.THEME)
-                .themeFilterHistorySelected(false)
+                .topicSize(2)
+                .topicSelectedItem(I1.TOPIC)
+                .topicItems(I2.TOPIC, I1.TOPIC)
+                .topicFilterHistorySelected(false)
                 .questionText(I1.QUESTION)
                 .questionStyle(QUESTION_STYLE_EMPTY)
                 .modelEditedQuestion(I1.QUESTION)

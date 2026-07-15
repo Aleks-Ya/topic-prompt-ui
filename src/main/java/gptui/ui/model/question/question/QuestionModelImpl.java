@@ -83,7 +83,7 @@ class QuestionModelImpl implements QuestionModel {
             throw new IllegalStateException("Interaction has no parentInteractionId, it's not a follow-up: " + interactionId);
         }
         // Follow-up messages skip PromptFactory/FreeMarker templating on purpose: the templated
-        // framing (theme, instructions) was already established in the first message of the
+        // framing (topic, instructions) was already established in the first message of the
         // conversation, so a follow-up only needs to send the raw text the user typed.
         var prompt = interaction.question();
         log.trace("Prompt: {}", prompt);
@@ -115,7 +115,7 @@ class QuestionModelImpl implements QuestionModel {
         }
         var promptOpt = promptFactory.getPrompt(
                 interaction.type(),
-                storage.getTheme(interaction.themeId()).title(),
+                storage.getTopic(interaction.topicId()).title(),
                 interaction.question(),
                 answerType);
         if (promptOpt.isPresent()) {

@@ -11,5 +11,5 @@ public interface GptUiMediator {
 
     void chooseFirstInteractionAsCurrent();
 
-    void chooseFirstThemeAsCurrent();
+    void chooseFirstTopicAsCurrent();
 }

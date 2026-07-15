@@ -10,7 +10,7 @@
     <Separator prefWidth="200.0" visible="false"/>
     <fx:include fx:id="history" source="History.fxml" VBox.vgrow="NEVER"/>
     <Separator prefWidth="200.0" visible="false"/>
-    <fx:include fx:id="theme" source="Theme.fxml" VBox.vgrow="NEVER"/>
+    <fx:include fx:id="topic" source="Topic.fxml" VBox.vgrow="NEVER"/>
     <Separator prefWidth="200.0" visible="false"/>
     <fx:include fx:id="question" source="Question.fxml"/>
     <Separator prefWidth="200.0" visible="false"/>

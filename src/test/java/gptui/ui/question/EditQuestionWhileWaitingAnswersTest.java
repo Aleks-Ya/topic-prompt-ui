@@ -16,8 +16,8 @@ import static javafx.scene.paint.Color.WHITE;
 class EditQuestionWhileWaitingAnswersTest extends BaseGptUiTest {
     @Override
     public void init() {
-        storage.saveTheme(I1.THEME);
-        storage.saveTheme(I2.THEME);
+        storage.saveTopic(I1.TOPIC);
+        storage.saveTopic(I2.TOPIC);
     }
 
     @Test
@@ -34,11 +34,11 @@ class EditQuestionWhileWaitingAnswersTest extends BaseGptUiTest {
                 .historyDeleteButtonDisabled(true)
                 .historySelectedItem(I0.HISTORY_SELECTED_ITEM)
                 .historyItems(I0.HISTORY_ITEMS)
-                .themeSize(2)
-                .themeSelectedItem(I0.THEME_SELECTED_ITEM)
-                .themeItems(I1.THEME, I2.THEME)
-                .themeFilterHistorySelected(false)
-                .themeRenameButtonDisabled(true)
+                .topicSize(2)
+                .topicSelectedItem(I0.TOPIC_SELECTED_ITEM)
+                .topicItems(I1.TOPIC, I2.TOPIC)
+                .topicFilterHistorySelected(false)
+                .topicRenameButtonDisabled(true)
                 .questionText(I0.QUESTION)
                 .questionStyle(QUESTION_STYLE_EMPTY)
                 .modelEditedQuestion(null)
@@ -52,7 +52,7 @@ class EditQuestionWhileWaitingAnswersTest extends BaseGptUiTest {
     }
 
     private void sendFirstQuestion() {
-        clickOn(theme().comboBoxNarrow()).clickOn(I1.THEME.title() + " (0)");
+        clickOn(topic().comboBoxNarrow()).clickOn(I1.TOPIC.title() + " (0)");
         clickOn(question().textArea());
         overWrite(I1.QUESTION);
         assertion()
@@ -61,11 +61,11 @@ class EditQuestionWhileWaitingAnswersTest extends BaseGptUiTest {
                 .historyDeleteButtonDisabled(true)
                 .historySelectedItem(I0.HISTORY_SELECTED_ITEM)
                 .historyItems(I0.HISTORY_ITEMS)
-                .themeSize(2)
-                .themeSelectedItem(I1.THEME)
-                .themeItems(I1.THEME, I2.THEME)
-                .themeFilterHistorySelected(false)
-                .themeRenameButtonDisabled(false)
+                .topicSize(2)
+                .topicSelectedItem(I1.TOPIC)
+                .topicItems(I1.TOPIC, I2.TOPIC)
+                .topicFilterHistorySelected(false)
+                .topicRenameButtonDisabled(false)
                 .questionText(I1.QUESTION)
                 .questionStyle(QUESTION_STYLE_EMPTY)
                 .modelEditedQuestion(I1.QUESTION)
@@ -90,11 +90,11 @@ class EditQuestionWhileWaitingAnswersTest extends BaseGptUiTest {
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(storage.readAllInteractions().getFirst())
                 .historyItems(storage.readAllInteractions())
-                .themeSize(2)
-                .themeSelectedItem(I1.THEME)
-                .themeItems(I1.THEME, I2.THEME)
-                .themeFilterHistorySelected(false)
-                .themeRenameButtonDisabled(false)
+                .topicSize(2)
+                .topicSelectedItem(I1.TOPIC)
+                .topicItems(I1.TOPIC, I2.TOPIC)
+                .topicFilterHistorySelected(false)
+                .topicRenameButtonDisabled(false)
                 .questionText(I1.QUESTION)
                 .questionStyle(QUESTION_STYLE_EMPTY)
                 .modelEditedQuestion(I1.QUESTION)
@@ -108,7 +108,7 @@ class EditQuestionWhileWaitingAnswersTest extends BaseGptUiTest {
     }
 
     private void editQuestion() {
-        clickOn(theme().comboBoxNarrow()).clickOn(I2.THEME.title() + " (0)");
+        clickOn(topic().comboBoxNarrow()).clickOn(I2.TOPIC.title() + " (0)");
         clickOn(question().textArea());
         overWrite(I2.QUESTION);
         assertion()
@@ -117,11 +117,11 @@ class EditQuestionWhileWaitingAnswersTest extends BaseGptUiTest {
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(storage.readAllInteractions().getFirst())
                 .historyItems(storage.readAllInteractions())
-                .themeSize(2)
-                .themeSelectedItem(I2.THEME)
-                .themeItems(I1.THEME, I2.THEME)
-                .themeFilterHistorySelected(false)
-                .themeRenameButtonDisabled(false)
+                .topicSize(2)
+                .topicSelectedItem(I2.TOPIC)
+                .topicItems(I1.TOPIC, I2.TOPIC)
+                .topicFilterHistorySelected(false)
+                .topicRenameButtonDisabled(false)
                 .questionText(I2.QUESTION)
                 .questionStyle(QUESTION_STYLE_EDITED)
                 .modelEditedQuestion(I2.QUESTION)
@@ -142,11 +142,11 @@ class EditQuestionWhileWaitingAnswersTest extends BaseGptUiTest {
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(storage.readAllInteractions().getFirst())
                 .historyItems(storage.readAllInteractions())
-                .themeSize(2)
-                .themeSelectedItem(I2.THEME)
-                .themeItems(I1.THEME, I2.THEME)
-                .themeFilterHistorySelected(false)
-                .themeRenameButtonDisabled(false)
+                .topicSize(2)
+                .topicSelectedItem(I2.TOPIC)
+                .topicItems(I1.TOPIC, I2.TOPIC)
+                .topicFilterHistorySelected(false)
+                .topicRenameButtonDisabled(false)
                 .questionText(I2.QUESTION)
                 .questionStyle(QUESTION_STYLE_EDITED)
                 .modelEditedQuestion(I2.QUESTION)

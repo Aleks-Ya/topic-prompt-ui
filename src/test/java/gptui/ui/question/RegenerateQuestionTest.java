@@ -23,7 +23,7 @@ class RegenerateQuestionTest extends BaseGptUiTest {
 
     @Override
     public void init() {
-        storage.saveTheme(I1.THEME);
+        storage.saveTopic(I1.TOPIC);
         storage.saveInteraction(interaction1);
     }
 
@@ -35,10 +35,10 @@ class RegenerateQuestionTest extends BaseGptUiTest {
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(interaction1)
                 .historyItems(interaction1)
-                .themeSize(1)
-                .themeSelectedItem(I1.THEME)
-                .themeItems(I1.THEME)
-                .themeFilterHistorySelected(false)
+                .topicSize(1)
+                .topicSelectedItem(I1.TOPIC)
+                .topicItems(I1.TOPIC)
+                .topicFilterHistorySelected(false)
                 .questionText(I1.QUESTION)
                 .questionStyle(QUESTION_STYLE_EMPTY)
                 .modelEditedQuestion(I1.QUESTION)
@@ -66,10 +66,10 @@ class RegenerateQuestionTest extends BaseGptUiTest {
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(storage.readInteraction(interaction1.id()).orElseThrow())
                 .historyItems(storage.readInteraction(interaction1.id()).orElseThrow())
-                .themeSize(1)
-                .themeSelectedItem(I1.THEME)
-                .themeItems(I1.THEME)
-                .themeFilterHistorySelected(false)
+                .topicSize(1)
+                .topicSelectedItem(I1.TOPIC)
+                .topicItems(I1.TOPIC)
+                .topicFilterHistorySelected(false)
                 .questionText(I1.QUESTION)
                 .questionStyle(QUESTION_STYLE_EMPTY)
                 .modelEditedQuestion(I1.QUESTION)

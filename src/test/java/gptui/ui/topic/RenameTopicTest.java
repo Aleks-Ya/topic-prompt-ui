@@ -1,7 +1,7 @@
-package gptui.ui.theme;
+package gptui.ui.topic;
 
 import gptui.BaseGptUiTest;
-import gptui.core.storagefilesystem.Theme;
+import gptui.core.storagefilesystem.Topic;
 import gptui.ui.TestingData.I1;
 import javafx.scene.input.KeyCode;
 import org.junit.jupiter.api.Test;
@@ -10,27 +10,27 @@ import static gptui.ui.viewmodel.question.QuestionStyle.QUESTION_STYLE_EMPTY;
 import static javafx.scene.paint.Color.GREEN;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class RenameThemeTest extends BaseGptUiTest {
+class RenameTopicTest extends BaseGptUiTest {
     @Override
     public void init() {
-        storage.saveTheme(I1.THEME);
+        storage.saveTopic(I1.TOPIC);
         storage.saveInteraction(I1.INTERACTION);
     }
 
     @Test
-    void renameTheme() {
-        var renamedTheme = new Theme(I1.THEME_ID, "Renamed Theme 1");
+    void renameTopic() {
+        var renamedTopic = new Topic(I1.TOPIC_ID, "Renamed Topic 1");
         assertion()
                 .focus(history().comboBox())
                 .historySize(1, 1)
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(I1.INTERACTION)
                 .historyItems(I1.INTERACTION)
-                .themeSize(1)
-                .themeSelectedItem(I1.THEME)
-                .themeItems(I1.THEME)
-                .themeFilterHistorySelected(false)
-                .themeRenameButtonDisabled(false)
+                .topicSize(1)
+                .topicSelectedItem(I1.TOPIC)
+                .topicItems(I1.TOPIC)
+                .topicFilterHistorySelected(false)
+                .topicRenameButtonDisabled(false)
                 .questionText(I1.QUESTION)
                 .questionStyle(QUESTION_STYLE_EMPTY)
                 .modelEditedQuestion(I1.QUESTION)
@@ -41,18 +41,18 @@ class RenameThemeTest extends BaseGptUiTest {
                 .gcpA().text(I1.GCP_HTML)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
 
-                .work("Rename Theme", () ->
-                        clickOn(theme().renameButton()).write(renamedTheme.title()).type(KeyCode.ENTER))
+                .work("Rename Topic", () ->
+                        clickOn(topic().renameButton()).write(renamedTopic.title()).type(KeyCode.ENTER))
                 .focus(question().textArea())
-                .themeSelectedItem(renamedTheme)
-                .themeItems(renamedTheme)
+                .topicSelectedItem(renamedTopic)
+                .topicItems(renamedTopic)
 
                 .work("Rename To Same Title Is No-op", () ->
-                        clickOn(theme().renameButton()).type(KeyCode.ENTER))
-                .themeSelectedItem(renamedTheme)
-                .themeItems(renamedTheme)
+                        clickOn(topic().renameButton()).type(KeyCode.ENTER))
+                .topicSelectedItem(renamedTopic)
+                .topicItems(renamedTopic)
                 .assertApp();
 
-        assertThat(storage.readInteraction(I1.INTERACTION.id()).orElseThrow().themeId()).isEqualTo(I1.THEME_ID);
+        assertThat(storage.readInteraction(I1.INTERACTION.id()).orElseThrow().topicId()).isEqualTo(I1.TOPIC_ID);
     }
 }

@@ -5,8 +5,8 @@ import gptui.core.storagefilesystem.Interaction;
 import gptui.core.storagefilesystem.InteractionId;
 import gptui.core.storagefilesystem.InteractionType;
 import gptui.ui.model.storage.StorageModel;
-import gptui.core.storagefilesystem.Theme;
-import gptui.core.storagefilesystem.ThemeId;
+import gptui.core.storagefilesystem.Topic;
+import gptui.core.storagefilesystem.TopicId;
 import gptui.core.util.Mdc;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -29,7 +29,7 @@ class StateModelImpl implements StateModel {
     private static final Logger log = LoggerFactory.getLogger(StateModelImpl.class);
     private final StorageModel storage;
     private InteractionId currentInteractionId;
-    private Theme currentTheme;
+    private Topic currentTopic;
     private String editedQuestion;
     private Boolean isHistoryFilteringEnabled = false;
 
@@ -55,7 +55,7 @@ class StateModelImpl implements StateModel {
         var historyFilteringEnabled = isHistoryFilteringEnabled();
         return getFullHistory().stream()
                 .filter(interaction -> !historyFilteringEnabled ||
-                        Objects.equals(getCurrentTheme(), storage.getTheme(interaction.themeId())))
+                        Objects.equals(getCurrentTopic(), storage.getTopic(interaction.topicId())))
                 .toList();
     }
 
@@ -82,9 +82,9 @@ class StateModelImpl implements StateModel {
     public InteractionId createInteraction(InteractionType interactionType, InteractionId parentInteractionId) {
         var interactionId = storage.newInteractionId();
         Mdc.run(interactionId.id(), () -> {
-            var theme = getCurrentTheme();
+            var topic = getCurrentTopic();
             var question = getEditedQuestion();
-            var interaction = new Interaction(interactionId, interactionType, theme.id(), question, Map.of(
+            var interaction = new Interaction(interactionId, interactionType, topic.id(), question, Map.of(
                     GRAMMAR, new Answer(GRAMMAR, "", "", "", NEW, null, null, null, null, null, null, null),
                     OPEN_AI, new Answer(OPEN_AI, "", "", "", NEW, null, null, null, null, null, null, null),
                     CLAUDE, new Answer(CLAUDE, "", "", "", NEW, null, null, null, null, null, null, null),
@@ -112,19 +112,19 @@ class StateModelImpl implements StateModel {
         var history = getFilteredHistory();
         if (history.size() > 1) {
             var neighborInteraction = adjacentItem(history, history.indexOf(currentInteraction));
-            setCurrentTheme(storage.getTheme(neighborInteraction.themeId()));
+            setCurrentTopic(storage.getTopic(neighborInteraction.topicId()));
             return neighborInteraction;
         }
-        return switchToAdjacentThemeAndPickFirstInteraction();
+        return switchToAdjacentTopicAndPickFirstInteraction();
     }
 
-    private Interaction switchToAdjacentThemeAndPickFirstInteraction() {
-        var oldCurrentTheme = getCurrentTheme();
-        var themes = getThemes();
-        if (oldCurrentTheme == null || themes.size() <= 1) {
+    private Interaction switchToAdjacentTopicAndPickFirstInteraction() {
+        var oldCurrentTopic = getCurrentTopic();
+        var topics = getTopics();
+        if (oldCurrentTopic == null || topics.size() <= 1) {
             return null;
         }
-        setCurrentTheme(adjacentItem(themes, themes.indexOf(oldCurrentTheme)));
+        setCurrentTopic(adjacentItem(topics, topics.indexOf(oldCurrentTopic)));
         var newHistory = getFilteredHistory();
         return newHistory.isEmpty() ? null : newHistory.getFirst();
     }
@@ -134,46 +134,46 @@ class StateModelImpl implements StateModel {
     }
 
     @Override
-    public synchronized List<Theme> getThemes() {
-        return storage.getThemes();
+    public synchronized List<Topic> getTopics() {
+        return storage.getTopics();
     }
 
     @Override
-    public Theme addTheme(String theme) {
-        return storage.addTheme(theme);
+    public Topic addTopic(String topic) {
+        return storage.addTopic(topic);
     }
 
     @Override
-    public Theme renameTheme(ThemeId themeId, String newTitle) {
-        return storage.renameTheme(themeId, newTitle);
+    public Topic renameTopic(TopicId topicId, String newTitle) {
+        return storage.renameTopic(topicId, newTitle);
     }
 
     @Override
-    public Theme getTheme(ThemeId themeId) {
-        return storage.getTheme(themeId);
+    public Topic getTopic(TopicId topicId) {
+        return storage.getTopic(topicId);
     }
 
     @Override
-    public Long getInteractionCountInTheme(String theme) {
+    public Long getInteractionCountInTopic(String topic) {
         return getFullHistory().stream()
-                .filter(interaction -> Objects.equals(storage.getTheme(interaction.themeId()).title(), theme))
+                .filter(interaction -> Objects.equals(storage.getTopic(interaction.topicId()).title(), topic))
                 .count();
     }
 
     @Override
-    public synchronized Theme getCurrentTheme() {
-        return currentTheme;
+    public synchronized Topic getCurrentTopic() {
+        return currentTopic;
     }
 
     @Override
-    public synchronized void setCurrentTheme(Theme currentTheme) {
-        log.trace("setCurrentTheme: '{}'", currentTheme);
-        this.currentTheme = currentTheme;
+    public synchronized void setCurrentTopic(Topic currentTopic) {
+        log.trace("setCurrentTopic: '{}'", currentTopic);
+        this.currentTopic = currentTopic;
     }
 
     @Override
-    public synchronized void setFirstThemeAsCurrent() {
-        setCurrentTheme(!getThemes().isEmpty() ? getThemes().getFirst() : null);
+    public synchronized void setFirstTopicAsCurrent() {
+        setCurrentTopic(!getTopics().isEmpty() ? getTopics().getFirst() : null);
     }
 
     @Override

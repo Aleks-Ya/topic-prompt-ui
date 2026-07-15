@@ -12,7 +12,7 @@ import static javafx.scene.paint.Color.WHITE;
 class DeleteInteractionOnlyTest extends BaseGptUiTest {
     @Override
     public void init() {
-        storage.saveTheme(I1.THEME);
+        storage.saveTopic(I1.TOPIC);
         storage.saveInteraction(I1.INTERACTION);
     }
 
@@ -24,11 +24,11 @@ class DeleteInteractionOnlyTest extends BaseGptUiTest {
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(I1.INTERACTION)
                 .historyItems(I1.INTERACTION)
-                .themeSize(1)
-                .themeSelectedItem(I1.THEME)
-                .themeItems(I1.THEME)
-                .themeFilterHistorySelected(false)
-                .themeRenameButtonDisabled(false)
+                .topicSize(1)
+                .topicSelectedItem(I1.TOPIC)
+                .topicItems(I1.TOPIC)
+                .topicFilterHistorySelected(false)
+                .topicRenameButtonDisabled(false)
                 .questionText(I1.QUESTION)
                 .questionStyle(QUESTION_STYLE_EMPTY)
                 .modelEditedQuestion(I1.QUESTION)
@@ -43,16 +43,16 @@ class DeleteInteractionOnlyTest extends BaseGptUiTest {
         clickOn(history().deleteButton());
 
         assertion()
-                .focus(theme().comboBox())
+                .focus(topic().comboBox())
                 .historySize(0, 0)
                 .historyDeleteButtonDisabled(true)
                 .historySelectedItem(I0.HISTORY_SELECTED_ITEM)
                 .historyItems()
-                .themeSize(1)
-                .themeSelectedItem(I0.THEME_SELECTED_ITEM)
-                .themeItems(I1.THEME)
-                .themeFilterHistorySelected(false)
-                .themeRenameButtonDisabled(true)
+                .topicSize(1)
+                .topicSelectedItem(I0.TOPIC_SELECTED_ITEM)
+                .topicItems(I1.TOPIC)
+                .topicFilterHistorySelected(false)
+                .topicRenameButtonDisabled(true)
                 .questionText(I1.QUESTION)
                 .questionStyle(QUESTION_STYLE_EMPTY)
                 .modelEditedQuestion(I1.QUESTION)

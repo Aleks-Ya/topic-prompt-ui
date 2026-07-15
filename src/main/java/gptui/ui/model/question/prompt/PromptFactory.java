@@ -6,5 +6,5 @@ import gptui.core.storagefilesystem.InteractionType;
 import java.util.Optional;
 
 public interface PromptFactory {
-    Optional<String> getPrompt(InteractionType interactionType, String theme, String question, AnswerType answerType);
+    Optional<String> getPrompt(InteractionType interactionType, String topic, String question, AnswerType answerType);
 }

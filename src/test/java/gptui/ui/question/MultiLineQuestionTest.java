@@ -13,7 +13,7 @@ import static javafx.scene.paint.Color.WHITE;
 class MultiLineQuestionTest extends BaseGptUiTest {
     @Override
     public void init() {
-        storage.saveTheme(I1.THEME);
+        storage.saveTopic(I1.TOPIC);
     }
 
     @Test
@@ -29,11 +29,11 @@ class MultiLineQuestionTest extends BaseGptUiTest {
                 .historyDeleteButtonDisabled(true)
                 .historySelectedItem(I0.HISTORY_SELECTED_ITEM)
                 .historyItems()
-                .themeSize(1)
-                .themeSelectedItem(I0.THEME_SELECTED_ITEM)
-                .themeItems(I1.THEME)
-                .themeFilterHistorySelected(false)
-                .themeRenameButtonDisabled(true)
+                .topicSize(1)
+                .topicSelectedItem(I0.TOPIC_SELECTED_ITEM)
+                .topicItems(I1.TOPIC)
+                .topicFilterHistorySelected(false)
+                .topicRenameButtonDisabled(true)
                 .questionText(I0.QUESTION)
                 .questionStyle(QUESTION_STYLE_EMPTY)
                 .modelEditedQuestion(null)
@@ -47,7 +47,7 @@ class MultiLineQuestionTest extends BaseGptUiTest {
     }
 
     private void sendQuestion() {
-        clickOn(theme().comboBoxNarrow()).clickOn(I1.THEME.title() + " (0)");
+        clickOn(topic().comboBoxNarrow()).clickOn(I1.TOPIC.title() + " (0)");
         clickOn(question().textArea());
         var questionLine1 = "Question line 1";
         var questionLine2 = "Question line 2";
@@ -71,11 +71,11 @@ class MultiLineQuestionTest extends BaseGptUiTest {
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(storage.readAllInteractions().getFirst())
                 .historyItems(storage.readAllInteractions())
-                .themeSize(1)
-                .themeSelectedItem(I1.THEME)
-                .themeItems(I1.THEME)
-                .themeFilterHistorySelected(false)
-                .themeRenameButtonDisabled(false)
+                .topicSize(1)
+                .topicSelectedItem(I1.TOPIC)
+                .topicItems(I1.TOPIC)
+                .topicFilterHistorySelected(false)
+                .topicRenameButtonDisabled(false)
                 .questionText(questionText)
                 .questionStyle(QUESTION_STYLE_EMPTY)
                 .modelEditedQuestion(questionText)

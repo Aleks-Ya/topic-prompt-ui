@@ -11,7 +11,7 @@ package view {
         class "AnswerController" as gcpAnswerController <<GCP>>
         class HistoryController
         class QuestionController
-        class ThemeController
+        class TopicController
     }
 }
 
@@ -23,7 +23,7 @@ package viewmodel {
     class GptUiVM
     class HistoryVM
     class QuestionVM
-    class ThemeVM
+    class TopicVM
     class ViewModelMediator
 }
 
@@ -36,7 +36,7 @@ package model{
     class HistorySearchModel
 }
 
-ThemeController ---> ThemeVM
+TopicController ---> TopicVM
 QuestionController ---> QuestionVM
 HistoryController ---> HistoryVM
 grammarAnswerController --> grammarAnswerVM
@@ -56,7 +56,7 @@ GptUiController --> openAiAnswerVM
 GptUiController --> claudeAnswerVM
 GptUiController --> gcpAnswerVM
 
-ThemeVM <--> ViewModelMediator
+TopicVM <--> ViewModelMediator
 QuestionVM <--> ViewModelMediator
 HistoryVM <--> ViewModelMediator
 GptUiVM --> ViewModelMediator
@@ -65,7 +65,7 @@ openAiAnswerVM <--> ViewModelMediator
 claudeAnswerVM <--> ViewModelMediator
 gcpAnswerVM <--> ViewModelMediator
 
-ThemeVM ---> StateModel
+TopicVM ---> StateModel
 HistoryVM ---> StateModel
 QuestionVM ---> StateModel
 QuestionVM ---> QuestionModel

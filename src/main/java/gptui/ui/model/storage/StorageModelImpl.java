@@ -3,8 +3,8 @@ package gptui.ui.model.storage;
 import gptui.core.storagefilesystem.Interaction;
 import gptui.core.storagefilesystem.InteractionId;
 import gptui.core.storagefilesystem.StorageFilesystem;
-import gptui.core.storagefilesystem.Theme;
-import gptui.core.storagefilesystem.ThemeId;
+import gptui.core.storagefilesystem.Topic;
+import gptui.core.storagefilesystem.TopicId;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
@@ -26,28 +26,28 @@ import static java.util.stream.Collectors.toMap;
 class StorageModelImpl implements StorageModel {
     private static final Logger log = LoggerFactory.getLogger(StorageModelImpl.class);
     private final Map<InteractionId, Interaction> interactions = new LinkedHashMap<>();
-    private final List<Theme> themeList = new ArrayList<>();
+    private final List<Topic> topicList = new ArrayList<>();
     private final StorageFilesystem storageFilesystem;
-    private final Map<ThemeId, Theme> themeMap = new HashMap<>();
+    private final Map<TopicId, Topic> topicMap = new HashMap<>();
 
     @Inject
     public StorageModelImpl(StorageFilesystem storageFilesystem) {
         this.storageFilesystem = storageFilesystem;
         storageFilesystem.readAllInteractions().forEach(interaction -> interactions.put(interaction.id(), interaction));
-        readThemesFromInteractions();
+        readTopicsFromInteractions();
     }
 
-    private void readThemesFromInteractions() {
-        themeMap.clear();
-        storageFilesystem.readThemes().stream()
-                .filter(theme -> !themeList.contains(theme))
-                .forEach(themeList::add);
-        storageFilesystem.readThemes().forEach(theme -> themeMap.put(theme.id(), theme));
-        var sortedThemeIds = readAllInteractions().stream().map(Interaction::themeId).distinct().toList();
-        sortedThemeIds.forEach(themeId -> {
-            var theme = themeMap.get(themeId);
-            themeList.remove(theme);
-            themeList.addLast(theme);
+    private void readTopicsFromInteractions() {
+        topicMap.clear();
+        storageFilesystem.readTopics().stream()
+                .filter(topic -> !topicList.contains(topic))
+                .forEach(topicList::add);
+        storageFilesystem.readTopics().forEach(topic -> topicMap.put(topic.id(), topic));
+        var sortedTopicIds = readAllInteractions().stream().map(Interaction::topicId).distinct().toList();
+        sortedTopicIds.forEach(topicId -> {
+            var topic = topicMap.get(topicId);
+            topicList.remove(topic);
+            topicList.addLast(topic);
         });
     }
 
@@ -77,9 +77,9 @@ class StorageModelImpl implements StorageModel {
     @Override
     public synchronized void saveInteraction(Interaction interaction) {
         interactions.put(interaction.id(), interaction);
-        var theme = getTheme(interaction.themeId());
-        themeList.remove(theme);
-        themeList.addFirst(theme);
+        var topic = getTopic(interaction.topicId());
+        topicList.remove(topic);
+        topicList.addFirst(topic);
         storageFilesystem.saveInteraction(interaction);
     }
 
@@ -105,97 +105,97 @@ class StorageModelImpl implements StorageModel {
     }
 
     @Override
-    public List<Theme> getThemes() {
-        return themeList;
+    public List<Topic> getTopics() {
+        return topicList;
     }
 
     @Override
-    public synchronized Theme addTheme(String theme) {
-        log.trace("Adding theme: {}", theme);
-        var trimmed = theme.trim();
-        var existingThemes = storageFilesystem.readThemes();
-        var existingOpt = existingThemes.stream().filter(themeObj -> themeObj.title().equals(trimmed)).findFirst();
-        var newThemeExists = existingOpt.isPresent();
-        if (!newThemeExists) {
-            var themes = new ArrayList<>(existingThemes);
-            var maxId = existingThemes.stream().map(Theme::id).mapToLong(ThemeId::id).max().orElse(0L);
+    public synchronized Topic addTopic(String topic) {
+        log.trace("Adding topic: {}", topic);
+        var trimmed = topic.trim();
+        var existingTopics = storageFilesystem.readTopics();
+        var existingOpt = existingTopics.stream().filter(topicObj -> topicObj.title().equals(trimmed)).findFirst();
+        var newTopicExists = existingOpt.isPresent();
+        if (!newTopicExists) {
+            var topics = new ArrayList<>(existingTopics);
+            var maxId = existingTopics.stream().map(Topic::id).mapToLong(TopicId::id).max().orElse(0L);
             var newId = ++maxId;
-            var newTheme = new Theme(new ThemeId(newId), theme);
-            themes.add(newTheme);
-            storageFilesystem.saveThemes(themes);
-            updateThemeCaches(themes);
-            log.trace("Theme was added: {}", newTheme);
-            return newTheme;
+            var newTopic = new Topic(new TopicId(newId), topic);
+            topics.add(newTopic);
+            storageFilesystem.saveTopics(topics);
+            updateTopicCaches(topics);
+            log.trace("Topic was added: {}", newTopic);
+            return newTopic;
         } else {
-            log.trace("Skip adding existing Theme: {}", existingOpt.get());
+            log.trace("Skip adding existing Topic: {}", existingOpt.get());
             return existingOpt.get();
         }
     }
 
     @Override
-    public synchronized Theme renameTheme(ThemeId themeId, String newTitle) {
-        log.trace("Renaming theme {} to '{}'", themeId, newTitle);
+    public synchronized Topic renameTopic(TopicId topicId, String newTitle) {
+        log.trace("Renaming topic {} to '{}'", topicId, newTitle);
         var trimmed = newTitle.trim();
-        var currentTheme = getTheme(themeId);
-        if (trimmed.equals(currentTheme.title())) {
-            log.trace("New title equals current title, no-op: {}", currentTheme);
-            return currentTheme;
+        var currentTopic = getTopic(topicId);
+        if (trimmed.equals(currentTopic.title())) {
+            log.trace("New title equals current title, no-op: {}", currentTopic);
+            return currentTopic;
         }
-        var existingThemes = storageFilesystem.readThemes();
-        var targetOpt = existingThemes.stream()
-                .filter(theme -> theme.title().equals(trimmed) && !theme.id().equals(themeId))
+        var existingTopics = storageFilesystem.readTopics();
+        var targetOpt = existingTopics.stream()
+                .filter(topic -> topic.title().equals(trimmed) && !topic.id().equals(topicId))
                 .findFirst();
         if (targetOpt.isEmpty()) {
-            var renamedTheme = new Theme(themeId, trimmed);
-            var themes = existingThemes.stream()
-                    .map(theme -> theme.id().equals(themeId) ? renamedTheme : theme)
+            var renamedTopic = new Topic(topicId, trimmed);
+            var topics = existingTopics.stream()
+                    .map(topic -> topic.id().equals(topicId) ? renamedTopic : topic)
                     .toList();
-            storageFilesystem.saveThemes(themes);
-            updateThemeCaches(themes);
-            log.trace("Theme was renamed: {}", renamedTheme);
-            return renamedTheme;
+            storageFilesystem.saveTopics(topics);
+            updateTopicCaches(topics);
+            log.trace("Topic was renamed: {}", renamedTopic);
+            return renamedTopic;
         } else {
-            var targetTheme = targetOpt.get();
-            log.trace("Merging theme {} into existing theme {}", currentTheme, targetTheme);
+            var targetTopic = targetOpt.get();
+            log.trace("Merging topic {} into existing topic {}", currentTopic, targetTopic);
             readAllInteractions().stream()
-                    .filter(interaction -> interaction.themeId().equals(themeId))
-                    .forEach(interaction -> updateInteraction(interaction.id(), i -> i.withThemeId(targetTheme.id())));
-            var themes = existingThemes.stream()
-                    .filter(theme -> !theme.id().equals(themeId))
+                    .filter(interaction -> interaction.topicId().equals(topicId))
+                    .forEach(interaction -> updateInteraction(interaction.id(), i -> i.withTopicId(targetTopic.id())));
+            var topics = existingTopics.stream()
+                    .filter(topic -> !topic.id().equals(topicId))
                     .toList();
-            storageFilesystem.saveThemes(themes);
-            updateThemeCaches(themes);
-            log.trace("Theme was merged and removed: {}", currentTheme);
-            return targetTheme;
+            storageFilesystem.saveTopics(topics);
+            updateTopicCaches(topics);
+            log.trace("Topic was merged and removed: {}", currentTopic);
+            return targetTopic;
         }
     }
 
-    private void updateThemeCaches(List<Theme> themes) {
-        themeList.clear();
-        themeList.addAll(themes);
-        themeMap.clear();
-        themeMap.putAll(themes.stream().collect(toMap(Theme::id, identity())));
-    }
-
-    @Override
-    public void saveTheme(Theme theme) {
-        var existingThemes = storageFilesystem.readThemes();
-        var existingOpt = existingThemes.stream().filter(themeObj -> themeObj.id().equals(theme.id())).findFirst();
-        var newThemeExists = existingOpt.isPresent();
-        if (!newThemeExists) {
-            var themes = new ArrayList<>(existingThemes);
-            themes.add(theme);
-            storageFilesystem.saveThemes(themes);
-            updateThemeCaches(themes);
-        }
+    private void updateTopicCaches(List<Topic> topics) {
+        topicList.clear();
+        topicList.addAll(topics);
+        topicMap.clear();
+        topicMap.putAll(topics.stream().collect(toMap(Topic::id, identity())));
     }
 
     @Override
-    public Theme getTheme(ThemeId themeId) {
-        var theme = themeMap.get(themeId);
-        if (theme == null) {
-            throw new IllegalStateException("Theme was not found by id: " + themeId);
+    public void saveTopic(Topic topic) {
+        var existingTopics = storageFilesystem.readTopics();
+        var existingOpt = existingTopics.stream().filter(topicObj -> topicObj.id().equals(topic.id())).findFirst();
+        var newTopicExists = existingOpt.isPresent();
+        if (!newTopicExists) {
+            var topics = new ArrayList<>(existingTopics);
+            topics.add(topic);
+            storageFilesystem.saveTopics(topics);
+            updateTopicCaches(topics);
         }
-        return theme;
+    }
+
+    @Override
+    public Topic getTopic(TopicId topicId) {
+        var topic = topicMap.get(topicId);
+        if (topic == null) {
+            throw new IllegalStateException("Topic was not found by id: " + topicId);
+        }
+        return topic;
     }
 }

@@ -5,8 +5,8 @@ import gptui.core.storagefilesystem.Answer;
 import gptui.core.storagefilesystem.Interaction;
 import gptui.core.storagefilesystem.InteractionId;
 import gptui.core.storagefilesystem.InteractionType;
-import gptui.core.storagefilesystem.Theme;
-import gptui.core.storagefilesystem.ThemeId;
+import gptui.core.storagefilesystem.Topic;
+import gptui.core.storagefilesystem.TopicId;
 import javafx.scene.input.KeyCode;
 import org.junit.jupiter.api.Test;
 
@@ -17,16 +17,16 @@ import static gptui.core.storagefilesystem.AnswerType.GRAMMAR;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class AnswerDetailsDialogTest extends BaseGptUiTest {
-    private static final ThemeId THEME_ID = new ThemeId(100L);
-    private static final Theme THEME = new Theme(THEME_ID, "Details Theme");
+    private static final TopicId TOPIC_ID = new TopicId(100L);
+    private static final Topic TOPIC = new Topic(TOPIC_ID, "Details Topic");
     private static final Answer GRAMMAR_ANSWER = new Answer(GRAMMAR, "Grammar prompt", "Grammar MD", "Grammar HTML",
             SUCCESS, "resp-1", "grammar-model", "low", "completed", 10, 20, 30);
     private static final Interaction INTERACTION = new Interaction(new InteractionId(100L), InteractionType.QUESTION,
-            THEME_ID, "Details question", Map.of(GRAMMAR, GRAMMAR_ANSWER), null);
+            TOPIC_ID, "Details question", Map.of(GRAMMAR, GRAMMAR_ANSWER), null);
 
     @Override
     public void init() {
-        storage.saveTheme(THEME);
+        storage.saveTopic(TOPIC);
         storage.saveInteraction(INTERACTION);
     }
 

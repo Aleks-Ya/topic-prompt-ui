@@ -4,8 +4,8 @@ import gptui.BaseTest;
 import gptui.core.storagefilesystem.Interaction;
 import gptui.core.storagefilesystem.InteractionId;
 import gptui.core.storagefilesystem.StorageFilesystemImpl;
-import gptui.core.storagefilesystem.Theme;
-import gptui.core.storagefilesystem.ThemeId;
+import gptui.core.storagefilesystem.Topic;
+import gptui.core.storagefilesystem.TopicId;
 import gptui.ui.TestingData.I1;
 import gptui.ui.TestingData.I2;
 import gptui.ui.TestingData.I3;
@@ -28,7 +28,7 @@ class StorageModelTest extends BaseTest {
     @Test
     void updateInteraction() {
         assertThat(storage.readInteraction(I1.INTERACTION.id())).isEmpty();
-        storage.saveTheme(I1.THEME);
+        storage.saveTopic(I1.TOPIC);
         storage.saveInteraction(I1.INTERACTION);
         assertThat(storage.readInteraction(I1.INTERACTION.id())).contains(I1.INTERACTION);
         var newGrammarPrompt = "new GRAMMAR prompt";
@@ -42,8 +42,8 @@ class StorageModelTest extends BaseTest {
     @Test
     void saveInteraction() {
         assertThat(storage.readAllInteractions()).isEmpty();
-        storage.saveTheme(I1.THEME);
-        storage.saveTheme(I2.THEME);
+        storage.saveTopic(I1.TOPIC);
+        storage.saveTopic(I2.TOPIC);
         storage.saveInteraction(I1.INTERACTION);
         storage.saveInteraction(I2.INTERACTION);
         assertThat(storage.readAllInteractions()).containsExactlyInAnyOrder(I1.INTERACTION, I2.INTERACTION);
@@ -53,7 +53,7 @@ class StorageModelTest extends BaseTest {
     void readInteraction() {
         var interactionId = new InteractionId(1L);
         assertThat(storage.readInteraction(interactionId)).isEmpty();
-        storage.saveTheme(I1.THEME);
+        storage.saveTopic(I1.TOPIC);
         storage.saveInteraction(I1.INTERACTION);
         assertThat(storage.readInteraction(I1.INTERACTION.id())).contains(I1.INTERACTION);
     }
@@ -66,9 +66,9 @@ class StorageModelTest extends BaseTest {
     @Test
     void readAllInteractions() {
         assertThat(storage.readAllInteractions()).isEmpty();
-        storage.saveTheme(I1.THEME);
-        storage.saveTheme(I2.THEME);
-        storage.saveTheme(I3.THEME);
+        storage.saveTopic(I1.TOPIC);
+        storage.saveTopic(I2.TOPIC);
+        storage.saveTopic(I3.TOPIC);
         storage.saveInteraction(I1.INTERACTION);
         storage.saveInteraction(I2.INTERACTION);
         storage.saveInteraction(I3.INTERACTION);
@@ -78,8 +78,8 @@ class StorageModelTest extends BaseTest {
     @Test
     void deleteInteraction() {
         assertThat(storage.readAllInteractions()).isEmpty();
-        storage.saveTheme(I1.THEME);
-        storage.saveTheme(I2.THEME);
+        storage.saveTopic(I1.TOPIC);
+        storage.saveTopic(I2.TOPIC);
         storage.saveInteraction(I1.INTERACTION);
         storage.saveInteraction(I2.INTERACTION);
         assertThat(storage.readAllInteractions()).containsExactlyInAnyOrder(I1.INTERACTION, I2.INTERACTION);
@@ -89,157 +89,157 @@ class StorageModelTest extends BaseTest {
     }
 
     @Test
-    void getThemesSeveral() {
-        var themeTitle1 = "AAA";
-        var themeTitle2 = "BBB";
-        var themeTitle4 = "CCC";
-        var theme1 = new Theme(new ThemeId(1L), themeTitle1);
-        var theme2 = new Theme(new ThemeId(2L), themeTitle2);
-        var theme4 = new Theme(new ThemeId(4L), themeTitle4);
+    void getTopicsSeveral() {
+        var topicTitle1 = "AAA";
+        var topicTitle2 = "BBB";
+        var topicTitle4 = "CCC";
+        var topic1 = new Topic(new TopicId(1L), topicTitle1);
+        var topic2 = new Topic(new TopicId(2L), topicTitle2);
+        var topic4 = new Topic(new TopicId(4L), topicTitle4);
         var id1 = 1693929900L;
         var id2 = id1 - 1;
         var id3 = id1 + 1;
         var id4 = id1 + 2;
         var id5 = id1 - 2;
-        storage.saveTheme(theme1);
-        storage.saveTheme(theme2);
-        storage.saveTheme(theme4);
-        storage.saveInteraction(newInteraction(id1, theme1));
-        storage.saveInteraction(newInteraction(id2, theme2));
-        storage.saveInteraction(newInteraction(id3, theme2));
-        storage.saveInteraction(newInteraction(id4, theme4));
-        storage.saveInteraction(newInteraction(id5, theme2));
-        assertThat(storage.getThemes().stream().map(Theme::title)).containsExactly(themeTitle2, themeTitle4, themeTitle1);
+        storage.saveTopic(topic1);
+        storage.saveTopic(topic2);
+        storage.saveTopic(topic4);
+        storage.saveInteraction(newInteraction(id1, topic1));
+        storage.saveInteraction(newInteraction(id2, topic2));
+        storage.saveInteraction(newInteraction(id3, topic2));
+        storage.saveInteraction(newInteraction(id4, topic4));
+        storage.saveInteraction(newInteraction(id5, topic2));
+        assertThat(storage.getTopics().stream().map(Topic::title)).containsExactly(topicTitle2, topicTitle4, topicTitle1);
     }
 
     @Test
-    void getThemesSingle() {
-        var themeTitle = "AAA";
-        var theme = new Theme(new ThemeId(1L), themeTitle);
-        storage.saveTheme(theme);
-        storage.saveInteraction(newInteraction(1693929900L, theme));
-        assertThat(storage.getThemes().stream().map(Theme::title)).containsExactly(themeTitle);
+    void getTopicsSingle() {
+        var topicTitle = "AAA";
+        var topic = new Topic(new TopicId(1L), topicTitle);
+        storage.saveTopic(topic);
+        storage.saveInteraction(newInteraction(1693929900L, topic));
+        assertThat(storage.getTopics().stream().map(Topic::title)).containsExactly(topicTitle);
     }
 
     @Test
-    void getThemesEmpty() {
-        assertThat(storage.getThemes()).isEmpty();
+    void getTopicsEmpty() {
+        assertThat(storage.getTopics()).isEmpty();
     }
 
     @Test
-    void getThemesSeveralStart() {
+    void getTopicsSeveralStart() {
         var storage1 = new StorageModelImpl(new StorageFilesystemImpl(configModel));
-        var themeTitle1 = "AAA";
-        var themeTitle2 = "BBB";
-        var themeTitle4 = "CCC";
-        var theme1 = new Theme(new ThemeId(1L), themeTitle1);
-        var theme2 = new Theme(new ThemeId(2L), themeTitle2);
-        var theme4 = new Theme(new ThemeId(4L), themeTitle4);
-        storage1.saveTheme(theme1);
-        storage1.saveTheme(theme2);
-        storage1.saveTheme(theme4);
+        var topicTitle1 = "AAA";
+        var topicTitle2 = "BBB";
+        var topicTitle4 = "CCC";
+        var topic1 = new Topic(new TopicId(1L), topicTitle1);
+        var topic2 = new Topic(new TopicId(2L), topicTitle2);
+        var topic4 = new Topic(new TopicId(4L), topicTitle4);
+        storage1.saveTopic(topic1);
+        storage1.saveTopic(topic2);
+        storage1.saveTopic(topic4);
         var id1 = 1693929900L;
         var id2 = id1 - 1;
         var id3 = id1 + 1;
         var id4 = id1 + 2;
         var id5 = id1 - 2;
-        storage1.saveInteraction(newInteraction(id1, theme1));
-        storage1.saveInteraction(newInteraction(id2, theme2));
-        storage1.saveInteraction(newInteraction(id3, theme2));
-        storage1.saveInteraction(newInteraction(id4, theme4));
-        storage1.saveInteraction(newInteraction(id5, theme2));
+        storage1.saveInteraction(newInteraction(id1, topic1));
+        storage1.saveInteraction(newInteraction(id2, topic2));
+        storage1.saveInteraction(newInteraction(id3, topic2));
+        storage1.saveInteraction(newInteraction(id4, topic4));
+        storage1.saveInteraction(newInteraction(id5, topic2));
 
         var storage2 = new StorageModelImpl(new StorageFilesystemImpl(configModel));
-        assertThat(storage2.getThemes().stream().map(Theme::title)).containsExactly(themeTitle4, themeTitle2, themeTitle1);
+        assertThat(storage2.getTopics().stream().map(Topic::title)).containsExactly(topicTitle4, topicTitle2, topicTitle1);
     }
 
     @Test
-    void getThemesSingleStart() {
+    void getTopicsSingleStart() {
         var storage1 = new StorageModelImpl(new StorageFilesystemImpl(configModel));
-        var themeTitle = "AAA";
-        var theme = new Theme(new ThemeId(1L), themeTitle);
-        storage1.saveTheme(theme);
-        storage1.saveInteraction(newInteraction(1693929900L, theme));
+        var topicTitle = "AAA";
+        var topic = new Topic(new TopicId(1L), topicTitle);
+        storage1.saveTopic(topic);
+        storage1.saveInteraction(newInteraction(1693929900L, topic));
 
         var storage2 = new StorageModelImpl(new StorageFilesystemImpl(configModel));
-        assertThat(storage2.getThemes()).containsExactly(theme);
+        assertThat(storage2.getTopics()).containsExactly(topic);
     }
 
     @Test
-    void getThemesEmptyStart() {
-        assertThat(storage.getThemes()).isEmpty();
+    void getTopicsEmptyStart() {
+        assertThat(storage.getTopics()).isEmpty();
     }
 
     @Test
-    void addTheme() {
+    void addTopic() {
         var title = "Java";
-        var theme1 = storage.addTheme(title);
-        assertThat(theme1).isEqualTo(new Theme(new ThemeId(1L), title));
-        var theme2 = storage.addTheme(title);
-        assertThat(theme2).isEqualTo(theme1);
+        var topic1 = storage.addTopic(title);
+        assertThat(topic1).isEqualTo(new Topic(new TopicId(1L), title));
+        var topic2 = storage.addTopic(title);
+        assertThat(topic2).isEqualTo(topic1);
     }
 
     @Test
-    void getTheme() {
-        var themeId = new ThemeId(1L);
-        assertThatThrownBy(() -> storage.getTheme(themeId))
+    void getTopic() {
+        var topicId = new TopicId(1L);
+        assertThatThrownBy(() -> storage.getTopic(topicId))
                 .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Theme was not found by id: ThemeId[id=1]");
+                .hasMessage("Topic was not found by id: TopicId[id=1]");
         var title = "Java";
-        var theme1 = storage.addTheme(title);
-        assertThat(theme1).isEqualTo(new Theme(new ThemeId(1L), title));
-        var theme2 = storage.getTheme(themeId);
-        assertThat(theme2).isEqualTo(theme1);
+        var topic1 = storage.addTopic(title);
+        assertThat(topic1).isEqualTo(new Topic(new TopicId(1L), title));
+        var topic2 = storage.getTopic(topicId);
+        assertThat(topic2).isEqualTo(topic1);
     }
 
     @Test
-    void saveTheme() {
-        var theme1 = new Theme(new ThemeId(5L), "Java");
-        var theme2 = new Theme(new ThemeId(10L), "Scala");
-        storage.saveTheme(theme1);
-        storage.saveTheme(theme2);
-        assertThat(storage.getTheme(theme1.id())).isEqualTo(theme1);
-        assertThat(storage.getTheme(theme2.id())).isEqualTo(theme2);
+    void saveTopic() {
+        var topic1 = new Topic(new TopicId(5L), "Java");
+        var topic2 = new Topic(new TopicId(10L), "Scala");
+        storage.saveTopic(topic1);
+        storage.saveTopic(topic2);
+        assertThat(storage.getTopic(topic1.id())).isEqualTo(topic1);
+        assertThat(storage.getTopic(topic2.id())).isEqualTo(topic2);
     }
 
     @Test
-    void renameThemeNoCollision() {
-        var theme = storage.addTheme("Java");
-        var renamed = storage.renameTheme(theme.id(), "Kotlin");
-        assertThat(renamed).isEqualTo(new Theme(theme.id(), "Kotlin"));
-        assertThat(storage.getTheme(theme.id())).isEqualTo(renamed);
+    void renameTopicNoCollision() {
+        var topic = storage.addTopic("Java");
+        var renamed = storage.renameTopic(topic.id(), "Kotlin");
+        assertThat(renamed).isEqualTo(new Topic(topic.id(), "Kotlin"));
+        assertThat(storage.getTopic(topic.id())).isEqualTo(renamed);
     }
 
     @Test
-    void renameThemeNoOpSameTitle() {
-        var theme = storage.addTheme("Java");
-        var result = storage.renameTheme(theme.id(), "Java");
-        assertThat(result).isEqualTo(theme);
+    void renameTopicNoOpSameTitle() {
+        var topic = storage.addTopic("Java");
+        var result = storage.renameTopic(topic.id(), "Java");
+        assertThat(result).isEqualTo(topic);
     }
 
     @Test
-    void renameThemeMergesOnCollision() {
-        var theme1 = storage.addTheme("Java");
-        var theme2 = storage.addTheme("Kotlin");
-        storage.saveInteraction(newInteraction(1L, theme1));
-        storage.saveInteraction(newInteraction(2L, theme1));
-        var result = storage.renameTheme(theme1.id(), "Kotlin");
-        assertThat(result).isEqualTo(theme2);
-        assertThat(storage.readInteraction(new InteractionId(1L)).orElseThrow().themeId()).isEqualTo(theme2.id());
-        assertThat(storage.readInteraction(new InteractionId(2L)).orElseThrow().themeId()).isEqualTo(theme2.id());
-        var theme1Id = theme1.id();
-        assertThatThrownBy(() -> storage.getTheme(theme1Id)).isInstanceOf(IllegalStateException.class);
-        assertThat(storage.getThemes()).containsExactly(theme2);
+    void renameTopicMergesOnCollision() {
+        var topic1 = storage.addTopic("Java");
+        var topic2 = storage.addTopic("Kotlin");
+        storage.saveInteraction(newInteraction(1L, topic1));
+        storage.saveInteraction(newInteraction(2L, topic1));
+        var result = storage.renameTopic(topic1.id(), "Kotlin");
+        assertThat(result).isEqualTo(topic2);
+        assertThat(storage.readInteraction(new InteractionId(1L)).orElseThrow().topicId()).isEqualTo(topic2.id());
+        assertThat(storage.readInteraction(new InteractionId(2L)).orElseThrow().topicId()).isEqualTo(topic2.id());
+        var topic1Id = topic1.id();
+        assertThatThrownBy(() -> storage.getTopic(topic1Id)).isInstanceOf(IllegalStateException.class);
+        assertThat(storage.getTopics()).containsExactly(topic2);
     }
 
     @Test
-    void renameThemeTrimsInput() {
-        var theme = storage.addTheme("Java");
-        var renamed = storage.renameTheme(theme.id(), "  Kotlin  ");
+    void renameTopicTrimsInput() {
+        var topic = storage.addTopic("Java");
+        var renamed = storage.renameTopic(topic.id(), "  Kotlin  ");
         assertThat(renamed.title()).isEqualTo("Kotlin");
     }
 
-    private static Interaction newInteraction(long id, Theme theme) {
-        return new Interaction(new InteractionId(id), null, theme.id(), null, null, null);
+    private static Interaction newInteraction(long id, Topic topic) {
+        return new Interaction(new InteractionId(id), null, topic.id(), null, null, null);
     }
 }

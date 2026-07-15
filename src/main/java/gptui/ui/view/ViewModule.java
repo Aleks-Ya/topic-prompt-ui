@@ -7,7 +7,7 @@ public class ViewModule extends AbstractModule {
     protected void configure() {
         bind(GptUiController.class);
         bind(HistoryController.class);
-        bind(ThemeController.class);
+        bind(TopicController.class);
         bind(QuestionController.class);
         bind(AnswerController.class);
     }

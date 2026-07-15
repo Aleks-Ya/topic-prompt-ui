@@ -1,4 +1,4 @@
 package gptui.core.storagefilesystem;
 
-public record ThemeId(Long id) {
+public record TopicId(Long id) {
 }

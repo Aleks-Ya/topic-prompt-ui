@@ -20,7 +20,7 @@ class GptUiVmImpl implements GptUiVmController {
     public void initialize() {
         log.trace("initialize");
         mediator.chooseFirstInteractionAsCurrent();
-        mediator.chooseFirstThemeAsCurrent();
+        mediator.chooseFirstTopicAsCurrent();
         mediator.displayCurrentInteraction();
     }
 }

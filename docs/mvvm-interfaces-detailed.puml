@@ -14,8 +14,8 @@ package viewmodel {
     interface QuestionVmMediator
     class QuestionVmImpl
 
-    interface ThemeVmController
-    interface ThemeVmMediator
+    interface TopicVmController
+    interface TopicVmMediator
     interface HistoryVmController
     interface HistoryVmMediator
     interface AnswerVmController
@@ -32,7 +32,7 @@ package viewmodel {
     interface GptUiMediator
     interface HistoryMediator
     interface QuestionMediator
-    interface ThemeMediator
+    interface TopicMediator
     class ViewModelMediatorImpl
 }
 
@@ -43,7 +43,7 @@ package view {
     class GptUiController
     class HistoryController
     class QuestionController
-    class ThemeController
+    class TopicController
 }
 
 GptUiApplication --> GptUiApplicationVmController
@@ -56,12 +56,12 @@ ViewModelMediatorImpl ..|> GptUiApplicationMediator
 ViewModelMediatorImpl ..|> GptUiMediator
 ViewModelMediatorImpl ..|> HistoryMediator
 ViewModelMediatorImpl ..|> QuestionMediator
-ViewModelMediatorImpl ..|> ThemeMediator
+ViewModelMediatorImpl ..|> TopicMediator
 
 ViewModelMediatorImpl --> AnswerVmMediator
 ViewModelMediatorImpl --> HistoryVmMediator
 ViewModelMediatorImpl --> QuestionVmMediator
-ViewModelMediatorImpl --> ThemeVmMediator
+ViewModelMediatorImpl --> TopicVmMediator
 
 QuestionVmImpl ..|> QuestionVmController
 QuestionVmImpl ..|> QuestionVmMediator
@@ -70,7 +70,7 @@ QuestionVmImpl --> QuestionMediator
 GptUiVmImpl ..|> GptUiVmController
 GptUiVmImpl --> GptUiMediator
 
-ThemeController ---> ThemeVmController
+TopicController ---> TopicVmController
 QuestionController ---> QuestionVmController
 HistoryController ---> HistoryVmController
 AnswerController --> AnswerVmController

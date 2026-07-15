@@ -12,8 +12,8 @@ import static javafx.scene.paint.Color.RED;
 class DeleteInteractionTopTest extends BaseGptUiTest {
     @Override
     public void init() {
-        storage.saveTheme(I1.THEME);
-        storage.saveTheme(I2.THEME);
+        storage.saveTopic(I1.TOPIC);
+        storage.saveTopic(I2.TOPIC);
         storage.saveInteraction(I1.INTERACTION);
         storage.saveInteraction(I2.INTERACTION);
     }
@@ -26,10 +26,10 @@ class DeleteInteractionTopTest extends BaseGptUiTest {
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(I2.INTERACTION)
                 .historyItems(I2.INTERACTION, I1.INTERACTION)
-                .themeSize(2)
-                .themeSelectedItem(I2.THEME)
-                .themeItems(I2.THEME, I1.THEME)
-                .themeFilterHistorySelected(false)
+                .topicSize(2)
+                .topicSelectedItem(I2.TOPIC)
+                .topicItems(I2.TOPIC, I1.TOPIC)
+                .topicFilterHistorySelected(false)
                 .questionText(I2.QUESTION)
                 .questionStyle(QUESTION_STYLE_EMPTY)
                 .modelEditedQuestion(I2.QUESTION)
@@ -49,10 +49,10 @@ class DeleteInteractionTopTest extends BaseGptUiTest {
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(I1.INTERACTION)
                 .historyItems(I1.INTERACTION)
-                .themeSize(2)
-                .themeSelectedItem(I1.THEME)
-                .themeItems(I2.THEME, I1.THEME)
-                .themeFilterHistorySelected(false)
+                .topicSize(2)
+                .topicSelectedItem(I1.TOPIC)
+                .topicItems(I2.TOPIC, I1.TOPIC)
+                .topicFilterHistorySelected(false)
                 .questionText(I1.QUESTION)
                 .questionStyle(QUESTION_STYLE_EMPTY)
                 .modelEditedQuestion(I1.QUESTION)

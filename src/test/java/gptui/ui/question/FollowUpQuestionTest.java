@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class FollowUpQuestionTest extends BaseGptUiTest {
     @Override
     public void init() {
-        storage.saveTheme(I1.THEME);
+        storage.saveTopic(I1.TOPIC);
         storage.saveInteraction(I1.INTERACTION);
     }
 

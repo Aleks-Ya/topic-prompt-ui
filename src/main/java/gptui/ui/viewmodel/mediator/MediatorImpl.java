@@ -8,13 +8,13 @@ import gptui.core.storagefilesystem.AnswerType;
 import gptui.core.storagefilesystem.Interaction;
 import gptui.core.storagefilesystem.InteractionId;
 import gptui.core.storagefilesystem.InteractionType;
-import gptui.core.storagefilesystem.Theme;
-import gptui.core.storagefilesystem.ThemeId;
+import gptui.core.storagefilesystem.Topic;
+import gptui.core.storagefilesystem.TopicId;
 import gptui.ui.viewmodel.answer.AnswerVmMediator;
 import gptui.ui.viewmodel.answer.AnswerVmModule;
 import gptui.ui.viewmodel.history.HistoryVmMediator;
 import gptui.ui.viewmodel.question.QuestionVmMediator;
-import gptui.ui.viewmodel.theme.ThemeVmMediator;
+import gptui.ui.viewmodel.topic.TopicVmMediator;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
@@ -40,7 +40,7 @@ import static javafx.scene.input.KeyCombination.ALT_DOWN;
 import static javafx.scene.input.KeyCombination.CONTROL_DOWN;
 
 @Singleton
-class MediatorImpl implements HistoryMediator, QuestionMediator, ThemeMediator, AnswerMediator,
+class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, AnswerMediator,
         GptUiMediator, GptUiApplicationMediator {
     private static final Logger log = LoggerFactory.getLogger(MediatorImpl.class);
     private final AnswerVmMediator grammarAnswerVM;
@@ -49,7 +49,7 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, ThemeMediator, 
     private final AnswerVmMediator gcpAnswerVM;
     private final HistoryVmMediator historyVM;
     private final QuestionVmMediator questionVM;
-    private final ThemeVmMediator themeVM;
+    private final TopicVmMediator topicVM;
     private final StateModel stateModel;
     private final QuestionModel questionModel;
     private final ClipboardModel clipboardModel;
@@ -62,7 +62,7 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, ThemeMediator, 
                  @Named(AnswerVmModule.GCP) AnswerVmMediator gcpAnswerVM,
                  HistoryVmMediator historyVM,
                  QuestionVmMediator questionVM,
-                 ThemeVmMediator themeVM,
+                 TopicVmMediator topicVM,
                  StateModel stateModel,
                  QuestionModel questionModel,
                  ClipboardModel clipboardModel,
@@ -73,7 +73,7 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, ThemeMediator, 
         this.gcpAnswerVM = gcpAnswerVM;
         this.historyVM = historyVM;
         this.questionVM = questionVM;
-        this.themeVM = themeVM;
+        this.topicVM = topicVM;
         this.stateModel = stateModel;
         this.questionModel = questionModel;
         this.clipboardModel = clipboardModel;
@@ -88,19 +88,19 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, ThemeMediator, 
         claudeAnswerVM.initialize();
         gcpAnswerVM.initialize();
         historyVM.displayCurrentInteraction();
-        themeVM.initialize();
-        themeVM.setLabel();
-        themeVM.updateComboBoxSelectedItemFromStateModel();
+        topicVM.initialize();
+        topicVM.setLabel();
+        topicVM.updateComboBoxSelectedItemFromStateModel();
     }
 
     @Override
-    public void themeWasChosen() {
-        log.trace("themeWasChosen");
+    public void topicWasChosen() {
+        log.trace("topicWasChosen");
         if (Boolean.TRUE.equals(stateModel.isHistoryFilteringEnabled())) {
             stateModel.chooseFirstInteractionAsCurrent();
         }
-        themeVM.updateComboBoxItems();
-        themeVM.updateComboBoxSelectedItemFromStateModel();
+        topicVM.updateComboBoxItems();
+        topicVM.updateComboBoxSelectedItemFromStateModel();
         historyVM.displayCurrentInteraction();
         questionVM.displayCurrentInteraction();
         grammarAnswerVM.displayCurrentAnswer();
@@ -136,8 +136,8 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, ThemeMediator, 
     }
 
     @Override
-    public void isThemeFilterHistoryChanged() {
-        log.trace("isThemeFilterHistoryChanged");
+    public void isTopicFilterHistoryChanged() {
+        log.trace("isTopicFilterHistoryChanged");
         if (Boolean.TRUE.equals(stateModel.isHistoryFilteringEnabled())) {
             stateModel.chooseFirstInteractionAsCurrent();
         }
@@ -153,8 +153,8 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, ThemeMediator, 
         log.trace("displayCurrentInteraction");
         historyVM.displayCurrentInteraction();
         questionVM.displayCurrentInteraction();
-        themeVM.updateComboBoxItems();
-        themeVM.updateComboBoxSelectedItemFromCurrentInteraction();
+        topicVM.updateComboBoxItems();
+        topicVM.updateComboBoxSelectedItemFromCurrentInteraction();
         grammarAnswerVM.displayCurrentAnswer();
         openAiAnswerVM.displayCurrentAnswer();
         claudeAnswerVM.displayCurrentAnswer();
@@ -217,13 +217,13 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, ThemeMediator, 
     }
 
     @Override
-    public Theme getCurrentTheme() {
-        return stateModel.getCurrentTheme();
+    public Topic getCurrentTopic() {
+        return stateModel.getCurrentTopic();
     }
 
     @Override
-    public Theme getTheme(ThemeId themeId) {
-        return stateModel.getTheme(themeId);
+    public Topic getTopic(TopicId topicId) {
+        return stateModel.getTopic(topicId);
     }
 
     @Override
@@ -237,28 +237,28 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, ThemeMediator, 
     }
 
     @Override
-    public void setCurrentTheme(Theme currentTheme) {
-        stateModel.setCurrentTheme(currentTheme);
+    public void setCurrentTopic(Topic currentTopic) {
+        stateModel.setCurrentTopic(currentTopic);
     }
 
     @Override
-    public List<Theme> getThemes() {
-        return stateModel.getThemes();
+    public List<Topic> getTopics() {
+        return stateModel.getTopics();
     }
 
     @Override
-    public Theme addTheme(String theme) {
-        return stateModel.addTheme(theme);
+    public Topic addTopic(String topic) {
+        return stateModel.addTopic(topic);
     }
 
     @Override
-    public Theme renameTheme(ThemeId themeId, String newTitle) {
-        return stateModel.renameTheme(themeId, newTitle);
+    public Topic renameTopic(TopicId topicId, String newTitle) {
+        return stateModel.renameTopic(topicId, newTitle);
     }
 
     @Override
-    public Long getInteractionCountInTheme(String theme) {
-        return stateModel.getInteractionCountInTheme(theme);
+    public Long getInteractionCountInTopic(String topic) {
+        return stateModel.getInteractionCountInTopic(topic);
     }
 
     @Override
@@ -280,7 +280,7 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, ThemeMediator, 
     @Override
     public InteractionId createInteraction(InteractionType interactionType, InteractionId parentInteractionId) {
         var interaction = stateModel.createInteraction(interactionType, parentInteractionId);
-        themeVM.updateComboBoxItems();
+        topicVM.updateComboBoxItems();
         grammarAnswerVM.displayCurrentAnswer();
         openAiAnswerVM.displayCurrentAnswer();
         claudeAnswerVM.displayCurrentAnswer();
@@ -304,8 +304,8 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, ThemeMediator, 
     }
 
     @Override
-    public void chooseFirstThemeAsCurrent() {
-        stateModel.setFirstThemeAsCurrent();
+    public void chooseFirstTopicAsCurrent() {
+        stateModel.setFirstTopicAsCurrent();
     }
 
     @Override

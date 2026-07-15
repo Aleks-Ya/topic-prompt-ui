@@ -144,7 +144,7 @@ class HistoryVmImpl implements HistoryVmController, HistoryVmMediator {
             if (!Objects.equals(modelItems, comboBoxItemInteractions)) {
                 log.debug("Set items: {}", modelItems.size());
                 var interactionItems = modelItems.stream()
-                        .map(interaction -> new InteractionItem(mediator.getTheme(interaction.themeId()), interaction))
+                        .map(interaction -> new InteractionItem(mediator.getTopic(interaction.topicId()), interaction))
                         .toList();
                 updateCbSilently(() -> vmProperties.historyCbItems.setValue(observableArrayList(interactionItems)),
                         vmProperties.historyCbOnAction);
@@ -162,7 +162,7 @@ class HistoryVmImpl implements HistoryVmController, HistoryVmMediator {
                     if (log.isDebugEnabled()) {
                         log.debug("Select interaction: '{}'", modelCurrentValue.toShortString());
                     }
-                    var interactionItem = new InteractionItem(mediator.getCurrentTheme(), modelCurrentValue);
+                    var interactionItem = new InteractionItem(mediator.getCurrentTopic(), modelCurrentValue);
                     updateCbSilently(() -> vmProperties.historyCbSelectionModel.getValue().select(interactionItem),
                             vmProperties.historyCbOnAction);
                 } else {

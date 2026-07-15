@@ -22,11 +22,11 @@ public class StorageFilesystemImpl implements StorageFilesystem {
     private static final Logger log = LoggerFactory.getLogger(StorageFilesystemImpl.class);
     private static final Gson gson = new GsonBuilder()
             .registerTypeAdapter(InteractionId.class, new InteractionIdSerDe())
-            .registerTypeAdapter(ThemeId.class, new ThemeIdSerDe())
+            .registerTypeAdapter(TopicId.class, new TopicIdSerDe())
             .setPrettyPrinting()
             .create();
     private final Path interactionsDir;
-    private final Path themesFile;
+    private final Path topicsFile;
 
     @Inject
     public StorageFilesystemImpl(ConfigModel config) {
@@ -40,9 +40,9 @@ public class StorageFilesystemImpl implements StorageFilesystem {
             if (Files.notExists(interactionsDir)) {
                 Files.createDirectories(interactionsDir);
             }
-            themesFile = storageDir.resolve("themes.json");
-            if (Files.notExists(themesFile)) {
-                saveThemes(List.of());
+            topicsFile = storageDir.resolve("topics.json");
+            if (Files.notExists(topicsFile)) {
+                saveTopics(List.of());
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -91,25 +91,25 @@ public class StorageFilesystemImpl implements StorageFilesystem {
     }
 
     @Override
-    public synchronized List<Theme> readThemes() {
+    public synchronized List<Topic> readTopics() {
         try {
-            var json = Files.readString(themesFile);
-            var type = new TypeToken<List<Theme>>() {
+            var json = Files.readString(topicsFile);
+            var type = new TypeToken<List<Topic>>() {
             }.getType();
-            List<Theme> themes = gson.fromJson(json, type);
-            log.trace("Themes were read from file ({} total): {}", themes.size(), themes);
-            return themes;
+            List<Topic> topics = gson.fromJson(json, type);
+            log.trace("Topics were read from file ({} total): {}", topics.size(), topics);
+            return topics;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public synchronized void saveThemes(List<Theme> themes) {
+    public synchronized void saveTopics(List<Topic> topics) {
         try {
-            var json = gson.toJson(themes);
-            Files.writeString(themesFile, json);
-            log.info("Themes were saved to file ({} total): {}", themes.size(), themes);
+            var json = gson.toJson(topics);
+            Files.writeString(topicsFile, json);
+            log.info("Topics were saved to file ({} total): {}", topics.size(), topics);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

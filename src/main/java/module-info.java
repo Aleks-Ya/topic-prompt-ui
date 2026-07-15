@@ -56,7 +56,7 @@ module GptUi.main {
     opens gptui.ui.model.search to com.google.gson, com.google.guice, javafx.fxml;
     opens gptui to com.google.gson, com.google.guice, javafx.fxml;
     opens gptui.ui.viewmodel.question to com.google.gson, com.google.guice, javafx.fxml;
-    opens gptui.ui.viewmodel.theme to com.google.gson, com.google.guice, javafx.fxml;
+    opens gptui.ui.viewmodel.topic to com.google.gson, com.google.guice, javafx.fxml;
     opens gptui.ui.viewmodel.history to com.google.gson, com.google.guice, javafx.fxml;
     opens gptui.ui.viewmodel.answer to com.google.gson, com.google.guice, javafx.fxml;
     opens gptui.ui.viewmodel.ui to com.google.gson, com.google.guice, javafx.fxml;

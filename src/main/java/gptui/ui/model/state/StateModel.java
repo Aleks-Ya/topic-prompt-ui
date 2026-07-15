@@ -3,8 +3,8 @@ package gptui.ui.model.state;
 import gptui.core.storagefilesystem.Interaction;
 import gptui.core.storagefilesystem.InteractionId;
 import gptui.core.storagefilesystem.InteractionType;
-import gptui.core.storagefilesystem.Theme;
-import gptui.core.storagefilesystem.ThemeId;
+import gptui.core.storagefilesystem.Topic;
+import gptui.core.storagefilesystem.TopicId;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,21 +26,21 @@ public interface StateModel {
 
     void deleteCurrentInteraction();
 
-    List<Theme> getThemes();
+    List<Topic> getTopics();
 
-    Theme addTheme(String theme);
+    Topic addTopic(String topic);
 
-    Theme renameTheme(ThemeId themeId, String newTitle);
+    Topic renameTopic(TopicId topicId, String newTitle);
 
-    Theme getTheme(ThemeId themeId);
+    Topic getTopic(TopicId topicId);
 
-    Long getInteractionCountInTheme(String theme);
+    Long getInteractionCountInTopic(String topic);
 
-    Theme getCurrentTheme();
+    Topic getCurrentTopic();
 
-    void setCurrentTheme(Theme currentTheme);
+    void setCurrentTopic(Topic currentTopic);
 
-    void setFirstThemeAsCurrent();
+    void setFirstTopicAsCurrent();
 
     String getEditedQuestion();
 

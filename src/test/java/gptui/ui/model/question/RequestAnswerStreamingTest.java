@@ -106,15 +106,15 @@ class RequestAnswerStreamingTest extends ApplicationTest {
     // the mock match on the question substring directly. Explicit IDs, because
     // storage.newInteractionId() is time-based and collides when called twice within a second.
     private InteractionId saveFollowUpInteraction(String question) {
-        var theme = storage.addTheme("Theme " + question);
+        var topic = storage.addTopic("Topic " + question);
         var parentId = new InteractionId(1L);
-        storage.saveInteraction(new Interaction(parentId, InteractionType.QUESTION, theme.id(), "What is Java?",
+        storage.saveInteraction(new Interaction(parentId, InteractionType.QUESTION, topic.id(), "What is Java?",
                 Map.of(OPEN_AI, new Answer(OPEN_AI, "Explain Java briefly", "Java is a language.",
                         "<p>Java is a language.</p>", AnswerState.SUCCESS, "resp_1",
                         null, null, null, null, null, null)),
                 null));
         var followUpId = new InteractionId(2L);
-        storage.saveInteraction(new Interaction(followUpId, InteractionType.QUESTION, theme.id(), question,
+        storage.saveInteraction(new Interaction(followUpId, InteractionType.QUESTION, topic.id(), question,
                 Map.of(OPEN_AI, new Answer(OPEN_AI, "", "", "", AnswerState.NEW, null,
                         null, null, null, null, null, null)),
                 parentId));

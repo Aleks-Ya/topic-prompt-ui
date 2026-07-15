@@ -7,7 +7,7 @@ package view {
         class GptUiApplication
         class HistoryController
         class QuestionController
-        class ThemeController
+        class TopicController
         class AnswerController
     }
 }
@@ -18,7 +18,7 @@ package viewmodel {
     class GptUiVM
     class HistoryVM
     class QuestionVM
-    class ThemeVM
+    class TopicVM
     class ViewModelMediator
 }
 
@@ -35,7 +35,7 @@ GptUiApplication --> GptUiApplicationVM
 
 GptUiApplicationVM --> ViewModelMediator
 
-ThemeController ---> ThemeVM
+TopicController ---> TopicVM
 QuestionController ---> QuestionVM
 HistoryController ---> HistoryVM
 AnswerController --> AnswerVM
@@ -44,7 +44,7 @@ GptUiController "1" --> "4" AnswerController: initialize
 GptUiController --> AnswerVM
 GptUiController --> GptUiVM
 
-ThemeVM <--> ViewModelMediator
+TopicVM <--> ViewModelMediator
 QuestionVM <--> ViewModelMediator
 HistoryVM <--> ViewModelMediator
 GptUiVM --> ViewModelMediator

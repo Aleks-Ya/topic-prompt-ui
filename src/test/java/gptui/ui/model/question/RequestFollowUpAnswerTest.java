@@ -38,16 +38,16 @@ class RequestFollowUpAnswerTest extends ApplicationTest {
 
     @Test
     void requestFollowUpAnswerSendsFullConversationHistory() {
-        var theme = storage.addTheme("Theme 1");
+        var topic = storage.addTopic("Topic 1");
         var parentId = new InteractionId(1L);
-        storage.saveInteraction(new Interaction(parentId, InteractionType.QUESTION, theme.id(), "What is Java?",
+        storage.saveInteraction(new Interaction(parentId, InteractionType.QUESTION, topic.id(), "What is Java?",
                 Map.of(OPEN_AI, new Answer(OPEN_AI, "Explain Java briefly", "Java is a language.",
                         "<p>Java is a language.</p>", AnswerState.SUCCESS, "resp_1",
                         null, null, null, null, null, null)),
                 null));
 
         var followUpId = new InteractionId(2L);
-        storage.saveInteraction(new Interaction(followUpId, InteractionType.QUESTION, theme.id(), "Who created it?",
+        storage.saveInteraction(new Interaction(followUpId, InteractionType.QUESTION, topic.id(), "Who created it?",
                 Map.of(OPEN_AI, new Answer(OPEN_AI, "", "", "", AnswerState.NEW, null,
                         null, null, null, null, null, null)),
                 parentId));
@@ -72,9 +72,9 @@ class RequestFollowUpAnswerTest extends ApplicationTest {
 
     @Test
     void requestFollowUpAnswerRequiresParentInteractionId() {
-        var theme = storage.addTheme("Theme 2");
+        var topic = storage.addTopic("Topic 2");
         var standaloneId = storage.newInteractionId();
-        storage.saveInteraction(new Interaction(standaloneId, InteractionType.QUESTION, theme.id(), "A question",
+        storage.saveInteraction(new Interaction(standaloneId, InteractionType.QUESTION, topic.id(), "A question",
                 Map.of(OPEN_AI, new Answer(OPEN_AI, "", "", "", AnswerState.NEW, null,
                         null, null, null, null, null, null)), null));
 
@@ -84,14 +84,14 @@ class RequestFollowUpAnswerTest extends ApplicationTest {
 
     @Test
     void requestFollowUpAnswerGrammarUnsupported() {
-        var theme = storage.addTheme("Theme 3");
+        var topic = storage.addTopic("Topic 3");
         var parentId = new InteractionId(1L);
-        storage.saveInteraction(new Interaction(parentId, InteractionType.QUESTION, theme.id(), "Q1",
+        storage.saveInteraction(new Interaction(parentId, InteractionType.QUESTION, topic.id(), "Q1",
                 Map.of(GRAMMAR, new Answer(GRAMMAR, "p1", "a1", "<p>a1</p>", AnswerState.SUCCESS, null,
                         null, null, null, null, null, null)), null));
 
         var followUpId = new InteractionId(2L);
-        storage.saveInteraction(new Interaction(followUpId, InteractionType.QUESTION, theme.id(), "Q2",
+        storage.saveInteraction(new Interaction(followUpId, InteractionType.QUESTION, topic.id(), "Q2",
                 Map.of(GRAMMAR, new Answer(GRAMMAR, "", "", "", AnswerState.NEW, null,
                         null, null, null, null, null, null)), parentId));
 

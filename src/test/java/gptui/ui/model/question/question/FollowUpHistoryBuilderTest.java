@@ -24,15 +24,15 @@ class FollowUpHistoryBuilderTest extends BaseTest {
 
     @Test
     void buildHistoryWalksChainOldestFirst() {
-        var theme = storage.addTheme("Theme");
+        var topic = storage.addTopic("Topic");
         var rootId = new InteractionId(1L);
-        storage.saveInteraction(new Interaction(rootId, InteractionType.QUESTION, theme.id(), "root question",
+        storage.saveInteraction(new Interaction(rootId, InteractionType.QUESTION, topic.id(), "root question",
                 Map.of(OPEN_AI, new Answer(OPEN_AI, "root prompt", "root answer", "<p>root answer</p>", AnswerState.SUCCESS, null,
                         null, null, null, null, null, null)),
                 null));
 
         var midId = new InteractionId(2L);
-        storage.saveInteraction(new Interaction(midId, InteractionType.QUESTION, theme.id(), "mid question",
+        storage.saveInteraction(new Interaction(midId, InteractionType.QUESTION, topic.id(), "mid question",
                 Map.of(OPEN_AI, new Answer(OPEN_AI, "mid prompt", "mid answer", "<p>mid answer</p>", AnswerState.SUCCESS, null,
                         null, null, null, null, null, null)),
                 rootId));
@@ -48,9 +48,9 @@ class FollowUpHistoryBuilderTest extends BaseTest {
 
     @Test
     void buildHistoryThrowsWhenAncestorAnswerMissing() {
-        var theme = storage.addTheme("Theme 2");
+        var topic = storage.addTopic("Topic 2");
         var rootId = storage.newInteractionId();
-        storage.saveInteraction(new Interaction(rootId, InteractionType.QUESTION, theme.id(), "root question",
+        storage.saveInteraction(new Interaction(rootId, InteractionType.QUESTION, topic.id(), "root question",
                 Map.of(), null));
 
         assertThatThrownBy(() -> builder.buildHistory(rootId, OPEN_AI))
@@ -59,9 +59,9 @@ class FollowUpHistoryBuilderTest extends BaseTest {
 
     @Test
     void buildHistoryThrowsWhenAncestorAnswerNotSuccess() {
-        var theme = storage.addTheme("Theme 3");
+        var topic = storage.addTopic("Topic 3");
         var rootId = storage.newInteractionId();
-        storage.saveInteraction(new Interaction(rootId, InteractionType.QUESTION, theme.id(), "root question",
+        storage.saveInteraction(new Interaction(rootId, InteractionType.QUESTION, topic.id(), "root question",
                 Map.of(OPEN_AI, new Answer(OPEN_AI, "p", "a", "<p>a</p>", AnswerState.FAIL, null,
                         null, null, null, null, null, null)), null));
 

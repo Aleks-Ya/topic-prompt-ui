@@ -1,7 +1,7 @@
 package gptui;
 
 import gptui.core.storagefilesystem.Interaction;
-import gptui.core.storagefilesystem.Theme;
+import gptui.core.storagefilesystem.Topic;
 import gptui.ui.viewmodel.InteractionItem;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
@@ -32,10 +32,10 @@ public class WindowAssertion {
     private boolean historyDeleteButtonDisabled;
     private Interaction historySelectedItem;
     private List<Interaction> historyItems;
-    private int themeSize;
-    private Theme themeSelectedItem;
-    private List<Theme> themeItems;
-    private boolean themeRenameButtonDisabled;
+    private int topicSize;
+    private Topic topicSelectedItem;
+    private List<Topic> topicItems;
+    private boolean topicRenameButtonDisabled;
     private Boolean filterHistorySelected;
     private String questionText;
     private String questionStyle;
@@ -114,27 +114,27 @@ public class WindowAssertion {
         return this;
     }
 
-    public WindowAssertion themeSize(int themeSize) {
-        this.themeSize = themeSize;
+    public WindowAssertion topicSize(int topicSize) {
+        this.topicSize = topicSize;
         return this;
     }
 
-    public WindowAssertion themeSelectedItem(Theme themeSelectedItem) {
-        this.themeSelectedItem = themeSelectedItem;
+    public WindowAssertion topicSelectedItem(Topic topicSelectedItem) {
+        this.topicSelectedItem = topicSelectedItem;
         return this;
     }
 
-    public WindowAssertion themeItems(Theme... themeItems) {
-        this.themeItems = Arrays.asList(themeItems);
+    public WindowAssertion topicItems(Topic... topicItems) {
+        this.topicItems = Arrays.asList(topicItems);
         return this;
     }
 
-    public WindowAssertion themeRenameButtonDisabled(boolean themeRenameButtonDisabled) {
-        this.themeRenameButtonDisabled = themeRenameButtonDisabled;
+    public WindowAssertion topicRenameButtonDisabled(boolean topicRenameButtonDisabled) {
+        this.topicRenameButtonDisabled = topicRenameButtonDisabled;
         return this;
     }
 
-    public WindowAssertion themeFilterHistorySelected(Boolean filterHistorySelected) {
+    public WindowAssertion topicFilterHistorySelected(Boolean filterHistorySelected) {
         this.filterHistorySelected = filterHistorySelected;
         return this;
     }
@@ -225,17 +225,17 @@ public class WindowAssertion {
         }
 
         {
-            var theme = app.theme();
-            soft.assertThat(theme.label().getText()).as(descr("Theme/Label/Text")).isEqualTo("_Theme (" + themeItems.size() + "):");
-            soft.assertThat(theme.comboBox().getItems()).as(descr("Theme/ComboBox/ItemsSize")).hasSize(themeSize);
-            var themeSelectedItemTitle = themeSelectedItem != null ? themeSelectedItem.title() : null;
-            soft.assertThat(theme.comboBox().getSelectionModel().getSelectedItem()).as(descr("Theme/ComboBox/SelectedItem"))
-                    .isEqualTo(themeSelectedItem);
-            soft.assertThat(theme.comboBox().getItems()).as(descr("Theme/ComboBox/Items")).containsExactlyElementsOf(themeItems);
-            soft.assertThat(theme.filterHistoryCheckBox().isSelected()).as(descr("Theme/Label/Text")).isEqualTo(filterHistorySelected);
-            soft.assertThat(theme.renameButton().isDisabled()).as(descr("Theme/RenameButton/Disabled")).isEqualTo(themeRenameButtonDisabled);
-            var themeTitle = app.stateModel.getCurrentTheme() != null ? app.stateModel.getCurrentTheme().title() : null;
-            soft.assertThat(themeTitle).as(descr("Theme/Model/CurrentTheme")).isEqualTo(themeSelectedItemTitle);
+            var topic = app.topic();
+            soft.assertThat(topic.label().getText()).as(descr("Topic/Label/Text")).isEqualTo("_Topic (" + topicItems.size() + "):");
+            soft.assertThat(topic.comboBox().getItems()).as(descr("Topic/ComboBox/ItemsSize")).hasSize(topicSize);
+            var topicSelectedItemTitle = topicSelectedItem != null ? topicSelectedItem.title() : null;
+            soft.assertThat(topic.comboBox().getSelectionModel().getSelectedItem()).as(descr("Topic/ComboBox/SelectedItem"))
+                    .isEqualTo(topicSelectedItem);
+            soft.assertThat(topic.comboBox().getItems()).as(descr("Topic/ComboBox/Items")).containsExactlyElementsOf(topicItems);
+            soft.assertThat(topic.filterHistoryCheckBox().isSelected()).as(descr("Topic/Label/Text")).isEqualTo(filterHistorySelected);
+            soft.assertThat(topic.renameButton().isDisabled()).as(descr("Topic/RenameButton/Disabled")).isEqualTo(topicRenameButtonDisabled);
+            var topicTitle = app.stateModel.getCurrentTopic() != null ? app.stateModel.getCurrentTopic().title() : null;
+            soft.assertThat(topicTitle).as(descr("Topic/Model/CurrentTopic")).isEqualTo(topicSelectedItemTitle);
         }
 
         {

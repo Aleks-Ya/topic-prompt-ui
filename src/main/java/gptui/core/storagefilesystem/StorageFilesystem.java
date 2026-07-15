@@ -9,7 +9,7 @@ public interface StorageFilesystem {
 
     void deleteInteraction(InteractionId interactionId);
 
-    List<Theme> readThemes();
+    List<Topic> readTopics();
 
-    void saveThemes(List<Theme> themes);
+    void saveTopics(List<Topic> topics);
 }

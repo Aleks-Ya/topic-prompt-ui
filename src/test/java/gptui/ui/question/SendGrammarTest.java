@@ -17,9 +17,9 @@ import static javafx.scene.paint.Color.WHITE;
 class SendGrammarTest extends BaseGptUiTest {
     @Override
     public void init() {
-        storage.saveTheme(I1.THEME);
-        storage.saveTheme(I2.THEME);
-        storage.saveTheme(I3.THEME);
+        storage.saveTopic(I1.TOPIC);
+        storage.saveTopic(I2.TOPIC);
+        storage.saveTopic(I3.TOPIC);
         storage.saveInteraction(I1.INTERACTION);
         storage.saveInteraction(I2.INTERACTION);
         storage.saveInteraction(I3.INTERACTION);
@@ -33,10 +33,10 @@ class SendGrammarTest extends BaseGptUiTest {
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(I3.INTERACTION)
                 .historyItems(I3.INTERACTION, I2.INTERACTION, I1.INTERACTION)
-                .themeSize(3)
-                .themeSelectedItem(I3.THEME)
-                .themeItems(I3.THEME, I2.THEME, I1.THEME)
-                .themeFilterHistorySelected(false)
+                .topicSize(3)
+                .topicSelectedItem(I3.TOPIC)
+                .topicItems(I3.TOPIC, I2.TOPIC, I1.TOPIC)
+                .topicFilterHistorySelected(false)
                 .questionText(I3.QUESTION)
                 .questionStyle(QUESTION_STYLE_EMPTY)
                 .modelEditedQuestion(I3.QUESTION)
@@ -59,10 +59,10 @@ class SendGrammarTest extends BaseGptUiTest {
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(storage.readAllInteractions().getFirst())
                 .historyItems(storage.readAllInteractions())
-                .themeSize(3)
-                .themeSelectedItem(I3.THEME)
-                .themeItems(I3.THEME, I2.THEME, I1.THEME)
-                .themeFilterHistorySelected(false)
+                .topicSize(3)
+                .topicSelectedItem(I3.TOPIC)
+                .topicItems(I3.TOPIC, I2.TOPIC, I1.TOPIC)
+                .topicFilterHistorySelected(false)
                 .questionText("Question 4")
                 .questionStyle(QUESTION_STYLE_EDITED)
                 .modelEditedQuestion("Question 4")

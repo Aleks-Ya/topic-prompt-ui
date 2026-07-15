@@ -2,8 +2,8 @@ package gptui.ui.viewmodel.mediator;
 
 import gptui.core.storagefilesystem.Interaction;
 import gptui.core.storagefilesystem.InteractionId;
-import gptui.core.storagefilesystem.Theme;
-import gptui.core.storagefilesystem.ThemeId;
+import gptui.core.storagefilesystem.Topic;
+import gptui.core.storagefilesystem.TopicId;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +23,7 @@ public interface HistoryMediator {
 
     List<Interaction> getFilteredHistory();
 
-    Theme getCurrentTheme();
+    Topic getCurrentTopic();
 
-    Theme getTheme(ThemeId themeId);
+    Topic getTopic(TopicId topicId);
 }

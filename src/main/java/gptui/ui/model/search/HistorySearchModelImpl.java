@@ -28,7 +28,7 @@ import static org.apache.lucene.search.BooleanClause.Occur.SHOULD;
 @Singleton
 class HistorySearchModelImpl implements HistorySearchModel {
     private static final String INTERACTION_ID_FIELD = "interactionId";
-    private static final String THEME_FIELD = "theme";
+    private static final String TOPIC_FIELD = "topic";
     private static final String QUESTION_FIELD = "question";
     private final Directory directory = new ByteBuffersDirectory();
     private final IndexWriter writer;
@@ -52,7 +52,7 @@ class HistorySearchModelImpl implements HistorySearchModel {
     private Document interactionToDocument(Interaction interaction) {
         var doc = new Document();
         doc.add(new LongField(INTERACTION_ID_FIELD, interaction.id().id(), YES));
-        doc.add(new TextField(THEME_FIELD, storageModel.getTheme(interaction.themeId()).title(), YES));
+        doc.add(new TextField(TOPIC_FIELD, storageModel.getTopic(interaction.topicId()).title(), YES));
         doc.add(new TextField(QUESTION_FIELD, interaction.question(), YES));
         return doc;
     }
@@ -66,14 +66,14 @@ class HistorySearchModelImpl implements HistorySearchModel {
                 indexUpdated = false;
             }
             var analyzer = new EnglishAnalyzer();
-            var themeParser = new QueryParser(THEME_FIELD, analyzer);
+            var topicParser = new QueryParser(TOPIC_FIELD, analyzer);
             var questionParser = new QueryParser(QUESTION_FIELD, analyzer);
 
-            var themeQuery = themeParser.parse(text);
+            var topicQuery = topicParser.parse(text);
             var questionQuery = questionParser.parse(text);
 
             var query = new BooleanQuery.Builder()
-                    .add(themeQuery, SHOULD)
+                    .add(topicQuery, SHOULD)
                     .add(questionQuery, SHOULD)
                     .setMinimumNumberShouldMatch(1)
                     .build();

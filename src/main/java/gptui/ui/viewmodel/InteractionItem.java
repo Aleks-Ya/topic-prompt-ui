@@ -1,9 +1,9 @@
 package gptui.ui.viewmodel;
 
 import gptui.core.storagefilesystem.Interaction;
-import gptui.core.storagefilesystem.Theme;
+import gptui.core.storagefilesystem.Topic;
 
-public record InteractionItem(Theme theme, Interaction interaction) {
+public record InteractionItem(Topic topic, Interaction interaction) {
     private static final int MAX_LENGTH = 150;
     private static final String SUFFIX = "∙∙∙";
 
@@ -22,7 +22,7 @@ public record InteractionItem(Theme theme, Interaction interaction) {
         if (interaction.parentInteractionId() != null) {
             typeStr = "↳ " + typeStr;
         }
-        var s = String.format("%s%s: %s", typeStr, theme.title(), interaction.question());
+        var s = String.format("%s%s: %s", typeStr, topic.title(), interaction.question());
         if (s.length() > MAX_LENGTH) {
             s = s.substring(0, MAX_LENGTH - SUFFIX.length()) + SUFFIX;
         }

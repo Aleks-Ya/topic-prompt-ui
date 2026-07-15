@@ -1,4 +1,4 @@
-package gptui.ui.theme;
+package gptui.ui.topic;
 
 import gptui.BaseGptUiTest;
 import gptui.ui.TestingData.I1;
@@ -12,28 +12,28 @@ import static javafx.scene.paint.Color.RED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class MergeThemeTest extends BaseGptUiTest {
+class MergeTopicTest extends BaseGptUiTest {
     @Override
     public void init() {
-        storage.saveTheme(I1.THEME);
-        storage.saveTheme(I2.THEME);
+        storage.saveTopic(I1.TOPIC);
+        storage.saveTopic(I2.TOPIC);
         storage.saveInteraction(I1.INTERACTION);
         storage.saveInteraction(I2.INTERACTION);
     }
 
     @Test
-    void mergeThemeOnNameCollision() {
+    void mergeTopicOnNameCollision() {
         assertion()
                 .focus(history().comboBox())
                 .historySize(2, 2)
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(I2.INTERACTION)
                 .historyItems(I2.INTERACTION, I1.INTERACTION)
-                .themeSize(2)
-                .themeSelectedItem(I2.THEME)
-                .themeItems(I2.THEME, I1.THEME)
-                .themeFilterHistorySelected(false)
-                .themeRenameButtonDisabled(false)
+                .topicSize(2)
+                .topicSelectedItem(I2.TOPIC)
+                .topicItems(I2.TOPIC, I1.TOPIC)
+                .topicFilterHistorySelected(false)
+                .topicRenameButtonDisabled(false)
                 .questionText(I2.QUESTION)
                 .questionStyle(QUESTION_STYLE_EMPTY)
                 .modelEditedQuestion(I2.QUESTION)
@@ -44,16 +44,16 @@ class MergeThemeTest extends BaseGptUiTest {
                 .gcpA().text(I2.GCP_HTML)
                 .answerCircleColors(GREEN, GREEN, RED, GREEN)
 
-                .work("Rename Theme To Existing Title (merge)", () ->
-                        clickOn(theme().renameButton()).write(I1.THEME.title()).type(KeyCode.ENTER))
+                .work("Rename Topic To Existing Title (merge)", () ->
+                        clickOn(topic().renameButton()).write(I1.TOPIC.title()).type(KeyCode.ENTER))
                 .focus(question().textArea())
-                .themeSize(1)
-                .themeSelectedItem(I1.THEME)
-                .themeItems(I1.THEME)
-                .historyItems(I2.INTERACTION.withThemeId(I1.THEME_ID), I1.INTERACTION)
+                .topicSize(1)
+                .topicSelectedItem(I1.TOPIC)
+                .topicItems(I1.TOPIC)
+                .historyItems(I2.INTERACTION.withTopicId(I1.TOPIC_ID), I1.INTERACTION)
                 .assertApp();
 
-        assertThat(storage.readInteraction(I2.INTERACTION.id()).orElseThrow().themeId()).isEqualTo(I1.THEME_ID);
-        assertThatThrownBy(() -> storage.getTheme(I2.THEME_ID)).isInstanceOf(IllegalStateException.class);
+        assertThat(storage.readInteraction(I2.INTERACTION.id()).orElseThrow().topicId()).isEqualTo(I1.TOPIC_ID);
+        assertThatThrownBy(() -> storage.getTopic(I2.TOPIC_ID)).isInstanceOf(IllegalStateException.class);
     }
 }

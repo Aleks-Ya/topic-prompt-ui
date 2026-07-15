@@ -14,9 +14,9 @@ import static javafx.scene.paint.Color.RED;
 class DeleteInteractionMiddleTest extends BaseGptUiTest {
     @Override
     public void init() {
-        storage.saveTheme(I1.THEME);
-        storage.saveTheme(I2.THEME);
-        storage.saveTheme(I3.THEME);
+        storage.saveTopic(I1.TOPIC);
+        storage.saveTopic(I2.TOPIC);
+        storage.saveTopic(I3.TOPIC);
         storage.saveInteraction(I1.INTERACTION);
         storage.saveInteraction(I2.INTERACTION);
         storage.saveInteraction(I3.INTERACTION);
@@ -35,10 +35,10 @@ class DeleteInteractionMiddleTest extends BaseGptUiTest {
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(I3.INTERACTION)
                 .historyItems(I3.INTERACTION, I2.INTERACTION, I1.INTERACTION)
-                .themeSize(3)
-                .themeSelectedItem(I3.THEME)
-                .themeItems(I3.THEME, I2.THEME, I1.THEME)
-                .themeFilterHistorySelected(false)
+                .topicSize(3)
+                .topicSelectedItem(I3.TOPIC)
+                .topicItems(I3.TOPIC, I2.TOPIC, I1.TOPIC)
+                .topicFilterHistorySelected(false)
                 .questionText(I3.QUESTION)
                 .questionStyle(QUESTION_STYLE_EMPTY)
                 .modelEditedQuestion(I3.QUESTION)
@@ -52,7 +52,7 @@ class DeleteInteractionMiddleTest extends BaseGptUiTest {
     }
 
     private void deleteInteraction() {
-        clickOn(history().comboBox()).clickOn(format("[Q] %s: %s", I2.THEME.title(), I2.QUESTION));
+        clickOn(history().comboBox()).clickOn(format("[Q] %s: %s", I2.TOPIC.title(), I2.QUESTION));
         clickOn(history().deleteButton());
         assertion()
                 .focus(history().deleteButton())
@@ -60,10 +60,10 @@ class DeleteInteractionMiddleTest extends BaseGptUiTest {
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(I3.INTERACTION)
                 .historyItems(I3.INTERACTION, I1.INTERACTION)
-                .themeSize(3)
-                .themeSelectedItem(I3.THEME)
-                .themeItems(I3.THEME, I2.THEME, I1.THEME)
-                .themeFilterHistorySelected(false)
+                .topicSize(3)
+                .topicSelectedItem(I3.TOPIC)
+                .topicItems(I3.TOPIC, I2.TOPIC, I1.TOPIC)
+                .topicFilterHistorySelected(false)
                 .questionText(I3.QUESTION)
                 .questionStyle(QUESTION_STYLE_EMPTY)
                 .modelEditedQuestion(I3.QUESTION)

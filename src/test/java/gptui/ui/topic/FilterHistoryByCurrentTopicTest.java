@@ -1,4 +1,4 @@
-package gptui.ui.theme;
+package gptui.ui.topic;
 
 import gptui.BaseGptUiTest;
 import gptui.ui.TestingData.I1;
@@ -10,12 +10,12 @@ import static gptui.ui.viewmodel.question.QuestionStyle.QUESTION_STYLE_EMPTY;
 import static javafx.scene.paint.Color.GREEN;
 import static javafx.scene.paint.Color.RED;
 
-class FilterHistoryByOtherThemeTest extends BaseGptUiTest {
+class FilterHistoryByCurrentTopicTest extends BaseGptUiTest {
     @Override
     public void init() {
-        storage.saveTheme(I1.THEME);
-        storage.saveTheme(I2.THEME);
-        storage.saveTheme(I3.THEME);
+        storage.saveTopic(I1.TOPIC);
+        storage.saveTopic(I2.TOPIC);
+        storage.saveTopic(I3.TOPIC);
         storage.saveInteraction(I1.INTERACTION);
         storage.saveInteraction(I2.INTERACTION);
         storage.saveInteraction(I3.INTERACTION);
@@ -29,10 +29,10 @@ class FilterHistoryByOtherThemeTest extends BaseGptUiTest {
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(I3.INTERACTION)
                 .historyItems(I3.INTERACTION, I2.INTERACTION, I1.INTERACTION)
-                .themeSize(3)
-                .themeSelectedItem(I3.THEME)
-                .themeItems(I3.THEME, I2.THEME, I1.THEME)
-                .themeFilterHistorySelected(false)
+                .topicSize(3)
+                .topicSelectedItem(I3.TOPIC)
+                .topicItems(I3.TOPIC, I2.TOPIC, I1.TOPIC)
+                .topicFilterHistorySelected(false)
                 .questionText(I3.QUESTION)
                 .questionStyle(QUESTION_STYLE_EMPTY)
                 .modelEditedQuestion(I3.QUESTION)
@@ -43,30 +43,16 @@ class FilterHistoryByOtherThemeTest extends BaseGptUiTest {
                 .gcpA().text(I3.GCP_HTML)
                 .answerCircleColors(GREEN, GREEN, RED, GREEN)
 
-                .work("Filter By Current Theme", () -> clickOn(theme().filterHistoryCheckBox()))
-                .focus(theme().filterHistoryCheckBox())
+                .work("Filter", () -> clickOn(topic().filterHistoryCheckBox()))
+                .focus(topic().filterHistoryCheckBox())
                 .historySize(1, 3)
                 .historyItems(I3.INTERACTION)
-                .themeFilterHistorySelected(true)
+                .topicFilterHistorySelected(true)
 
-                .work("Choose Another Theme", () -> clickOn(theme().comboBoxNarrow()).clickOn(I1.THEME.title() + " (1)"))
-                .focus(question().textArea())
-                .historySelectedItem(I1.INTERACTION)
-                .historyItems(I1.INTERACTION)
-                .themeSelectedItem(I1.THEME)
-                .questionText(I1.QUESTION)
-                .modelEditedQuestion(I1.QUESTION)
-                .grammarA().text(I1.GRAMMAR_HTML)
-                .openAiA().text(I1.OPEN_AI_HTML)
-                .claudeA().text(I1.CLAUDE_HTML)
-                .gcpA().text(I1.GCP_HTML)
-                .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
-
-                .work("Remove Filter", () -> clickOn(theme().filterHistoryCheckBox()))
-                .focus(theme().filterHistoryCheckBox())
+                .work("Remove Filter", () -> clickOn(topic().filterHistoryCheckBox()))
                 .historySize(3, 3)
                 .historyItems(I3.INTERACTION, I2.INTERACTION, I1.INTERACTION)
-                .themeFilterHistorySelected(false)
+                .topicFilterHistorySelected(false)
                 .assertApp();
     }
 }

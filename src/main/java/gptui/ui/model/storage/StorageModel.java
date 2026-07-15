@@ -2,8 +2,8 @@ package gptui.ui.model.storage;
 
 import gptui.core.storagefilesystem.Interaction;
 import gptui.core.storagefilesystem.InteractionId;
-import gptui.core.storagefilesystem.Theme;
-import gptui.core.storagefilesystem.ThemeId;
+import gptui.core.storagefilesystem.Topic;
+import gptui.core.storagefilesystem.TopicId;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,13 +22,13 @@ public interface StorageModel {
 
     void deleteInteraction(InteractionId interactionId);
 
-    List<Theme> getThemes();
+    List<Topic> getTopics();
 
-    Theme addTheme(String theme);
+    Topic addTopic(String topic);
 
-    Theme renameTheme(ThemeId themeId, String newTitle);
+    Topic renameTopic(TopicId topicId, String newTitle);
 
-    void saveTheme(Theme theme);
+    void saveTopic(Topic topic);
 
-    Theme getTheme(ThemeId themeId);
+    Topic getTopic(TopicId topicId);
 }

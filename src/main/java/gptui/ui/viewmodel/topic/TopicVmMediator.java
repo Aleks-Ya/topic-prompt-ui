@@ -1,6 +1,6 @@
-package gptui.ui.viewmodel.theme;
+package gptui.ui.viewmodel.topic;
 
-public interface ThemeVmMediator {
+public interface TopicVmMediator {
     void updateComboBoxSelectedItemFromCurrentInteraction();
 
     void updateComboBoxSelectedItemFromStateModel();

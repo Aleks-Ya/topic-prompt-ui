@@ -1,6 +1,6 @@
-package gptui.ui.viewmodel.theme;
+package gptui.ui.viewmodel.topic;
 
-import gptui.core.storagefilesystem.Theme;
+import gptui.core.storagefilesystem.Topic;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
@@ -13,12 +13,12 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
 
-public class ThemeVmProperties {
-    public final ObjectProperty<Theme> themeCbValue = new SimpleObjectProperty<>();
-    public final ListProperty<Theme> themeCbItems = new SimpleListProperty<>();
-    public final StringProperty themeCbEditor = new SimpleStringProperty();
-    public final ObjectProperty<Callback<ListView<Theme>, ListCell<Theme>>> themeCbCellFactory = new SimpleObjectProperty<>();
+public class TopicVmProperties {
+    public final ObjectProperty<Topic> topicCbValue = new SimpleObjectProperty<>();
+    public final ListProperty<Topic> topicCbItems = new SimpleListProperty<>();
+    public final StringProperty topicCbEditor = new SimpleStringProperty();
+    public final ObjectProperty<Callback<ListView<Topic>, ListCell<Topic>>> topicCbCellFactory = new SimpleObjectProperty<>();
     public final BooleanProperty filterHistoryCheckBoxSelected = new SimpleBooleanProperty();
-    public final StringProperty themeLabelText = new SimpleStringProperty();
+    public final StringProperty topicLabelText = new SimpleStringProperty();
     public final BooleanProperty renameButtonDisable = new SimpleBooleanProperty();
 }

@@ -15,8 +15,8 @@ class RegenerateAnswerTest extends BaseGptUiTest {
 
     @Override
     public void init() {
-        storage.saveTheme(I1.THEME);
-        storage.saveTheme(I2.THEME);
+        storage.saveTopic(I1.TOPIC);
+        storage.saveTopic(I2.TOPIC);
         storage.saveInteraction(I1.INTERACTION);
         storage.saveInteraction(I2.INTERACTION);
     }
@@ -29,10 +29,10 @@ class RegenerateAnswerTest extends BaseGptUiTest {
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(I2.INTERACTION)
                 .historyItems(I2.INTERACTION, I1.INTERACTION)
-                .themeSize(2)
-                .themeSelectedItem(I2.THEME)
-                .themeItems(I2.THEME, I1.THEME)
-                .themeFilterHistorySelected(false)
+                .topicSize(2)
+                .topicSelectedItem(I2.TOPIC)
+                .topicItems(I2.TOPIC, I1.TOPIC)
+                .topicFilterHistorySelected(false)
                 .questionText(I2.QUESTION)
                 .questionStyle(QUESTION_STYLE_EMPTY)
                 .modelEditedQuestion(I2.QUESTION)
@@ -82,11 +82,11 @@ class RegenerateAnswerTest extends BaseGptUiTest {
 
                 .work("Choose Interaction 1 from history", () -> {
                     clickOn(history().comboBox());
-                    clickOn(String.format("[Q] %s: %s", I1.THEME.title(), I1.QUESTION));
+                    clickOn(String.format("[Q] %s: %s", I1.TOPIC.title(), I1.QUESTION));
                 })
                 .focus(history().comboBox())
                 .historySelectedItem(storage.readInteraction(I1.INTERACTION.id()).orElseThrow())
-                .themeSelectedItem(I1.THEME)
+                .topicSelectedItem(I1.TOPIC)
                 .questionText(I1.QUESTION)
                 .modelEditedQuestion(I1.QUESTION)
                 .grammarA().text(I1.GRAMMAR_HTML)

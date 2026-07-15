@@ -11,12 +11,12 @@ import static java.lang.String.format;
 import static javafx.scene.paint.Color.GREEN;
 import static javafx.scene.paint.Color.RED;
 
-class DeleteInteractionMiddleThemeFilteredTest extends BaseGptUiTest {
+class DeleteInteractionMiddleTopicFilteredTest extends BaseGptUiTest {
     @Override
     public void init() {
-        storage.saveTheme(I1.THEME);
-        storage.saveTheme(I2.THEME);
-        storage.saveTheme(I3.THEME);
+        storage.saveTopic(I1.TOPIC);
+        storage.saveTopic(I2.TOPIC);
+        storage.saveTopic(I3.TOPIC);
         storage.saveInteraction(I1.INTERACTION);
         storage.saveInteraction(I2.INTERACTION);
         storage.saveInteraction(I3.INTERACTION);
@@ -30,10 +30,10 @@ class DeleteInteractionMiddleThemeFilteredTest extends BaseGptUiTest {
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(I3.INTERACTION)
                 .historyItems(I3.INTERACTION, I2.INTERACTION, I1.INTERACTION)
-                .themeSize(3)
-                .themeSelectedItem(I3.THEME)
-                .themeItems(I3.THEME, I2.THEME, I1.THEME)
-                .themeFilterHistorySelected(false)
+                .topicSize(3)
+                .topicSelectedItem(I3.TOPIC)
+                .topicItems(I3.TOPIC, I2.TOPIC, I1.TOPIC)
+                .topicFilterHistorySelected(false)
                 .questionText(I3.QUESTION)
                 .questionStyle(QUESTION_STYLE_EMPTY)
                 .modelEditedQuestion(I3.QUESTION)
@@ -45,19 +45,19 @@ class DeleteInteractionMiddleThemeFilteredTest extends BaseGptUiTest {
                 .answerCircleColors(GREEN, GREEN, RED, GREEN)
                 .assertApp();
 
-        clickOn(history().comboBox()).clickOn(format("[Q] %s: %s", I2.THEME.title(), I2.QUESTION));
-        clickOn(theme().filterHistoryCheckBox());
+        clickOn(history().comboBox()).clickOn(format("[Q] %s: %s", I2.TOPIC.title(), I2.QUESTION));
+        clickOn(topic().filterHistoryCheckBox());
 
         assertion()
-                .focus(theme().filterHistoryCheckBox())
+                .focus(topic().filterHistoryCheckBox())
                 .historySize(1, 3)
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(I2.INTERACTION)
                 .historyItems(I2.INTERACTION)
-                .themeSize(3)
-                .themeSelectedItem(I2.THEME)
-                .themeItems(I3.THEME, I2.THEME, I1.THEME)
-                .themeFilterHistorySelected(true)
+                .topicSize(3)
+                .topicSelectedItem(I2.TOPIC)
+                .topicItems(I3.TOPIC, I2.TOPIC, I1.TOPIC)
+                .topicFilterHistorySelected(true)
                 .questionText(I2.QUESTION)
                 .questionStyle(QUESTION_STYLE_EMPTY)
                 .modelEditedQuestion(I2.QUESTION)
@@ -77,10 +77,10 @@ class DeleteInteractionMiddleThemeFilteredTest extends BaseGptUiTest {
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(I3.INTERACTION)
                 .historyItems(I3.INTERACTION)
-                .themeSize(3)
-                .themeSelectedItem(I3.THEME)
-                .themeItems(I3.THEME, I2.THEME, I1.THEME)
-                .themeFilterHistorySelected(true)
+                .topicSize(3)
+                .topicSelectedItem(I3.TOPIC)
+                .topicItems(I3.TOPIC, I2.TOPIC, I1.TOPIC)
+                .topicFilterHistorySelected(true)
                 .questionText(I3.QUESTION)
                 .questionStyle(QUESTION_STYLE_EMPTY)
                 .modelEditedQuestion(I3.QUESTION)

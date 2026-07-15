@@ -15,6 +15,7 @@ import static gptui.core.storagefilesystem.InteractionType.GRAMMAR;
 import static gptui.core.storagefilesystem.InteractionType.QUESTION;
 import static gptui.ui.viewmodel.question.QuestionStyle.QUESTION_STYLE_EMPTY;
 import static javafx.scene.input.KeyCode.ALT;
+import static javafx.scene.input.KeyCode.C;
 import static javafx.scene.input.KeyCode.CONTROL;
 import static javafx.scene.input.KeyCode.D;
 import static javafx.scene.input.KeyCode.DIGIT1;
@@ -22,13 +23,13 @@ import static javafx.scene.input.KeyCode.DIGIT2;
 import static javafx.scene.input.KeyCode.DIGIT3;
 import static javafx.scene.input.KeyCode.DIGIT4;
 import static javafx.scene.input.KeyCode.DOWN;
-import static javafx.scene.input.KeyCode.E;
 import static javafx.scene.input.KeyCode.ENTER;
 import static javafx.scene.input.KeyCode.ESCAPE;
 import static javafx.scene.input.KeyCode.F;
 import static javafx.scene.input.KeyCode.G;
-import static javafx.scene.input.KeyCode.H;
-import static javafx.scene.input.KeyCode.M;
+import static javafx.scene.input.KeyCode.I;
+import static javafx.scene.input.KeyCode.O;
+import static javafx.scene.input.KeyCode.P;
 import static javafx.scene.input.KeyCode.Q;
 import static javafx.scene.input.KeyCode.R;
 import static javafx.scene.input.KeyCode.SPACE;
@@ -46,9 +47,9 @@ class HotKeysTest extends BaseGptUiTest {
 
     @Override
     public void init() {
-        storage.saveTheme(I1.THEME);
-        storage.saveTheme(I2.THEME);
-        storage.saveTheme(I3.THEME);
+        storage.saveTopic(I1.TOPIC);
+        storage.saveTopic(I2.TOPIC);
+        storage.saveTopic(I3.TOPIC);
         storage.saveInteraction(I1.INTERACTION);
         storage.saveInteraction(I2.INTERACTION);
         storage.saveInteraction(I3.INTERACTION);
@@ -62,10 +63,10 @@ class HotKeysTest extends BaseGptUiTest {
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(I3.INTERACTION)
                 .historyItems(I3.INTERACTION, I2.INTERACTION, I1.INTERACTION)
-                .themeSize(3)
-                .themeSelectedItem(I3.THEME)
-                .themeItems(I3.THEME, I2.THEME, I1.THEME)
-                .themeFilterHistorySelected(false)
+                .topicSize(3)
+                .topicSelectedItem(I3.TOPIC)
+                .topicItems(I3.TOPIC, I2.TOPIC, I1.TOPIC)
+                .topicFilterHistorySelected(false)
                 .questionText(I3.QUESTION)
                 .questionStyle(QUESTION_STYLE_EMPTY)
                 .modelEditedQuestion(I3.QUESTION)
@@ -176,7 +177,7 @@ class HotKeysTest extends BaseGptUiTest {
 
     @Test
     void selectNextInteractionByCtrlAltUp() {
-        clickOn(history().comboBox()).clickOn(String.format("[Q] %s: %s", I1.THEME.title(), I1.QUESTION));
+        clickOn(history().comboBox()).clickOn(String.format("[Q] %s: %s", I1.TOPIC.title(), I1.QUESTION));
         assertThat(history().comboBox().getSelectionModel().getSelectedItem().interaction()).isEqualTo(I1.INTERACTION);
 
         press(CONTROL, ALT, UP).release(UP, ALT, CONTROL);
@@ -191,7 +192,7 @@ class HotKeysTest extends BaseGptUiTest {
 
     @Test
     void selectPreviousInteractionByCtrlAltDown() {
-        clickOn(history().comboBox()).clickOn(String.format("[Q] %s: %s", I3.THEME.title(), I3.QUESTION));
+        clickOn(history().comboBox()).clickOn(String.format("[Q] %s: %s", I3.TOPIC.title(), I3.QUESTION));
         assertThat(history().comboBox().getSelectionModel().getSelectedItem().interaction()).isEqualTo(I3.INTERACTION);
 
         press(CONTROL, ALT, DOWN).release(DOWN, ALT, CONTROL);
@@ -206,7 +207,7 @@ class HotKeysTest extends BaseGptUiTest {
 
     @Test
     void selectPreviousInteractionByCtrlAltDown_FocusOnWebView() {
-        clickOn(history().comboBox()).clickOn(String.format("[Q] %s: %s", I3.THEME.title(), I3.QUESTION));
+        clickOn(history().comboBox()).clickOn(String.format("[Q] %s: %s", I3.TOPIC.title(), I3.QUESTION));
         clickOn(claudeAnswer().webView());
         assertThat(history().comboBox().getSelectionModel().getSelectedItem().interaction()).isEqualTo(I3.INTERACTION);
 
@@ -216,7 +217,7 @@ class HotKeysTest extends BaseGptUiTest {
 
     @Test
     void selectPreviousInteractionByCtrlAltUp_FocusOnWebView() {
-        clickOn(history().comboBox()).clickOn(String.format("[Q] %s: %s", I2.THEME.title(), I2.QUESTION));
+        clickOn(history().comboBox()).clickOn(String.format("[Q] %s: %s", I2.TOPIC.title(), I2.QUESTION));
         clickOn(claudeAnswer().webView());
         scroll(10, VerticalDirection.DOWN);
         assertThat(history().comboBox().getSelectionModel().getSelectedItem().interaction()).isEqualTo(I2.INTERACTION);
@@ -226,12 +227,12 @@ class HotKeysTest extends BaseGptUiTest {
     }
 
     @Test
-    void altTFocusOnThemeComboBox() {
-        assertThat(theme().comboBox().isFocused()).isFalse();
-        assertThat(theme().comboBox().getSelectionModel().getSelectedItem()).isEqualTo(I3.THEME);
+    void altTFocusOnTopicComboBox() {
+        assertThat(topic().comboBox().isFocused()).isFalse();
+        assertThat(topic().comboBox().getSelectionModel().getSelectedItem()).isEqualTo(I3.TOPIC);
         press(ALT, T).release(ALT, T);
-        assertThat(theme().comboBox().isFocused()).isTrue();
-        type(T, H, E, M, E, SPACE, DIGIT2, ENTER);
-        assertThat(theme().comboBox().getSelectionModel().getSelectedItem()).isEqualTo(I2.THEME);
+        assertThat(topic().comboBox().isFocused()).isTrue();
+        type(T, O, P, I, C, SPACE, DIGIT2, ENTER);
+        assertThat(topic().comboBox().getSelectionModel().getSelectedItem()).isEqualTo(I2.TOPIC);
     }
 }

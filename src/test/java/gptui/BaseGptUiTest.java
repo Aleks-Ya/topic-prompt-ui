@@ -8,7 +8,7 @@ import gptui.ui.model.clipboard.ClipboardModel;
 import gptui.ui.model.search.HistorySearchModel;
 import gptui.ui.model.state.StateModel;
 import gptui.ui.model.storage.StorageModel;
-import gptui.core.storagefilesystem.Theme;
+import gptui.core.storagefilesystem.Topic;
 import gptui.ui.view.GptUiApplication;
 import gptui.ui.viewmodel.InteractionItem;
 import javafx.scene.Node;
@@ -39,7 +39,7 @@ public abstract class BaseGptUiTest extends ApplicationTest {
     protected final HistorySearchModel search = app.getGuiceContext().getInstance(HistorySearchModel.class);
     protected final ClipboardModel clipboardModel = app.getGuiceContext().getInstance(ClipboardModel.class);
     private final HistoryInfo history = new HistoryInfo();
-    private final ThemeInfo theme = new ThemeInfo();
+    private final TopicInfo topic = new TopicInfo();
     private final QuestionInfo question = new QuestionInfo();
     private final AnswerInfo answerGrammar = new AnswerInfo("#grammarAnswer");
     private final AnswerInfo answerOpenAi = new AnswerInfo("#openAiAnswer");
@@ -52,15 +52,15 @@ public abstract class BaseGptUiTest extends ApplicationTest {
     }
 
     protected Scene scene() {
-        return theme().comboBox().getScene();
+        return topic().comboBox().getScene();
     }
 
     protected HistoryInfo history() {
         return history;
     }
 
-    protected ThemeInfo theme() {
-        return theme;
+    protected TopicInfo topic() {
+        return topic;
     }
 
     protected QuestionInfo question() {
@@ -124,13 +124,13 @@ public abstract class BaseGptUiTest extends ApplicationTest {
         }
     }
 
-    protected class ThemeInfo {
+    protected class TopicInfo {
         public Label label() {
-            return lookup("#themeLabel").queryAs(Label.class);
+            return lookup("#topicLabel").queryAs(Label.class);
         }
 
-        public ComboBox<Theme> comboBox() {
-            return lookup("#themeComboBox").queryComboBox();
+        public ComboBox<Topic> comboBox() {
+            return lookup("#topicComboBox").queryComboBox();
         }
 
         public Node comboBoxNarrow() {
@@ -138,11 +138,11 @@ public abstract class BaseGptUiTest extends ApplicationTest {
         }
 
         /** The SearchableComboBox skin's internal filtered combo box; exists only after the skin is created. */
-        public ComboBox<Theme> popupFilteredComboBox() {
+        public ComboBox<Topic> popupFilteredComboBox() {
             return lookup("#filtered").queryComboBox();
         }
 
-        public Button addThemeButton() {
+        public Button addTopicButton() {
             return lookup("#addButton").queryButton();
         }
 

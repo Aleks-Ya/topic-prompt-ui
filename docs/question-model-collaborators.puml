@@ -10,7 +10,7 @@ interface QuestionModel {
 }
 interface StorageModel {
     readInteraction()
-    getTheme()
+    getTopic()
     updateInteraction()
 }
 interface PromptFactory {

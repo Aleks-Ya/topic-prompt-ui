@@ -9,16 +9,16 @@ import static gptui.core.util.LogUtils.shorten;
 
 public record Interaction(InteractionId id,
                           InteractionType type,
-                          ThemeId themeId,
+                          TopicId topicId,
                           String question,
                           Map<AnswerType, Answer> answers,
                           InteractionId parentInteractionId) {
 
-    public Interaction(InteractionId id, InteractionType type, ThemeId themeId, String question,
+    public Interaction(InteractionId id, InteractionType type, TopicId topicId, String question,
                        Map<AnswerType, Answer> answers, InteractionId parentInteractionId) {
         this.id = id;
         this.type = type;
-        this.themeId = themeId;
+        this.topicId = topicId;
         this.question = question;
         this.answers = answers != null ? answers : new TreeMap<>();
         this.parentInteractionId = parentInteractionId;
@@ -31,7 +31,7 @@ public record Interaction(InteractionId id,
     public Interaction withAnswer(Answer answer) {
         var map = new TreeMap<>(answers);
         map.put(answer.answerType(), answer);
-        return new Interaction(id, type, themeId, question, Map.copyOf(map), parentInteractionId);
+        return new Interaction(id, type, topicId, question, Map.copyOf(map), parentInteractionId);
     }
 
     public Interaction withAnswer(AnswerType answerType, UnaryOperator<Answer> update) {
@@ -45,15 +45,15 @@ public record Interaction(InteractionId id,
     public Interaction withAnswerDeleted(AnswerType answerType) {
         var map = new TreeMap<>(answers);
         map.remove(answerType);
-        return new Interaction(id, type, themeId, question, Map.copyOf(map), parentInteractionId);
+        return new Interaction(id, type, topicId, question, Map.copyOf(map), parentInteractionId);
     }
 
     public Interaction withParentInteractionId(InteractionId parentInteractionId) {
-        return new Interaction(id, type, themeId, question, answers, parentInteractionId);
+        return new Interaction(id, type, topicId, question, answers, parentInteractionId);
     }
 
-    public Interaction withThemeId(ThemeId themeId) {
-        return new Interaction(id, type, themeId, question, answers, parentInteractionId);
+    public Interaction withTopicId(TopicId topicId) {
+        return new Interaction(id, type, topicId, question, answers, parentInteractionId);
     }
 
     @Override
@@ -61,7 +61,7 @@ public record Interaction(InteractionId id,
         return "Interaction{" +
                 "id=" + id +
                 ", type=" + type +
-                ", themeId='" + themeId + '\'' +
+                ", topicId='" + topicId + '\'' +
                 ", question='" + question + '\'' +
                 ", answers=" + answers +
                 ", parentInteractionId=" + parentInteractionId +
@@ -75,7 +75,7 @@ public record Interaction(InteractionId id,
         return "Interaction{" +
                 "id=" + id +
                 ", type=" + type +
-                ", themeId='" + themeId + '\'' +
+                ", topicId='" + topicId + '\'' +
                 ", question='" + shorten(question) + '\'' +
                 ", answers=" + shortAnswers +
                 '}';

@@ -23,8 +23,8 @@ class StorageFilesystemTest extends BaseTest {
     @Test
     void saveInteraction() {
         assertThat(storageFileSystem.readAllInteractions()).isEmpty();
-        var interaction1 = new Interaction(new InteractionId(1L), QUESTION, new ThemeId(1L), "question1", null, null);
-        var interaction2 = new Interaction(new InteractionId(2L), QUESTION, new ThemeId(2L), "question2", null, null);
+        var interaction1 = new Interaction(new InteractionId(1L), QUESTION, new TopicId(1L), "question1", null, null);
+        var interaction2 = new Interaction(new InteractionId(2L), QUESTION, new TopicId(2L), "question2", null, null);
         storageFileSystem.saveInteraction(interaction1);
         storageFileSystem.saveInteraction(interaction2);
         assertThat(storageFileSystem.readAllInteractions()).containsExactlyInAnyOrder(interaction1, interaction2);
@@ -33,8 +33,8 @@ class StorageFilesystemTest extends BaseTest {
     @Test
     void saveInteractionWithParentAndResponseId() {
         assertThat(storageFileSystem.readAllInteractions()).isEmpty();
-        var parent = new Interaction(new InteractionId(1L), QUESTION, new ThemeId(1L), "question1", null, null);
-        var followUp = new Interaction(new InteractionId(2L), QUESTION, new ThemeId(1L), "question2", Map.of(
+        var parent = new Interaction(new InteractionId(1L), QUESTION, new TopicId(1L), "question1", null, null);
+        var followUp = new Interaction(new InteractionId(2L), QUESTION, new TopicId(1L), "question2", Map.of(
                 OPEN_AI, new Answer(OPEN_AI, "prompt2", "answerMd2", "answerHtml2", SUCCESS, "resp_123",
                         null, null, null, null, null, null)),
                 parent.id());
@@ -46,8 +46,8 @@ class StorageFilesystemTest extends BaseTest {
     @Test
     void deleteInteraction() {
         assertThat(storageFileSystem.readAllInteractions()).isEmpty();
-        var interaction1 = new Interaction(new InteractionId(1L), QUESTION, new ThemeId(1L), "question1", null, null);
-        var interaction2 = new Interaction(new InteractionId(2L), QUESTION, new ThemeId(2L), "question2", null, null);
+        var interaction1 = new Interaction(new InteractionId(1L), QUESTION, new TopicId(1L), "question1", null, null);
+        var interaction2 = new Interaction(new InteractionId(2L), QUESTION, new TopicId(2L), "question2", null, null);
         storageFileSystem.saveInteraction(interaction1);
         storageFileSystem.saveInteraction(interaction2);
         assertThat(storageFileSystem.readAllInteractions()).containsExactlyInAnyOrder(interaction1, interaction2);
@@ -57,13 +57,13 @@ class StorageFilesystemTest extends BaseTest {
     }
 
     @Test
-    void saveReadThemes() {
-        assertThat(storageFileSystem.readThemes()).isEmpty();
-        var theme1 = new Theme(new ThemeId(1L), "Java");
-        var theme2 = new Theme(new ThemeId(2L), "Scala");
-        var themes = List.of(theme1, theme2);
-        storageFileSystem.saveThemes(themes);
-        assertThat(storageFileSystem.readThemes()).containsExactly(theme1, theme2);
+    void saveReadTopics() {
+        assertThat(storageFileSystem.readTopics()).isEmpty();
+        var topic1 = new Topic(new TopicId(1L), "Java");
+        var topic2 = new Topic(new TopicId(2L), "Scala");
+        var topics = List.of(topic1, topic2);
+        storageFileSystem.saveTopics(topics);
+        assertThat(storageFileSystem.readTopics()).containsExactly(topic1, topic2);
     }
 
 }
