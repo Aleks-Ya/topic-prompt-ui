@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
@@ -21,5 +22,11 @@
             <!--suppress JavaFxUnresolvedFxIdReference -->
             <Button fx:id="regenerateButton" mnemonicParsing="false" onAction="#onRegenerateButtonClick" text="⟳"/>
         </HBox>
+        <Separator visible="false"/>
+        <Button fx:id="expandButton" mnemonicParsing="false" onAction="#onExpandButtonClick" text="⛶">
+            <tooltip>
+                <Tooltip text="Expand / collapse (Esc)"/>
+            </tooltip>
+        </Button>
     </VBox>
 </HBox>

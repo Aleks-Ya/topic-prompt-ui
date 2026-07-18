@@ -5,6 +5,8 @@ public interface AnswerVmController {
 
     void onRegenerateButtonClick();
 
+    void onExpandButtonClick();
+
     AnswerVmProperties properties();
 
     AnswerDetails getAnswerDetails();

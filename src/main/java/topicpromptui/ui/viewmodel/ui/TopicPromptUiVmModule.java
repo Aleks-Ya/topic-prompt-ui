@@ -6,5 +6,6 @@ public class TopicPromptUiVmModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(TopicPromptUiVmController.class).to(TopicPromptUiVmImpl.class);
+        bind(TopicPromptUiVmMediator.class).to(TopicPromptUiVmImpl.class);
     }
 }

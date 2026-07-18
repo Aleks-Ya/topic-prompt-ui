@@ -51,6 +51,12 @@ public class AnswerController extends BaseController {
     }
 
     @FXML
+    void onExpandButtonClick(ActionEvent ignoredEvent) {
+        log.trace("onExpandButtonClick");
+        vm.onExpandButtonClick();
+    }
+
+    @FXML
     void onAnswerButtonClick(ActionEvent ignoredEvent) {
         log.trace("onAnswerButtonClick");
         showAnswerInfoDialog(vm.getAnswerDetails());

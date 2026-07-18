@@ -56,6 +56,14 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
     }
 
     @Override
+    public void onExpandButtonClick() {
+        Mdc.run(answerType.toString(), () -> {
+            log.trace("onExpandButtonClick");
+            mediator.toggleExpandedAnswer(answerType);
+        });
+    }
+
+    @Override
     public AnswerVmProperties properties() {
         return vmProperties;
     }

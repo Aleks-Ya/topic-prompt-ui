@@ -16,4 +16,6 @@ public interface AnswerMediator {
     Optional<Interaction> getCurrentInteractionOpt();
 
     void requestAnswer(InteractionId interactionId, AnswerType answerType);
+
+    void toggleExpandedAnswer(AnswerType answerType);
 }

@@ -19,6 +19,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
@@ -210,6 +211,15 @@ public abstract class BaseTopicPromptUiTest extends ApplicationTest {
 
         public Button regenerateButton() {
             return lookup(tag + " #regenerateButton").queryButton();
+        }
+
+        public Button expandButton() {
+            return lookup(tag + " #expandButton").queryButton();
+        }
+
+        /** The pane's root node (the fx:include root in TopicPromptUi.fxml). */
+        public HBox pane() {
+            return lookup(tag).queryAs(HBox.class);
         }
 
         public WebView webView() {

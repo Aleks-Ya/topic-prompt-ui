@@ -15,6 +15,7 @@ import topicpromptui.ui.viewmodel.answer.AnswerVmModule;
 import topicpromptui.ui.viewmodel.history.HistoryVmMediator;
 import topicpromptui.ui.viewmodel.question.QuestionVmMediator;
 import topicpromptui.ui.viewmodel.topic.TopicVmMediator;
+import topicpromptui.ui.viewmodel.ui.TopicPromptUiVmMediator;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
@@ -50,6 +51,7 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
     private final HistoryVmMediator historyVM;
     private final QuestionVmMediator questionVM;
     private final TopicVmMediator topicVM;
+    private final TopicPromptUiVmMediator uiVM;
     private final StateModel stateModel;
     private final QuestionModel questionModel;
     private final ClipboardModel clipboardModel;
@@ -63,6 +65,7 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
                  HistoryVmMediator historyVM,
                  QuestionVmMediator questionVM,
                  TopicVmMediator topicVM,
+                 TopicPromptUiVmMediator uiVM,
                  StateModel stateModel,
                  QuestionModel questionModel,
                  ClipboardModel clipboardModel,
@@ -74,6 +77,7 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
         this.historyVM = historyVM;
         this.questionVM = questionVM;
         this.topicVM = topicVM;
+        this.uiVM = uiVM;
         this.stateModel = stateModel;
         this.questionModel = questionModel;
         this.clipboardModel = clipboardModel;
@@ -167,9 +171,17 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
         accelerators.put(new KeyCodeCombination(UP, CONTROL_DOWN, ALT_DOWN), this::selectPreviousHistoryItem);
         accelerators.put(new KeyCodeCombination(DOWN, CONTROL_DOWN, ALT_DOWN), this::selectNextHistoryItem);
         accelerators.put(new KeyCodeCombination(V, CONTROL_DOWN, ALT_DOWN), questionVM::pasteQuestionFromClipboard);
-        accelerators.put(new KeyCodeCombination(ESCAPE), questionVM::focusOnQuestionAndSelect);
+        accelerators.put(new KeyCodeCombination(ESCAPE), this::escapePressed);
         accelerators.put(new KeyCodeCombination(ENTER, CONTROL_DOWN), () -> questionVM.createNewInteractionAndRequestAnswers(QUESTION));
         accelerators.put(new KeyCodeCombination(U, ALT_DOWN), questionVM::toggleFollowUp);
+    }
+
+    private void escapePressed() {
+        if (uiVM.isAnswerExpanded()) {
+            uiVM.collapseExpandedAnswer();
+        } else {
+            questionVM.focusOnQuestionAndSelect();
+        }
     }
 
     void selectPreviousHistoryItem() {
@@ -280,6 +292,12 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
     public void requestAnswer(InteractionId interactionId, AnswerType answerType) {
         questionModel.requestAnswer(interactionId, answerType, () -> answerUpdated(answerType),
                 html -> answerProgress(interactionId, answerType, html));
+    }
+
+    @Override
+    public void toggleExpandedAnswer(AnswerType answerType) {
+        log.trace("toggleExpandedAnswer: {}", answerType);
+        uiVM.toggleExpandedAnswer(answerType);
     }
 
     @Override
