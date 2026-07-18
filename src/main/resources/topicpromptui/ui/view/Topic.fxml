@@ -12,9 +12,9 @@
     <Separator orientation="VERTICAL" prefHeight="200.0" visible="false"/>
     <SearchableComboBox fx:id="topicComboBox"/>
     <Separator orientation="VERTICAL" prefHeight="200.0" visible="false"/>
-    <Button fx:id="renameButton" text="✎"/>
-    <Separator orientation="VERTICAL" prefHeight="200.0" visible="false"/>
     <Button fx:id="addButton" onAction="#onAddButtonClicked" text="_+"/>
+    <Separator orientation="VERTICAL" prefHeight="200.0" visible="false"/>
+    <Button fx:id="renameButton" text="✎"/>
     <Separator orientation="VERTICAL" prefHeight="200.0" visible="false"/>
     <Button fx:id="deleteButton" text="🗑"/>
     <Separator orientation="VERTICAL" prefHeight="200.0" visible="false"/>
