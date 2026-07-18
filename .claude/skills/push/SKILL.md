@@ -48,6 +48,22 @@ gh run watch "$RUN_ID" --exit-status
 - Commit the fix as a new commit (not `--amend`, not `--no-verify`), push again, then repeat step 3 to watch the new run.
 - Keep iterating until the run succeeds. Never force-push or skip hooks just to make CI pass.
 
-## 5. Report
+## 5. Check the Sonar report
 
-Report whether CI passed on the first try or required fixes, and give the run URL (`gh run view "$RUN_ID" --web`).
+CI going green does **not** mean Sonar is clean — the `sonar` Gradle task (`.github/workflows/gradle.yml`, "SonarCloud analysis" step, runs `./gradlew -PskipIntegrationTests sonar`) just uploads the analysis and doesn't wait on the quality gate (no `waitForQualityGate` configured in `build.gradle`). Once the run is green, explicitly read the report for the SonarCloud project (`Aleks-Ya_topic-prompt-ui`, see `CLAUDE.md`). The API is readable anonymously (no `SONAR_TOKEN` needed, and none is available locally):
+
+```bash
+curl -s "https://sonarcloud.io/api/qualitygates/project_status?projectKey=Aleks-Ya_topic-prompt-ui" | jq
+curl -s "https://sonarcloud.io/api/issues/search?componentKeys=Aleks-Ya_topic-prompt-ui&resolved=false&ps=100" | jq '.issues[] | {rule, severity, type, component, line, message}'
+curl -s "https://sonarcloud.io/api/hotspots/search?projectKey=Aleks-Ya_topic-prompt-ui&status=TO_REVIEW&ps=100" | jq '.hotspots[] | {vulnerabilityProbability, component, line, message}'
+```
+
+For every issue/hotspot returned:
+
+- If it's a genuine problem, fix it in code, commit as a new commit, push, and go back to step 3 to re-verify CI, then re-run the Sonar queries above once the new analysis has landed.
+- If it should **not** be fixed (false positive, accepted risk, intentional pattern), don't just leave it unresolved — explicitly suppress it inline (e.g. a `// NOSONAR` comment, following the existing example in `.github/workflows/gradle.yml`, or a rule-specific suppression) with a short comment explaining why. There's no local `SONAR_TOKEN` to mark issues "Won't Fix"/"False Positive" via the SonarCloud API, so an inline suppression is what records the decision durably and stops it reappearing in future reports.
+- If it's genuinely unclear whether an issue should be fixed or ignored, ask the user rather than guessing.
+
+## 6. Report
+
+Report whether CI passed on the first try or required fixes, whether Sonar had any issues/hotspots and how they were resolved (fixed vs. explicitly suppressed), and give the run URL (`gh run view "$RUN_ID" --web`).
