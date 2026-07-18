@@ -3,9 +3,9 @@ module TopicPromptUi.main {
     requires javafx.fxml;
     requires javafx.graphics;
     requires javafx.web;
-    requires javafx.media;
 
     requires java.net.http;
+    requires java.desktop;
     requires jakarta.inject;
 
     requires org.slf4j;

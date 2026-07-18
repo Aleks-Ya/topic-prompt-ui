@@ -14,10 +14,6 @@ public class ResourceUtils {
         return requireNonNull(clazz.getResource(resource));
     }
 
-    public static String resourcePath(Class<?> clazz, String resource) {
-        return resourceUrl(clazz, resource).toString();
-    }
-
     public static InputStream resourceIS(Class<?> clazz, String resource) {
         return requireNonNull(clazz.getResourceAsStream(resource));
     }
