@@ -243,6 +243,8 @@ public class WindowAssertion {
             soft.assertThat(history.comboBox().getItems().stream().map(InteractionItem::interaction)).as(descr("History/ComboBox/Items"))
                     .containsExactlyElementsOf(historyItems);
             soft.assertThat(history.filterTextField().getText()).as(descr("History/FilterTextField/Text")).isEqualTo(historyFilterText);
+            soft.assertThat(history.filterClearButton().isVisible()).as(descr("History/FilterClearButton/Visible"))
+                    .isEqualTo(!historyFilterText.isEmpty());
             var expModelCurrentInteraction = modelCurrentInteraction != null ? modelCurrentInteraction : historySelectedItem;
             var expModelCurrentInteractionId = expModelCurrentInteraction != null ? expModelCurrentInteraction.id() : null;
             soft.assertThat(app.stateModel.getCurrentInteractionId()).as(descr("Model/CurrentInteractionId")).isEqualTo(expModelCurrentInteractionId);

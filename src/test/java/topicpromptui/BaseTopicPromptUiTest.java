@@ -124,6 +124,10 @@ public abstract class BaseTopicPromptUiTest extends ApplicationTest {
             return lookup("#historyFilterTextField").queryAs(TextField.class);
         }
 
+        public Label filterClearButton() {
+            return lookup("#historyFilterClearButton").queryAs(Label.class);
+        }
+
         public Button deleteButton() {
             return lookup("#historyDeleteButton").queryButton();
         }

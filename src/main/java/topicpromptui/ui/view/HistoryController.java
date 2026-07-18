@@ -5,10 +5,12 @@ import topicpromptui.ui.viewmodel.history.HistoryVmController;
 import jakarta.inject.Inject;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import org.controlsfx.control.textfield.CustomTextField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +24,7 @@ public class HistoryController extends BaseController {
     @FXML
     private ComboBox<InteractionItem> historyComboBox;
     @FXML
-    private TextField historyFilterTextField;
+    private CustomTextField historyFilterTextField;
     @FXML
     private Button historyDeleteButton;
     @Inject
@@ -48,6 +50,17 @@ public class HistoryController extends BaseController {
         vm.properties().historyCbOnAction.bindBidirectional(historyComboBox.onActionProperty());
         vm.properties().historyFilterTfText.bindBidirectional(historyFilterTextField.textProperty());
         vm.properties().historyDeleteButtonDisable.bindBidirectional(historyDeleteButton.disableProperty());
+        historyFilterTextField.setRight(createFilterClearButton());
+    }
+
+    private Label createFilterClearButton() {
+        var clearButton = new Label("✕");
+        clearButton.setId("historyFilterClearButton");
+        clearButton.setCursor(Cursor.HAND);
+        clearButton.setPadding(new Insets(0, 4, 0, 0));
+        clearButton.setOnMouseClicked(event -> historyFilterTextField.clear());
+        clearButton.visibleProperty().bind(historyFilterTextField.textProperty().isNotEmpty());
+        return clearButton;
     }
 }
 

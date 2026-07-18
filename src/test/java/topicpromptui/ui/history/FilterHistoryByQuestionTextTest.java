@@ -70,7 +70,7 @@ class FilterHistoryByQuestionTextTest extends BaseTopicPromptUiTest {
                 .gcpA().text(I1.GCP_HTML)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
 
-                .work("Clear filter", () -> clickOn(history().filterTextField()).eraseText("question 1".length()))
+                .work("Clear filter", () -> clickOn(history().filterClearButton()))
                 .focus(history().filterTextField())
                 .historySize(3, 3)
                 .historyItems(I3.INTERACTION, I2.INTERACTION, I1.INTERACTION)
