@@ -55,4 +55,41 @@ class RenameTopicTest extends BaseTopicPromptUiTest {
 
         assertThat(storage.readInteraction(I1.INTERACTION.id()).orElseThrow().topicId()).isEqualTo(I1.TOPIC_ID);
     }
+
+    @Test
+    void blankTopicNameDoesNotSubmit() {
+        assertion()
+                .focus(history().comboBox())
+                .historySize(1, 1)
+                .historyDeleteButtonDisabled(false)
+                .historySelectedItem(I1.INTERACTION)
+                .historyItems(I1.INTERACTION)
+                .topicSize(1)
+                .topicSelectedItem(I1.TOPIC)
+                .topicItems(I1.TOPIC)
+                .topicFilterHistorySelected(false)
+                .topicRenameButtonDisabled(false)
+                .questionText(I1.QUESTION)
+                .questionStyle(QUESTION_STYLE_EMPTY)
+                .modelEditedQuestion(I1.QUESTION)
+                .modelIsEnteringNewQuestion(false)
+                .grammarA().text(I1.GRAMMAR_HTML)
+                .openAiA().text(I1.OPEN_AI_HTML)
+                .claudeA().text(I1.CLAUDE_HTML)
+                .gcpA().text(I1.GCP_HTML)
+                .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
+
+                // Whitespace-only input must leave the OK button disabled, so ENTER does not submit
+                // and the topic keeps its original title.
+                .work("Try rename to blank", () ->
+                        clickOn(topic().renameButton()).write("   ").type(KeyCode.ENTER))
+                .focus(topic().renameButton())
+                .topicSelectedItem(I1.TOPIC)
+                .topicItems(I1.TOPIC)
+
+                .work("Cancel dialog", () -> type(KeyCode.ESCAPE))
+                .assertApp();
+
+        assertThat(storage.readInteraction(I1.INTERACTION.id()).orElseThrow().topicId()).isEqualTo(I1.TOPIC_ID);
+    }
 }

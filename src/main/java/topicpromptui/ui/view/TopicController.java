@@ -74,6 +74,10 @@ public class TopicController extends BaseController {
 
         renameTopicDialog.setTitle("Rename topic");
         renameTopicDialog.setHeaderText("New topic name:");
+        renameTopicDialog.getDialogPane().lookupButton(ButtonType.OK)
+                .disableProperty().bind(Bindings.createBooleanBinding(
+                        () -> renameTopicDialog.getEditor().getText().isBlank(),
+                        renameTopicDialog.getEditor().textProperty()));
         renameButton.setOnAction(_ -> {
             var currentTopic = topicComboBox.getValue();
             renameTopicDialog.show();
