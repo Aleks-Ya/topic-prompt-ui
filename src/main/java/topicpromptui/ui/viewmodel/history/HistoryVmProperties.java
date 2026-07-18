@@ -14,6 +14,7 @@ import javafx.scene.control.SingleSelectionModel;
 
 public class HistoryVmProperties {
     public final StringProperty historyLabelText = new SimpleStringProperty();
+    public final StringProperty historyLabelTemplateText = new SimpleStringProperty();
     public final ObjectProperty<SingleSelectionModel<InteractionItem>> historyCbSelectionModel = new SimpleObjectProperty<>();
     public final BooleanProperty historyDeleteButtonDisable = new SimpleBooleanProperty();
     public final ObjectProperty<ObservableList<InteractionItem>> historyCbItems = new SimpleObjectProperty<>();

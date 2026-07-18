@@ -22,6 +22,8 @@ public class HistoryController extends BaseController {
     @FXML
     private Label historyLabel;
     @FXML
+    private Label historyLabelTemplate;
+    @FXML
     private ComboBox<InteractionItem> historyComboBox;
     @FXML
     private CustomTextField historyFilterTextField;
@@ -45,6 +47,7 @@ public class HistoryController extends BaseController {
     @Override
     protected void initialize() {
         vm.properties().historyLabelText.bindBidirectional(historyLabel.textProperty());
+        vm.properties().historyLabelTemplateText.bindBidirectional(historyLabelTemplate.textProperty());
         vm.properties().historyCbSelectionModel.bindBidirectional(historyComboBox.selectionModelProperty());
         vm.properties().historyCbItems.bindBidirectional(historyComboBox.itemsProperty());
         vm.properties().historyCbOnAction.bindBidirectional(historyComboBox.onActionProperty());

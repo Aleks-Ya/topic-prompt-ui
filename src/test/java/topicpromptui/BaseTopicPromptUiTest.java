@@ -116,6 +116,10 @@ public abstract class BaseTopicPromptUiTest extends ApplicationTest {
             return lookup("#historyLabel").queryAs(Label.class);
         }
 
+        public Label labelTemplate() {
+            return lookup("#historyLabelTemplate").queryAs(Label.class);
+        }
+
         public ComboBox<InteractionItem> comboBox() {
             return lookup("#historyComboBox").queryComboBox();
         }

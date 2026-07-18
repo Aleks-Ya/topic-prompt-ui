@@ -7,13 +7,19 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import org.controlsfx.control.textfield.CustomTextField?>
 <HBox fx:id="historyHBox" alignment="CENTER_LEFT" fillHeight="false" prefHeight="26.0"
       xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="topicpromptui.ui.view.HistoryController">
-    <Label fx:id="historyLabel" text="Question history (42):" HBox.hgrow="NEVER"/>
+    <StackPane alignment="CENTER_LEFT" HBox.hgrow="NEVER">
+        <!-- Invisible but managed: reserves the width of the widest possible label text
+             (filtered <= full), so digit-count changes don't shift the rest of the row -->
+        <Label fx:id="historyLabelTemplate" text="Question history (0/0):" visible="false"/>
+        <Label fx:id="historyLabel" text="Question history (42):"/>
+    </StackPane>
     <Separator orientation="VERTICAL" prefHeight="200.0" visible="false"/>
-    <ComboBox fx:id="historyComboBox" maxWidth="1500.0" onAction="#historyComboBoxAction" HBox.hgrow="NEVER"/>
+    <ComboBox fx:id="historyComboBox" maxWidth="1500.0" onAction="#historyComboBoxAction" HBox.hgrow="ALWAYS"/>
     <Separator orientation="VERTICAL" prefHeight="200.0" visible="false"/>
     <CustomTextField fx:id="historyFilterTextField" promptText="Filter by question" prefWidth="180.0" HBox.hgrow="NEVER"/>
     <Separator orientation="VERTICAL" prefHeight="200.0" visible="false"/>

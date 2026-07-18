@@ -232,6 +232,11 @@ public class WindowAssertion {
             var history = app.history();
             soft.assertThat(history.label().getText()).as(descr("History/Label/Text"))
                     .isEqualTo("Question history (" + historySizeFiltered + "/" + historySizeFull + "):");
+            soft.assertThat(history.labelTemplate().getText()).as(descr("History/LabelTemplate/Text"))
+                    .isEqualTo("Question history (" + historySizeFull + "/" + historySizeFull + "):");
+            soft.assertThat(history.labelTemplate().isVisible()).as(descr("History/LabelTemplate/Visible")).isFalse();
+            soft.assertThat(history.labelTemplate().getWidth()).as(descr("History/LabelTemplate/ReservesLabelWidth"))
+                    .isGreaterThanOrEqualTo(history.label().getWidth());
             soft.assertThat(history.deleteButton().getText()).as(descr("History/DeleteButton/Text")).isEqualTo("Delete");
             soft.assertThat(history.comboBox().getItems()).as(descr("History/ComboBox/Items")).hasSize(historySizeFiltered);
             soft.assertThat(history.deleteButton().isDisabled()).as(descr("History/DeleteButton/Disabled")).isEqualTo(historyDeleteButtonDisabled);

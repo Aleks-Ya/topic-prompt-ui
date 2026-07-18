@@ -89,6 +89,9 @@ class HistoryVmImpl implements HistoryVmController, HistoryVmMediator {
         var label = format("Question history (%d/%d):", historySize, allInteractionSize);
         log.trace("Set label: {}", label);
         vmProperties.historyLabelText.setValue(label);
+        // Widest text the label can show (filtered <= full); reserves stable width in the view
+        vmProperties.historyLabelTemplateText.setValue(
+                format("Question history (%d/%d):", allInteractionSize, allInteractionSize));
     }
 
     private class StateModelFacade {
