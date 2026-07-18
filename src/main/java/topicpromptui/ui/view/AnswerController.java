@@ -22,10 +22,10 @@ import org.w3c.dom.Document;
 import java.util.Objects;
 
 import static topicpromptui.core.util.LogUtils.shorten;
-import static javafx.scene.input.KeyCode.DIGIT1;
-import static javafx.scene.input.KeyCode.DIGIT2;
-import static javafx.scene.input.KeyCode.DIGIT3;
-import static javafx.scene.input.KeyCode.DIGIT4;
+import static javafx.scene.input.KeyCode.DIGIT1; // NOSONAR - used in switch case labels below, S1128 false positive
+import static javafx.scene.input.KeyCode.DIGIT2; // NOSONAR - used in switch case labels below, S1128 false positive
+import static javafx.scene.input.KeyCode.DIGIT3; // NOSONAR - used in switch case labels below, S1128 false positive
+import static javafx.scene.input.KeyCode.DIGIT4; // NOSONAR - used in switch case labels below, S1128 false positive
 import static javafx.scene.input.KeyCode.DOWN;
 import static javafx.scene.input.KeyCode.UP;
 import static javafx.scene.input.KeyEvent.KEY_PRESSED;
