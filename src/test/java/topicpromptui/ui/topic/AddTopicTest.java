@@ -52,4 +52,39 @@ class AddTopicTest extends BaseTopicPromptUiTest {
                         clickOn(topic().addTopicButton()).write(I2.TOPIC.title()).type(KeyCode.ENTER))
                 .assertApp();
     }
+
+    @Test
+    void blankTopicNameDoesNotSubmit() {
+        assertion()
+                .focus(history().comboBox())
+                .historySize(0, 0)
+                .historyDeleteButtonDisabled(true)
+                .historySelectedItem(I0.HISTORY_SELECTED_ITEM)
+                .historyItems(I0.HISTORY_ITEMS)
+                .topicSize(I0.TOPIC_SIZE)
+                .topicSelectedItem(I0.TOPIC_SELECTED_ITEM)
+                .topicItems(I0.TOPIC_ITEMS)
+                .topicFilterHistorySelected(false)
+                .topicRenameButtonDisabled(true)
+                .questionText(I0.QUESTION)
+                .questionStyle(QUESTION_STYLE_EMPTY)
+                .modelEditedQuestion(null)
+                .modelIsEnteringNewQuestion(false)
+                .grammarA().text(I0.GRAMMAR_HTML)
+                .openAiA().text(I0.OPEN_AI_HTML)
+                .claudeA().text(I0.CLAUDE_HTML)
+                .gcpA().text(I0.GCP_HTML)
+                .answerCircleColors(WHITE, WHITE, WHITE, WHITE)
+
+                // Whitespace-only input must leave the OK button disabled, so ENTER does not submit
+                // and the topic list stays untouched.
+                .work("Try add blank topic", () ->
+                        clickOn(topic().addTopicButton()).write("   ").type(KeyCode.ENTER))
+                .focus(topic().addTopicButton())
+                .topicSize(0)
+                .topicItems()
+
+                .work("Cancel dialog", () -> type(KeyCode.ESCAPE))
+                .assertApp();
+    }
 }

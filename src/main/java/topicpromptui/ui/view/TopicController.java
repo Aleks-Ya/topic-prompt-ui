@@ -3,9 +3,11 @@ package topicpromptui.ui.view;
 import topicpromptui.core.storagefilesystem.Topic;
 import topicpromptui.ui.viewmodel.topic.TopicVmController;
 import jakarta.inject.Inject;
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
@@ -58,6 +60,10 @@ public class TopicController extends BaseController {
 
         newTopicDialog.setTitle("Add new topic");
         newTopicDialog.setHeaderText("New topic:");
+        newTopicDialog.getDialogPane().lookupButton(ButtonType.OK)
+                .disableProperty().bind(Bindings.createBooleanBinding(
+                        () -> newTopicDialog.getEditor().getText().isBlank(),
+                        newTopicDialog.getEditor().textProperty()));
         addButton.setOnAction(_ -> {
             newTopicDialog.show();
             newTopicDialog.getEditor().clear();
