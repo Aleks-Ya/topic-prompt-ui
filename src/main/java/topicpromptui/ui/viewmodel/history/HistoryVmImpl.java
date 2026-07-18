@@ -25,6 +25,18 @@ class HistoryVmImpl implements HistoryVmController, HistoryVmMediator {
     @Inject
     HistoryVmImpl(HistoryMediator mediator) {
         this.mediator = mediator;
+        vmProperties.historyFilterTfText.addListener(
+                (observable, oldValue, newValue) -> onHistoryFilterTextChanged(newValue));
+    }
+
+    private void onHistoryFilterTextChanged(String newValue) {
+        log.trace("onHistoryFilterTextChanged: '{}'", newValue);
+        var tfValue = newValue != null ? newValue : "";
+        var modelValue = mediator.getHistoryFilterText();
+        if (!Objects.equals(tfValue, modelValue)) {
+            mediator.setHistoryFilterText(tfValue);
+            displayCurrentInteraction();
+        }
     }
 
     @Override
@@ -157,7 +169,9 @@ class HistoryVmImpl implements HistoryVmController, HistoryVmMediator {
             var comboBoxCurrentInteraction = vmProperties.historyCbSelectionModel.getValue().getSelectedItem();
             var cmCurrentInteraction = comboBoxCurrentInteraction != null ? comboBoxCurrentInteraction.interaction() : null;
             if (!Objects.equals(modelCurrentInteractionIdOpt.orElse(null), cmCurrentInteraction)) {
-                if (modelCurrentInteractionIdOpt.isPresent()) {
+                // ComboBox happily selects a value absent from items, so a current interaction
+                // filtered out by the history filter must clear the selection instead
+                if (modelCurrentInteractionIdOpt.isPresent() && isAmongItems(modelCurrentInteractionIdOpt.get())) {
                     var modelCurrentValue = modelCurrentInteractionIdOpt.get();
                     if (log.isDebugEnabled()) {
                         log.debug("Select interaction: '{}'", modelCurrentValue.toShortString());
@@ -173,6 +187,12 @@ class HistoryVmImpl implements HistoryVmController, HistoryVmMediator {
             } else {
                 log.debug("Selection is unchanged: '{}'", modelCurrentInteractionIdOpt.map(Interaction::toShortString));
             }
+        }
+
+        private boolean isAmongItems(Interaction interaction) {
+            return vmProperties.historyCbItems.getValue().stream()
+                    .map(InteractionItem::interaction)
+                    .anyMatch(interaction::equals);
         }
     }
 

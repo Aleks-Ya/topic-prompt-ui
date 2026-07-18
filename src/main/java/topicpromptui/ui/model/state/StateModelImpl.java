@@ -32,6 +32,7 @@ class StateModelImpl implements StateModel {
     private Topic currentTopic;
     private String editedQuestion;
     private Boolean isHistoryFilteringEnabled = false;
+    private String historyFilterText = "";
 
     @Inject
     StateModelImpl(StorageModel storage) {
@@ -53,9 +54,13 @@ class StateModelImpl implements StateModel {
     @Override
     public synchronized List<Interaction> getFilteredHistory() {
         var historyFilteringEnabled = isHistoryFilteringEnabled();
+        var filterText = getHistoryFilterText();
+        var filterTextLower = filterText.toLowerCase();
         return getFullHistory().stream()
                 .filter(interaction -> !historyFilteringEnabled ||
                         Objects.equals(getCurrentTopic(), storage.getTopic(interaction.topicId())))
+                .filter(interaction -> filterText.isBlank() ||
+                        interaction.question().toLowerCase().contains(filterTextLower))
                 .toList();
     }
 
@@ -209,6 +214,18 @@ class StateModelImpl implements StateModel {
     public synchronized void setIsHistoryFilteringEnabled(Boolean isHistoryFilteringEnabled) {
         log.trace("setIsHistoryFilteringEnabled: {}", isHistoryFilteringEnabled);
         this.isHistoryFilteringEnabled = isHistoryFilteringEnabled;
+    }
+
+    @Override
+    public synchronized String getHistoryFilterText() {
+        log.trace("getHistoryFilterText: '{}'", historyFilterText);
+        return historyFilterText;
+    }
+
+    @Override
+    public synchronized void setHistoryFilterText(String historyFilterText) {
+        log.trace("setHistoryFilterText: '{}'", historyFilterText);
+        this.historyFilterText = historyFilterText != null ? historyFilterText : "";
     }
 
     @Override

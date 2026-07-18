@@ -247,6 +247,16 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
     }
 
     @Override
+    public String getHistoryFilterText() {
+        return stateModel.getHistoryFilterText();
+    }
+
+    @Override
+    public void setHistoryFilterText(String filterText) {
+        stateModel.setHistoryFilterText(filterText);
+    }
+
+    @Override
     public Topic getCurrentTopic() {
         return stateModel.getCurrentTopic();
     }

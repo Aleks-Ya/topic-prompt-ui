@@ -120,6 +120,10 @@ public abstract class BaseTopicPromptUiTest extends ApplicationTest {
             return lookup("#historyComboBox").queryComboBox();
         }
 
+        public TextField filterTextField() {
+            return lookup("#historyFilterTextField").queryAs(TextField.class);
+        }
+
         public Button deleteButton() {
             return lookup("#historyDeleteButton").queryButton();
         }

@@ -52,5 +52,9 @@ public interface StateModel {
 
     void setIsHistoryFilteringEnabled(Boolean isHistoryFilteringEnabled);
 
+    String getHistoryFilterText();
+
+    void setHistoryFilterText(String historyFilterText);
+
     void chooseFirstInteractionAsCurrent();
 }

@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +21,8 @@ public class HistoryController extends BaseController {
     private Label historyLabel;
     @FXML
     private ComboBox<InteractionItem> historyComboBox;
+    @FXML
+    private TextField historyFilterTextField;
     @FXML
     private Button historyDeleteButton;
     @Inject
@@ -43,6 +46,7 @@ public class HistoryController extends BaseController {
         vm.properties().historyCbSelectionModel.bindBidirectional(historyComboBox.selectionModelProperty());
         vm.properties().historyCbItems.bindBidirectional(historyComboBox.itemsProperty());
         vm.properties().historyCbOnAction.bindBidirectional(historyComboBox.onActionProperty());
+        vm.properties().historyFilterTfText.bindBidirectional(historyFilterTextField.textProperty());
         vm.properties().historyDeleteButtonDisable.bindBidirectional(historyDeleteButton.disableProperty());
     }
 }

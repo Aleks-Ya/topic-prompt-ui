@@ -31,7 +31,11 @@ public class WindowAssertion {
     private int historySizeFull;
     private boolean historyDeleteButtonDisabled;
     private Interaction historySelectedItem;
+    // null means "same as historySelectedItem": the model current interaction only diverges from the
+    // combo selection when the history filter text hides the current interaction from the items.
+    private Interaction modelCurrentInteraction;
     private List<Interaction> historyItems;
+    private String historyFilterText = "";
     private int topicSize;
     private Topic topicSelectedItem;
     private List<Topic> topicItems;
@@ -104,6 +108,16 @@ public class WindowAssertion {
 
     public WindowAssertion historySelectedItem(Interaction historySelectedItem) {
         this.historySelectedItem = historySelectedItem;
+        return this;
+    }
+
+    public WindowAssertion modelCurrentInteraction(Interaction modelCurrentInteraction) {
+        this.modelCurrentInteraction = modelCurrentInteraction;
+        return this;
+    }
+
+    public WindowAssertion historyFilterText(String historyFilterText) {
+        this.historyFilterText = historyFilterText;
         return this;
     }
 
@@ -228,7 +242,10 @@ public class WindowAssertion {
                     .isEqualTo(app.storage.readInteraction(historySelectedItemId).map(Interaction::toString).orElse(null));
             soft.assertThat(history.comboBox().getItems().stream().map(InteractionItem::interaction)).as(descr("History/ComboBox/Items"))
                     .containsExactlyElementsOf(historyItems);
-            soft.assertThat(app.stateModel.getCurrentInteractionId()).as(descr("Model/CurrentInteractionId")).isEqualTo(historySelectedItemId);
+            soft.assertThat(history.filterTextField().getText()).as(descr("History/FilterTextField/Text")).isEqualTo(historyFilterText);
+            var expModelCurrentInteraction = modelCurrentInteraction != null ? modelCurrentInteraction : historySelectedItem;
+            var expModelCurrentInteractionId = expModelCurrentInteraction != null ? expModelCurrentInteraction.id() : null;
+            soft.assertThat(app.stateModel.getCurrentInteractionId()).as(descr("Model/CurrentInteractionId")).isEqualTo(expModelCurrentInteractionId);
             soft.assertThat(app.stateModel.getFilteredHistory()).as(descr("Model/History/Items")).containsExactlyElementsOf(historyItems);
         }
 

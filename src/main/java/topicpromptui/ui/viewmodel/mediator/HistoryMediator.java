@@ -26,4 +26,8 @@ public interface HistoryMediator {
     Topic getCurrentTopic();
 
     Topic getTopic(TopicId topicId);
+
+    String getHistoryFilterText();
+
+    void setHistoryFilterText(String filterText);
 }

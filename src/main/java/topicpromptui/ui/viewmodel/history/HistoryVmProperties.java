@@ -18,4 +18,5 @@ public class HistoryVmProperties {
     public final BooleanProperty historyDeleteButtonDisable = new SimpleBooleanProperty();
     public final ObjectProperty<ObservableList<InteractionItem>> historyCbItems = new SimpleObjectProperty<>();
     public final ObjectProperty<EventHandler<ActionEvent>> historyCbOnAction = new SimpleObjectProperty<>();
+    public final StringProperty historyFilterTfText = new SimpleStringProperty("");
 }
