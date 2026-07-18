@@ -265,7 +265,7 @@ public class WindowAssertion {
 
         {
             var answer = app.grammarAnswer();
-            soft.assertThat(answer.button().getText()).as(descr("Answer/Grammar/Button/Text")).isEqualTo("Grammar\nanswer:");
+            soft.assertThat(answer.button().getText()).as(descr("Answer/Grammar/Button/Text")).isEqualTo("Grammar:");
             soft.assertThat(answer.copyButton().getText()).as(descr("Answer/Grammar/CopyButton/Text")).isEqualTo("Copy _1");
             soft.assertThat(answer.regenerateButton().getText()).as(descr("Answer/Grammar/RegenerateButton/Text")).isEqualTo("⟳");
             app.verifyWebViewBody(soft, descr("Answer/Grammar/WebView/Body"), answer.webView(), grammarAnswer.text);
@@ -274,7 +274,7 @@ public class WindowAssertion {
 
         {
             var answer = app.openAiAnswer();
-            soft.assertThat(answer.button().getText()).as(descr("Answer/OpenAI/Button/Text")).isEqualTo("OpenAI\nanswer:");
+            soft.assertThat(answer.button().getText()).as(descr("Answer/OpenAI/Button/Text")).isEqualTo("OpenAI:");
             soft.assertThat(answer.copyButton().getText()).as(descr("Answer/OpenAI/CopyButton/Text")).isEqualTo("Copy _2");
             soft.assertThat(answer.regenerateButton().getText()).as(descr("Answer/OpenAI/RegenerateButton/Text")).isEqualTo("⟳");
             app.verifyWebViewBody(soft, descr("Answer/OpenAI/WebView/Body"), answer.webView(), openAiA().text);
@@ -283,7 +283,7 @@ public class WindowAssertion {
 
         {
             var answer = app.claudeAnswer();
-            soft.assertThat(answer.button().getText()).as(descr("Answer/Claude/Button/Text")).isEqualTo("Claude\nanswer:");
+            soft.assertThat(answer.button().getText()).as(descr("Answer/Claude/Button/Text")).isEqualTo("Claude:");
             soft.assertThat(answer.copyButton().getText()).as(descr("Answer/Claude/CopyButton/Text")).isEqualTo("Copy _3");
             soft.assertThat(answer.regenerateButton().getText()).as(descr("Answer/Claude/RegenerateButton/Text")).isEqualTo("⟳");
             app.verifyWebViewBody(soft, descr("Answer/Claude/WebView/Body"), answer.webView(), claudeA().text);
@@ -292,7 +292,7 @@ public class WindowAssertion {
 
         {
             var answer = app.gcpAnswer();
-            soft.assertThat(answer.button().getText()).as(descr("Answer/GCP/Button/Text")).isEqualTo("GCP\nanswer:");
+            soft.assertThat(answer.button().getText()).as(descr("Answer/GCP/Button/Text")).isEqualTo("Gemini:");
             soft.assertThat(answer.copyButton().getText()).as(descr("Answer/GCP/CopyButton/Text")).isEqualTo("Copy _4");
             soft.assertThat(answer.regenerateButton().getText()).as(descr("Answer/GCP/RegenerateButton/Text")).isEqualTo("⟳");
             app.verifyWebViewBody(soft, descr("Answer/GCP/WebView/Body"), answer.webView(), gcpA().text);

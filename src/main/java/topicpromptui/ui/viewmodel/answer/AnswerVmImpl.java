@@ -38,7 +38,7 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
     private String currentWebViewContent = "";
     private final AnswerType answerType;
     private static final Map<AnswerType, Integer> hotkeyDigitMap = Map.of(GRAMMAR, 1, OPEN_AI, 2, CLAUDE, 3, GCP, 4);
-    private static final Map<AnswerType, String> buttonTextMap = Map.of(GRAMMAR, "Grammar\nanswer:", OPEN_AI, "OpenAI\nanswer:", CLAUDE, "Claude\nanswer:", GCP, "GCP\nanswer:");
+    private static final Map<AnswerType, String> buttonTextMap = Map.of(GRAMMAR, "Grammar:", OPEN_AI, "OpenAI:", CLAUDE, "Claude:", GCP, "Gemini:");
 
     @Override
     public void onCopyButtonClick() {
