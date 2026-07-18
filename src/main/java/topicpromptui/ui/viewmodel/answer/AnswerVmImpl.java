@@ -118,6 +118,18 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
     }
 
     @Override
+    public void ctrlDigitHotkeyPressed(int digit) {
+        Mdc.run(answerType.toString(), () -> {
+            log.trace("ctrlDigitHotkeyPressed: {}", digit);
+            // The digit, not the receiving VM instance, picks the target pane
+            hotkeyDigitMap.entrySet().stream()
+                    .filter(entry -> entry.getValue() == digit)
+                    .findFirst()
+                    .ifPresent(entry -> mediator.toggleExpandedAnswer(entry.getKey()));
+        });
+    }
+
+    @Override
     public void ctrlAltUpHotkeyPressed() {
         mediator.selectNextHistoryItem();
     }

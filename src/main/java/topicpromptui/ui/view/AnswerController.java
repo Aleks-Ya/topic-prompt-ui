@@ -22,6 +22,10 @@ import org.w3c.dom.Document;
 import java.util.Objects;
 
 import static topicpromptui.core.util.LogUtils.shorten;
+import static javafx.scene.input.KeyCode.DIGIT1;
+import static javafx.scene.input.KeyCode.DIGIT2;
+import static javafx.scene.input.KeyCode.DIGIT3;
+import static javafx.scene.input.KeyCode.DIGIT4;
 import static javafx.scene.input.KeyCode.DOWN;
 import static javafx.scene.input.KeyCode.UP;
 import static javafx.scene.input.KeyEvent.KEY_PRESSED;
@@ -135,8 +139,24 @@ public class AnswerController extends BaseController {
         webView.getEngine().loadContent(newValue);
     }
 
+    // Scene accelerators don't fire while the WebView has focus (WebView consumes key events),
+    // so the hotkeys that must work while reading an answer are re-dispatched from this filter.
     private void onWebViewKeyPressed(KeyEvent event) {
-        if (!event.isControlDown() || !event.isAltDown()) {
+        if (!event.isControlDown()) {
+            return;
+        }
+        if (!event.isAltDown()) {
+            var digit = switch (event.getCode()) {
+                case DIGIT1 -> 1;
+                case DIGIT2 -> 2;
+                case DIGIT3 -> 3;
+                case DIGIT4 -> 4;
+                default -> 0;
+            };
+            if (digit != 0) {
+                event.consume();
+                vm.ctrlDigitHotkeyPressed(digit);
+            }
             return;
         }
         if (event.getCode() == DOWN) {

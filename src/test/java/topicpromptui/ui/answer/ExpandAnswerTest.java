@@ -9,6 +9,11 @@ import javafx.scene.layout.VBox;
 import org.junit.jupiter.api.Test;
 import org.testfx.util.WaitForAsyncUtils;
 
+import static javafx.scene.input.KeyCode.CONTROL;
+import static javafx.scene.input.KeyCode.DIGIT1;
+import static javafx.scene.input.KeyCode.DIGIT2;
+import static javafx.scene.input.KeyCode.DIGIT3;
+import static javafx.scene.input.KeyCode.DIGIT4;
 import static javafx.scene.input.KeyCode.ESCAPE;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -74,6 +79,58 @@ class ExpandAnswerTest extends BaseTopicPromptUiTest {
         press(ESCAPE).release(ESCAPE);
         WaitForAsyncUtils.waitForFxEvents();
         assertThat(question().textArea().isFocused()).isTrue();
+    }
+
+    @Test
+    void expandAndCollapseByCtrlDigit() {
+        press(CONTROL, DIGIT2).release(DIGIT2, CONTROL);
+        WaitForAsyncUtils.waitForFxEvents();
+        assertShown(openAiAnswer().pane());
+        assertHidden(historyPane(), topicPane(), questionPane(),
+                grammarAnswer().pane(), claudeAnswer().pane(), gcpAnswer().pane());
+
+        press(CONTROL, DIGIT2).release(DIGIT2, CONTROL);
+        WaitForAsyncUtils.waitForFxEvents();
+        assertShown(historyPane(), topicPane(), questionPane(),
+                grammarAnswer().pane(), openAiAnswer().pane(), claudeAnswer().pane(), gcpAnswer().pane());
+    }
+
+    @Test
+    void switchExpandedPaneByCtrlDigit() {
+        press(CONTROL, DIGIT1).release(DIGIT1, CONTROL);
+        WaitForAsyncUtils.waitForFxEvents();
+        assertShown(grammarAnswer().pane());
+        assertHidden(historyPane(), topicPane(), questionPane(),
+                openAiAnswer().pane(), claudeAnswer().pane(), gcpAnswer().pane());
+        assertThat(grammarAnswer().pane().getMaxHeight()).isEqualTo(Double.MAX_VALUE);
+
+        press(CONTROL, DIGIT3).release(DIGIT3, CONTROL);
+        WaitForAsyncUtils.waitForFxEvents();
+        assertShown(claudeAnswer().pane());
+        assertHidden(historyPane(), topicPane(), questionPane(),
+                grammarAnswer().pane(), openAiAnswer().pane(), gcpAnswer().pane());
+        assertThat(grammarAnswer().pane().getMaxHeight()).isEqualTo(70.0);
+        assertThat(VBox.getVgrow(grammarAnswer().pane())).isEqualTo(Priority.SOMETIMES);
+
+        press(ESCAPE).release(ESCAPE);
+        WaitForAsyncUtils.waitForFxEvents();
+        assertShown(historyPane(), topicPane(), questionPane(),
+                grammarAnswer().pane(), openAiAnswer().pane(), claudeAnswer().pane(), gcpAnswer().pane());
+    }
+
+    @Test
+    void expandByCtrlDigitWhileWebViewFocused() {
+        clickOn(claudeAnswer().webView());
+        press(CONTROL, DIGIT4).release(DIGIT4, CONTROL);
+        WaitForAsyncUtils.waitForFxEvents();
+        assertShown(gcpAnswer().pane());
+        assertHidden(historyPane(), topicPane(), questionPane(),
+                grammarAnswer().pane(), openAiAnswer().pane(), claudeAnswer().pane());
+
+        press(CONTROL, DIGIT4).release(DIGIT4, CONTROL);
+        WaitForAsyncUtils.waitForFxEvents();
+        assertShown(historyPane(), topicPane(), questionPane(),
+                grammarAnswer().pane(), openAiAnswer().pane(), claudeAnswer().pane(), gcpAnswer().pane());
     }
 
     @Test

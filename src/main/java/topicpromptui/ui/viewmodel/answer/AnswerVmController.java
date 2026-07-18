@@ -14,4 +14,6 @@ public interface AnswerVmController {
     void ctrlAltUpHotkeyPressed();
 
     void ctrlAltDownHotkeyPressed();
+
+    void ctrlDigitHotkeyPressed(int digit);
 }

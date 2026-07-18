@@ -30,7 +30,15 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 
+import static topicpromptui.core.storagefilesystem.AnswerType.CLAUDE;
+import static topicpromptui.core.storagefilesystem.AnswerType.GCP;
+import static topicpromptui.core.storagefilesystem.AnswerType.GRAMMAR;
+import static topicpromptui.core.storagefilesystem.AnswerType.OPEN_AI;
 import static topicpromptui.core.storagefilesystem.InteractionType.QUESTION;
+import static javafx.scene.input.KeyCode.DIGIT1;
+import static javafx.scene.input.KeyCode.DIGIT2;
+import static javafx.scene.input.KeyCode.DIGIT3;
+import static javafx.scene.input.KeyCode.DIGIT4;
 import static javafx.scene.input.KeyCode.DOWN;
 import static javafx.scene.input.KeyCode.ENTER;
 import static javafx.scene.input.KeyCode.ESCAPE;
@@ -174,6 +182,11 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
         accelerators.put(new KeyCodeCombination(ESCAPE), this::escapePressed);
         accelerators.put(new KeyCodeCombination(ENTER, CONTROL_DOWN), () -> questionVM.createNewInteractionAndRequestAnswers(QUESTION));
         accelerators.put(new KeyCodeCombination(U, ALT_DOWN), questionVM::toggleFollowUp);
+        // Digit order must match the Alt-1..4 copy shortcuts (AnswerVmImpl.hotkeyDigitMap)
+        accelerators.put(new KeyCodeCombination(DIGIT1, CONTROL_DOWN), () -> uiVM.toggleExpandedAnswer(GRAMMAR));
+        accelerators.put(new KeyCodeCombination(DIGIT2, CONTROL_DOWN), () -> uiVM.toggleExpandedAnswer(OPEN_AI));
+        accelerators.put(new KeyCodeCombination(DIGIT3, CONTROL_DOWN), () -> uiVM.toggleExpandedAnswer(CLAUDE));
+        accelerators.put(new KeyCodeCombination(DIGIT4, CONTROL_DOWN), () -> uiVM.toggleExpandedAnswer(GCP));
     }
 
     private void escapePressed() {
