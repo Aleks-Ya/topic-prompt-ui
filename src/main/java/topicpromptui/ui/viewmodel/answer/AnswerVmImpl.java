@@ -131,7 +131,7 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
 
     @Override
     public void ctrlAltUpHotkeyPressed() {
-        mediator.selectNextHistoryItem();
+        mediator.selectPreviousHistoryItem();
     }
 
     @Override

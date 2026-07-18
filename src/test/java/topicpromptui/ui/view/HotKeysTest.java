@@ -216,14 +216,14 @@ class HotKeysTest extends BaseTopicPromptUiTest {
     }
 
     @Test
-    void selectPreviousInteractionByCtrlAltUp_FocusOnWebView() {
+    void selectNextInteractionByCtrlAltUp_FocusOnWebView() {
         clickOn(history().comboBox()).clickOn(String.format("[Q] %s: %s", I2.TOPIC.title(), I2.QUESTION));
         clickOn(claudeAnswer().webView());
         scroll(10, VerticalDirection.DOWN);
         assertThat(history().comboBox().getSelectionModel().getSelectedItem().interaction()).isEqualTo(I2.INTERACTION);
 
         press(CONTROL, ALT, UP).release(UP, ALT, CONTROL);
-        assertThat(history().comboBox().getSelectionModel().getSelectedItem().interaction()).isEqualTo(I1.INTERACTION);
+        assertThat(history().comboBox().getSelectionModel().getSelectedItem().interaction()).isEqualTo(I3.INTERACTION);
     }
 
     @Test

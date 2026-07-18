@@ -204,7 +204,8 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
         }
     }
 
-    void selectPreviousHistoryItem() {
+    @Override
+    public void selectPreviousHistoryItem() {
         historyVM.selectPreviousItem();
     }
 
