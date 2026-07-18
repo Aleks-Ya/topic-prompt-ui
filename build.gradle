@@ -62,11 +62,56 @@ dependencies {
         }
     }
 }
+// TestFX drives real windows with synthesized input; on a developer desktop the test windows
+// steal focus, and any real keyboard/mouse activity mid-run silently breaks press()-based tests
+// (see CLAUDE.md "Testing conventions"). So the test task runs on its own throwaway Xvfb display
+// by default; pass -PonRealDisplay to watch the tests on the current DISPLAY instead.
+// TestFX/JavaFX popups (ComboBox dropdowns) need a window manager to register mouse clicks
+// correctly; plain Xvfb has none. Openbox's default keybindings (e.g. Ctrl+Alt+Up/Down) collide
+// with the app's own hotkeys, so it starts with an empty keyboard/mouse config.
+def virtualDisplay = [xvfb: null, openbox: null]
+def stopVirtualDisplay = tasks.register('stopVirtualDisplay') {
+    doLast {
+        virtualDisplay.openbox?.destroyForcibly()
+        virtualDisplay.xvfb?.destroyForcibly()
+    }
+}
 test {
     testLogging.showStandardStreams = true
     useJUnitPlatform()
     if (project.hasProperty('skipIntegrationTests')) {
         exclude '**/*IT.class'
+    }
+    def xvfbBinary = new File('/usr/bin/Xvfb')
+    if (xvfbBinary.exists() && !project.hasProperty('onRealDisplay')) {
+        finalizedBy stopVirtualDisplay
+        doFirst {
+            def xvfb = new ProcessBuilder(xvfbBinary.path, '-displayfd', '1', '-screen', '0', '1920x1080x24').start()
+            virtualDisplay.xvfb = xvfb
+            // -displayfd 1 makes Xvfb print the auto-picked free display number to stdout
+            // once the server is ready, so this read doubles as the readiness wait.
+            def displayNumber = xvfb.inputStream.newReader().readLine()
+            if (displayNumber == null) {
+                throw new GradleException("Xvfb failed to start: ${xvfb.errorStream.text}")
+            }
+            // Plain String, not a GString: ProcessBuilder.environment() rejects non-String values
+            def display = ':' + displayNumber
+            def openboxBinary = new File('/usr/bin/openbox')
+            if (openboxBinary.exists()) {
+                def rcXml = new File(temporaryDir, 'openbox-rc.xml')
+                // xmlns="http://openbox.org/3.4/rc" is openbox's fixed XML namespace URI, matched
+                // literally by openbox's config parser, never dereferenced over the network.
+                rcXml.text = '<?xml version="1.0" encoding="UTF-8"?><openbox_config xmlns="http://openbox.org/3.4/rc"><keyboard></keyboard><mouse></mouse></openbox_config>' // NOSONAR
+                def openboxBuilder = new ProcessBuilder(openboxBinary.path, '--config-file', rcXml.path)
+                openboxBuilder.environment().put('DISPLAY', display)
+                virtualDisplay.openbox = openboxBuilder.start()
+                sleep(2000) // give the window manager a moment to take over the display
+            } else {
+                logger.warn('openbox not found - ComboBox popup clicks may not register in TestFX tests')
+            }
+            environment 'DISPLAY', display
+            logger.lifecycle("Running tests on virtual display $display")
+        }
     }
     finalizedBy jacocoTestReport
 }
