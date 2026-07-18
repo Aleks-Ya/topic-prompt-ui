@@ -33,6 +33,7 @@ class HistorySearchModelImpl implements HistorySearchModel {
     private final Directory directory = new ByteBuffersDirectory();
     private final IndexWriter writer;
     private boolean indexUpdated = true;
+    private DirectoryReader reader;
     private IndexSearcher searcher;
     private final StorageModel storageModel;
 
@@ -58,10 +59,13 @@ class HistorySearchModelImpl implements HistorySearchModel {
     }
 
     @Override
-    public List<InteractionId> search(String text) {
+    public synchronized List<InteractionId> search(String text) {
         try {
             if (indexUpdated) {
-                var reader = DirectoryReader.open(directory);
+                if (reader != null) {
+                    reader.close();
+                }
+                reader = DirectoryReader.open(directory);
                 searcher = new IndexSearcher(reader);
                 indexUpdated = false;
             }
@@ -92,7 +96,7 @@ class HistorySearchModelImpl implements HistorySearchModel {
     }
 
     @Override
-    public void indexDocuments(List<Interaction> interactions) {
+    public synchronized void indexDocuments(List<Interaction> interactions) {
         try {
             for (var interaction : interactions) {
                 writer.addDocument(interactionToDocument(interaction));
@@ -105,7 +109,7 @@ class HistorySearchModelImpl implements HistorySearchModel {
     }
 
     @Override
-    public void indexDocument(Interaction interaction) {
+    public synchronized void indexDocument(Interaction interaction) {
         try {
             writer.addDocument(interactionToDocument(interaction));
             writer.commit();

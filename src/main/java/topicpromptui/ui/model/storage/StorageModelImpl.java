@@ -29,11 +29,13 @@ class StorageModelImpl implements StorageModel {
     private final List<Topic> topicList = new ArrayList<>();
     private final StorageFilesystem storageFilesystem;
     private final Map<TopicId, Topic> topicMap = new HashMap<>();
+    private long lastIssuedId;
 
     @Inject
     public StorageModelImpl(StorageFilesystem storageFilesystem) {
         this.storageFilesystem = storageFilesystem;
         storageFilesystem.readAllInteractions().forEach(interaction -> interactions.put(interaction.id(), interaction));
+        lastIssuedId = interactions.keySet().stream().mapToLong(InteractionId::id).max().orElse(0L);
         readTopicsFromInteractions();
     }
 
@@ -53,7 +55,10 @@ class StorageModelImpl implements StorageModel {
 
     @Override
     public synchronized InteractionId newInteractionId() {
-        var interactionId = new InteractionId(Instant.now().getEpochSecond());
+        // Epoch seconds alone collide when two interactions are created within the same second,
+        // silently merging them (same in-memory key and same <id>.json file).
+        lastIssuedId = Math.max(Instant.now().getEpochSecond(), lastIssuedId + 1);
+        var interactionId = new InteractionId(lastIssuedId);
         log.trace("newInteractionId: {}", interactionId);
         return interactionId;
     }
@@ -61,22 +66,19 @@ class StorageModelImpl implements StorageModel {
     @Override
     public synchronized void updateInteraction(InteractionId interactionId, UnaryOperator<Interaction> update) {
         var interactionOpt = readInteraction(interactionId);
-        Interaction interaction;
         if (interactionOpt.isEmpty()) {
-            interaction = new Interaction(interactionId, null, null, null, null, null);
-            if (interactions.containsKey(interactionId)) {
-                throw new IllegalStateException("Interaction already exists: " + interaction);
-            }
-        } else {
-            interaction = interactionOpt.get();
+            // A streaming answer may finish after the user deleted its interaction;
+            // dropping the late update here keeps the deletion final.
+            log.warn("Skip updating nonexistent interaction: {}", interactionId);
+            return;
         }
-        var updatedInteraction = update.apply(interaction);
-        saveInteraction(updatedInteraction);
+        saveInteraction(update.apply(interactionOpt.get()));
     }
 
     @Override
     public synchronized void saveInteraction(Interaction interaction) {
         interactions.put(interaction.id(), interaction);
+        lastIssuedId = Math.max(lastIssuedId, interaction.id().id());
         var topic = getTopic(interaction.topicId());
         topicList.remove(topic);
         topicList.addFirst(topic);
@@ -105,8 +107,10 @@ class StorageModelImpl implements StorageModel {
     }
 
     @Override
-    public List<Topic> getTopics() {
-        return topicList;
+    public synchronized List<Topic> getTopics() {
+        // Copy: saveInteraction reorders topicList on the AI executor threads, so handing out
+        // the live list would let the FX thread iterate it concurrently with that mutation.
+        return List.copyOf(topicList);
     }
 
     @Override
@@ -193,7 +197,7 @@ class StorageModelImpl implements StorageModel {
     }
 
     @Override
-    public void saveTopic(Topic topic) {
+    public synchronized void saveTopic(Topic topic) {
         var existingTopics = storageFilesystem.readTopics();
         var existingOpt = existingTopics.stream().filter(topicObj -> topicObj.id().equals(topic.id())).findFirst();
         var newTopicExists = existingOpt.isPresent();
@@ -206,7 +210,7 @@ class StorageModelImpl implements StorageModel {
     }
 
     @Override
-    public Topic getTopic(TopicId topicId) {
+    public synchronized Topic getTopic(TopicId topicId) {
         var topic = topicMap.get(topicId);
         if (topic == null) {
             throw new IllegalStateException("Topic was not found by id: " + topicId);

@@ -122,13 +122,18 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
         questionVM.focusOnQuestionAndSelect();
     }
 
-    private void answerUpdated(AnswerType answerType) {
+    private void answerUpdated(InteractionId interactionId, AnswerType answerType) {
         log.trace("answerUpdated");
-        switch (answerType) {
-            case GRAMMAR -> grammarAnswerVM.displayCurrentAnswer();
-            case OPEN_AI -> openAiAnswerVM.displayCurrentAnswer();
-            case CLAUDE -> claudeAnswerVM.displayCurrentAnswer();
-            case GCP -> gcpAnswerVM.displayCurrentAnswer();
+        // Same guard as answerProgress: a completion for a no-longer-current interaction must
+        // not repaint the pane — displayCurrentAnswer would revert a partial answer still
+        // streaming for the current interaction to its stored (stale or empty) HTML.
+        if (interactionId.equals(stateModel.getCurrentInteractionId())) {
+            switch (answerType) {
+                case GRAMMAR -> grammarAnswerVM.displayCurrentAnswer();
+                case OPEN_AI -> openAiAnswerVM.displayCurrentAnswer();
+                case CLAUDE -> claudeAnswerVM.displayCurrentAnswer();
+                case GCP -> gcpAnswerVM.displayCurrentAnswer();
+            }
         }
         historyVM.displayCurrentInteraction();
     }
@@ -303,7 +308,7 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
 
     @Override
     public void requestAnswer(InteractionId interactionId, AnswerType answerType) {
-        questionModel.requestAnswer(interactionId, answerType, () -> answerUpdated(answerType),
+        questionModel.requestAnswer(interactionId, answerType, () -> answerUpdated(interactionId, answerType),
                 html -> answerProgress(interactionId, answerType, html));
     }
 

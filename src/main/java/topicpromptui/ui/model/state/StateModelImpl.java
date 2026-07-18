@@ -79,7 +79,7 @@ class StateModelImpl implements StateModel {
     }
 
     @Override
-    public InteractionId createInteraction(InteractionType interactionType, InteractionId parentInteractionId) {
+    public synchronized InteractionId createInteraction(InteractionType interactionType, InteractionId parentInteractionId) {
         var interactionId = storage.newInteractionId();
         Mdc.run(interactionId.id(), () -> {
             var topic = getCurrentTopic();
@@ -139,12 +139,12 @@ class StateModelImpl implements StateModel {
     }
 
     @Override
-    public Topic addTopic(String topic) {
+    public synchronized Topic addTopic(String topic) {
         return storage.addTopic(topic);
     }
 
     @Override
-    public Topic renameTopic(TopicId topicId, String newTitle) {
+    public synchronized Topic renameTopic(TopicId topicId, String newTitle) {
         return storage.renameTopic(topicId, newTitle);
     }
 
@@ -161,12 +161,12 @@ class StateModelImpl implements StateModel {
     }
 
     @Override
-    public Topic getTopic(TopicId topicId) {
+    public synchronized Topic getTopic(TopicId topicId) {
         return storage.getTopic(topicId);
     }
 
     @Override
-    public Long getInteractionCountInTopic(String topic) {
+    public synchronized Long getInteractionCountInTopic(String topic) {
         return getFullHistory().stream()
                 .filter(interaction -> Objects.equals(storage.getTopic(interaction.topicId()).title(), topic))
                 .count();
@@ -200,19 +200,19 @@ class StateModelImpl implements StateModel {
     }
 
     @Override
-    public Boolean isHistoryFilteringEnabled() {
+    public synchronized Boolean isHistoryFilteringEnabled() {
         log.trace("isHistoryFilteringEnabled: {}", isHistoryFilteringEnabled);
         return isHistoryFilteringEnabled;
     }
 
     @Override
-    public void setIsHistoryFilteringEnabled(Boolean isHistoryFilteringEnabled) {
+    public synchronized void setIsHistoryFilteringEnabled(Boolean isHistoryFilteringEnabled) {
         log.trace("setIsHistoryFilteringEnabled: {}", isHistoryFilteringEnabled);
         this.isHistoryFilteringEnabled = isHistoryFilteringEnabled;
     }
 
     @Override
-    public void chooseFirstInteractionAsCurrent() {
+    public synchronized void chooseFirstInteractionAsCurrent() {
         if (!getFilteredHistory().isEmpty()) {
             setCurrentInteractionId(getFilteredHistory().getFirst().id());
         } else {

@@ -12,6 +12,8 @@ import topicpromptui.ui.TestingData.I3;
 import topicpromptui.core.config.ConfigModel;
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
+
 import static topicpromptui.core.storagefilesystem.AnswerType.GRAMMAR;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -23,6 +25,30 @@ class StorageModelTest extends BaseTest {
     @Test
     void newInteractionId() {
         assertThat(storage.newInteractionId()).isNotNull();
+    }
+
+    @Test
+    void newInteractionIdIsDistinctWithinTheSameSecond() {
+        var id1 = storage.newInteractionId();
+        var id2 = storage.newInteractionId();
+        var id3 = storage.newInteractionId();
+        assertThat(id2.id()).isGreaterThan(id1.id());
+        assertThat(id3.id()).isGreaterThan(id2.id());
+    }
+
+    @Test
+    void newInteractionIdNeverCollidesWithSavedInteraction() {
+        var futureId = Instant.now().getEpochSecond() + 1000;
+        storage.saveTopic(I1.TOPIC);
+        storage.saveInteraction(newInteraction(futureId, I1.TOPIC));
+        assertThat(storage.newInteractionId().id()).isGreaterThan(futureId);
+    }
+
+    @Test
+    void updateNonexistentInteractionIsSkipped() {
+        var deletedId = new InteractionId(999L);
+        storage.updateInteraction(deletedId, i -> i.withParentInteractionId(null));
+        assertThat(storage.readInteraction(deletedId)).isEmpty();
     }
 
     @Test

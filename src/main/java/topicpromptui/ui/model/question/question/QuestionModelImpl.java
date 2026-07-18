@@ -43,8 +43,14 @@ class QuestionModelImpl implements QuestionModel {
     private static final Logger log = LoggerFactory.getLogger(QuestionModelImpl.class);
     // Requests to the 4 AiApi providers are network-bound and sent concurrently, so they
     // must not be limited by ForkJoinPool.commonPool()'s CPU-core-based sizing, which can
-    // serialize them on machines with few cores (e.g. CI runners).
-    private static final ExecutorService EXECUTOR = Executors.newCachedThreadPool();
+    // serialize them on machines with few cores (e.g. CI runners). Daemon threads: a
+    // streaming send has no overall timeout, so a non-daemon in-flight stream would keep
+    // the JVM alive long after the window is closed (nothing ever shuts this pool down).
+    private static final ExecutorService EXECUTOR = Executors.newCachedThreadPool(runnable -> {
+        var thread = new Thread(runnable);
+        thread.setDaemon(true);
+        return thread;
+    });
     private static final Duration PROGRESS_INTERVAL = Duration.ofMillis(250);
     private final StorageModel storage;
     private final PromptFactory promptFactory;
