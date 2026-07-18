@@ -36,6 +36,9 @@ public class WindowAssertion {
     private Topic topicSelectedItem;
     private List<Topic> topicItems;
     private boolean topicRenameButtonDisabled;
+    // null means "same as topicRenameButtonDisabled": both buttons disable on the same
+    // "no current topic" condition, so most tests don't need to set this separately.
+    private Boolean topicDeleteButtonDisabled;
     private Boolean filterHistorySelected;
     private String questionText;
     private String questionStyle;
@@ -131,6 +134,11 @@ public class WindowAssertion {
 
     public WindowAssertion topicRenameButtonDisabled(boolean topicRenameButtonDisabled) {
         this.topicRenameButtonDisabled = topicRenameButtonDisabled;
+        return this;
+    }
+
+    public WindowAssertion topicDeleteButtonDisabled(boolean topicDeleteButtonDisabled) {
+        this.topicDeleteButtonDisabled = topicDeleteButtonDisabled;
         return this;
     }
 
@@ -234,6 +242,9 @@ public class WindowAssertion {
             soft.assertThat(topic.comboBox().getItems()).as(descr("Topic/ComboBox/Items")).containsExactlyElementsOf(topicItems);
             soft.assertThat(topic.filterHistoryCheckBox().isSelected()).as(descr("Topic/Label/Text")).isEqualTo(filterHistorySelected);
             soft.assertThat(topic.renameButton().isDisabled()).as(descr("Topic/RenameButton/Disabled")).isEqualTo(topicRenameButtonDisabled);
+            soft.assertThat(topic.deleteButton().getText()).as(descr("Topic/DeleteButton/Text")).isEqualTo("🗑");
+            soft.assertThat(topic.deleteButton().isDisabled()).as(descr("Topic/DeleteButton/Disabled"))
+                    .isEqualTo(topicDeleteButtonDisabled != null ? topicDeleteButtonDisabled : topicRenameButtonDisabled);
             var topicTitle = app.stateModel.getCurrentTopic() != null ? app.stateModel.getCurrentTopic().title() : null;
             soft.assertThat(topicTitle).as(descr("Topic/Model/CurrentTopic")).isEqualTo(topicSelectedItemTitle);
         }

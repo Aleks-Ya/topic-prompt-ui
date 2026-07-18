@@ -257,6 +257,11 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
     }
 
     @Override
+    public void deleteTopic(TopicId topicId) {
+        stateModel.deleteTopic(topicId);
+    }
+
+    @Override
     public Long getInteractionCountInTopic(String topic) {
         return stateModel.getInteractionCountInTopic(topic);
     }

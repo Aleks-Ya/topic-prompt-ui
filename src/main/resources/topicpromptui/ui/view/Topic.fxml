@@ -16,6 +16,8 @@
     <Separator orientation="VERTICAL" prefHeight="200.0" visible="false"/>
     <Button fx:id="addButton" onAction="#onAddButtonClicked" text="_+"/>
     <Separator orientation="VERTICAL" prefHeight="200.0" visible="false"/>
+    <Button fx:id="deleteButton" text="🗑"/>
+    <Separator orientation="VERTICAL" prefHeight="200.0" visible="false"/>
     <CheckBox fx:id="filterHistoryCheckBox" mnemonicParsing="false" onAction="#topicFilterHistoryCheckBoxClicked"
               text="Filter history"/>
 </HBox>

@@ -32,6 +32,8 @@ public interface StateModel {
 
     Topic renameTopic(TopicId topicId, String newTitle);
 
+    void deleteTopic(TopicId topicId);
+
     Topic getTopic(TopicId topicId);
 
     Long getInteractionCountInTopic(String topic);

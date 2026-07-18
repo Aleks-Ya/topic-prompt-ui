@@ -28,6 +28,8 @@ public interface StorageModel {
 
     Topic renameTopic(TopicId topicId, String newTitle);
 
+    void deleteTopic(TopicId topicId);
+
     void saveTopic(Topic topic);
 
     Topic getTopic(TopicId topicId);

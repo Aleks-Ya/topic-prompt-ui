@@ -65,6 +65,19 @@ class TopicVmImpl implements TopicVmController, TopicVmMediator {
     }
 
     @Override
+    public void deleteCurrentTopic() {
+        log.trace("deleteCurrentTopic");
+        var currentTopic = mediator.getCurrentTopic();
+        mediator.deleteTopic(currentTopic.id());
+        mediator.topicWasChosen();
+    }
+
+    @Override
+    public Long getInteractionCountInCurrentTopic() {
+        return mediator.getInteractionCountInTopic(mediator.getCurrentTopic().title());
+    }
+
+    @Override
     public void updateComboBoxSelectedItemFromCurrentInteraction() {
         var topicTitle = mediator.getCurrentInteractionOpt()
                 .map(Interaction::topicId)
@@ -72,17 +85,19 @@ class TopicVmImpl implements TopicVmController, TopicVmMediator {
                 .orElse(null);
         mediator.setCurrentTopic(topicTitle);
         vmProperties.topicCbValue.setValue(topicTitle);
-        updateRenameButtonDisable();
+        updateButtonsDisable();
     }
 
     @Override
     public void updateComboBoxSelectedItemFromStateModel() {
         vmProperties.topicCbValue.setValue(mediator.getCurrentTopic());
-        updateRenameButtonDisable();
+        updateButtonsDisable();
     }
 
-    private void updateRenameButtonDisable() {
-        vmProperties.renameButtonDisable.setValue(mediator.getCurrentTopic() == null);
+    private void updateButtonsDisable() {
+        var noCurrentTopic = mediator.getCurrentTopic() == null;
+        vmProperties.renameButtonDisable.setValue(noCurrentTopic);
+        vmProperties.deleteButtonDisable.setValue(noCurrentTopic);
     }
 
     @Override

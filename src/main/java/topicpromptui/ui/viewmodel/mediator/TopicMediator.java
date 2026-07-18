@@ -24,6 +24,8 @@ public interface TopicMediator {
 
     Topic renameTopic(TopicId topicId, String newTitle);
 
+    void deleteTopic(TopicId topicId);
+
     Long getInteractionCountInTopic(String topic);
 
     Optional<Interaction> getCurrentInteractionOpt();

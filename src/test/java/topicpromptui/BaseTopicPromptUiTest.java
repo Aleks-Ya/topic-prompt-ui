@@ -150,6 +150,10 @@ public abstract class BaseTopicPromptUiTest extends ApplicationTest {
             return lookup("#renameButton").queryButton();
         }
 
+        public Button deleteButton() {
+            return lookup("#deleteButton").queryButton();
+        }
+
         public CheckBox filterHistoryCheckBox() {
             return lookup("#filterHistoryCheckBox").queryAs(CheckBox.class);
         }

@@ -9,5 +9,9 @@ public interface TopicVmController {
 
     void renameCurrentTopic(String newTitle);
 
+    void deleteCurrentTopic();
+
+    Long getInteractionCountInCurrentTopic();
+
     TopicVmProperties properties();
 }

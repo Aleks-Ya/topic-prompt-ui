@@ -149,6 +149,18 @@ class StateModelImpl implements StateModel {
     }
 
     @Override
+    public synchronized void deleteTopic(TopicId topicId) {
+        var topics = getTopics();
+        var adjacentTopic = topics.size() > 1 ? adjacentItem(topics, topics.indexOf(getTopic(topicId))) : null;
+        storage.deleteTopic(topicId);
+        setCurrentTopic(adjacentTopic);
+        if (getCurrentInteractionOpt().isEmpty()) {
+            chooseFirstInteractionAsCurrent();
+            getCurrentInteractionOpt().ifPresent(interaction -> setCurrentTopic(storage.getTopic(interaction.topicId())));
+        }
+    }
+
+    @Override
     public Topic getTopic(TopicId topicId) {
         return storage.getTopic(topicId);
     }

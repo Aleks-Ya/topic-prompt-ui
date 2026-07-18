@@ -6,6 +6,7 @@ import jakarta.inject.Inject;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
@@ -31,10 +32,13 @@ public class TopicController extends BaseController {
     private Button addButton;
     @FXML
     private Button renameButton;
+    @FXML
+    private Button deleteButton;
     @Inject
     private TopicVmController vm;
     private final TextInputDialog newTopicDialog = new TextInputDialog();
     private final TextInputDialog renameTopicDialog = new TextInputDialog();
+    private final Alert deleteTopicDialog = new Alert(Alert.AlertType.CONFIRMATION);
 
     @FXML
     void topicFilterHistoryCheckBoxClicked(ActionEvent ignore) {
@@ -86,6 +90,20 @@ public class TopicController extends BaseController {
             renameTopicDialog.getEditor().requestFocus();
             renameTopicDialog.hide();
             renameTopicDialog.showAndWait().ifPresent(newTitle -> vm.renameCurrentTopic(newTitle));
+        });
+
+        vm.properties().deleteButtonDisable.bindBidirectional(deleteButton.disableProperty());
+        deleteTopicDialog.setTitle("Delete topic");
+        ((Button) deleteTopicDialog.getDialogPane().lookupButton(ButtonType.OK)).setDefaultButton(false);
+        ((Button) deleteTopicDialog.getDialogPane().lookupButton(ButtonType.CANCEL)).setDefaultButton(true);
+        deleteButton.setOnAction(_ -> {
+            var currentTopic = topicComboBox.getValue();
+            deleteTopicDialog.setHeaderText("Delete topic \"" + currentTopic.title() + "\"?");
+            deleteTopicDialog.setContentText("This will also delete " + vm.getInteractionCountInCurrentTopic()
+                    + " interaction(s) in this topic.");
+            deleteTopicDialog.showAndWait()
+                    .filter(buttonType -> buttonType == ButtonType.OK)
+                    .ifPresent(_ -> vm.deleteCurrentTopic());
         });
         topicLabel.setLabelFor(topicComboBox);
         topicComboBox.showingProperty()

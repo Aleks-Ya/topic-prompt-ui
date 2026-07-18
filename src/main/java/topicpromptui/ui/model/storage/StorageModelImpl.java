@@ -170,6 +170,21 @@ class StorageModelImpl implements StorageModel {
         }
     }
 
+    @Override
+    public synchronized void deleteTopic(TopicId topicId) {
+        var currentTopic = getTopic(topicId);
+        log.trace("Deleting topic: {}", currentTopic);
+        readAllInteractions().stream()
+                .filter(interaction -> interaction.topicId().equals(topicId))
+                .forEach(interaction -> deleteInteraction(interaction.id()));
+        var topics = storageFilesystem.readTopics().stream()
+                .filter(topic -> !topic.id().equals(topicId))
+                .toList();
+        storageFilesystem.saveTopics(topics);
+        updateTopicCaches(topics);
+        log.trace("Topic was deleted: {}", currentTopic);
+    }
+
     private void updateTopicCaches(List<Topic> topics) {
         topicList.clear();
         topicList.addAll(topics);
