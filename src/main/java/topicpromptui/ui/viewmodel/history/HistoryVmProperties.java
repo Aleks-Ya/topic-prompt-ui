@@ -20,4 +20,6 @@ public class HistoryVmProperties {
     public final ObjectProperty<ObservableList<InteractionItem>> historyCbItems = new SimpleObjectProperty<>();
     public final ObjectProperty<EventHandler<ActionEvent>> historyCbOnAction = new SimpleObjectProperty<>();
     public final StringProperty historyFilterTfText = new SimpleStringProperty("");
+    public final BooleanProperty historyFilterTfFocused = new SimpleBooleanProperty();
+    public final BooleanProperty historyFilterTfSelectAll = new SimpleBooleanProperty();
 }

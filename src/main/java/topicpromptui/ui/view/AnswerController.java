@@ -27,6 +27,7 @@ import static javafx.scene.input.KeyCode.DIGIT2; // NOSONAR - used in switch cas
 import static javafx.scene.input.KeyCode.DIGIT3; // NOSONAR - used in switch case labels below, S1128 false positive
 import static javafx.scene.input.KeyCode.DIGIT4; // NOSONAR - used in switch case labels below, S1128 false positive
 import static javafx.scene.input.KeyCode.DOWN;
+import static javafx.scene.input.KeyCode.F;
 import static javafx.scene.input.KeyCode.UP;
 import static javafx.scene.input.KeyEvent.KEY_PRESSED;
 
@@ -146,6 +147,11 @@ public class AnswerController extends BaseController {
             return;
         }
         if (!event.isAltDown()) {
+            if (event.getCode() == F) {
+                event.consume();
+                vm.ctrlFHotkeyPressed();
+                return;
+            }
             var digit = switch (event.getCode()) {
                 case DIGIT1 -> 1;
                 case DIGIT2 -> 2;

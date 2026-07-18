@@ -6,4 +6,6 @@ public interface HistoryVmMediator {
     void selectPreviousItem();
 
     void selectNextItem();
+
+    void focusOnFilterAndSelect();
 }

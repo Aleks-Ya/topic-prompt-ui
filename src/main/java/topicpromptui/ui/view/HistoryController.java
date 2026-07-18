@@ -3,6 +3,7 @@ package topicpromptui.ui.view;
 import topicpromptui.ui.viewmodel.InteractionItem;
 import topicpromptui.ui.viewmodel.history.HistoryVmController;
 import jakarta.inject.Inject;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -52,6 +53,18 @@ public class HistoryController extends BaseController {
         vm.properties().historyCbItems.bindBidirectional(historyComboBox.itemsProperty());
         vm.properties().historyCbOnAction.bindBidirectional(historyComboBox.onActionProperty());
         vm.properties().historyFilterTfText.bindBidirectional(historyFilterTextField.textProperty());
+        vm.properties().historyFilterTfFocused.addListener((observable, oldValue, newValue) -> {
+                    if (Boolean.TRUE.equals(newValue)) {
+                        Platform.runLater(() -> historyFilterTextField.requestFocus());
+                    }
+                }
+        );
+        vm.properties().historyFilterTfSelectAll.addListener((observable, oldValue, newValue) -> {
+                    if (Boolean.TRUE.equals(newValue)) {
+                        Platform.runLater(() -> historyFilterTextField.selectAll());
+                    }
+                }
+        );
         vm.properties().historyDeleteButtonDisable.bindBidirectional(historyDeleteButton.disableProperty());
         historyFilterTextField.setRight(createFilterClearButton());
     }

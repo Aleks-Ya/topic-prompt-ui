@@ -139,6 +139,11 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
         mediator.selectNextHistoryItem();
     }
 
+    @Override
+    public void ctrlFHotkeyPressed() {
+        mediator.focusHistoryFilter();
+    }
+
     private Color answerStateToColor(AnswerState answerState) {
         return switch (answerState) {
             case NEW -> WHITE;

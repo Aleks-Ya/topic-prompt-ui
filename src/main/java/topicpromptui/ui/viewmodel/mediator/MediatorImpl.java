@@ -42,6 +42,7 @@ import static javafx.scene.input.KeyCode.DIGIT4;
 import static javafx.scene.input.KeyCode.DOWN;
 import static javafx.scene.input.KeyCode.ENTER;
 import static javafx.scene.input.KeyCode.ESCAPE;
+import static javafx.scene.input.KeyCode.F;
 import static javafx.scene.input.KeyCode.U;
 import static javafx.scene.input.KeyCode.UP;
 import static javafx.scene.input.KeyCode.V;
@@ -187,6 +188,7 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
         accelerators.put(new KeyCodeCombination(ESCAPE), this::escapePressed);
         accelerators.put(new KeyCodeCombination(ENTER, CONTROL_DOWN), () -> questionVM.createNewInteractionAndRequestAnswers(QUESTION));
         accelerators.put(new KeyCodeCombination(U, ALT_DOWN), questionVM::toggleFollowUp);
+        accelerators.put(new KeyCodeCombination(F, CONTROL_DOWN), historyVM::focusOnFilterAndSelect);
         // Digit order must match the Alt-1..4 copy shortcuts (AnswerVmImpl.hotkeyDigitMap)
         accelerators.put(new KeyCodeCombination(DIGIT1, CONTROL_DOWN), () -> uiVM.toggleExpandedAnswer(GRAMMAR));
         accelerators.put(new KeyCodeCombination(DIGIT2, CONTROL_DOWN), () -> uiVM.toggleExpandedAnswer(OPEN_AI));
@@ -209,6 +211,11 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
     @Override
     public void selectNextHistoryItem() {
         historyVM.selectNextItem();
+    }
+
+    @Override
+    public void focusHistoryFilter() {
+        historyVM.focusOnFilterAndSelect();
     }
 
     @Override

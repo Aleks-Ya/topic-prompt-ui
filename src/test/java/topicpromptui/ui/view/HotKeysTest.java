@@ -227,6 +227,41 @@ class HotKeysTest extends BaseTopicPromptUiTest {
     }
 
     @Test
+    void focusFilterByCtrlF() {
+        assertThat(history().filterTextField().isFocused()).isFalse();
+        press(CONTROL, F).release(F, CONTROL);
+        WaitForAsyncUtils.waitForFxEvents();
+        assertThat(history().filterTextField().isFocused()).isTrue();
+        write("question 1");
+        WaitForAsyncUtils.waitForFxEvents();
+        assertThat(history().comboBox().getItems()).hasSize(1);
+        assertThat(history().comboBox().getItems().getFirst().interaction()).isEqualTo(I1.INTERACTION);
+    }
+
+    @Test
+    void ctrlFSelectsExistingFilterText() {
+        clickOn(history().filterTextField()).write("question 1");
+        clickOn(question().textArea());
+        press(CONTROL, F).release(F, CONTROL);
+        WaitForAsyncUtils.waitForFxEvents();
+        assertThat(history().filterTextField().isFocused()).isTrue();
+        write("2");
+        WaitForAsyncUtils.waitForFxEvents();
+        assertThat(history().filterTextField().getText()).isEqualTo("2");
+        assertThat(history().comboBox().getItems()).hasSize(1);
+        assertThat(history().comboBox().getItems().getFirst().interaction()).isEqualTo(I2.INTERACTION);
+    }
+
+    @Test
+    void focusFilterByCtrlF_FocusOnWebView() {
+        clickOn(claudeAnswer().webView());
+        assertThat(history().filterTextField().isFocused()).isFalse();
+        press(CONTROL, F).release(F, CONTROL);
+        WaitForAsyncUtils.waitForFxEvents();
+        assertThat(history().filterTextField().isFocused()).isTrue();
+    }
+
+    @Test
     void altTFocusOnTopicComboBox() {
         assertThat(topic().comboBox().isFocused()).isFalse();
         assertThat(topic().comboBox().getSelectionModel().getSelectedItem()).isEqualTo(I3.TOPIC);

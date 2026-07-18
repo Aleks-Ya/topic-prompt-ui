@@ -78,6 +78,15 @@ class HistoryVmImpl implements HistoryVmController, HistoryVmMediator {
         historyCbFacade.selectNextItem();
     }
 
+    @Override
+    public void focusOnFilterAndSelect() {
+        log.debug("focusOnFilterAndSelect");
+        vmProperties.historyFilterTfFocused.setValue(false);
+        vmProperties.historyFilterTfFocused.setValue(true);
+        vmProperties.historyFilterTfSelectAll.setValue(false);
+        vmProperties.historyFilterTfSelectAll.setValue(true);
+    }
+
     private void enableDeleteButton() {
         vmProperties.historyDeleteButtonDisable.setValue(stateModelFacade.isCurrentInteractionEmpty());
     }

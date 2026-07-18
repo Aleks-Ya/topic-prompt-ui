@@ -9,6 +9,8 @@ import java.util.Optional;
 public interface AnswerMediator {
     void selectNextHistoryItem();
 
+    void focusHistoryFilter();
+
     void putHtmlToClipboard(String html);
 
     InteractionId getCurrentInteractionId();
