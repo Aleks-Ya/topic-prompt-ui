@@ -1,2 +1,2 @@
-Check is this sentence factually correct in context of `${topic}`: `${question}`?
+Check is this sentence factually correct in the context of `${topic}`: `${question}`?
 Format your answer into Markdown.

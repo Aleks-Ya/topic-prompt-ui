@@ -38,6 +38,7 @@ class PromptFactoryTest extends BaseTest {
         assertThat(factory.getPrompt(QUESTION, "Topic A", "Question A", OPEN_AI)).contains("""
                 I will ask you a question about `Topic A`.
                 Do not repeat the question in your answer.
+                Avoid repeating the topic in your answer.
                 Format your answer into Markdown.
                 The question is:
                 ```
@@ -46,6 +47,7 @@ class PromptFactoryTest extends BaseTest {
         assertThat(factory.getPrompt(QUESTION, "Topic A", "Question A", CLAUDE)).contains("""
                 I will ask you a question about `Topic A`.
                 Do not repeat the question in your answer.
+                Avoid repeating the topic in your answer.
                 Format your answer into Markdown.
                 The question is:
                 ```
@@ -54,6 +56,7 @@ class PromptFactoryTest extends BaseTest {
         assertThat(factory.getPrompt(QUESTION, "Topic A", "Question A", GCP)).contains("""
                 I will ask you a question about `Topic A`.
                 Do not repeat the question in your answer.
+                Avoid repeating the topic in your answer.
                 Format your answer into Markdown.
                 The question is:
                 ```
@@ -115,15 +118,15 @@ class PromptFactoryTest extends BaseTest {
                 ```""");
         assertThat(factory.getPrompt(FACT, "Topic A", "Question A", OPEN_AI))
                 .contains("""
-                        Check is this sentence factually correct in context of `Topic A`: `Question A`?
+                        Check is this sentence factually correct in the context of `Topic A`: `Question A`?
                         Format your answer into Markdown.""");
         assertThat(factory.getPrompt(FACT, "Topic A", "Question A", CLAUDE))
                 .contains("""
-                        Check is this sentence factually correct in context of `Topic A`: `Question A`?
+                        Check is this sentence factually correct in the context of `Topic A`: `Question A`?
                         Format your answer into Markdown.""");
         assertThat(factory.getPrompt(FACT, "Topic A", "Question A", GCP))
                 .contains("""
-                        Check is this sentence factually correct in context of `Topic A`: `Question A`?
+                        Check is this sentence factually correct in the context of `Topic A`: `Question A`?
                         Format your answer into Markdown.""");
     }
 
