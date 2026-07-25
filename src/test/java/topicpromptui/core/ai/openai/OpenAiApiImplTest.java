@@ -5,6 +5,9 @@ import topicpromptui.core.ai.AiApiException;
 import topicpromptui.core.ai.ConversationTurn;
 import topicpromptui.core.config.ConfigModel;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -89,39 +92,36 @@ class OpenAiApiImplTest {
                 .hasMessageContaining("without a response.completed");
     }
 
-    @Test
-    void parseResponseThrowsWhenTruncatedByTokenLimit() {
-        var json = """
-                {
-                  "id": "resp_1",
-                  "output": [
-                    {"type": "message", "content": [{"text": "partial answ"}], "status": "incomplete"}
-                  ],
-                  "usage": {"input_tokens": 10, "output_tokens": 5, "total_tokens": 15}
-                }
-                """;
-        var responseBody = gson.fromJson(json, ResponseBody.class);
-        assertThatThrownBy(() -> api.parseResponse(responseBody))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("Message output not completed");
+    private static Stream<Arguments> parseResponseErrorCases() {
+        return Stream.of(
+                Arguments.of("truncated by token limit (status incomplete)", """
+                        {"id": "resp_1", "output": [{"type": "message", "content": [{"text": "partial answ"}], \
+                        "status": "incomplete"}], "usage": {"input_tokens": 10, "output_tokens": 5, "total_tokens": 15}}""",
+                        "Message output not completed"),
+                Arguments.of("multiple message outputs", """
+                        {"id": "resp_2", "output": [{"type": "message", "content": [{"text": "answer 1"}], \
+                        "status": "completed"}, {"type": "message", "content": [{"text": "answer 2"}], \
+                        "status": "completed"}], "usage": {"input_tokens": 10, "output_tokens": 5, "total_tokens": 15}}""",
+                        "Multiple message outputs"),
+                Arguments.of("no message output (only MCP bookkeeping)", """
+                        {"id": "resp_6", "output": [{"type": "mcp_list_tools", "status": "completed"}, \
+                        {"type": "mcp_call", "status": "completed"}], \
+                        "usage": {"input_tokens": 10, "output_tokens": 5, "total_tokens": 15}}""",
+                        "No message output"),
+                Arguments.of("message with multiple contents", """
+                        {"id": "resp_7", "output": [{"type": "message", "status": "completed", \
+                        "content": [{"text": "part 1"}, {"text": "part 2"}]}], \
+                        "usage": {"input_tokens": 10, "output_tokens": 5, "total_tokens": 15}}""",
+                        "Multiple contents"));
     }
 
-    @Test
-    void parseResponseThrowsWhenMultipleMessageOutputs() {
-        var json = """
-                {
-                  "id": "resp_2",
-                  "output": [
-                    {"type": "message", "content": [{"text": "answer 1"}], "status": "completed"},
-                    {"type": "message", "content": [{"text": "answer 2"}], "status": "completed"}
-                  ],
-                  "usage": {"input_tokens": 10, "output_tokens": 5, "total_tokens": 15}
-                }
-                """;
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("parseResponseErrorCases")
+    void parseResponseThrows(String caseName, String json, String expectedMessage) {
         var responseBody = gson.fromJson(json, ResponseBody.class);
         assertThatThrownBy(() -> api.parseResponse(responseBody))
                 .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("Multiple message outputs");
+                .hasMessageContaining(expectedMessage);
     }
 
     @Test
@@ -217,39 +217,4 @@ class OpenAiApiImplTest {
         assertThat(request.headers().firstValue("Content-Type")).contains("application/json");
     }
 
-    @Test
-    void parseResponseThrowsWhenNoMessageOutput() {
-        var json = """
-                {
-                  "id": "resp_6",
-                  "output": [
-                    {"type": "mcp_list_tools", "status": "completed"},
-                    {"type": "mcp_call", "status": "completed"}
-                  ],
-                  "usage": {"input_tokens": 10, "output_tokens": 5, "total_tokens": 15}
-                }
-                """;
-        var responseBody = gson.fromJson(json, ResponseBody.class);
-        assertThatThrownBy(() -> api.parseResponse(responseBody))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("No message output");
-    }
-
-    @Test
-    void parseResponseThrowsWhenMessageHasMultipleContents() {
-        var json = """
-                {
-                  "id": "resp_7",
-                  "output": [
-                    {"type": "message", "status": "completed", \
-                     "content": [{"text": "part 1"}, {"text": "part 2"}]}
-                  ],
-                  "usage": {"input_tokens": 10, "output_tokens": 5, "total_tokens": 15}
-                }
-                """;
-        var responseBody = gson.fromJson(json, ResponseBody.class);
-        assertThatThrownBy(() -> api.parseResponse(responseBody))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("Multiple contents");
-    }
 }
