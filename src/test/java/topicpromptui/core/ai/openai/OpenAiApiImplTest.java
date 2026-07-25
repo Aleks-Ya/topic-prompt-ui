@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class OpenAiApiImplTest {
     private final Gson gson = new Gson();
-    private final OpenAiApiImpl api = new OpenAiApiImpl("gpt-5", null);
+    private final OpenAiApiImpl api = new OpenAiApiImpl("gpt-5", null, false);
 
     private static Stream<String> sse(String... eventTypeAndData) {
         var lines = new ArrayList<String>();
@@ -36,7 +36,7 @@ class OpenAiApiImplTest {
                         {"type": "response.output_text.delta", "delta": "answer"}""",
                 "response.completed", """
                         {"type": "response.completed", "response": {"id": "resp_3", \
-                        "output": [{"content": [{"text": "Full answer"}], "status": "completed"}], \
+                        "output": [{"type": "message", "content": [{"text": "Full answer"}], "status": "completed"}], \
                         "usage": {"input_tokens": 10, "output_tokens": 20, "total_tokens": 30}}}"""
         ), deltas::add);
         assertThat(deltas).containsExactly("Full ", "answer");
@@ -76,7 +76,7 @@ class OpenAiApiImplTest {
                 {
                   "id": "resp_1",
                   "output": [
-                    {"content": [{"text": "partial answ"}], "status": "incomplete"}
+                    {"type": "message", "content": [{"text": "partial answ"}], "status": "incomplete"}
                   ],
                   "usage": {"input_tokens": 10, "output_tokens": 5, "total_tokens": 15}
                 }
@@ -84,17 +84,17 @@ class OpenAiApiImplTest {
         var responseBody = gson.fromJson(json, ResponseBody.class);
         assertThatThrownBy(() -> api.parseResponse(responseBody))
                 .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("No completed output");
+                .hasMessageContaining("Message output not completed");
     }
 
     @Test
-    void parseResponseThrowsWhenMultipleCompletedOutputs() {
+    void parseResponseThrowsWhenMultipleMessageOutputs() {
         var json = """
                 {
                   "id": "resp_2",
                   "output": [
-                    {"content": [{"text": "answer 1"}], "status": "completed"},
-                    {"content": [{"text": "answer 2"}], "status": "completed"}
+                    {"type": "message", "content": [{"text": "answer 1"}], "status": "completed"},
+                    {"type": "message", "content": [{"text": "answer 2"}], "status": "completed"}
                   ],
                   "usage": {"input_tokens": 10, "output_tokens": 5, "total_tokens": 15}
                 }
@@ -102,7 +102,7 @@ class OpenAiApiImplTest {
         var responseBody = gson.fromJson(json, ResponseBody.class);
         assertThatThrownBy(() -> api.parseResponse(responseBody))
                 .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("Multiple outputs");
+                .hasMessageContaining("Multiple message outputs");
     }
 
     @Test
@@ -111,7 +111,7 @@ class OpenAiApiImplTest {
                 {
                   "id": "resp_3",
                   "output": [
-                    {"content": [{"text": "Full answer"}], "status": "completed"}
+                    {"type": "message", "content": [{"text": "Full answer"}], "status": "completed"}
                   ],
                   "usage": {"input_tokens": 10, "output_tokens": 20, "total_tokens": 30}
                 }
@@ -121,5 +121,28 @@ class OpenAiApiImplTest {
         assertThat(response.text()).isEqualTo("Full answer");
         assertThat(response.finishReason()).isEqualTo("completed");
         assertThat(response.totalTokens()).isEqualTo(30);
+    }
+
+    @Test
+    void parseResponseSelectsMessageAmongMcpOutputs() {
+        // With the Context7 MCP tool enabled, the output array also carries mcp_list_tools / mcp_call /
+        // reasoning items; parseResponse must pick the single "message" output, not choke on the extras.
+        var json = """
+                {
+                  "id": "resp_5",
+                  "output": [
+                    {"type": "mcp_list_tools", "status": "completed"},
+                    {"type": "reasoning", "status": "completed"},
+                    {"type": "mcp_call", "status": "completed"},
+                    {"type": "message", "content": [{"text": "The React docs say X."}], "status": "completed"}
+                  ],
+                  "usage": {"input_tokens": 100, "output_tokens": 40, "total_tokens": 140}
+                }
+                """;
+        var responseBody = gson.fromJson(json, ResponseBody.class);
+        var response = api.parseResponse(responseBody);
+        assertThat(response.text()).isEqualTo("The React docs say X.");
+        assertThat(response.finishReason()).isEqualTo("completed");
+        assertThat(response.totalTokens()).isEqualTo(140);
     }
 }

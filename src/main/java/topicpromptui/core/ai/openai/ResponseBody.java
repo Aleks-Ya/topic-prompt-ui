@@ -6,7 +6,9 @@ record ResponseBody(String id, String model, List<Outputs> output, Error error, 
     public record Content(String text) {
     }
 
-    public record Outputs(List<Content> content, String status) {
+    // type distinguishes the assistant "message" output from MCP bookkeeping outputs
+    // ("mcp_list_tools", "mcp_call") and "reasoning" outputs that appear when tools are enabled.
+    public record Outputs(String type, List<Content> content, String status) {
     }
 
     record Error(String message, String type, String param, String code) {

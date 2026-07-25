@@ -114,6 +114,18 @@ class OpenAiApiIT {
     }
 
     @Test
+    void sendWithContext7Docs() {
+        // Exercises the server-side Context7 MCP tool end to end (context7.api.key must be set): a green
+        // run proves the extra mcp_list_tools/mcp_call outputs don't break parseResponse's selection.
+        var response = api.send("Using the Context7 documentation, briefly explain what the Context7 MCP "
+                + "server provides for developers. Consult the library docs before answering.");
+        System.out.println(response.text());
+        System.out.println("finishReason: " + response.finishReason());
+        assertThat(response.text()).isNotBlank();
+        assertThat(response.finishReason()).isEqualTo("completed");
+    }
+
+    @Test
     void error() {
         assertThatThrownBy(() -> api.send((String) null))
                 .isInstanceOf(RuntimeException.class)

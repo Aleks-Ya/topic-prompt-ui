@@ -12,6 +12,6 @@ public class ClaudeModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(AiApi.class).annotatedWith(Names.named(CLAUDE_AI)).toInstance(new ClaudeApiImpl(MODEL, EFFORT));
+        bind(AiApi.class).annotatedWith(Names.named(CLAUDE_AI)).toInstance(new ClaudeApiImpl(MODEL, EFFORT, true));
     }
 }

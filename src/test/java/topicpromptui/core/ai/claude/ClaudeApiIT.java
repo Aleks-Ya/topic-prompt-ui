@@ -66,6 +66,18 @@ class ClaudeApiIT {
     }
 
     @Test
+    void sendWithContext7Docs() {
+        // Exercises the server-side Context7 MCP connector end to end (context7.api.key must be set):
+        // a green run proves the MCP tool-use/tool-result blocks in the stream don't break assemble().
+        var response = api.send("Using the Context7 documentation, briefly explain what the Context7 MCP "
+                + "server provides for developers. Consult the library docs before answering.");
+        System.out.println(response.text());
+        System.out.println("finishReason: " + response.finishReason());
+        assertThat(response.text()).isNotBlank();
+        assertThat(response.finishReason()).isIn("end_turn", "pause_turn");
+    }
+
+    @Test
     void error() {
         assertThatThrownBy(() -> api.send((String) null))
                 .isInstanceOf(RuntimeException.class)

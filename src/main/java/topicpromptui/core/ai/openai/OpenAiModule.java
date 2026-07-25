@@ -15,8 +15,8 @@ public class OpenAiModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(AiApi.class).annotatedWith(Names.named(OPEN_AI)).toInstance(new OpenAiApiImpl(MODEL, EFFORT));
+        bind(AiApi.class).annotatedWith(Names.named(OPEN_AI)).toInstance(new OpenAiApiImpl(MODEL, EFFORT, true));
         bind(AiApi.class).annotatedWith(Names.named(OPEN_AI_GRAMMAR))
-                .toInstance(new OpenAiApiImpl(GRAMMAR_MODEL, GRAMMAR_EFFORT));
+                .toInstance(new OpenAiApiImpl(GRAMMAR_MODEL, GRAMMAR_EFFORT, false));
     }
 }

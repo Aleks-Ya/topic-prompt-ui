@@ -17,36 +17,52 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-// OpenAiModule builds this instance manually (new OpenAiApiImpl(model, effort)) and binds it via
+// OpenAiModule builds this instance manually (new OpenAiApiImpl(model, effort, context7Enabled)) and binds it via
 // toInstance(...) so the hardcoded model/effort constants stay per-binding; Guice therefore never
 // calls this constructor and can only supply configModel via member injection.
 @SuppressWarnings("java:S6813")
 class OpenAiApiImpl implements AiApi {
     private static final Logger log = LoggerFactory.getLogger(OpenAiApiImpl.class);
+    private static final String CONTEXT7_MCP_URL = "https://mcp.context7.com/mcp";
+    private static final String CONTEXT7_NAME = "context7";
+    private static final String CONTEXT7_KEY_PROPERTY = "context7.api.key";
     private static final Gson gson = new Gson();
     private static final URI endpoint = URI.create("https://api.openai.com/v1/responses");
     private final String model;
     private final ReasoningEffort effort;
+    // When true (and context7.api.key is set), this binding attaches the Context7 documentation MCP
+    // server so the model can look up current library docs. Off for the grammar binding.
+    private final boolean context7Enabled;
     @Inject
     private ConfigModel configModel;
 
-    OpenAiApiImpl(String model, ReasoningEffort effort) {
+    OpenAiApiImpl(String model, ReasoningEffort effort, boolean context7Enabled) {
         this.model = model;
         this.effort = effort;
+        this.context7Enabled = context7Enabled;
     }
 
     @Override
     public AiResponse send(List<ConversationTurn> turns, Consumer<String> onTextDelta) {
         log.info("Sending question: {}", turns);
         var token = configModel.getProperty("openai.token");
+        var context7Key = context7Key();
         var reasoning = effort != null ? new Reasoning(effort) : null;
         var input = turns.stream().map(turn -> new InputItem(role(turn.speaker()), turn.content())).toList();
-        var body = new RequestBody(model, input, reasoning, true);
+        List<Tool> tools = null;
+        if (context7Key != null) {
+            tools = List.of(new Tool("mcp", CONTEXT7_NAME, CONTEXT7_MCP_URL,
+                    Map.of("Authorization", "Bearer " + context7Key), "never"));
+        }
+        var body = new RequestBody(model, input, reasoning, true, tools);
         var json = gson.toJson(body);
-        log.trace("Request body: {}", json);
+        if (log.isTraceEnabled()) {
+            log.trace("Request body: {}", context7Key != null ? json.replace(context7Key, "***") : json);
+        }
         var request = HttpRequest.newBuilder()
                 .uri(endpoint)
                 .header("Authorization", "Bearer " + token)
@@ -109,26 +125,41 @@ class OpenAiApiImpl implements AiApi {
 
     AiResponse parseResponse(ResponseBody responseBody) {
         var outputs = responseBody.output();
-        var completedOutputs = outputs.stream()
-                .filter(output -> "completed".equalsIgnoreCase(output.status()))
+        // With the MCP tool enabled the output array also carries mcp_list_tools / mcp_call / reasoning
+        // items; the assistant's answer is the single "message" output. Select it rather than assuming
+        // the array holds exactly one item.
+        var messageOutputs = outputs.stream()
+                .filter(output -> "message".equalsIgnoreCase(output.type()))
                 .toList();
-        if (completedOutputs.isEmpty()) {
-            throw new AiApiException("No completed output in response: " + outputs);
+        if (messageOutputs.isEmpty()) {
+            throw new AiApiException("No message output in response: " + outputs);
         }
-        if (completedOutputs.size() > 1) {
-            throw new AiApiException("Multiple outputs in response: " + outputs);
+        if (messageOutputs.size() > 1) {
+            throw new AiApiException("Multiple message outputs in response: " + outputs);
         }
-        var contents = completedOutputs.getFirst().content();
+        var message = messageOutputs.getFirst();
+        if (!"completed".equalsIgnoreCase(message.status())) {
+            throw new AiApiException("Message output not completed in response: " + outputs);
+        }
+        var contents = message.content();
         if (contents.size() > 1) {
             throw new AiApiException("Multiple contents in output: " + contents);
         }
         var usage = responseBody.usage();
         return new AiResponse(contents.getFirst().text(), responseBody.id(), model,
                 effort != null ? effort.name() : null,
-                completedOutputs.getFirst().status(),
+                message.status(),
                 usage != null ? usage.input_tokens() : null,
                 usage != null ? usage.output_tokens() : null,
                 usage != null ? usage.total_tokens() : null);
+    }
+
+    private String context7Key() {
+        if (!context7Enabled) {
+            return null;
+        }
+        var key = configModel.getProperty(CONTEXT7_KEY_PROPERTY);
+        return key != null && !key.isBlank() ? key : null;
     }
 
     private static String role(ConversationTurn.Speaker speaker) {
