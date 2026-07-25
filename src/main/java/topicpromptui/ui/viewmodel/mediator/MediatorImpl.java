@@ -126,14 +126,16 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
     private void answerUpdated(InteractionId interactionId, AnswerType answerType) {
         log.trace("answerUpdated");
         // Same guard as answerProgress: a completion for a no-longer-current interaction must
-        // not repaint the pane — displayCurrentAnswer would revert a partial answer still
+        // not repaint the pane — displayCompletedAnswer would revert a partial answer still
         // streaming for the current interaction to its stored (stale or empty) HTML.
+        // displayCompletedAnswer (not displayCurrentAnswer) so the partial→final swap keeps the
+        // user's scroll position; every other pane refresh resets the scroll on purpose.
         if (interactionId.equals(stateModel.getCurrentInteractionId())) {
             switch (answerType) {
-                case GRAMMAR -> grammarAnswerVM.displayCurrentAnswer();
-                case OPEN_AI -> openAiAnswerVM.displayCurrentAnswer();
-                case CLAUDE -> claudeAnswerVM.displayCurrentAnswer();
-                case GCP -> gcpAnswerVM.displayCurrentAnswer();
+                case GRAMMAR -> grammarAnswerVM.displayCompletedAnswer();
+                case OPEN_AI -> openAiAnswerVM.displayCompletedAnswer();
+                case CLAUDE -> claudeAnswerVM.displayCompletedAnswer();
+                case GCP -> gcpAnswerVM.displayCompletedAnswer();
             }
         }
         historyVM.displayCurrentInteraction();

@@ -79,21 +79,28 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
 
     @Override
     public void displayCurrentAnswer() {
+        displayCurrentAnswer(false);
+    }
+
+    @Override
+    public void displayCompletedAnswer() {
+        displayCurrentAnswer(true);
+    }
+
+    private void displayCurrentAnswer(boolean preserveScroll) {
         Mdc.run(answerType.toString(), () -> {
-            log.trace("displayCurrentAnswer");
+            log.trace("displayCurrentAnswer, preserveScroll={}", preserveScroll);
             mediator.getCurrentInteractionOpt().map(interaction -> interaction.getAnswer(answerType)).ifPresentOrElse(answerOpt -> {
                 log.trace("Display answer: {}", answerOpt.map(Answer::toShortString));
                 var html = answerOpt.isPresent() ? answerOpt.get().answerHtml() : "";
                 var state = answerOpt.isPresent() ? answerOpt.get().answerState() : NEW;
                 if (!currentWebViewContent.equals(html)) {
-                    vmProperties.webViewContent.set(html);
-                    currentWebViewContent = html;
+                    setWebViewContent(html, preserveScroll);
                 }
                 vmProperties.statusCircleFill.setValue(answerStateToColor(state));
             }, () -> {
                 log.trace("Display empty answer");
-                currentWebViewContent = "";
-                vmProperties.webViewContent.set("");
+                setWebViewContent("", false);
                 vmProperties.statusCircleFill.setValue(WHITE);
             });
         });
@@ -103,9 +110,18 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
     public void displayPartialAnswer(String html) {
         Mdc.run(answerType.toString(), () -> {
             log.trace("displayPartialAnswer: {} chars", html.length());
-            vmProperties.webViewContent.set(html);
-            currentWebViewContent = html;
+            setWebViewContent(html, true);
         });
+    }
+
+    private void setWebViewContent(String html, boolean preserveScroll) {
+        vmProperties.preserveScrollOnNextUpdate = preserveScroll;
+        try {
+            vmProperties.webViewContent.set(html); // listener fires synchronously on the FX thread
+        } finally {
+            vmProperties.preserveScrollOnNextUpdate = false;
+        }
+        currentWebViewContent = html;
     }
 
     @Override

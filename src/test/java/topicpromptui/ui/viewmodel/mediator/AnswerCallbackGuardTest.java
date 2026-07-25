@@ -49,6 +49,7 @@ class AnswerCallbackGuardTest {
     void completionForNonCurrentInteractionSkipsPaneButRefreshesHistory() {
         when(stateModel.getCurrentInteractionId()).thenReturn(otherId);
         captureCallbacks().completion().run();
+        verify(gcpAnswerVM, never()).displayCompletedAnswer();
         verify(gcpAnswerVM, never()).displayCurrentAnswer();
         verify(historyVM).displayCurrentInteraction();
     }
@@ -57,7 +58,9 @@ class AnswerCallbackGuardTest {
     void completionForCurrentInteractionRefreshesPane() {
         when(stateModel.getCurrentInteractionId()).thenReturn(streamedId);
         captureCallbacks().completion().run();
-        verify(gcpAnswerVM).displayCurrentAnswer();
+        // displayCompletedAnswer, not displayCurrentAnswer: the partial→final swap must keep scroll
+        verify(gcpAnswerVM).displayCompletedAnswer();
+        verify(gcpAnswerVM, never()).displayCurrentAnswer();
         verify(historyVM).displayCurrentInteraction();
     }
 

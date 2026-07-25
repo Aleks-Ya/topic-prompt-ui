@@ -1,5 +1,6 @@
 package topicpromptui.ui.view;
 
+import com.google.gson.Gson;
 import topicpromptui.ui.viewmodel.answer.AnswerDetails;
 import topicpromptui.ui.viewmodel.answer.AnswerVmController;
 import javafx.event.ActionEvent;
@@ -33,6 +34,8 @@ import static javafx.scene.input.KeyEvent.KEY_PRESSED;
 
 public class AnswerController extends BaseController {
     private static final Logger log = LoggerFactory.getLogger(AnswerController.class);
+    // Used only to build JS string literals (escapes quotes, <, >, & and U+2028/U+2029)
+    private static final Gson GSON = new Gson();
     @FXML
     private Button answerButton;
     @FXML
@@ -42,6 +45,10 @@ public class AnswerController extends BaseController {
     @FXML
     private Button copyButton;
     private AnswerVmController vm;
+    // Reentrancy guard: replaceBodyInPlace writes the normalized outerHTML back into
+    // webViewContent from inside the property's own change listener; without the guard that
+    // nested write would re-fire onWebViewContentChanged and loadContent would reset the scroll.
+    private boolean readingBackFromEngine;
 
     @FXML
     void clickCopyButton(ActionEvent ignoredEvent) {
@@ -131,13 +138,41 @@ public class AnswerController extends BaseController {
     }
 
     private void onWebViewContentChanged(String newValue) {
-        if (newValue == null) {
+        if (newValue == null || readingBackFromEngine) {
             return;
         }
-        if (log.isTraceEnabled()) {
-            log.trace("Load content to WebView Engine: {}", shorten(newValue));
+        if (vm.properties().preserveScrollOnNextUpdate && canReplaceBodyInPlace()) {
+            if (log.isTraceEnabled()) {
+                log.trace("Replace WebView body in place: {}", shorten(newValue));
+            }
+            replaceBodyInPlace(newValue);
+        } else {
+            if (log.isTraceEnabled()) {
+                log.trace("Load content to WebView Engine: {}", shorten(newValue));
+            }
+            webView.getEngine().loadContent(newValue);
         }
-        webView.getEngine().loadContent(newValue);
+    }
+
+    private boolean canReplaceBodyInPlace() {
+        var document = webView.getEngine().getDocument();
+        return document != null && document.getElementsByTagName("body").getLength() > 0;
+    }
+
+    // Streaming/completion updates mutate the live body instead of reloading the document, so the
+    // WebView keeps its vertical scroll position while an answer streams in.
+    private void replaceBodyInPlace(String bodyHtmlFragment) {
+        var engine = webView.getEngine();
+        engine.executeScript("document.body.innerHTML = " + GSON.toJson(bodyHtmlFragment) + ";");
+        // Keep the load-path invariant (see onDocumentChanged): webViewContent mirrors the
+        // engine's normalized outerHTML after the DOM settles — the Copy button depends on it.
+        var outerHtml = (String) engine.executeScript("document.documentElement.outerHTML");
+        readingBackFromEngine = true;
+        try {
+            vm.properties().webViewContent.set(outerHtml);
+        } finally {
+            readingBackFromEngine = false;
+        }
     }
 
     // Scene accelerators don't fire while the WebView has focus (WebView consumes key events),
