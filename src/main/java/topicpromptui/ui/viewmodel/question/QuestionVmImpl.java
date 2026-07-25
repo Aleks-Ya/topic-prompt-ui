@@ -34,7 +34,8 @@ class QuestionVmImpl implements QuestionVmController, QuestionVmMediator {
     @Override
     public void displayCurrentInteraction() {
         log.trace("displayCurrentInteraction");
-        mediator.getCurrentInteractionOpt()
+        var interactionOpt = mediator.getCurrentInteractionOpt();
+        interactionOpt
                 .map(Interaction::question)
                 .filter(question -> !question.equals(properties.questionTaText.getValue()))
                 .ifPresent(question -> {
@@ -43,6 +44,8 @@ class QuestionVmImpl implements QuestionVmController, QuestionVmMediator {
                     mediator.setEditedQuestion(question);
                     updateQuestionTextAreaBackgroundColor();
                 });
+        interactionOpt.ifPresent(interaction ->
+                properties.followUpCheckBoxSelected.set(interaction.parentInteractionId() != null));
     }
 
     @Override
