@@ -49,8 +49,9 @@ class ClaudeApiImpl implements AiApi {
     // When true (and context7.api.key is set), this binding attaches the Context7 documentation MCP
     // server so the model can look up current library docs. Off for the grammar binding.
     private final boolean context7Enabled;
+    // Package-private for member injection by Guice and direct assignment in unit tests.
     @Inject
-    private ConfigModel configModel;
+    ConfigModel configModel;
 
     ClaudeApiImpl(String model, Effort effort, boolean context7Enabled) {
         this.model = model;
@@ -64,30 +65,12 @@ class ClaudeApiImpl implements AiApi {
         var apiKey = configModel.getProperty("claude.api.key");
         var context7Key = context7Key();
         try (var client = HttpClient.newHttpClient()) {
-            var outputConfig = effort != null ? new OutputConfig(effort) : null;
-            var messages = turns.stream().map(turn -> new Message(role(turn.speaker()), turn.content())).toList();
-            List<McpServer> mcpServers = null;
-            List<McpToolset> tools = null;
-            if (context7Key != null) {
-                mcpServers = List.of(new McpServer("url", CONTEXT7_NAME, CONTEXT7_MCP_URL, context7Key));
-                tools = List.of(new McpToolset("mcp_toolset", CONTEXT7_NAME));
-            }
-            var body = new RequestBody(model, MAX_TOKENS, messages, outputConfig, true, mcpServers, tools);
+            var body = buildRequestBody(turns, context7Key);
             var json = gson.toJson(body);
             if (log.isTraceEnabled()) {
                 log.trace("Request body: {}", context7Key != null ? json.replace(context7Key, "***") : json);
             }
-            var requestBuilder = HttpRequest.newBuilder()
-                    .uri(endpoint)
-                    .header("x-api-key", apiKey)
-                    .header("anthropic-version", ANTHROPIC_VERSION)
-                    .header("content-type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(json))
-                    .timeout(Duration.ofMinutes(1));
-            if (mcpServers != null) {
-                requestBuilder.header("anthropic-beta", MCP_BETA);
-            }
-            var request = requestBuilder.build();
+            var request = buildHttpRequest(apiKey, json, body.mcp_servers() != null);
             var response = client.send(request, HttpResponse.BodyHandlers.ofLines());
             try (var lines = response.body()) {
                 if (response.statusCode() == 200) {
@@ -219,7 +202,34 @@ class ClaudeApiImpl implements AiApi {
         }
     }
 
-    private String context7Key() {
+    RequestBody buildRequestBody(List<ConversationTurn> turns, String context7Key) {
+        var outputConfig = effort != null ? new OutputConfig(effort) : null;
+        var messages = turns.stream().map(turn -> new Message(role(turn.speaker()), turn.content())).toList();
+        List<McpServer> mcpServers = null;
+        List<McpToolset> tools = null;
+        if (context7Key != null) {
+            mcpServers = List.of(new McpServer("url", CONTEXT7_NAME, CONTEXT7_MCP_URL, context7Key));
+            tools = List.of(new McpToolset("mcp_toolset", CONTEXT7_NAME));
+        }
+        return new RequestBody(model, MAX_TOKENS, messages, outputConfig, true, mcpServers, tools);
+    }
+
+    // mcpEnabled adds the beta header required by the server-side MCP connector.
+    HttpRequest buildHttpRequest(String apiKey, String json, boolean mcpEnabled) {
+        var requestBuilder = HttpRequest.newBuilder()
+                .uri(endpoint)
+                .header("x-api-key", apiKey)
+                .header("anthropic-version", ANTHROPIC_VERSION)
+                .header("content-type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .timeout(Duration.ofMinutes(1));
+        if (mcpEnabled) {
+            requestBuilder.header("anthropic-beta", MCP_BETA);
+        }
+        return requestBuilder.build();
+    }
+
+    String context7Key() {
         if (!context7Enabled) {
             return null;
         }

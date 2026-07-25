@@ -2,17 +2,36 @@ package topicpromptui.core.ai.openai;
 
 import com.google.gson.Gson;
 import topicpromptui.core.ai.AiApiException;
+import topicpromptui.core.ai.ConversationTurn;
+import topicpromptui.core.config.ConfigModel;
 import org.junit.jupiter.api.Test;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
+import static topicpromptui.core.ai.ConversationTurn.Speaker.USER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class OpenAiApiImplTest {
     private final Gson gson = new Gson();
     private final OpenAiApiImpl api = new OpenAiApiImpl("gpt-5", null, false);
+
+    private static ConfigModel configWith(String context7Key) {
+        return new ConfigModel() {
+            @Override
+            public String getProperty(String name) {
+                return "context7.api.key".equals(name) ? context7Key : null;
+            }
+
+            @Override
+            public Path getAppDataPath() {
+                return null;
+            }
+        };
+    }
 
     private static Stream<String> sse(String... eventTypeAndData) {
         var lines = new ArrayList<String>();
@@ -147,5 +166,90 @@ class OpenAiApiImplTest {
         assertThat(response.totalTokens()).isEqualTo(140);
         assertThat(response.toolCalls())
                 .containsExactly("context7 · get-library-docs {\"library\":\"/facebook/react\"}");
+    }
+
+    @Test
+    void buildRequestBodyAttachesContext7WhenKeyPresent() {
+        var body = api.buildRequestBody(List.of(new ConversationTurn(USER, "hi")), "ctx7-key");
+        assertThat(body.tools()).singleElement().satisfies(tool -> {
+            assertThat(tool.type()).isEqualTo("mcp");
+            assertThat(tool.server_label()).isEqualTo("context7");
+            assertThat(tool.server_url()).isEqualTo("https://mcp.context7.com/mcp");
+            assertThat(tool.headers()).containsEntry("Authorization", "Bearer ctx7-key");
+            assertThat(tool.require_approval()).isEqualTo("never");
+        });
+        assertThat(body.input()).singleElement()
+                .satisfies(item -> assertThat(item.role()).isEqualTo("user"));
+    }
+
+    @Test
+    void buildRequestBodyOmitsContext7WhenKeyNull() {
+        var body = api.buildRequestBody(List.of(new ConversationTurn(USER, "hi")), null);
+        assertThat(body.tools()).isNull();
+    }
+
+    @Test
+    void context7KeyNullWhenDisabled() {
+        // context7Enabled=false on this api instance; the config is never consulted.
+        assertThat(api.context7Key()).isNull();
+    }
+
+    @Test
+    void context7KeyReturnsConfiguredKeyWhenEnabled() {
+        var enabled = new OpenAiApiImpl("gpt-5", null, true);
+        enabled.configModel = configWith("the-key");
+        assertThat(enabled.context7Key()).isEqualTo("the-key");
+    }
+
+    @Test
+    void context7KeyNullWhenEnabledButBlankOrMissing() {
+        var enabled = new OpenAiApiImpl("gpt-5", null, true);
+        enabled.configModel = configWith("   ");
+        assertThat(enabled.context7Key()).isNull();
+        enabled.configModel = configWith(null);
+        assertThat(enabled.context7Key()).isNull();
+    }
+
+    @Test
+    void buildHttpRequestSetsAuthAndContentTypeHeaders() {
+        var request = api.buildHttpRequest("api-token", "{}");
+        assertThat(request.headers().firstValue("Authorization")).contains("Bearer api-token");
+        assertThat(request.headers().firstValue("Content-Type")).contains("application/json");
+    }
+
+    @Test
+    void parseResponseThrowsWhenNoMessageOutput() {
+        var json = """
+                {
+                  "id": "resp_6",
+                  "output": [
+                    {"type": "mcp_list_tools", "status": "completed"},
+                    {"type": "mcp_call", "status": "completed"}
+                  ],
+                  "usage": {"input_tokens": 10, "output_tokens": 5, "total_tokens": 15}
+                }
+                """;
+        var responseBody = gson.fromJson(json, ResponseBody.class);
+        assertThatThrownBy(() -> api.parseResponse(responseBody))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("No message output");
+    }
+
+    @Test
+    void parseResponseThrowsWhenMessageHasMultipleContents() {
+        var json = """
+                {
+                  "id": "resp_7",
+                  "output": [
+                    {"type": "message", "status": "completed", \
+                     "content": [{"text": "part 1"}, {"text": "part 2"}]}
+                  ],
+                  "usage": {"input_tokens": 10, "output_tokens": 5, "total_tokens": 15}
+                }
+                """;
+        var responseBody = gson.fromJson(json, ResponseBody.class);
+        assertThatThrownBy(() -> api.parseResponse(responseBody))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("Multiple contents");
     }
 }

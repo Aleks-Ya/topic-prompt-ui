@@ -1,16 +1,35 @@
 package topicpromptui.core.ai.claude;
 
 import topicpromptui.core.ai.AiApiException;
+import topicpromptui.core.ai.ConversationTurn;
+import topicpromptui.core.config.ConfigModel;
 import org.junit.jupiter.api.Test;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
+import static topicpromptui.core.ai.ConversationTurn.Speaker.USER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ClaudeApiImplTest {
     private final ClaudeApiImpl api = new ClaudeApiImpl("claude-opus", null, false);
+
+    private static ConfigModel configWith(String context7Key) {
+        return new ConfigModel() {
+            @Override
+            public String getProperty(String name) {
+                return "context7.api.key".equals(name) ? context7Key : null;
+            }
+
+            @Override
+            public Path getAppDataPath() {
+                return null;
+            }
+        };
+    }
 
     private static Stream<String> sse(String... eventTypeAndData) {
         var lines = new ArrayList<String>();
@@ -150,5 +169,83 @@ class ClaudeApiImplTest {
         }))
                 .isInstanceOf(AiApiException.class)
                 .hasMessageContaining("overloaded_error");
+    }
+
+    @Test
+    void buildRequestBodyAttachesContext7WhenKeyPresent() {
+        var body = api.buildRequestBody(List.of(new ConversationTurn(USER, "hi")), "ctx7-key");
+        assertThat(body.mcp_servers()).singleElement().satisfies(server -> {
+            assertThat(server.type()).isEqualTo("url");
+            assertThat(server.name()).isEqualTo("context7");
+            assertThat(server.url()).isEqualTo("https://mcp.context7.com/mcp");
+            assertThat(server.authorization_token()).isEqualTo("ctx7-key");
+        });
+        assertThat(body.tools()).singleElement().satisfies(tool -> {
+            assertThat(tool.type()).isEqualTo("mcp_toolset");
+            assertThat(tool.mcp_server_name()).isEqualTo("context7");
+        });
+        assertThat(body.messages()).singleElement()
+                .satisfies(m -> assertThat(m.role()).isEqualTo("user"));
+    }
+
+    @Test
+    void buildRequestBodyOmitsContext7WhenKeyNull() {
+        var body = api.buildRequestBody(List.of(new ConversationTurn(USER, "hi")), null);
+        assertThat(body.mcp_servers()).isNull();
+        assertThat(body.tools()).isNull();
+    }
+
+    @Test
+    void context7KeyNullWhenDisabled() {
+        // context7Enabled=false on this api instance; the config is never consulted.
+        assertThat(api.context7Key()).isNull();
+    }
+
+    @Test
+    void context7KeyReturnsConfiguredKeyWhenEnabled() {
+        var enabled = new ClaudeApiImpl("claude-opus", null, true);
+        enabled.configModel = configWith("the-key");
+        assertThat(enabled.context7Key()).isEqualTo("the-key");
+    }
+
+    @Test
+    void context7KeyNullWhenEnabledButBlankOrMissing() {
+        var enabled = new ClaudeApiImpl("claude-opus", null, true);
+        enabled.configModel = configWith("   ");
+        assertThat(enabled.context7Key()).isNull();
+        enabled.configModel = configWith(null);
+        assertThat(enabled.context7Key()).isNull();
+    }
+
+    @Test
+    void buildHttpRequestAddsMcpBetaHeaderWhenEnabled() {
+        var request = api.buildHttpRequest("api-key", "{}", true);
+        assertThat(request.headers().firstValue("x-api-key")).contains("api-key");
+        assertThat(request.headers().firstValue("anthropic-version")).contains("2023-06-01");
+        assertThat(request.headers().firstValue("anthropic-beta")).contains("mcp-client-2025-11-20");
+    }
+
+    @Test
+    void buildHttpRequestOmitsMcpBetaHeaderWhenDisabled() {
+        var request = api.buildHttpRequest("api-key", "{}", false);
+        assertThat(request.headers().firstValue("anthropic-beta")).isEmpty();
+    }
+
+    @Test
+    void assembleToleratesDeltaWithoutPayloadAndStopWithoutIndex() {
+        var response = api.assemble(sse(
+                "content_block_delta", """
+                        {"type": "content_block_delta", "index": 0}""",
+                "content_block_stop", """
+                        {"type": "content_block_stop"}""",
+                "content_block_delta", """
+                        {"type": "content_block_delta", "index": 0, \
+                        "delta": {"type": "text_delta", "text": "Hi"}}""",
+                "message_delta", """
+                        {"type": "message_delta", "delta": {"stop_reason": "end_turn"}, "usage": {"output_tokens": 1}}"""
+        ), delta -> {
+        });
+        assertThat(response.text()).isEqualTo("Hi");
+        assertThat(response.toolCalls()).isEmpty();
     }
 }

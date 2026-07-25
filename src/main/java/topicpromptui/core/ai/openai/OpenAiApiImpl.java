@@ -38,8 +38,9 @@ class OpenAiApiImpl implements AiApi {
     // When true (and context7.api.key is set), this binding attaches the Context7 documentation MCP
     // server so the model can look up current library docs. Off for the grammar binding.
     private final boolean context7Enabled;
+    // Package-private for member injection by Guice and direct assignment in unit tests.
     @Inject
-    private ConfigModel configModel;
+    ConfigModel configModel;
 
     OpenAiApiImpl(String model, ReasoningEffort effort, boolean context7Enabled) {
         this.model = model;
@@ -52,25 +53,12 @@ class OpenAiApiImpl implements AiApi {
         log.info("Sending question: {}", turns);
         var token = configModel.getProperty("openai.token");
         var context7Key = context7Key();
-        var reasoning = effort != null ? new Reasoning(effort) : null;
-        var input = turns.stream().map(turn -> new InputItem(role(turn.speaker()), turn.content())).toList();
-        List<Tool> tools = null;
-        if (context7Key != null) {
-            tools = List.of(new Tool("mcp", CONTEXT7_NAME, CONTEXT7_MCP_URL,
-                    Map.of("Authorization", "Bearer " + context7Key), "never"));
-        }
-        var body = new RequestBody(model, input, reasoning, true, tools);
+        var body = buildRequestBody(turns, context7Key);
         var json = gson.toJson(body);
         if (log.isTraceEnabled()) {
             log.trace("Request body: {}", context7Key != null ? json.replace(context7Key, "***") : json);
         }
-        var request = HttpRequest.newBuilder()
-                .uri(endpoint)
-                .header("Authorization", "Bearer " + token)
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(json))
-                .timeout(Duration.ofMinutes(1))
-                .build();
+        var request = buildHttpRequest(token, json);
         try (var client = HttpClient.newHttpClient()) {
             var response = client.send(request, HttpResponse.BodyHandlers.ofLines());
             try (var lines = response.body()) {
@@ -159,7 +147,28 @@ class OpenAiApiImpl implements AiApi {
                 usage != null ? usage.total_tokens() : null, toolCalls);
     }
 
-    private String context7Key() {
+    RequestBody buildRequestBody(List<ConversationTurn> turns, String context7Key) {
+        var reasoning = effort != null ? new Reasoning(effort) : null;
+        var input = turns.stream().map(turn -> new InputItem(role(turn.speaker()), turn.content())).toList();
+        List<Tool> tools = null;
+        if (context7Key != null) {
+            tools = List.of(new Tool("mcp", CONTEXT7_NAME, CONTEXT7_MCP_URL,
+                    Map.of("Authorization", "Bearer " + context7Key), "never"));
+        }
+        return new RequestBody(model, input, reasoning, true, tools);
+    }
+
+    HttpRequest buildHttpRequest(String token, String json) {
+        return HttpRequest.newBuilder()
+                .uri(endpoint)
+                .header("Authorization", "Bearer " + token)
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .timeout(Duration.ofMinutes(1))
+                .build();
+    }
+
+    String context7Key() {
         if (!context7Enabled) {
             return null;
         }
