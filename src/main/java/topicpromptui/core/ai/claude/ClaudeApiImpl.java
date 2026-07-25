@@ -30,7 +30,7 @@ class ClaudeApiImpl implements AiApi {
     private static final Logger log = LoggerFactory.getLogger(ClaudeApiImpl.class);
     private static final String GOOD_STOP_REASON = "end_turn";
     private static final String ANTHROPIC_VERSION = "2023-06-01";
-    private static final Integer MAX_TOKENS = 8192;
+    private static final Integer MAX_TOKENS = 32768;
     private static final Gson gson = new Gson();
     private static final URI endpoint = URI.create("https://api.anthropic.com/v1/messages");
     private final String model;
