@@ -10,6 +10,7 @@ import topicpromptui.core.storagefilesystem.TopicId;
 import javafx.scene.input.KeyCode;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Map;
 
 import static topicpromptui.core.storagefilesystem.AnswerState.SUCCESS;
@@ -19,8 +20,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 class AnswerDetailsDialogTest extends BaseTopicPromptUiTest {
     private static final TopicId TOPIC_ID = new TopicId(100L);
     private static final Topic TOPIC = new Topic(TOPIC_ID, "Details Topic");
+    // Synthetic rendering fixture: the toolCalls lines exercise the "Tools used" area regardless of pane.
     private static final Answer GRAMMAR_ANSWER = new Answer(GRAMMAR, "Grammar prompt", "Grammar MD", "Grammar HTML",
-            SUCCESS, "resp-1", "grammar-model", "low", "completed", 10, 20, 30);
+            SUCCESS, "resp-1", "grammar-model", "low", "completed", 10, 20, 30)
+            .withToolCalls(List.of("context7 · resolve-library-id {\"libraryName\":\"react\"}",
+                    "context7 · get-library-docs {\"context7CompatibleLibraryID\":\"/facebook/react\"}"));
     private static final Interaction INTERACTION = new Interaction(new InteractionId(100L), InteractionType.QUESTION,
             TOPIC_ID, "Details question", Map.of(GRAMMAR, GRAMMAR_ANSWER), null);
 
@@ -41,6 +45,9 @@ class AnswerDetailsDialogTest extends BaseTopicPromptUiTest {
         assertThat(dialog.inputTokensField().getText()).isEqualTo("10");
         assertThat(dialog.outputTokensField().getText()).isEqualTo("20");
         assertThat(dialog.totalTokensField().getText()).isEqualTo("30");
+        assertThat(dialog.toolsUsedArea().getText()).isEqualTo(
+                "context7 · resolve-library-id {\"libraryName\":\"react\"}\n"
+                        + "context7 · get-library-docs {\"context7CompatibleLibraryID\":\"/facebook/react\"}");
         assertThat(dialog.promptArea().getText()).isEqualTo("Grammar prompt");
         type(KeyCode.ESCAPE);
     }
@@ -56,6 +63,7 @@ class AnswerDetailsDialogTest extends BaseTopicPromptUiTest {
         assertThat(dialog.inputTokensField().getText()).isEmpty();
         assertThat(dialog.outputTokensField().getText()).isEmpty();
         assertThat(dialog.totalTokensField().getText()).isEmpty();
+        assertThat(dialog.toolsUsedArea().getText()).isEmpty();
         assertThat(dialog.promptArea().getText()).isEmpty();
         type(KeyCode.ESCAPE);
     }

@@ -6,6 +6,7 @@ import topicpromptui.core.ai.AiApiException;
 import topicpromptui.core.ai.AiResponse;
 import topicpromptui.core.ai.ConversationTurn;
 import topicpromptui.core.ai.SseParser;
+import topicpromptui.core.ai.ToolCalls;
 import topicpromptui.core.config.ConfigModel;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
@@ -18,7 +19,10 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -114,7 +118,7 @@ class ClaudeApiImpl implements AiApi {
                 ? state.inputTokens + state.outputTokens : null;
         return new AiResponse(state.text.toString(), state.responseId, model,
                 effort != null ? effort.name() : null,
-                state.stopReason, state.inputTokens, state.outputTokens, totalTokens);
+                state.stopReason, state.inputTokens, state.outputTokens, totalTokens, List.copyOf(state.toolCalls));
     }
 
     // S6916 ("use a pattern-match guard") is a false positive on switch cases with constant
@@ -126,10 +130,12 @@ class ClaudeApiImpl implements AiApi {
         var type = event.type() != null ? event.type() : sseEvent.event();
         switch (type) {
             case "message_start" -> applyMessageStart(state, event);
+            case "content_block_start" -> applyContentBlockStart(state, event);
             case "content_block_delta" -> applyContentBlockDelta(state, event, onTextDelta);
+            case "content_block_stop" -> applyContentBlockStop(state, event);
             case "message_delta" -> applyMessageDelta(state, event);
             case "error" -> throw new AiApiException(sseEvent.data());
-            default -> { // message_stop, content_block_start/stop, ping
+            default -> { // message_stop, ping
             }
         }
     }
@@ -143,10 +149,39 @@ class ClaudeApiImpl implements AiApi {
         }
     }
 
+    // Opens a pending tool call for each mcp_tool_use block; its input arrives via input_json_delta.
+    private static void applyContentBlockStart(StreamState state, StreamEvent event) {
+        if (event.index() != null && event.content_block() != null
+                && "mcp_tool_use".equals(event.content_block().type())) {
+            state.pendingToolCalls.put(event.index(),
+                    new ToolCallAccumulator(event.content_block().server_name(), event.content_block().name()));
+        }
+    }
+
     private static void applyContentBlockDelta(StreamState state, StreamEvent event, Consumer<String> onTextDelta) {
-        if (event.delta() != null && "text_delta".equals(event.delta().type()) && event.delta().text() != null) {
+        if (event.delta() == null) {
+            return;
+        }
+        if ("text_delta".equals(event.delta().type()) && event.delta().text() != null) {
             state.text.append(event.delta().text());
             onTextDelta.accept(event.delta().text());
+        } else if ("input_json_delta".equals(event.delta().type()) && event.delta().partial_json() != null
+                && event.index() != null) {
+            var accumulator = state.pendingToolCalls.get(event.index());
+            if (accumulator != null) {
+                accumulator.input.append(event.delta().partial_json());
+            }
+        }
+    }
+
+    // Finalizes the tool call opened at this index (mcp_tool_result and text blocks have no pending entry).
+    private static void applyContentBlockStop(StreamState state, StreamEvent event) {
+        if (event.index() == null) {
+            return;
+        }
+        var accumulator = state.pendingToolCalls.remove(event.index());
+        if (accumulator != null) {
+            state.toolCalls.add(accumulator.format());
         }
     }
 
@@ -161,10 +196,27 @@ class ClaudeApiImpl implements AiApi {
 
     private static class StreamState {
         final StringBuilder text = new StringBuilder();
+        final List<String> toolCalls = new ArrayList<>();
+        final Map<Integer, ToolCallAccumulator> pendingToolCalls = new HashMap<>();
         String responseId;
         String stopReason;
         Integer inputTokens;
         Integer outputTokens;
+    }
+
+    private static final class ToolCallAccumulator {
+        private final String server;
+        private final String name;
+        private final StringBuilder input = new StringBuilder();
+
+        ToolCallAccumulator(String server, String name) {
+            this.server = server;
+            this.name = name;
+        }
+
+        String format() {
+            return ToolCalls.line(server, name, input.toString());
+        }
     }
 
     private String context7Key() {

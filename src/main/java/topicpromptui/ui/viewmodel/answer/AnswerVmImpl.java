@@ -10,6 +10,7 @@ import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Map;
 
 import static topicpromptui.core.storagefilesystem.AnswerState.NEW;
@@ -73,8 +74,9 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
         return mediator.getCurrentInteractionOpt()
                 .flatMap(interaction -> interaction.getAnswer(answerType))
                 .map(a -> new AnswerDetails(a.answerType(), a.modelId(), a.effortLevel(), a.finishReason(),
-                        a.inputTokens(), a.outputTokens(), a.totalTokens(), a.prompt()))
-                .orElse(new AnswerDetails(answerType, null, null, null, null, null, null, null));
+                        a.inputTokens(), a.outputTokens(), a.totalTokens(), a.prompt(),
+                        a.toolCalls() != null ? a.toolCalls() : List.of()))
+                .orElse(new AnswerDetails(answerType, null, null, null, null, null, null, null, List.of()));
     }
 
     @Override

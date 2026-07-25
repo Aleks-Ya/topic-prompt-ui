@@ -81,26 +81,35 @@ class ClaudeApiImplTest {
     }
 
     @Test
-    void assembleIgnoresMcpToolBlocksAndKeepsText() {
-        // With the Context7 MCP connector, the model streams mcp_tool_use blocks (input_json_delta)
-        // alongside the answer text; only text_delta must land in the assembled answer.
+    void assembleCapturesMcpToolCallAndKeepsText() {
+        // With the Context7 MCP connector, the model streams an mcp_tool_use block (name/server on
+        // content_block_start, input via input_json_delta) plus an mcp_tool_result block alongside the
+        // answer text: only text_delta lands in the answer, only mcp_tool_use becomes a tool call.
         var deltas = new ArrayList<String>();
         var response = api.assemble(sse(
                 "message_start", """
                         {"type": "message_start", "message": {"id": "msg_2", "usage": {"input_tokens": 50}}}""",
                 "content_block_start", """
-                        {"type": "content_block_start", "index": 0, \
-                        "content_block": {"type": "mcp_tool_use", "name": "get-library-docs"}}""",
+                        {"type": "content_block_start", "index": 0, "content_block": \
+                        {"type": "mcp_tool_use", "name": "get-library-docs", "server_name": "context7"}}""",
                 "content_block_delta", """
                         {"type": "content_block_delta", "index": 0, \
                         "delta": {"type": "input_json_delta", "partial_json": "{\\"library\\":"}}""",
+                "content_block_delta", """
+                        {"type": "content_block_delta", "index": 0, \
+                        "delta": {"type": "input_json_delta", "partial_json": "\\"/facebook/react\\"}"}}""",
                 "content_block_stop", """
                         {"type": "content_block_stop", "index": 0}""",
+                "content_block_start", """
+                        {"type": "content_block_start", "index": 1, \
+                        "content_block": {"type": "mcp_tool_result", "tool_use_id": "mcptool_1"}}""",
+                "content_block_stop", """
+                        {"type": "content_block_stop", "index": 1}""",
                 "content_block_delta", """
-                        {"type": "content_block_delta", "index": 1, \
+                        {"type": "content_block_delta", "index": 2, \
                         "delta": {"type": "text_delta", "text": "Per the docs, "}}""",
                 "content_block_delta", """
-                        {"type": "content_block_delta", "index": 1, \
+                        {"type": "content_block_delta", "index": 2, \
                         "delta": {"type": "text_delta", "text": "use X."}}""",
                 "message_delta", """
                         {"type": "message_delta", "delta": {"stop_reason": "end_turn"}, "usage": {"output_tokens": 30}}"""
@@ -108,6 +117,8 @@ class ClaudeApiImplTest {
         assertThat(deltas).containsExactly("Per the docs, ", "use X.");
         assertThat(response.text()).isEqualTo("Per the docs, use X.");
         assertThat(response.finishReason()).isEqualTo("end_turn");
+        assertThat(response.toolCalls())
+                .containsExactly("context7 · get-library-docs {\"library\":\"/facebook/react\"}");
     }
 
     @Test

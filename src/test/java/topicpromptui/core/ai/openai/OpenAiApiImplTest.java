@@ -133,7 +133,8 @@ class OpenAiApiImplTest {
                   "output": [
                     {"type": "mcp_list_tools", "status": "completed"},
                     {"type": "reasoning", "status": "completed"},
-                    {"type": "mcp_call", "status": "completed"},
+                    {"type": "mcp_call", "status": "completed", "server_label": "context7", \
+                     "name": "get-library-docs", "arguments": "{\\"library\\":\\"/facebook/react\\"}"},
                     {"type": "message", "content": [{"text": "The React docs say X."}], "status": "completed"}
                   ],
                   "usage": {"input_tokens": 100, "output_tokens": 40, "total_tokens": 140}
@@ -144,5 +145,7 @@ class OpenAiApiImplTest {
         assertThat(response.text()).isEqualTo("The React docs say X.");
         assertThat(response.finishReason()).isEqualTo("completed");
         assertThat(response.totalTokens()).isEqualTo(140);
+        assertThat(response.toolCalls())
+                .containsExactly("context7 · get-library-docs {\"library\":\"/facebook/react\"}");
     }
 }

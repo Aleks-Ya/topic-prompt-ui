@@ -8,7 +8,9 @@ record ResponseBody(String id, String model, List<Outputs> output, Error error, 
 
     // type distinguishes the assistant "message" output from MCP bookkeeping outputs
     // ("mcp_list_tools", "mcp_call") and "reasoning" outputs that appear when tools are enabled.
-    public record Outputs(String type, List<Content> content, String status) {
+    // name/server_label/arguments are populated on "mcp_call" outputs (the tool invocations).
+    public record Outputs(String type, List<Content> content, String status, String name, String server_label,
+                          String arguments) {
     }
 
     record Error(String message, String type, String param, String code) {

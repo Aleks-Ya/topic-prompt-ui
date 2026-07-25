@@ -276,6 +276,10 @@ public abstract class BaseTopicPromptUiTest extends ApplicationTest {
             return lookup("#totalTokensField").queryAs(TextField.class);
         }
 
+        public TextArea toolsUsedArea() {
+            return lookup("#toolsUsedArea").queryAs(TextArea.class);
+        }
+
         public TextArea promptArea() {
             return lookup("#promptArea").queryAs(TextArea.class);
         }

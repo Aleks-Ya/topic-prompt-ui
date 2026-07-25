@@ -155,6 +155,7 @@ class QuestionModelImpl implements QuestionModel {
                             .withResponseId(response.responseId())
                             .withModelInfo(response.modelId(), response.effortLevel(), response.finishReason(),
                                     response.inputTokens(), response.outputTokens(), response.totalTokens())
+                            .withToolCalls(response.toolCalls())
                             .withState(SUCCESS), callback);
             soundService.beenOnAnswer(answerType);
             log.info(finishedMessage);

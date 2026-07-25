@@ -6,6 +6,7 @@ import topicpromptui.core.ai.AiApiException;
 import topicpromptui.core.ai.AiResponse;
 import topicpromptui.core.ai.ConversationTurn;
 import topicpromptui.core.ai.SseParser;
+import topicpromptui.core.ai.ToolCalls;
 import topicpromptui.core.config.ConfigModel;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
@@ -145,13 +146,17 @@ class OpenAiApiImpl implements AiApi {
         if (contents.size() > 1) {
             throw new AiApiException("Multiple contents in output: " + contents);
         }
+        var toolCalls = outputs.stream()
+                .filter(output -> "mcp_call".equalsIgnoreCase(output.type()))
+                .map(output -> ToolCalls.line(output.server_label(), output.name(), output.arguments()))
+                .toList();
         var usage = responseBody.usage();
         return new AiResponse(contents.getFirst().text(), responseBody.id(), model,
                 effort != null ? effort.name() : null,
                 message.status(),
                 usage != null ? usage.input_tokens() : null,
                 usage != null ? usage.output_tokens() : null,
-                usage != null ? usage.total_tokens() : null);
+                usage != null ? usage.total_tokens() : null, toolCalls);
     }
 
     private String context7Key() {

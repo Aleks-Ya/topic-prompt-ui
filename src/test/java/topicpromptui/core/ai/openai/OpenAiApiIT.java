@@ -121,8 +121,10 @@ class OpenAiApiIT {
                 + "server provides for developers. Consult the library docs before answering.");
         System.out.println(response.text());
         System.out.println("finishReason: " + response.finishReason());
+        System.out.println("toolCalls: " + response.toolCalls());
         assertThat(response.text()).isNotBlank();
         assertThat(response.finishReason()).isEqualTo("completed");
+        assertThat(response.toolCalls()).isNotEmpty();
     }
 
     @Test

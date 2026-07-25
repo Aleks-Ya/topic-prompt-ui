@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
+import java.util.List;
 import java.util.Objects;
 
 import static topicpromptui.core.util.LogUtils.shorten;
@@ -102,17 +103,30 @@ public class AnswerController extends BaseController {
         addInfoRow(grid, 5, "outputTokensField", "Output tokens:", Objects.toString(details.outputTokens(), ""));
         addInfoRow(grid, 6, "totalTokensField", "Total tokens:", Objects.toString(details.totalTokens(), ""));
 
+        var toolsUsedArea = new TextArea(formatToolCalls(details.toolCalls()));
+        toolsUsedArea.setId("toolsUsedArea");
+        toolsUsedArea.setEditable(false);
+        toolsUsedArea.setWrapText(true);
+        toolsUsedArea.setPrefRowCount(3);
+        toolsUsedArea.setPrefColumnCount(60);
+        grid.add(new Label("Tools used:"), 0, 7);
+        grid.add(toolsUsedArea, 1, 7);
+
         var promptArea = new TextArea(Objects.toString(details.prompt(), ""));
         promptArea.setId("promptArea");
         promptArea.setEditable(false);
         promptArea.setWrapText(true);
         promptArea.setPrefRowCount(10);
         promptArea.setPrefColumnCount(60);
-        grid.add(new Label("Prompt:"), 0, 7);
-        grid.add(promptArea, 1, 7);
+        grid.add(new Label("Prompt:"), 0, 8);
+        grid.add(promptArea, 1, 8);
 
         dialog.getDialogPane().setContent(grid);
         dialog.showAndWait();
+    }
+
+    private static String formatToolCalls(List<String> toolCalls) {
+        return toolCalls == null ? "" : String.join("\n", toolCalls);
     }
 
     private void addInfoRow(GridPane grid, int row, String fieldId, String labelText, String value) {
