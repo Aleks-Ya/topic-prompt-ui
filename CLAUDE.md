@@ -26,6 +26,10 @@ UI tests use TestFX (`ApplicationTest`) and need a display. The Gradle `test` ta
 
 Integration tests (`*IT.java`, e.g. `OpenAiApiIT`, `ClaudeApiIT`, `GcpApiIT`, `SoundServiceIT`) hit real external services/APIs and require credentials in `~/.topic-prompt-ui/config.properties` (`openai.token`, `claude.api.key`, `gcp.api.key`); they are excluded by `-PskipIntegrationTests` and are not run in CI. If `~/.topic-prompt-ui/config.properties` on the local machine already has all three credentials populated, these tests are directly runnable via `./gradlew test` — don't assume they're unrunnable and skip straight to `-PskipIntegrationTests`; try running the relevant `*ApiIT` class first.
 
+## Git workflow
+
+**Always commit to the current branch — never create a new branch first, even when on `main`.** This is a single-contributor repo whose release/deploy tooling (`release.sh`, `deploy-local.sh`) operates directly on `main`, so the default "branch before committing on the default branch" behavior only adds unwanted merge friction here. When the user says "commit", commit in place on whatever branch is checked out.
+
 ## Code quality
 
 SonarCloud project: https://sonarcloud.io/project/overview?id=Aleks-Ya_topic-prompt-ui — check here for code quality/coverage metrics and issues.
