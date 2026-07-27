@@ -144,7 +144,7 @@ class ClaudeApiImpl implements AiApi {
         if (event.index() != null && "mcp_tool_use".equals(blockType)) {
             state.pendingToolCalls.put(event.index(),
                     new ToolCallAccumulator(event.content_block().server_name(), event.content_block().name()));
-        } else if ("text".equals(blockType) && state.text.length() > 0) {
+        } else if ("text".equals(blockType) && !state.text.isEmpty()) {
             state.text.append("\n\n");
             onTextDelta.accept("\n\n");
         }
