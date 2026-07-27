@@ -102,7 +102,7 @@ public class AnswerController extends BaseController {
         grid.add(new Label("Interaction ID:"), 0, 0);
         grid.add(interactionIdField, 1, 0);
 
-        var openInteractionFileButton = new Button("📂");
+        var openInteractionFileButton = new Button("…");
         openInteractionFileButton.setId("openInteractionFileButton");
         openInteractionFileButton.setDisable(details.interactionId() == null);
         openInteractionFileButton.setOnAction(_ -> vm.onOpenInteractionFileButtonClick());
