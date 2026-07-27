@@ -50,6 +50,10 @@ class AnswerDetailsDialogTest extends BaseTopicPromptUiTest {
                 "context7 · resolve-library-id {\"libraryName\":\"react\"}\n"
                         + "context7 · get-library-docs {\"context7CompatibleLibraryID\":\"/facebook/react\"}");
         assertThat(dialog.promptArea().getText()).isEqualTo("Grammar prompt");
+
+        clickOn(dialog.openInteractionFileButton());
+        assertThat(fileModel.getOpenedFiles()).containsExactly(storage.getInteractionFilePath(new InteractionId(100L)));
+
         type(KeyCode.ESCAPE);
     }
 

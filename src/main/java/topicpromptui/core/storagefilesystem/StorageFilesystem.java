@@ -1,5 +1,6 @@
 package topicpromptui.core.storagefilesystem;
 
+import java.nio.file.Path;
 import java.util.List;
 
 public interface StorageFilesystem {
@@ -12,4 +13,6 @@ public interface StorageFilesystem {
     List<Topic> readTopics();
 
     void saveTopics(List<Topic> topics);
+
+    Path getInteractionFilePath(InteractionId interactionId);
 }

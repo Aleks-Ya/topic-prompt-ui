@@ -22,4 +22,6 @@ public interface AnswerMediator {
     void requestAnswer(InteractionId interactionId, AnswerType answerType);
 
     void toggleExpandedAnswer(AnswerType answerType);
+
+    void openInteractionFile(InteractionId interactionId);
 }

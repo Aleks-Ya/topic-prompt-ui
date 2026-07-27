@@ -265,6 +265,12 @@ class StorageModelTest extends BaseTest {
         assertThat(renamed.title()).isEqualTo("Kotlin");
     }
 
+    @Test
+    void getInteractionFilePath() {
+        var path = storage.getInteractionFilePath(new InteractionId(1L));
+        assertThat(path.toString()).endsWith("interactions" + path.getFileSystem().getSeparator() + "1.json");
+    }
+
     private static Interaction newInteraction(long id, Topic topic) {
         return new Interaction(new InteractionId(id), null, topic.id(), null, null, null);
     }

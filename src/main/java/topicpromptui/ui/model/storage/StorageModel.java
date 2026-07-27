@@ -5,6 +5,7 @@ import topicpromptui.core.storagefilesystem.InteractionId;
 import topicpromptui.core.storagefilesystem.Topic;
 import topicpromptui.core.storagefilesystem.TopicId;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
@@ -33,4 +34,6 @@ public interface StorageModel {
     void saveTopic(Topic topic);
 
     Topic getTopic(TopicId topicId);
+
+    Path getInteractionFilePath(InteractionId interactionId);
 }

@@ -339,6 +339,12 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
     }
 
     @Override
+    public void openInteractionFile(InteractionId interactionId) {
+        log.trace("openInteractionFile: {}", interactionId);
+        fileModel.openFile(stateModel.getInteractionFilePath(interactionId));
+    }
+
+    @Override
     public InteractionId createInteraction(InteractionType interactionType, InteractionId parentInteractionId) {
         var interaction = stateModel.createInteraction(interactionType, parentInteractionId);
         topicVM.updateComboBoxItems();

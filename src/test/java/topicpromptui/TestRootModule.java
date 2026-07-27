@@ -7,6 +7,8 @@ import topicpromptui.core.ai.AiApi;
 import topicpromptui.core.ai.claude.MockClaudeApi;
 import topicpromptui.core.ai.gcp.MockGcpApi;
 import topicpromptui.core.ai.openai.MockOpenAiApi;
+import topicpromptui.ui.model.file.FileModel;
+import topicpromptui.ui.model.file.FileModelMock;
 import topicpromptui.ui.model.question.sound.SoundService;
 import topicpromptui.ui.model.question.sound.SoundServiceMock;
 
@@ -29,6 +31,8 @@ public class TestRootModule extends AbstractModule {
         bind(AiApi.class).annotatedWith(Names.named(GCP_AI)).to(MockGcpApi.class);
         bind(AiApi.class).annotatedWith(Names.named(CLAUDE_AI)).to(MockClaudeApi.class);
         bind(SoundService.class).to(SoundServiceMock.class);
+        bind(FileModelMock.class);
+        bind(FileModel.class).to(FileModelMock.class);
         bind(FileSystem.class).toInstance(Jimfs.newFileSystem(unix()));
     }
 }

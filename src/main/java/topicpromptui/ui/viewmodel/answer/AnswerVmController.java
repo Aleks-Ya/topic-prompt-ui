@@ -7,6 +7,8 @@ public interface AnswerVmController {
 
     void onExpandButtonClick();
 
+    void onOpenInteractionFileButtonClick();
+
     AnswerVmProperties properties();
 
     AnswerDetails getAnswerDetails();

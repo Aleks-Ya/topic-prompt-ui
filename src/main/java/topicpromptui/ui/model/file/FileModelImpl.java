@@ -4,10 +4,13 @@ import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.Desktop;
 import java.io.DataInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 
 import static topicpromptui.core.util.ResourceUtils.resourceIS;
 import static topicpromptui.core.util.ResourceUtils.resourceUrl;
@@ -45,5 +48,15 @@ class FileModelImpl implements FileModel {
         var topicPromptUiFxml = resourceUrl(getClass(), "/topicpromptui/ui/view/TopicPromptUi.fxml");
         log.info("TopicPromptUi.fxml: {}", topicPromptUiFxml);
         return requireNonNull(topicPromptUiFxml);
+    }
+
+    @Override
+    public void openFile(Path path) {
+        log.info("Opening file: {}", path);
+        try {
+            Desktop.getDesktop().open(path.toFile());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -6,6 +6,7 @@ import topicpromptui.core.storagefilesystem.InteractionType;
 import topicpromptui.core.storagefilesystem.Topic;
 import topicpromptui.core.storagefilesystem.TopicId;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,4 +58,6 @@ public interface StateModel {
     void setHistoryFilterText(String historyFilterText);
 
     void chooseFirstInteractionAsCurrent();
+
+    Path getInteractionFilePath(InteractionId interactionId);
 }

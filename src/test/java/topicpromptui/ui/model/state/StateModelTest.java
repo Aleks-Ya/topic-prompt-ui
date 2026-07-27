@@ -1,6 +1,7 @@
 package topicpromptui.ui.model.state;
 
 import topicpromptui.BaseTopicPromptUiTest;
+import topicpromptui.core.storagefilesystem.InteractionId;
 import org.junit.jupiter.api.Test;
 import org.testfx.util.WaitForAsyncUtils;
 
@@ -16,5 +17,12 @@ class StateModelTest extends BaseTopicPromptUiTest {
         clickOn(question().textArea()).type(A, B, C);
         WaitForAsyncUtils.waitForFxEvents();
         assertThat(stateModel.getEditedQuestion()).isEqualTo("abc");
+    }
+
+    @Test
+    void getInteractionFilePath() {
+        var interactionId = new InteractionId(1L);
+        assertThat(stateModel.getInteractionFilePath(interactionId))
+                .isEqualTo(storage.getInteractionFilePath(interactionId));
     }
 }

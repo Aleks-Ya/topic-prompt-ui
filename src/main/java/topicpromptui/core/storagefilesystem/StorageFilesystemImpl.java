@@ -66,6 +66,11 @@ public class StorageFilesystemImpl implements StorageFilesystem {
     }
 
     @Override
+    public Path getInteractionFilePath(InteractionId interactionId) {
+        return getInteractionFile(interactionId);
+    }
+
+    @Override
     public synchronized List<Interaction> readAllInteractions() {
         try {
             var result = new ArrayList<Interaction>();

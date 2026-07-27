@@ -10,6 +10,7 @@ import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.file.Path;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -216,5 +217,10 @@ class StorageModelImpl implements StorageModel {
             throw new IllegalStateException("Topic was not found by id: " + topicId);
         }
         return topic;
+    }
+
+    @Override
+    public synchronized Path getInteractionFilePath(InteractionId interactionId) {
+        return storageFilesystem.getInteractionFilePath(interactionId);
     }
 }

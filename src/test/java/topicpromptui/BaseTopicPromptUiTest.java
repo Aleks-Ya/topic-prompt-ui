@@ -5,6 +5,7 @@ import topicpromptui.core.ai.claude.MockClaudeApi;
 import topicpromptui.core.ai.gcp.MockGcpApi;
 import topicpromptui.core.ai.openai.MockOpenAiApi;
 import topicpromptui.ui.model.clipboard.ClipboardModel;
+import topicpromptui.ui.model.file.FileModelMock;
 import topicpromptui.ui.model.search.HistorySearchModel;
 import topicpromptui.ui.model.state.StateModel;
 import topicpromptui.ui.model.storage.StorageModel;
@@ -39,6 +40,7 @@ public abstract class BaseTopicPromptUiTest extends ApplicationTest {
     protected final StorageModel storage = app.getGuiceContext().getInstance(StorageModel.class);
     protected final HistorySearchModel search = app.getGuiceContext().getInstance(HistorySearchModel.class);
     protected final ClipboardModel clipboardModel = app.getGuiceContext().getInstance(ClipboardModel.class);
+    protected final FileModelMock fileModel = app.getGuiceContext().getInstance(FileModelMock.class);
     private final HistoryInfo history = new HistoryInfo();
     private final TopicInfo topic = new TopicInfo();
     private final QuestionInfo question = new QuestionInfo();
@@ -250,6 +252,10 @@ public abstract class BaseTopicPromptUiTest extends ApplicationTest {
     protected class AnswerDetailsDialog {
         public TextField interactionIdField() {
             return lookup("#interactionIdField").queryAs(TextField.class);
+        }
+
+        public Button openInteractionFileButton() {
+            return lookup("#openInteractionFileButton").queryAs(Button.class);
         }
 
         public TextField answerTypeField() {

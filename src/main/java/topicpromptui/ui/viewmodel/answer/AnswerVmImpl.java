@@ -66,6 +66,14 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
     }
 
     @Override
+    public void onOpenInteractionFileButtonClick() {
+        Mdc.run(answerType.toString(), () -> {
+            log.trace("onOpenInteractionFileButtonClick");
+            mediator.openInteractionFile(mediator.getCurrentInteractionId());
+        });
+    }
+
+    @Override
     public AnswerVmProperties properties() {
         return vmProperties;
     }

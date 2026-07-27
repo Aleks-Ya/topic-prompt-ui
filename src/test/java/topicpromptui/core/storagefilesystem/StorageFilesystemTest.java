@@ -66,4 +66,10 @@ class StorageFilesystemTest extends BaseTest {
         assertThat(storageFileSystem.readTopics()).containsExactly(topic1, topic2);
     }
 
+    @Test
+    void getInteractionFilePath() {
+        var path = storageFileSystem.getInteractionFilePath(new InteractionId(1L));
+        assertThat(path.toString()).endsWith("interactions" + path.getFileSystem().getSeparator() + "1.json");
+    }
+
 }

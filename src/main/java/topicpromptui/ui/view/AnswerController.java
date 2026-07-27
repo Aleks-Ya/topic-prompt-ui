@@ -95,8 +95,19 @@ public class AnswerController extends BaseController {
         grid.setHgap(8);
         grid.setVgap(8);
         grid.setPadding(new Insets(8));
-        addInfoRow(grid, 0, "interactionIdField", "Interaction ID:",
+        var interactionIdField = new TextField(
                 details.interactionId() == null ? "" : Objects.toString(details.interactionId().id(), ""));
+        interactionIdField.setId("interactionIdField");
+        interactionIdField.setEditable(false);
+        grid.add(new Label("Interaction ID:"), 0, 0);
+        grid.add(interactionIdField, 1, 0);
+
+        var openInteractionFileButton = new Button("📂");
+        openInteractionFileButton.setId("openInteractionFileButton");
+        openInteractionFileButton.setDisable(details.interactionId() == null);
+        openInteractionFileButton.setOnAction(_ -> vm.onOpenInteractionFileButtonClick());
+        grid.add(openInteractionFileButton, 2, 0);
+
         addInfoRow(grid, 1, "answerTypeField", "Answer type:", String.valueOf(details.answerType()));
         addInfoRow(grid, 2, "modelIdField", "Model ID:", details.modelId());
         addInfoRow(grid, 3, "effortLevelField", "Effort level:", details.effortLevel());
