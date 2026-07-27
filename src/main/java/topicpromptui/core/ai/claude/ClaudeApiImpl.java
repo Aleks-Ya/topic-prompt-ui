@@ -113,7 +113,7 @@ class ClaudeApiImpl implements AiApi {
         var type = event.type() != null ? event.type() : sseEvent.event();
         switch (type) {
             case "message_start" -> applyMessageStart(state, event);
-            case "content_block_start" -> applyContentBlockStart(state, event);
+            case "content_block_start" -> applyContentBlockStart(state, event, onTextDelta);
             case "content_block_delta" -> applyContentBlockDelta(state, event, onTextDelta);
             case "content_block_stop" -> applyContentBlockStop(state, event);
             case "message_delta" -> applyMessageDelta(state, event);
@@ -133,11 +133,20 @@ class ClaudeApiImpl implements AiApi {
     }
 
     // Opens a pending tool call for each mcp_tool_use block; its input arrives via input_json_delta.
-    private static void applyContentBlockStart(StreamState state, StreamEvent event) {
-        if (event.index() != null && event.content_block() != null
-                && "mcp_tool_use".equals(event.content_block().type())) {
+    // A tool-using turn interleaves multiple "text" blocks around the tool blocks; their deltas would
+    // otherwise be concatenated with no gap (e.g. "...term.## Verdict:"), so a paragraph break is
+    // inserted whenever a new text block opens after text has already been accumulated.
+    private static void applyContentBlockStart(StreamState state, StreamEvent event, Consumer<String> onTextDelta) {
+        if (event.content_block() == null) {
+            return;
+        }
+        var blockType = event.content_block().type();
+        if (event.index() != null && "mcp_tool_use".equals(blockType)) {
             state.pendingToolCalls.put(event.index(),
                     new ToolCallAccumulator(event.content_block().server_name(), event.content_block().name()));
+        } else if ("text".equals(blockType) && state.text.length() > 0) {
+            state.text.append("\n\n");
+            onTextDelta.accept("\n\n");
         }
     }
 

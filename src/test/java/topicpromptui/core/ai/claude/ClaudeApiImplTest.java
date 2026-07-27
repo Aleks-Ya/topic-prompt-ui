@@ -141,6 +141,48 @@ class ClaudeApiImplTest {
     }
 
     @Test
+    void assembleSeparatesTextBlocksAroundToolCall() {
+        // Real bug: a tool-using turn emits a text block ("I'll check..."), then an mcp_tool_use/result,
+        // then a second text block ("## Verdict:..."). Each text block opens with its own
+        // content_block_start; without a separator the two blocks glue together ("...term.## Verdict:").
+        var deltas = new ArrayList<String>();
+        var response = api.assemble(sse(
+                "message_start", """
+                        {"type": "message_start", "message": {"id": "msg_4", "usage": {"input_tokens": 50}}}""",
+                "content_block_start", """
+                        {"type": "content_block_start", "index": 0, \
+                        "content_block": {"type": "text", "text": ""}}""",
+                "content_block_delta", """
+                        {"type": "content_block_delta", "index": 0, \
+                        "delta": {"type": "text_delta", "text": "I'll check the docs."}}""",
+                "content_block_stop", """
+                        {"type": "content_block_stop", "index": 0}""",
+                "content_block_start", """
+                        {"type": "content_block_start", "index": 1, "content_block": \
+                        {"type": "mcp_tool_use", "name": "get-library-docs", "server_name": "context7"}}""",
+                "content_block_delta", """
+                        {"type": "content_block_delta", "index": 1, \
+                        "delta": {"type": "input_json_delta", "partial_json": "{}"}}""",
+                "content_block_stop", """
+                        {"type": "content_block_stop", "index": 1}""",
+                "content_block_start", """
+                        {"type": "content_block_start", "index": 2, \
+                        "content_block": {"type": "text", "text": ""}}""",
+                "content_block_delta", """
+                        {"type": "content_block_delta", "index": 2, \
+                        "delta": {"type": "text_delta", "text": "## Verdict: correct."}}""",
+                "content_block_stop", """
+                        {"type": "content_block_stop", "index": 2}""",
+                "message_delta", """
+                        {"type": "message_delta", "delta": {"stop_reason": "end_turn"}, "usage": {"output_tokens": 30}}"""
+        ), deltas::add);
+        assertThat(response.text()).isEqualTo("I'll check the docs.\n\n## Verdict: correct.");
+        assertThat(deltas).containsExactly("I'll check the docs.", "\n\n", "## Verdict: correct.");
+        assertThat(response.toolCalls())
+                .containsExactly("context7 · get-library-docs {}");
+    }
+
+    @Test
     void assembleAcceptsPauseTurn() {
         // Anthropic's server-side MCP loop can end a turn with pause_turn; we keep the partial answer
         // rather than throwing (unlike max_tokens/refusal).
