@@ -38,6 +38,7 @@ class AnswerDetailsDialogTest extends BaseTopicPromptUiTest {
     void showsAnswerDetailsForAnsweredPane() {
         clickOn(grammarAnswer().button());
         var dialog = answerDetailsDialog();
+        assertThat(dialog.interactionIdField().getText()).isEqualTo("100");
         assertThat(dialog.answerTypeField().getText()).isEqualTo("GRAMMAR");
         assertThat(dialog.modelIdField().getText()).isEqualTo("grammar-model");
         assertThat(dialog.effortLevelField().getText()).isEqualTo("low");
@@ -56,6 +57,7 @@ class AnswerDetailsDialogTest extends BaseTopicPromptUiTest {
     void showsBlankFieldsForUnansweredPane() {
         clickOn(openAiAnswer().button());
         var dialog = answerDetailsDialog();
+        assertThat(dialog.interactionIdField().getText()).isEqualTo("100");
         assertThat(dialog.answerTypeField().getText()).isEqualTo("OPEN_AI");
         assertThat(dialog.modelIdField().getText()).isEmpty();
         assertThat(dialog.effortLevelField().getText()).isEmpty();

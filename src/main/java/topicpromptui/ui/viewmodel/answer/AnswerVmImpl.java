@@ -4,6 +4,7 @@ import topicpromptui.core.util.Mdc;
 import topicpromptui.core.storagefilesystem.Answer;
 import topicpromptui.core.storagefilesystem.AnswerState;
 import topicpromptui.core.storagefilesystem.AnswerType;
+import topicpromptui.core.storagefilesystem.Interaction;
 import topicpromptui.ui.viewmodel.mediator.AnswerMediator;
 import jakarta.inject.Inject;
 import javafx.scene.paint.Color;
@@ -71,12 +72,13 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
 
     @Override
     public AnswerDetails getAnswerDetails() {
-        return mediator.getCurrentInteractionOpt()
-                .flatMap(interaction -> interaction.getAnswer(answerType))
-                .map(a -> new AnswerDetails(a.answerType(), a.modelId(), a.effortLevel(), a.finishReason(),
+        var interactionOpt = mediator.getCurrentInteractionOpt();
+        var interactionId = interactionOpt.map(Interaction::id).orElse(null);
+        return interactionOpt.flatMap(interaction -> interaction.getAnswer(answerType))
+                .map(a -> new AnswerDetails(interactionId, a.answerType(), a.modelId(), a.effortLevel(), a.finishReason(),
                         a.inputTokens(), a.outputTokens(), a.totalTokens(), a.prompt(),
                         a.toolCalls() != null ? a.toolCalls() : List.of()))
-                .orElse(new AnswerDetails(answerType, null, null, null, null, null, null, null, List.of()));
+                .orElse(new AnswerDetails(interactionId, answerType, null, null, null, null, null, null, null, List.of()));
     }
 
     @Override

@@ -95,13 +95,15 @@ public class AnswerController extends BaseController {
         grid.setHgap(8);
         grid.setVgap(8);
         grid.setPadding(new Insets(8));
-        addInfoRow(grid, 0, "answerTypeField", "Answer type:", String.valueOf(details.answerType()));
-        addInfoRow(grid, 1, "modelIdField", "Model ID:", details.modelId());
-        addInfoRow(grid, 2, "effortLevelField", "Effort level:", details.effortLevel());
-        addInfoRow(grid, 3, "finishReasonField", "Finish reason:", details.finishReason());
-        addInfoRow(grid, 4, "inputTokensField", "Input tokens:", Objects.toString(details.inputTokens(), ""));
-        addInfoRow(grid, 5, "outputTokensField", "Output tokens:", Objects.toString(details.outputTokens(), ""));
-        addInfoRow(grid, 6, "totalTokensField", "Total tokens:", Objects.toString(details.totalTokens(), ""));
+        addInfoRow(grid, 0, "interactionIdField", "Interaction ID:",
+                details.interactionId() == null ? "" : Objects.toString(details.interactionId().id(), ""));
+        addInfoRow(grid, 1, "answerTypeField", "Answer type:", String.valueOf(details.answerType()));
+        addInfoRow(grid, 2, "modelIdField", "Model ID:", details.modelId());
+        addInfoRow(grid, 3, "effortLevelField", "Effort level:", details.effortLevel());
+        addInfoRow(grid, 4, "finishReasonField", "Finish reason:", details.finishReason());
+        addInfoRow(grid, 5, "inputTokensField", "Input tokens:", Objects.toString(details.inputTokens(), ""));
+        addInfoRow(grid, 6, "outputTokensField", "Output tokens:", Objects.toString(details.outputTokens(), ""));
+        addInfoRow(grid, 7, "totalTokensField", "Total tokens:", Objects.toString(details.totalTokens(), ""));
 
         var toolsUsedArea = new TextArea(formatToolCalls(details.toolCalls()));
         toolsUsedArea.setId("toolsUsedArea");
@@ -109,8 +111,8 @@ public class AnswerController extends BaseController {
         toolsUsedArea.setWrapText(true);
         toolsUsedArea.setPrefRowCount(3);
         toolsUsedArea.setPrefColumnCount(60);
-        grid.add(new Label("Tools used:"), 0, 7);
-        grid.add(toolsUsedArea, 1, 7);
+        grid.add(new Label("Tools used:"), 0, 8);
+        grid.add(toolsUsedArea, 1, 8);
 
         var promptArea = new TextArea(Objects.toString(details.prompt(), ""));
         promptArea.setId("promptArea");
@@ -118,8 +120,8 @@ public class AnswerController extends BaseController {
         promptArea.setWrapText(true);
         promptArea.setPrefRowCount(10);
         promptArea.setPrefColumnCount(60);
-        grid.add(new Label("Prompt:"), 0, 8);
-        grid.add(promptArea, 1, 8);
+        grid.add(new Label("Prompt:"), 0, 9);
+        grid.add(promptArea, 1, 9);
 
         dialog.getDialogPane().setContent(grid);
         dialog.showAndWait();

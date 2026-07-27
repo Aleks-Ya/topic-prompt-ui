@@ -248,6 +248,10 @@ public abstract class BaseTopicPromptUiTest extends ApplicationTest {
     }
 
     protected class AnswerDetailsDialog {
+        public TextField interactionIdField() {
+            return lookup("#interactionIdField").queryAs(TextField.class);
+        }
+
         public TextField answerTypeField() {
             return lookup("#answerTypeField").queryAs(TextField.class);
         }
