@@ -68,6 +68,9 @@ class RequestFollowUpAnswerTest extends ApplicationTest {
         assertThat(turns.get(0).content()).isEqualTo("Explain Java briefly");
         assertThat(turns.get(1).content()).isEqualTo("Java is a language.");
         assertThat(turns.get(2).content()).isEqualTo("Who created it?");
+
+        // Follow-ups carry the per-type system prompt too, reasserting the instructions every turn.
+        assertThat(openAiApi.getSystemPromptHistory().getLast()).contains("Do not repeat the question");
     }
 
     @Test

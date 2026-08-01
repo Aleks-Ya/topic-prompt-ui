@@ -4,8 +4,8 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-record RequestBody(String model, Integer max_tokens, List<Message> messages, OutputConfig output_config,
-                   Boolean stream, List<McpServer> mcp_servers, List<McpToolset> tools) {
+record RequestBody(String model, Integer max_tokens, String system, List<Message> messages,
+                   OutputConfig output_config, Boolean stream, List<McpServer> mcp_servers, List<McpToolset> tools) {
 }
 
 record Message(String role, String content) {

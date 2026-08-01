@@ -170,7 +170,8 @@ class OpenAiApiImplTest {
 
     @Test
     void buildRequestBodyAttachesContext7WhenKeyPresent() {
-        var body = api.buildRequestBody(List.of(new ConversationTurn(USER, "hi")), "ctx7-key");
+        var body = api.buildRequestBody("sys", List.of(new ConversationTurn(USER, "hi")), "ctx7-key");
+        assertThat(body.instructions()).isEqualTo("sys");
         assertThat(body.tools()).singleElement().satisfies(tool -> {
             assertThat(tool.type()).isEqualTo("mcp");
             assertThat(tool.server_label()).isEqualTo("context7");
@@ -184,7 +185,8 @@ class OpenAiApiImplTest {
 
     @Test
     void buildRequestBodyOmitsContext7WhenKeyNull() {
-        var body = api.buildRequestBody(List.of(new ConversationTurn(USER, "hi")), null);
+        var body = api.buildRequestBody(null, List.of(new ConversationTurn(USER, "hi")), null);
+        assertThat(body.instructions()).isNull();
         assertThat(body.tools()).isNull();
     }
 

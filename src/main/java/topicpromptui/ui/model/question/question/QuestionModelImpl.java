@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
@@ -92,6 +93,7 @@ class QuestionModelImpl implements QuestionModel {
         // framing (topic, instructions) was already established in the first message of the
         // conversation, so a follow-up only needs to send the raw text the user typed.
         var prompt = interaction.question();
+        var systemPrompt = promptFactory.getSystemPrompt(interaction.type(), answerType).orElse(null);
         log.trace("Prompt: {}", prompt);
         updateAnswer(interactionId, answerType, answer -> answer
                         .withPrompt(prompt)
@@ -101,9 +103,9 @@ class QuestionModelImpl implements QuestionModel {
             var turns = new ArrayList<>(followUpHistoryBuilder.buildHistory(parentInteractionId, answerType));
             turns.add(new ConversationTurn(USER, prompt));
             return switch (answerType) {
-                case GCP -> gcpApi.send(turns, onTextDelta);
-                case CLAUDE -> claudeApi.send(turns, onTextDelta);
-                case OPEN_AI -> openAiApi.send(turns, onTextDelta);
+                case GCP -> gcpApi.send(systemPrompt, turns, onTextDelta);
+                case CLAUDE -> claudeApi.send(systemPrompt, turns, onTextDelta);
+                case OPEN_AI -> openAiApi.send(systemPrompt, turns, onTextDelta);
                 case GRAMMAR -> throw new IllegalArgumentException(
                         "Grammar checks don't support follow-up conversations");
             };
@@ -126,16 +128,18 @@ class QuestionModelImpl implements QuestionModel {
                 answerType);
         if (promptOpt.isPresent()) {
             var prompt = promptOpt.get();
+            var systemPrompt = promptFactory.getSystemPrompt(interaction.type(), answerType).orElse(null);
             log.trace("Prompt: {}", prompt);
             updateAnswer(interactionId, answerType, answer -> answer
                             .withPrompt(prompt)
                             .withState(SENT),
                     callback);
+            var turns = List.of(new ConversationTurn(USER, prompt));
             sendAsync(interactionId, answerType, callback, progressHtml, onTextDelta -> switch (answerType) {
-                case GCP -> gcpApi.send(prompt, onTextDelta);
-                case CLAUDE -> claudeApi.send(prompt, onTextDelta);
-                case OPEN_AI -> openAiApi.send(prompt, onTextDelta);
-                case GRAMMAR -> openAiGrammarApi.send(prompt, onTextDelta);
+                case GCP -> gcpApi.send(systemPrompt, turns, onTextDelta);
+                case CLAUDE -> claudeApi.send(systemPrompt, turns, onTextDelta);
+                case OPEN_AI -> openAiApi.send(systemPrompt, turns, onTextDelta);
+                case GRAMMAR -> openAiGrammarApi.send(systemPrompt, turns, onTextDelta);
             }, "The short answer request finished.");
         } else {
             log.info("The short answer was skipped.");

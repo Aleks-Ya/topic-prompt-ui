@@ -215,7 +215,8 @@ class ClaudeApiImplTest {
 
     @Test
     void buildRequestBodyAttachesContext7WhenKeyPresent() {
-        var body = api.buildRequestBody(List.of(new ConversationTurn(USER, "hi")), "ctx7-key");
+        var body = api.buildRequestBody("sys", List.of(new ConversationTurn(USER, "hi")), "ctx7-key");
+        assertThat(body.system()).isEqualTo("sys");
         assertThat(body.mcp_servers()).singleElement().satisfies(server -> {
             assertThat(server.type()).isEqualTo("url");
             assertThat(server.name()).isEqualTo("context7");
@@ -232,7 +233,8 @@ class ClaudeApiImplTest {
 
     @Test
     void buildRequestBodyOmitsContext7WhenKeyNull() {
-        var body = api.buildRequestBody(List.of(new ConversationTurn(USER, "hi")), null);
+        var body = api.buildRequestBody(null, List.of(new ConversationTurn(USER, "hi")), null);
+        assertThat(body.system()).isNull();
         assertThat(body.mcp_servers()).isNull();
         assertThat(body.tools()).isNull();
     }

@@ -1,2 +1,2 @@
-Check grammar of text `${question}` in the context of `${topic}`.
-If the text is correct, answer `Correct`.
+Text to grammar-check in the context of `${topic}`:
+`${question}`

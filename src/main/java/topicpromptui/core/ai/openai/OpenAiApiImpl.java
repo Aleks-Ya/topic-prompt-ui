@@ -49,11 +49,11 @@ class OpenAiApiImpl implements AiApi {
     }
 
     @Override
-    public AiResponse send(List<ConversationTurn> turns, Consumer<String> onTextDelta) {
+    public AiResponse send(String systemPrompt, List<ConversationTurn> turns, Consumer<String> onTextDelta) {
         log.info("Sending question: {}", turns);
         var token = configModel.getProperty("openai.token");
         var context7Key = context7Key();
-        var body = buildRequestBody(turns, context7Key);
+        var body = buildRequestBody(systemPrompt, turns, context7Key);
         var json = gson.toJson(body);
         if (log.isTraceEnabled()) {
             log.trace("Request body: {}", context7Key != null ? json.replace(context7Key, "***") : json);
@@ -147,7 +147,7 @@ class OpenAiApiImpl implements AiApi {
                 usage != null ? usage.total_tokens() : null, toolCalls);
     }
 
-    RequestBody buildRequestBody(List<ConversationTurn> turns, String context7Key) {
+    RequestBody buildRequestBody(String systemPrompt, List<ConversationTurn> turns, String context7Key) {
         var reasoning = effort != null ? new Reasoning(effort) : null;
         var input = turns.stream().map(turn -> new InputItem(role(turn.speaker()), turn.content())).toList();
         List<Tool> tools = null;
@@ -155,7 +155,7 @@ class OpenAiApiImpl implements AiApi {
             tools = List.of(new Tool("mcp", CONTEXT7_NAME, CONTEXT7_MCP_URL,
                     Map.of("Authorization", "Bearer " + context7Key), "never"));
         }
-        return new RequestBody(model, input, reasoning, true, tools);
+        return new RequestBody(model, systemPrompt, input, reasoning, true, tools);
     }
 
     HttpRequest buildHttpRequest(String token, String json) {

@@ -46,7 +46,7 @@ class GcpApiImpl implements AiApi {
     }
 
     @Override
-    public AiResponse send(List<ConversationTurn> turns, Consumer<String> onTextDelta) {
+    public AiResponse send(String systemPrompt, List<ConversationTurn> turns, Consumer<String> onTextDelta) {
         log.info("Sending question: {}", turns);
         var apiKey = configModel.getProperty("gcp.api.key");
         try (var client = HttpClient.newHttpClient()) {
@@ -54,7 +54,9 @@ class GcpApiImpl implements AiApi {
             var contents = turns.stream()
                     .map(turn -> new Content(List.of(new Part(turn.content())), role(turn.speaker())))
                     .toList();
-            var body = new RequestBody(contents, new GenerationConfig(1, thinkingConfig));
+            var systemInstruction = systemPrompt != null
+                    ? new Content(List.of(new Part(systemPrompt)), null) : null;
+            var body = new RequestBody(contents, systemInstruction, new GenerationConfig(1, thinkingConfig));
             var json = gson.toJson(body);
             log.trace("Request body: {}", json);
             var request = HttpRequest.newBuilder()

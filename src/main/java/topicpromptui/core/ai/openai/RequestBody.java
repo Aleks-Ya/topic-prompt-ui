@@ -5,7 +5,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 import java.util.Map;
 
-record RequestBody(String model, List<InputItem> input, Reasoning reasoning, Boolean stream, List<Tool> tools) {
+record RequestBody(String model, String instructions, List<InputItem> input, Reasoning reasoning, Boolean stream,
+                   List<Tool> tools) {
 }
 
 record InputItem(String role, String content) {

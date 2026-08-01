@@ -102,6 +102,29 @@ class RequestAnswerStreamingTest extends ApplicationTest {
         assertThat(snapshots).isEmpty();
     }
 
+    @Test
+    void initialRequestSendsSystemPromptAndSingleUserTurn() {
+        var topic = storage.addTopic("Java topic");
+        var interactionId = new InteractionId(7L);
+        storage.saveInteraction(new Interaction(interactionId, InteractionType.QUESTION, topic.id(), "What is Java?",
+                Map.of(OPEN_AI, new Answer(OPEN_AI, "", "", "", AnswerState.NEW, null,
+                        null, null, null, null, null, null)),
+                null));
+        openAiApi.clear().putResponse("What is Java?", "Java is a language.", Duration.ZERO);
+
+        questionModel.requestAnswer(interactionId, OPEN_AI, () -> {
+        }, html -> {
+        });
+        awaitTerminalState(interactionId, OPEN_AI);
+
+        // Initial (non-follow-up) request: the behavioral instructions ride in the system prompt,
+        // and the single user turn carries only the slim topic + question message.
+        assertThat(openAiApi.getSystemPromptHistory().getLast()).contains("Do not repeat the question");
+        var turns = openAiApi.getTurnsSendHistory().getLast();
+        assertThat(turns).hasSize(1);
+        assertThat(turns.getLast().content()).contains("What is Java?");
+    }
+
     // A follow-up interaction sends the raw question text (no FreeMarker template), which lets
     // the mock match on the question substring directly. Explicit IDs, because
     // storage.newInteractionId() is time-based and collides when called twice within a second.

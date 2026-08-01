@@ -50,8 +50,9 @@ class GcpApiIT {
 
     @Test
     void definition() {
+        var system = promptFactory.getSystemPrompt(DEFINITION, GCP).orElse(null);
         var prompt = promptFactory.getPrompt(DEFINITION, "AWS S3", "Bucket", GCP).orElseThrow();
-        var response = api.send(prompt);
+        var response = api.send(system, List.of(new ConversationTurn(USER, prompt)), delta -> { });
         System.out.println(response.text());
         System.out.println("responseId: " + response.responseId());
         assertThat(response.text()).isNotBlank();

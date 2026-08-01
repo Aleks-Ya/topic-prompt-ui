@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-record RequestBody(List<Content> contents, GenerationConfig generationConfig) {
+record RequestBody(List<Content> contents, Content systemInstruction, GenerationConfig generationConfig) {
 }
 
 record Content(List<Part> parts, String role) {

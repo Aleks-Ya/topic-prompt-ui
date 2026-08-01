@@ -11,7 +11,7 @@ public class MockClaudeApi extends BaseMockApi implements AiApi {
 
     @SuppressWarnings("UnusedReturnValue")
     public MockClaudeApi putClaudeResponse(String response, Duration timeout) {
-        put("I will ask you a question about", "a short response", response, timeout);
+        put("Do not repeat the question", "a short response", response, timeout);
         return this;
     }
 

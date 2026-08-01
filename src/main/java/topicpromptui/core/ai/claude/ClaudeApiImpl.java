@@ -60,12 +60,12 @@ class ClaudeApiImpl implements AiApi {
     }
 
     @Override
-    public AiResponse send(List<ConversationTurn> turns, Consumer<String> onTextDelta) {
+    public AiResponse send(String systemPrompt, List<ConversationTurn> turns, Consumer<String> onTextDelta) {
         log.info("Sending question: {}", turns);
         var apiKey = configModel.getProperty("claude.api.key");
         var context7Key = context7Key();
         try (var client = HttpClient.newHttpClient()) {
-            var body = buildRequestBody(turns, context7Key);
+            var body = buildRequestBody(systemPrompt, turns, context7Key);
             var json = gson.toJson(body);
             if (log.isTraceEnabled()) {
                 log.trace("Request body: {}", context7Key != null ? json.replace(context7Key, "***") : json);
@@ -211,7 +211,7 @@ class ClaudeApiImpl implements AiApi {
         }
     }
 
-    RequestBody buildRequestBody(List<ConversationTurn> turns, String context7Key) {
+    RequestBody buildRequestBody(String systemPrompt, List<ConversationTurn> turns, String context7Key) {
         var outputConfig = effort != null ? new OutputConfig(effort) : null;
         var messages = turns.stream().map(turn -> new Message(role(turn.speaker()), turn.content())).toList();
         List<McpServer> mcpServers = null;
@@ -220,7 +220,7 @@ class ClaudeApiImpl implements AiApi {
             mcpServers = List.of(new McpServer("url", CONTEXT7_NAME, CONTEXT7_MCP_URL, context7Key));
             tools = List.of(new McpToolset("mcp_toolset", CONTEXT7_NAME));
         }
-        return new RequestBody(model, MAX_TOKENS, messages, outputConfig, true, mcpServers, tools);
+        return new RequestBody(model, MAX_TOKENS, systemPrompt, messages, outputConfig, true, mcpServers, tools);
     }
 
     // mcpEnabled adds the beta header required by the server-side MCP connector.

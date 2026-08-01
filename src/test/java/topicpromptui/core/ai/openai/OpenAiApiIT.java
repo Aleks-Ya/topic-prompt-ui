@@ -72,8 +72,9 @@ class OpenAiApiIT {
 
     @Test
     void definitionOpenAi() {
+        var system = promptFactory.getSystemPrompt(DEFINITION, AnswerType.OPEN_AI).orElse(null);
         var prompt = promptFactory.getPrompt(DEFINITION, "AWS S3", "Bucket", AnswerType.OPEN_AI).orElseThrow();
-        var response = api.send(prompt);
+        var response = api.send(system, List.of(new ConversationTurn(USER, prompt)), delta -> { });
         System.out.println(response.text());
         System.out.println("responseId: " + response.responseId());
         assertThat(response.text()).isNotBlank();
@@ -82,8 +83,9 @@ class OpenAiApiIT {
 
     @Test
     void definitionGrammar() {
+        var system = promptFactory.getSystemPrompt(DEFINITION, AnswerType.GRAMMAR).orElse(null);
         var prompt = promptFactory.getPrompt(DEFINITION, "AWS S3", "Bucket", AnswerType.GRAMMAR).orElseThrow();
-        var response = grammarApi.send(prompt);
+        var response = grammarApi.send(system, List.of(new ConversationTurn(USER, prompt)), delta -> { });
         System.out.println(response.text());
         System.out.println("responseId: " + response.responseId());
         assertThat(response.text()).isNotBlank();

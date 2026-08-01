@@ -25,33 +25,38 @@ public abstract class BaseMockApi implements AiApi {
     protected final Map<RequestInfo, ResponseInfo> contentSubstringToResponseMap = new HashMap<>();
     protected final List<String> sendHistory = new ArrayList<>();
     protected final List<List<ConversationTurn>> turnsSendHistory = new ArrayList<>();
+    protected final List<String> systemPromptHistory = new ArrayList<>();
     protected final AtomicInteger receivedCounter = new AtomicInteger();
 
     // Thread.sleep here simulates provider latency and the per-chunk delay of a real streaming
     // response for tests (see putStreamingResponse), not a substitute for polling.
     @Override
     @SuppressWarnings("java:S2925")
-    public AiResponse send(List<ConversationTurn> turns, Consumer<String> onTextDelta) {
+    public AiResponse send(String systemPrompt, List<ConversationTurn> turns, Consumer<String> onTextDelta) {
         var content = turns.getLast().content();
         sendHistory.add(content);
         turnsSendHistory.add(turns);
+        systemPromptHistory.add(systemPrompt);
+        // The behavioral phrases that distinguish request types (question/definition/fact/grammar)
+        // now live in the system prompt, so match against both it and the last user message.
+        var matchTarget = (systemPrompt != null ? systemPrompt + "\n" : "") + content;
         if (Platform.isFxApplicationThread()) {
             throw new IllegalStateException("Should not run in the JavaFX Application Thread");
         }
         var info = contentSubstringToResponseMap.entrySet().stream()
                 .filter(entry -> {
                     var contains = entry.getKey().containsOpt
-                            .map(value -> content.toLowerCase().contains(value.toLowerCase()))
+                            .map(value -> matchTarget.toLowerCase().contains(value.toLowerCase()))
                             .orElse(false);
                     var notContains = entry.getKey().notContainOpt
-                            .map(value -> !content.toLowerCase().contains(value.toLowerCase()))
+                            .map(value -> !matchTarget.toLowerCase().contains(value.toLowerCase()))
                             .orElse(true);
                     return contains && notContains;
                 })
                 .findFirst()
                 .orElseThrow(() -> new NoSuchElementException(format(
-                        "Not found mock content: content='%s', mapKeys='%s'",
-                        content, contentSubstringToResponseMap.keySet())))
+                        "Not found mock content: matchTarget='%s', mapKeys='%s'",
+                        matchTarget, contentSubstringToResponseMap.keySet())))
                 .getValue();
         try {
             Thread.sleep(info.timeout().toMillis());
@@ -83,6 +88,11 @@ public abstract class BaseMockApi implements AiApi {
         return turnsSendHistory;
     }
 
+    /** The system prompt passed to each send (may contain nulls for legacy no-system calls). */
+    public List<String> getSystemPromptHistory() {
+        return systemPromptHistory;
+    }
+
     protected void put(String containsSubstring, String notContainSubstring, String response, Duration timeout) {
         var requestInfo = new RequestInfo(Optional.ofNullable(containsSubstring), Optional.ofNullable(notContainSubstring));
         var responseInfo = new ResponseInfo(response, timeout, List.of(response), Duration.ZERO);
@@ -109,6 +119,7 @@ public abstract class BaseMockApi implements AiApi {
         contentSubstringToResponseMap.clear();
         sendHistory.clear();
         turnsSendHistory.clear();
+        systemPromptHistory.clear();
         return this;
     }
 

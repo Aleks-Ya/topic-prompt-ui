@@ -15,7 +15,7 @@ public class MockOpenAiApi extends BaseMockApi implements AiApi {
     }
 
     public MockOpenAiApi putOpenAiResponse(String response, Duration timeout) {
-        put("I will ask you a question about", null, response, timeout);
+        put("Do not repeat the question", null, response, timeout);
         return this;
     }
 

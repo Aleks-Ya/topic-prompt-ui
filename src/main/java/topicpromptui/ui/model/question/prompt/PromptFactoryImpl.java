@@ -37,6 +37,14 @@ class PromptFactoryImpl implements PromptFactory {
     private static final String FACT_OPEN_AI_TEMPLATE = "fact-openai.ftl";
     private static final String FACT_GRAMMAR_FTL = "fact-grammar.ftl";
 
+    // System prompts carry the stable behavioral instructions (shared across providers within a type)
+    // that used to be baked inline into the user-message templates above.
+    private static final String QUESTION_SYSTEM_TEMPLATE = "question-system.ftl";
+    private static final String DEFINITION_SYSTEM_TEMPLATE = "definition-system.ftl";
+    private static final String DEFINITION_GRAMMAR_SYSTEM_TEMPLATE = "definition-grammar-system.ftl";
+    private static final String GRAMMAR_SYSTEM_TEMPLATE = "grammar-system.ftl";
+    private static final String FACT_SYSTEM_TEMPLATE = "fact-system.ftl";
+
     private static final StringTemplateLoader STRING_TEMPLATE_LOADER = new StringTemplateLoader();
 
     private final Path templatesDir;
@@ -76,6 +84,28 @@ class PromptFactoryImpl implements PromptFactory {
                 case GRAMMAR -> render(GRAMMAR_TEMPLATE, data);
                 case OPEN_AI -> render(FACT_OPEN_AI_TEMPLATE, data);
                 case CLAUDE, GCP -> render(FACT_GRAMMAR_FTL, data);
+            };
+        };
+    }
+
+    @Override
+    public Optional<String> getSystemPrompt(InteractionType interactionType, AnswerType answerType) {
+        return switch (interactionType) {
+            case QUESTION -> switch (answerType) {
+                case GRAMMAR -> render(GRAMMAR_SYSTEM_TEMPLATE, Map.of());
+                case OPEN_AI, CLAUDE, GCP -> render(QUESTION_SYSTEM_TEMPLATE, Map.of());
+            };
+            case DEFINITION -> switch (answerType) {
+                case GRAMMAR -> render(DEFINITION_GRAMMAR_SYSTEM_TEMPLATE, Map.of());
+                case OPEN_AI, CLAUDE, GCP -> render(DEFINITION_SYSTEM_TEMPLATE, Map.of());
+            };
+            case GRAMMAR -> switch (answerType) {
+                case GRAMMAR -> render(GRAMMAR_SYSTEM_TEMPLATE, Map.of());
+                case OPEN_AI, CLAUDE, GCP -> Optional.empty();
+            };
+            case FACT -> switch (answerType) {
+                case GRAMMAR -> render(GRAMMAR_SYSTEM_TEMPLATE, Map.of());
+                case OPEN_AI, CLAUDE, GCP -> render(FACT_SYSTEM_TEMPLATE, Map.of());
             };
         };
     }

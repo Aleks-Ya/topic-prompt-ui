@@ -11,7 +11,7 @@ public class MockGcpApi extends BaseMockApi implements AiApi {
 
     @SuppressWarnings("UnusedReturnValue")
     public MockGcpApi putGcpResponse(String response, Duration timeout) {
-        put("I will ask you a question about", null, response, timeout);
+        put("Do not repeat the question", null, response, timeout);
         return this;
     }
 
