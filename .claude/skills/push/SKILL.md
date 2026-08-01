@@ -1,7 +1,7 @@
 ---
 name: push
-description: >-
-  Push `main` branch, wait for GitHub Actions to finish, fix if it fails.
+description: Push `main` branch, wait for GitHub Actions to finish, fix if it fails.
+disable-model-invocation: true
 ---
 
 # Push main and watch CI
@@ -41,10 +41,10 @@ gh run watch "$RUN_ID" --exit-status
 - Inspect the failing logs: `gh run view "$RUN_ID" --log-failed`.
 - Diagnose the root cause from the actual error (compile error, test failure, Sonar quality gate, etc.) — don't guess.
 - Reproduce and fix locally. Useful commands (see repo `CLAUDE.md`):
-  - Compile: `./gradlew compileTestJava`
-  - Unit tests only, matches CI (`-PskipIntegrationTests`): `./gradlew -PskipIntegrationTests test`
-  - A single failing test class: `./gradlew test --tests "fully.Qualified.ClassName"`
-  - Authoritative failure detail: `build/test-results/test/TEST-<FullyQualifiedClassName>.xml`
+    - Compile: `./gradlew compileTestJava`
+    - Unit tests only, matches CI (`-PskipIntegrationTests`): `./gradlew -PskipIntegrationTests test`
+    - A single failing test class: `./gradlew test --tests "fully.Qualified.ClassName"`
+    - Authoritative failure detail: `build/test-results/test/TEST-<FullyQualifiedClassName>.xml`
 - Commit the fix as a new commit (not `--amend`, not `--no-verify`), push again, then repeat step 3 to watch the new run.
 - Keep iterating until the run succeeds. Never force-push or skip hooks just to make CI pass.
 

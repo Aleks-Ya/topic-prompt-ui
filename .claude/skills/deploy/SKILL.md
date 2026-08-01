@@ -1,7 +1,7 @@
 ---
 name: deploy
-description: >-
-  Deploy TopicPromptUI locally: `/deploy` - current version, `/deploy 66` - tag `v66`.
+description: "Deploy TopicPromptUI locally: `/deploy` - current version, `/deploy 66` - tag `v66`."
+disable-model-invocation: true
 ---
 
 # Deploy
