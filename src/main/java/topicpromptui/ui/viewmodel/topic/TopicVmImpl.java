@@ -117,6 +117,12 @@ class TopicVmImpl implements TopicVmController, TopicVmMediator {
     }
 
     @Override
+    public void setTopicComboBoxDisable(boolean disable) {
+        log.trace("setTopicComboBoxDisable: {}", disable);
+        vmProperties.topicComboBoxDisable.set(disable);
+    }
+
+    @Override
     public void initialize() {
         vmProperties.topicCbCellFactory.setValue(_ -> new ListCell<>() {
             @Override

@@ -89,11 +89,13 @@ class QuestionModelImpl implements QuestionModel {
         if (parentInteractionId == null) {
             throw new IllegalStateException("Interaction has no parentInteractionId, it's not a follow-up: " + interactionId);
         }
-        // Follow-up messages skip PromptFactory/FreeMarker templating on purpose: the templated
-        // framing (topic, instructions) was already established in the first message of the
-        // conversation, so a follow-up only needs to send the raw text the user typed.
+        // Follow-up messages skip PromptFactory/FreeMarker templating of the user text on purpose:
+        // the instructions were already established in the first message of the conversation, so a
+        // follow-up only needs to send the raw text the user typed. The topic and behavioral
+        // instructions still ride in the system prompt, which is reasserted on every turn.
         var prompt = interaction.question();
-        var systemPrompt = promptFactory.getSystemPrompt(interaction.type(), answerType).orElse(null);
+        var topic = storage.getTopic(interaction.topicId()).title();
+        var systemPrompt = promptFactory.getSystemPrompt(interaction.type(), topic, answerType).orElse(null);
         log.trace("Prompt: {}", prompt);
         updateAnswer(interactionId, answerType, answer -> answer
                         .withPrompt(prompt)
@@ -122,14 +124,15 @@ class QuestionModelImpl implements QuestionModel {
             requestFollowUpAnswer(interactionId, answerType, callback, progressHtml);
             return;
         }
+        var topic = storage.getTopic(interaction.topicId()).title();
         var promptOpt = promptFactory.getPrompt(
                 interaction.type(),
-                storage.getTopic(interaction.topicId()).title(),
+                topic,
                 interaction.question(),
                 answerType);
         if (promptOpt.isPresent()) {
             var prompt = promptOpt.get();
-            var systemPrompt = promptFactory.getSystemPrompt(interaction.type(), answerType).orElse(null);
+            var systemPrompt = promptFactory.getSystemPrompt(interaction.type(), topic, answerType).orElse(null);
             log.trace("Prompt: {}", prompt);
             updateAnswer(interactionId, answerType, answer -> answer
                             .withPrompt(prompt)

@@ -1,2 +1,1 @@
 Term: `${question}`
-Context: `${topic}`

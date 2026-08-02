@@ -22,4 +22,5 @@ public class TopicVmProperties {
     public final StringProperty topicLabelText = new SimpleStringProperty();
     public final BooleanProperty renameButtonDisable = new SimpleBooleanProperty();
     public final BooleanProperty deleteButtonDisable = new SimpleBooleanProperty();
+    public final BooleanProperty topicComboBoxDisable = new SimpleBooleanProperty();
 }

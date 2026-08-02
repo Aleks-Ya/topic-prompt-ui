@@ -356,6 +356,11 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
     }
 
     @Override
+    public void setTopicComboBoxDisabled(boolean disabled) {
+        topicVM.setTopicComboBoxDisable(disabled);
+    }
+
+    @Override
     public String getTextFromClipboard() {
         return clipboardModel.getTextFromClipboard();
     }

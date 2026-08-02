@@ -28,7 +28,11 @@ class QuestionVmImpl implements QuestionVmController, QuestionVmMediator {
     @Inject
     QuestionVmImpl(QuestionMediator mediator) {
         this.mediator = mediator;
-        properties.followUpCheckBoxSelected.addListener((observable, oldValue, newValue) -> updateQuestionTextAreaBackgroundColor());
+        properties.followUpCheckBoxSelected.addListener((observable, oldValue, newValue) -> {
+            updateQuestionTextAreaBackgroundColor();
+            // A follow-up inherits its parent's topic, so lock the Topic combobox while it's selected.
+            mediator.setTopicComboBoxDisabled(newValue);
+        });
     }
 
     @Override

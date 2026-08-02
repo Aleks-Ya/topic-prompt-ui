@@ -1,4 +1,4 @@
-Statement to fact-check in the context of `${topic}`:
+Statement to fact-check:
 ```
 ${question}
 ```

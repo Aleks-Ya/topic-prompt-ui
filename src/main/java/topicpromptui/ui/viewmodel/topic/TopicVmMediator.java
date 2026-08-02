@@ -9,5 +9,7 @@ public interface TopicVmMediator {
 
     void setLabel();
 
+    void setTopicComboBoxDisable(boolean disable);
+
     void initialize();
 }

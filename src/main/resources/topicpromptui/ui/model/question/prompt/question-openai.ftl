@@ -1,4 +1,3 @@
-Topic: `${topic}`
 Question:
 ```
 ${question}

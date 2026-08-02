@@ -89,23 +89,24 @@ class PromptFactoryImpl implements PromptFactory {
     }
 
     @Override
-    public Optional<String> getSystemPrompt(InteractionType interactionType, AnswerType answerType) {
+    public Optional<String> getSystemPrompt(InteractionType interactionType, String topic, AnswerType answerType) {
+        var data = Map.of("topic", topic);
         return switch (interactionType) {
             case QUESTION -> switch (answerType) {
-                case GRAMMAR -> render(GRAMMAR_SYSTEM_TEMPLATE, Map.of());
-                case OPEN_AI, CLAUDE, GCP -> render(QUESTION_SYSTEM_TEMPLATE, Map.of());
+                case GRAMMAR -> render(GRAMMAR_SYSTEM_TEMPLATE, data);
+                case OPEN_AI, CLAUDE, GCP -> render(QUESTION_SYSTEM_TEMPLATE, data);
             };
             case DEFINITION -> switch (answerType) {
-                case GRAMMAR -> render(DEFINITION_GRAMMAR_SYSTEM_TEMPLATE, Map.of());
-                case OPEN_AI, CLAUDE, GCP -> render(DEFINITION_SYSTEM_TEMPLATE, Map.of());
+                case GRAMMAR -> render(DEFINITION_GRAMMAR_SYSTEM_TEMPLATE, data);
+                case OPEN_AI, CLAUDE, GCP -> render(DEFINITION_SYSTEM_TEMPLATE, data);
             };
             case GRAMMAR -> switch (answerType) {
-                case GRAMMAR -> render(GRAMMAR_SYSTEM_TEMPLATE, Map.of());
+                case GRAMMAR -> render(GRAMMAR_SYSTEM_TEMPLATE, data);
                 case OPEN_AI, CLAUDE, GCP -> Optional.empty();
             };
             case FACT -> switch (answerType) {
-                case GRAMMAR -> render(GRAMMAR_SYSTEM_TEMPLATE, Map.of());
-                case OPEN_AI, CLAUDE, GCP -> render(FACT_SYSTEM_TEMPLATE, Map.of());
+                case GRAMMAR -> render(GRAMMAR_SYSTEM_TEMPLATE, data);
+                case OPEN_AI, CLAUDE, GCP -> render(FACT_SYSTEM_TEMPLATE, data);
             };
         };
     }

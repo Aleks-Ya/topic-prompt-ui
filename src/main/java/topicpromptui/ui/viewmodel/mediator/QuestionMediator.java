@@ -20,5 +20,7 @@ public interface QuestionMediator {
 
     InteractionId createInteraction(InteractionType interactionType, InteractionId parentInteractionId);
 
+    void setTopicComboBoxDisabled(boolean disabled);
+
     String getTextFromClipboard();
 }

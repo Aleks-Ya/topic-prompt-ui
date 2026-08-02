@@ -61,6 +61,7 @@ public class TopicController extends BaseController {
         vm.properties().topicCbCellFactory.bindBidirectional(topicComboBox.cellFactoryProperty());
         vm.properties().filterHistoryCheckBoxSelected.bindBidirectional(filterHistoryCheckBox.selectedProperty());
         vm.properties().renameButtonDisable.bindBidirectional(renameButton.disableProperty());
+        vm.properties().topicComboBoxDisable.bindBidirectional(topicComboBox.disableProperty());
 
         newTopicDialog.setTitle("Add new topic");
         newTopicDialog.setHeaderText("New topic:");
