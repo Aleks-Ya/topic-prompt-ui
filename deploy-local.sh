@@ -27,5 +27,14 @@ fi
 echo "Building and installing..."
 ./gradlew -x test installLocally
 
+# The app copies each prompt template into <appData>/templates only if it isn't already there
+# (PromptFactoryImpl.render), so stale copies would shadow template changes in the new build.
+# Delete them here; the app re-copies the fresh versions from resources on the next request.
+TEMPLATES_DIR="$HOME/.topic-prompt-ui/templates"
+if [ -d "$TEMPLATES_DIR" ]; then
+    echo "Clearing cached prompt templates in $TEMPLATES_DIR..."
+    rm -f "$TEMPLATES_DIR"/*.ftl
+fi
+
 echo "Starting TopicPromptUI..."
 nohup "$HOME/installed/TopicPromptUI/bin/TopicPromptUI" >/dev/null 2>&1 &
