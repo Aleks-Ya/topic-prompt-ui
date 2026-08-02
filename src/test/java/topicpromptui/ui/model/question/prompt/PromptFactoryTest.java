@@ -19,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class PromptFactoryTest extends BaseTest {
     private static final String GRAMMAR_SYSTEM = "Check if the sentence or phrase has grammatical mistakes.";
+    private static final String GRAMMAR_SYSTEM_TOPIC = "in the context of the topic `Topic A`";
     private final PromptFactory factory = injector.getInstance(PromptFactory.class);
     private final ConfigModel configModel = injector.getInstance(ConfigModel.class);
 
@@ -27,7 +28,7 @@ class PromptFactoryTest extends BaseTest {
     @Test
     void questionUserMessage() {
         var grammar = """
-                Sentence or phrase to check, in the context of `Topic A`:
+                Sentence or phrase to check:
                 ```
                 Question A
                 ```""";
@@ -46,7 +47,7 @@ class PromptFactoryTest extends BaseTest {
     void definitionUserMessage() {
         var definition = "Term: `Question A`";
         assertThat(factory.getPrompt(DEFINITION, "Topic A", "Question A", GRAMMAR).orElseThrow()).contains("""
-                Text to grammar-check in the context of `Topic A`:
+                Text to grammar-check:
                 ```
                 Question A
                 ```""");
@@ -58,7 +59,7 @@ class PromptFactoryTest extends BaseTest {
     @Test
     void grammarUserMessage() {
         assertThat(factory.getPrompt(InteractionType.GRAMMAR, "Topic A", "Question A", GRAMMAR).orElseThrow()).contains("""
-                Sentence or phrase to check, in the context of `Topic A`:
+                Sentence or phrase to check:
                 ```
                 Question A
                 ```""");
@@ -75,7 +76,7 @@ class PromptFactoryTest extends BaseTest {
                 Question A
                 ```""";
         assertThat(factory.getPrompt(FACT, "Topic A", "Question A", GRAMMAR).orElseThrow()).contains("""
-                Sentence or phrase to check, in the context of `Topic A`:
+                Sentence or phrase to check:
                 ```
                 Question A
                 ```""");
@@ -93,7 +94,7 @@ class PromptFactoryTest extends BaseTest {
                 Do not repeat the question in your answer.
                 Avoid repeating the topic in your answer.
                 Format your answer into Markdown.""";
-        assertThat(factory.getSystemPrompt(QUESTION, "Topic A", GRAMMAR).orElseThrow()).contains(GRAMMAR_SYSTEM);
+        assertThat(factory.getSystemPrompt(QUESTION, "Topic A", GRAMMAR).orElseThrow()).contains(GRAMMAR_SYSTEM).contains(GRAMMAR_SYSTEM_TOPIC);
         assertThat(factory.getSystemPrompt(QUESTION, "Topic A", OPEN_AI).orElseThrow()).contains(question);
         assertThat(factory.getSystemPrompt(QUESTION, "Topic A", CLAUDE).orElseThrow()).contains(question);
         assertThat(factory.getSystemPrompt(QUESTION, "Topic A", GCP).orElseThrow()).contains(question);
@@ -106,7 +107,7 @@ class PromptFactoryTest extends BaseTest {
                 Format your answer as `[the term] is/are`.
                 Do not repeat the context in your answer if possible.""";
         assertThat(factory.getSystemPrompt(DEFINITION, "Topic A", GRAMMAR).orElseThrow()).contains("""
-                Check the grammar of the given text in the given context.
+                Check the grammar of the given text in the context of the topic `Topic A`.
                 If the text is correct, answer `Correct`.""");
         assertThat(factory.getSystemPrompt(DEFINITION, "Topic A", OPEN_AI).orElseThrow()).contains(definition);
         assertThat(factory.getSystemPrompt(DEFINITION, "Topic A", CLAUDE).orElseThrow()).contains(definition);
@@ -115,7 +116,7 @@ class PromptFactoryTest extends BaseTest {
 
     @Test
     void grammarSystemPrompt() {
-        assertThat(factory.getSystemPrompt(InteractionType.GRAMMAR, "Topic A", GRAMMAR).orElseThrow()).contains(GRAMMAR_SYSTEM);
+        assertThat(factory.getSystemPrompt(InteractionType.GRAMMAR, "Topic A", GRAMMAR).orElseThrow()).contains(GRAMMAR_SYSTEM).contains(GRAMMAR_SYSTEM_TOPIC);
         assertThat(factory.getSystemPrompt(InteractionType.GRAMMAR, "Topic A", OPEN_AI)).isEmpty();
         assertThat(factory.getSystemPrompt(InteractionType.GRAMMAR, "Topic A", CLAUDE)).isEmpty();
         assertThat(factory.getSystemPrompt(InteractionType.GRAMMAR, "Topic A", GCP)).isEmpty();
@@ -124,7 +125,7 @@ class PromptFactoryTest extends BaseTest {
     @Test
     void factSystemPrompt() {
         var fact = "Check whether the given statement is factually correct in the context of the topic `Topic A`.";
-        assertThat(factory.getSystemPrompt(FACT, "Topic A", GRAMMAR).orElseThrow()).contains(GRAMMAR_SYSTEM);
+        assertThat(factory.getSystemPrompt(FACT, "Topic A", GRAMMAR).orElseThrow()).contains(GRAMMAR_SYSTEM).contains(GRAMMAR_SYSTEM_TOPIC);
         assertThat(factory.getSystemPrompt(FACT, "Topic A", OPEN_AI).orElseThrow()).contains(fact);
         assertThat(factory.getSystemPrompt(FACT, "Topic A", CLAUDE).orElseThrow()).contains(fact);
         assertThat(factory.getSystemPrompt(FACT, "Topic A", GCP).orElseThrow()).contains(fact);

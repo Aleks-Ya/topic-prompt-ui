@@ -1,4 +1,4 @@
-Text to grammar-check in the context of `${topic}`:
+Text to grammar-check:
 ```
 ${question}
 ```

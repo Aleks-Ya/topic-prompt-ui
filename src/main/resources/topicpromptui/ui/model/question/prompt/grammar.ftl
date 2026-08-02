@@ -1,4 +1,4 @@
-Sentence or phrase to check, in the context of `${topic}`:
+Sentence or phrase to check:
 ```
 ${question}
 ```
