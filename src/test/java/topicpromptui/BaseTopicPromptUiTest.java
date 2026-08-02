@@ -293,5 +293,9 @@ public abstract class BaseTopicPromptUiTest extends ApplicationTest {
         public TextArea promptArea() {
             return lookup("#promptArea").queryAs(TextArea.class);
         }
+
+        public TextArea systemPromptArea() {
+            return lookup("#systemPromptArea").queryAs(TextArea.class);
+        }
     }
 }

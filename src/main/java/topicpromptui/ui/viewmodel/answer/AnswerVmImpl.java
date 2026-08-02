@@ -84,9 +84,9 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
         var interactionId = interactionOpt.map(Interaction::id).orElse(null);
         return interactionOpt.flatMap(interaction -> interaction.getAnswer(answerType))
                 .map(a -> new AnswerDetails(interactionId, a.answerType(), a.modelId(), a.effortLevel(), a.finishReason(),
-                        a.inputTokens(), a.outputTokens(), a.totalTokens(), a.prompt(),
+                        a.inputTokens(), a.outputTokens(), a.totalTokens(), a.prompt(), a.systemPrompt(),
                         a.toolCalls() != null ? a.toolCalls() : List.of()))
-                .orElse(new AnswerDetails(interactionId, answerType, null, null, null, null, null, null, null, List.of()));
+                .orElse(new AnswerDetails(interactionId, answerType, null, null, null, null, null, null, null, null, List.of()));
     }
 
     @Override

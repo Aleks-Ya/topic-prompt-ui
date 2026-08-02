@@ -97,6 +97,7 @@ class QuestionModelImpl implements QuestionModel {
         log.trace("Prompt: {}", prompt);
         updateAnswer(interactionId, answerType, answer -> answer
                         .withPrompt(prompt)
+                        .withSystemPrompt(systemPrompt)
                         .withState(SENT),
                 callback);
         sendAsync(interactionId, answerType, callback, progressHtml, onTextDelta -> {
@@ -132,6 +133,7 @@ class QuestionModelImpl implements QuestionModel {
             log.trace("Prompt: {}", prompt);
             updateAnswer(interactionId, answerType, answer -> answer
                             .withPrompt(prompt)
+                            .withSystemPrompt(systemPrompt)
                             .withState(SENT),
                     callback);
             var turns = List.of(new ConversationTurn(USER, prompt));

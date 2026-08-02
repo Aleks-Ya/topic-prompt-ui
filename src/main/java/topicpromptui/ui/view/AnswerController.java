@@ -125,14 +125,23 @@ public class AnswerController extends BaseController {
         grid.add(new Label("Tools used:"), 0, 8);
         grid.add(toolsUsedArea, 1, 8);
 
+        var systemPromptArea = new TextArea(Objects.toString(details.systemPrompt(), ""));
+        systemPromptArea.setId("systemPromptArea");
+        systemPromptArea.setEditable(false);
+        systemPromptArea.setWrapText(true);
+        systemPromptArea.setPrefRowCount(10);
+        systemPromptArea.setPrefColumnCount(60);
+        grid.add(new Label("System prompt:"), 0, 9);
+        grid.add(systemPromptArea, 1, 9);
+
         var promptArea = new TextArea(Objects.toString(details.prompt(), ""));
         promptArea.setId("promptArea");
         promptArea.setEditable(false);
         promptArea.setWrapText(true);
         promptArea.setPrefRowCount(10);
         promptArea.setPrefColumnCount(60);
-        grid.add(new Label("Prompt:"), 0, 9);
-        grid.add(promptArea, 1, 9);
+        grid.add(new Label("Prompt:"), 0, 10);
+        grid.add(promptArea, 1, 10);
 
         dialog.getDialogPane().setContent(grid);
         dialog.showAndWait();

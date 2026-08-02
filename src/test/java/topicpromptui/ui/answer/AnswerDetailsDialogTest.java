@@ -24,7 +24,8 @@ class AnswerDetailsDialogTest extends BaseTopicPromptUiTest {
     private static final Answer GRAMMAR_ANSWER = new Answer(GRAMMAR, "Grammar prompt", "Grammar MD", "Grammar HTML",
             SUCCESS, "resp-1", "grammar-model", "low", "completed", 10, 20, 30)
             .withToolCalls(List.of("context7 · resolve-library-id {\"libraryName\":\"react\"}",
-                    "context7 · get-library-docs {\"context7CompatibleLibraryID\":\"/facebook/react\"}"));
+                    "context7 · get-library-docs {\"context7CompatibleLibraryID\":\"/facebook/react\"}"))
+            .withSystemPrompt("Grammar system prompt");
     private static final Interaction INTERACTION = new Interaction(new InteractionId(100L), InteractionType.QUESTION,
             TOPIC_ID, "Details question", Map.of(GRAMMAR, GRAMMAR_ANSWER), null);
 
@@ -50,6 +51,7 @@ class AnswerDetailsDialogTest extends BaseTopicPromptUiTest {
                 "context7 · resolve-library-id {\"libraryName\":\"react\"}\n"
                         + "context7 · get-library-docs {\"context7CompatibleLibraryID\":\"/facebook/react\"}");
         assertThat(dialog.promptArea().getText()).isEqualTo("Grammar prompt");
+        assertThat(dialog.systemPromptArea().getText()).isEqualTo("Grammar system prompt");
 
         clickOn(dialog.openInteractionFileButton());
         assertThat(fileModel.getOpenedFiles()).containsExactly(storage.getInteractionFilePath(new InteractionId(100L)));
@@ -71,6 +73,7 @@ class AnswerDetailsDialogTest extends BaseTopicPromptUiTest {
         assertThat(dialog.totalTokensField().getText()).isEmpty();
         assertThat(dialog.toolsUsedArea().getText()).isEmpty();
         assertThat(dialog.promptArea().getText()).isEmpty();
+        assertThat(dialog.systemPromptArea().getText()).isEmpty();
         type(KeyCode.ESCAPE);
     }
 }

@@ -62,6 +62,7 @@ class RequestFollowUpAnswerTest extends ApplicationTest {
         assertThat(answer.answerState()).isEqualTo(AnswerState.SUCCESS);
         assertThat(answer.prompt()).isEqualTo("Who created it?");
         assertThat(answer.answerMd()).isEqualTo("James Gosling created Java.");
+        assertThat(answer.systemPrompt()).contains("Do not repeat the question");
 
         var turns = openAiApi.getTurnsSendHistory().getLast();
         assertThat(turns).hasSize(3);

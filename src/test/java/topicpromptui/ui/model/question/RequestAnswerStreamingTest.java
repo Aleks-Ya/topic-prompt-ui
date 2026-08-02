@@ -123,6 +123,9 @@ class RequestAnswerStreamingTest extends ApplicationTest {
         var turns = openAiApi.getTurnsSendHistory().getLast();
         assertThat(turns).hasSize(1);
         assertThat(turns.getLast().content()).contains("What is Java?");
+
+        var answer = storage.readInteraction(interactionId).orElseThrow().getAnswer(OPEN_AI).orElseThrow();
+        assertThat(answer.systemPrompt()).contains("Do not repeat the question");
     }
 
     // A follow-up interaction sends the raw question text (no FreeMarker template), which lets
