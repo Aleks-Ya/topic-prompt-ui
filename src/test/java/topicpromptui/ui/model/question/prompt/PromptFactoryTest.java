@@ -2,19 +2,19 @@ package topicpromptui.ui.model.question.prompt;
 
 import topicpromptui.BaseTest;
 import topicpromptui.core.config.ConfigModel;
-import topicpromptui.core.storagefilesystem.InteractionType;
+import topicpromptui.core.domain.InteractionType;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
 
-import static topicpromptui.core.storagefilesystem.AnswerType.CLAUDE;
-import static topicpromptui.core.storagefilesystem.AnswerType.GCP;
-import static topicpromptui.core.storagefilesystem.AnswerType.GRAMMAR;
-import static topicpromptui.core.storagefilesystem.AnswerType.OPEN_AI;
-import static topicpromptui.core.storagefilesystem.InteractionType.DEFINITION;
-import static topicpromptui.core.storagefilesystem.InteractionType.FACT;
-import static topicpromptui.core.storagefilesystem.InteractionType.QUESTION;
+import static topicpromptui.core.domain.AnswerType.CLAUDE;
+import static topicpromptui.core.domain.AnswerType.GCP;
+import static topicpromptui.core.domain.AnswerType.GRAMMAR;
+import static topicpromptui.core.domain.AnswerType.OPEN_AI;
+import static topicpromptui.core.domain.InteractionType.DEFINITION;
+import static topicpromptui.core.domain.InteractionType.FACT;
+import static topicpromptui.core.domain.InteractionType.QUESTION;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class PromptFactoryTest extends BaseTest {

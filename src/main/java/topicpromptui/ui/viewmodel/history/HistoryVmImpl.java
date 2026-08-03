@@ -1,7 +1,7 @@
 package topicpromptui.ui.viewmodel.history;
 
 import com.google.inject.Singleton;
-import topicpromptui.core.storagefilesystem.Interaction;
+import topicpromptui.core.domain.Interaction;
 import topicpromptui.ui.viewmodel.InteractionItem;
 import topicpromptui.ui.viewmodel.mediator.HistoryMediator;
 import jakarta.inject.Inject;

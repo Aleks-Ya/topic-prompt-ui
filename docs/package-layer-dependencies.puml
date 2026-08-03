@@ -4,7 +4,8 @@
 package topicpromptui {
     package core {
         package ai {}
-        package util {}
+        package util #orange {}
+        package domain #green {}
         package storagefilesystem {}
     }
     package ui {
@@ -14,15 +15,20 @@ package topicpromptui {
     }
 }
 
+' Arrows into domain are green, arrows into util are orange, to make the
+' two widely-shared leaf packages easy to trace across the layers.
 view --> viewmodel
-view --> storagefilesystem
-view --> util
+view -[#green]-> domain
+view -[#orange]-> util
 viewmodel --> model
-viewmodel --> storagefilesystem
-viewmodel --> util
+viewmodel -[#green]-> domain
+viewmodel -[#orange]-> util
 model --> ai
 model --> storagefilesystem
-model --> util
-storagefilesystem --> util
+model -[#green]-> domain
+model -[#orange]-> util
+storagefilesystem -[#green]-> domain
+storagefilesystem -[#orange]-> util
+domain -[#orange]-> util
 
 @enduml

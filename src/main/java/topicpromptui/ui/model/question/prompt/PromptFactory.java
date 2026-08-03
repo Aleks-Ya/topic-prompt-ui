@@ -1,7 +1,7 @@
 package topicpromptui.ui.model.question.prompt;
 
-import topicpromptui.core.storagefilesystem.AnswerType;
-import topicpromptui.core.storagefilesystem.InteractionType;
+import topicpromptui.core.domain.AnswerType;
+import topicpromptui.core.domain.InteractionType;
 
 import java.util.Optional;
 

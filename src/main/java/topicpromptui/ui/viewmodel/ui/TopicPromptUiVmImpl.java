@@ -1,6 +1,6 @@
 package topicpromptui.ui.viewmodel.ui;
 
-import topicpromptui.core.storagefilesystem.AnswerType;
+import topicpromptui.core.domain.AnswerType;
 import topicpromptui.ui.viewmodel.mediator.TopicPromptUiMediator;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

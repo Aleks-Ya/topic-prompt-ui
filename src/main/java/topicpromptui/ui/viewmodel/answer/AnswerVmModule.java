@@ -2,7 +2,7 @@ package topicpromptui.ui.viewmodel.answer;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
-import topicpromptui.core.storagefilesystem.AnswerType;
+import topicpromptui.core.domain.AnswerType;
 
 public class AnswerVmModule extends AbstractModule {
     public static final String GRAMMAR = "GrammarAnswerVM";

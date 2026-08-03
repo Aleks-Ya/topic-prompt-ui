@@ -9,7 +9,7 @@ import topicpromptui.ui.model.file.FileModelMock;
 import topicpromptui.ui.model.search.HistorySearchModel;
 import topicpromptui.ui.model.state.StateModel;
 import topicpromptui.ui.model.storage.StorageModel;
-import topicpromptui.core.storagefilesystem.Topic;
+import topicpromptui.core.domain.Topic;
 import topicpromptui.ui.view.TopicPromptUiApplication;
 import topicpromptui.ui.viewmodel.InteractionItem;
 import javafx.scene.Node;

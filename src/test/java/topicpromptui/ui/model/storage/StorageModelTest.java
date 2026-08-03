@@ -1,11 +1,11 @@
 package topicpromptui.ui.model.storage;
 
 import topicpromptui.BaseTest;
-import topicpromptui.core.storagefilesystem.Interaction;
-import topicpromptui.core.storagefilesystem.InteractionId;
+import topicpromptui.core.domain.Interaction;
+import topicpromptui.core.domain.InteractionId;
 import topicpromptui.core.storagefilesystem.StorageFilesystemImpl;
-import topicpromptui.core.storagefilesystem.Topic;
-import topicpromptui.core.storagefilesystem.TopicId;
+import topicpromptui.core.domain.Topic;
+import topicpromptui.core.domain.TopicId;
 import topicpromptui.ui.TestingData.I1;
 import topicpromptui.ui.TestingData.I2;
 import topicpromptui.ui.TestingData.I3;
@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 
-import static topicpromptui.core.storagefilesystem.AnswerType.GRAMMAR;
+import static topicpromptui.core.domain.AnswerType.GRAMMAR;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 

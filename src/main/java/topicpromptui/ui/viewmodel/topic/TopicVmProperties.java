@@ -1,6 +1,6 @@
 package topicpromptui.ui.viewmodel.topic;
 
-import topicpromptui.core.storagefilesystem.Topic;
+import topicpromptui.core.domain.Topic;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;

@@ -1,21 +1,21 @@
 package topicpromptui.ui;
 
-import topicpromptui.core.storagefilesystem.Answer;
-import topicpromptui.core.storagefilesystem.Interaction;
-import topicpromptui.core.storagefilesystem.InteractionId;
-import topicpromptui.core.storagefilesystem.InteractionType;
-import topicpromptui.core.storagefilesystem.Topic;
-import topicpromptui.core.storagefilesystem.TopicId;
+import topicpromptui.core.domain.Answer;
+import topicpromptui.core.domain.Interaction;
+import topicpromptui.core.domain.InteractionId;
+import topicpromptui.core.domain.InteractionType;
+import topicpromptui.core.domain.Topic;
+import topicpromptui.core.domain.TopicId;
 
 import java.util.List;
 import java.util.Map;
 
-import static topicpromptui.core.storagefilesystem.AnswerState.FAIL;
-import static topicpromptui.core.storagefilesystem.AnswerState.SUCCESS;
-import static topicpromptui.core.storagefilesystem.AnswerType.CLAUDE;
-import static topicpromptui.core.storagefilesystem.AnswerType.GCP;
-import static topicpromptui.core.storagefilesystem.AnswerType.GRAMMAR;
-import static topicpromptui.core.storagefilesystem.AnswerType.OPEN_AI;
+import static topicpromptui.core.domain.AnswerState.FAIL;
+import static topicpromptui.core.domain.AnswerState.SUCCESS;
+import static topicpromptui.core.domain.AnswerType.CLAUDE;
+import static topicpromptui.core.domain.AnswerType.GCP;
+import static topicpromptui.core.domain.AnswerType.GRAMMAR;
+import static topicpromptui.core.domain.AnswerType.OPEN_AI;
 
 public class TestingData {
     public static class I0 {

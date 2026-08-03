@@ -1,4 +1,4 @@
-package topicpromptui.core.storagefilesystem;
+package topicpromptui.core.domain;
 
 public record Topic(TopicId id, String title) {
     @Override

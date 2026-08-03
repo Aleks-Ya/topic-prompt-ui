@@ -1,7 +1,7 @@
 package topicpromptui.ui.model.question.sound;
 
 import topicpromptui.BaseTest;
-import topicpromptui.core.storagefilesystem.AnswerType;
+import topicpromptui.core.domain.AnswerType;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatCode;

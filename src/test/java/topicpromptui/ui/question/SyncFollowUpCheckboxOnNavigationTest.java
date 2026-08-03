@@ -1,7 +1,7 @@
 package topicpromptui.ui.question;
 
 import topicpromptui.BaseTopicPromptUiTest;
-import topicpromptui.core.storagefilesystem.Interaction;
+import topicpromptui.core.domain.Interaction;
 import topicpromptui.ui.TestingData.I1;
 import org.junit.jupiter.api.Test;
 import org.testfx.util.WaitForAsyncUtils;

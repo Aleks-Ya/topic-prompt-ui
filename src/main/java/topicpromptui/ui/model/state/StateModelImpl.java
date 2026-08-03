@@ -1,12 +1,12 @@
 package topicpromptui.ui.model.state;
 
-import topicpromptui.core.storagefilesystem.Answer;
-import topicpromptui.core.storagefilesystem.Interaction;
-import topicpromptui.core.storagefilesystem.InteractionId;
-import topicpromptui.core.storagefilesystem.InteractionType;
+import topicpromptui.core.domain.Answer;
+import topicpromptui.core.domain.Interaction;
+import topicpromptui.core.domain.InteractionId;
+import topicpromptui.core.domain.InteractionType;
 import topicpromptui.ui.model.storage.StorageModel;
-import topicpromptui.core.storagefilesystem.Topic;
-import topicpromptui.core.storagefilesystem.TopicId;
+import topicpromptui.core.domain.Topic;
+import topicpromptui.core.domain.TopicId;
 import topicpromptui.core.util.Mdc;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -19,11 +19,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import static topicpromptui.core.storagefilesystem.AnswerState.NEW;
-import static topicpromptui.core.storagefilesystem.AnswerType.CLAUDE;
-import static topicpromptui.core.storagefilesystem.AnswerType.GCP;
-import static topicpromptui.core.storagefilesystem.AnswerType.GRAMMAR;
-import static topicpromptui.core.storagefilesystem.AnswerType.OPEN_AI;
+import static topicpromptui.core.domain.AnswerState.NEW;
+import static topicpromptui.core.domain.AnswerType.CLAUDE;
+import static topicpromptui.core.domain.AnswerType.GCP;
+import static topicpromptui.core.domain.AnswerType.GRAMMAR;
+import static topicpromptui.core.domain.AnswerType.OPEN_AI;
 
 @Singleton
 class StateModelImpl implements StateModel {

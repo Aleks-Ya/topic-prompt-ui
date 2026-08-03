@@ -1,6 +1,6 @@
 package topicpromptui.ui.viewmodel.mediator;
 
-import topicpromptui.core.storagefilesystem.InteractionId;
+import topicpromptui.core.domain.InteractionId;
 import topicpromptui.ui.model.clipboard.ClipboardModel;
 import topicpromptui.ui.model.file.FileModel;
 import topicpromptui.ui.model.question.QuestionModel;
@@ -15,7 +15,7 @@ import org.mockito.ArgumentCaptor;
 
 import java.util.function.Consumer;
 
-import static topicpromptui.core.storagefilesystem.AnswerType.GCP;
+import static topicpromptui.core.domain.AnswerType.GCP;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;

@@ -1,6 +1,6 @@
 package topicpromptui.ui.view;
 
-import topicpromptui.core.storagefilesystem.Topic;
+import topicpromptui.core.domain.Topic;
 import topicpromptui.ui.viewmodel.topic.TopicVmController;
 import jakarta.inject.Inject;
 import javafx.beans.binding.Bindings;

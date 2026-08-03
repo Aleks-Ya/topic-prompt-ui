@@ -1,7 +1,7 @@
 package topicpromptui;
 
-import topicpromptui.core.storagefilesystem.Interaction;
-import topicpromptui.core.storagefilesystem.Topic;
+import topicpromptui.core.domain.Interaction;
+import topicpromptui.core.domain.Topic;
 import topicpromptui.ui.viewmodel.InteractionItem;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;

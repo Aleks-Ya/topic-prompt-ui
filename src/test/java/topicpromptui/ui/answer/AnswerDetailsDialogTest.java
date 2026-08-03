@@ -1,20 +1,20 @@
 package topicpromptui.ui.answer;
 
 import topicpromptui.BaseTopicPromptUiTest;
-import topicpromptui.core.storagefilesystem.Answer;
-import topicpromptui.core.storagefilesystem.Interaction;
-import topicpromptui.core.storagefilesystem.InteractionId;
-import topicpromptui.core.storagefilesystem.InteractionType;
-import topicpromptui.core.storagefilesystem.Topic;
-import topicpromptui.core.storagefilesystem.TopicId;
+import topicpromptui.core.domain.Answer;
+import topicpromptui.core.domain.Interaction;
+import topicpromptui.core.domain.InteractionId;
+import topicpromptui.core.domain.InteractionType;
+import topicpromptui.core.domain.Topic;
+import topicpromptui.core.domain.TopicId;
 import javafx.scene.input.KeyCode;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
 
-import static topicpromptui.core.storagefilesystem.AnswerState.SUCCESS;
-import static topicpromptui.core.storagefilesystem.AnswerType.GRAMMAR;
+import static topicpromptui.core.domain.AnswerState.SUCCESS;
+import static topicpromptui.core.domain.AnswerType.GRAMMAR;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class AnswerDetailsDialogTest extends BaseTopicPromptUiTest {

@@ -1,8 +1,8 @@
 package topicpromptui.ui.viewmodel.topic;
 
 import com.google.inject.Singleton;
-import topicpromptui.core.storagefilesystem.Interaction;
-import topicpromptui.core.storagefilesystem.Topic;
+import topicpromptui.core.domain.Interaction;
+import topicpromptui.core.domain.Topic;
 import topicpromptui.ui.viewmodel.mediator.TopicMediator;
 import jakarta.inject.Inject;
 import javafx.collections.FXCollections;

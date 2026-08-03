@@ -6,9 +6,9 @@ import topicpromptui.core.ai.ConversationTurn;
 import topicpromptui.ui.model.question.QuestionModel;
 import topicpromptui.ui.model.question.prompt.PromptFactory;
 import topicpromptui.ui.model.question.sound.SoundService;
-import topicpromptui.core.storagefilesystem.Answer;
-import topicpromptui.core.storagefilesystem.AnswerType;
-import topicpromptui.core.storagefilesystem.InteractionId;
+import topicpromptui.core.domain.Answer;
+import topicpromptui.core.domain.AnswerType;
+import topicpromptui.core.domain.InteractionId;
 import topicpromptui.ui.model.storage.StorageModel;
 import topicpromptui.core.util.Mdc;
 import jakarta.inject.Inject;
@@ -33,10 +33,10 @@ import static topicpromptui.core.ai.AiModule.CLAUDE_AI;
 import static topicpromptui.core.ai.AiModule.GCP_AI;
 import static topicpromptui.core.ai.AiModule.OPEN_AI;
 import static topicpromptui.core.ai.AiModule.OPEN_AI_GRAMMAR;
-import static topicpromptui.core.storagefilesystem.AnswerState.FAIL;
-import static topicpromptui.core.storagefilesystem.AnswerState.SENT;
-import static topicpromptui.core.storagefilesystem.AnswerState.SUCCESS;
-import static topicpromptui.core.storagefilesystem.AnswerType.GRAMMAR;
+import static topicpromptui.core.domain.AnswerState.FAIL;
+import static topicpromptui.core.domain.AnswerState.SENT;
+import static topicpromptui.core.domain.AnswerState.SUCCESS;
+import static topicpromptui.core.domain.AnswerType.GRAMMAR;
 import static java.util.concurrent.CompletableFuture.runAsync;
 
 @Singleton

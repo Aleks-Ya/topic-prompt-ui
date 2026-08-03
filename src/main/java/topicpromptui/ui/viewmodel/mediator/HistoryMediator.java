@@ -1,9 +1,9 @@
 package topicpromptui.ui.viewmodel.mediator;
 
-import topicpromptui.core.storagefilesystem.Interaction;
-import topicpromptui.core.storagefilesystem.InteractionId;
-import topicpromptui.core.storagefilesystem.Topic;
-import topicpromptui.core.storagefilesystem.TopicId;
+import topicpromptui.core.domain.Interaction;
+import topicpromptui.core.domain.InteractionId;
+import topicpromptui.core.domain.Topic;
+import topicpromptui.core.domain.TopicId;
 
 import java.util.List;
 import java.util.Optional;

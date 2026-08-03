@@ -2,7 +2,7 @@ package topicpromptui.ui.model.question.sound;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import topicpromptui.core.storagefilesystem.AnswerType;
+import topicpromptui.core.domain.AnswerType;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatCode;

@@ -1,14 +1,22 @@
 package topicpromptui.core.storagefilesystem;
 
 import topicpromptui.BaseTest;
+import topicpromptui.core.domain.Answer;
+import topicpromptui.core.domain.AnswerState;
+import topicpromptui.core.domain.AnswerType;
+import topicpromptui.core.domain.Interaction;
+import topicpromptui.core.domain.InteractionId;
+import topicpromptui.core.domain.InteractionType;
+import topicpromptui.core.domain.Topic;
+import topicpromptui.core.domain.TopicId;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
 
-import static topicpromptui.core.storagefilesystem.AnswerState.SUCCESS;
-import static topicpromptui.core.storagefilesystem.AnswerType.OPEN_AI;
-import static topicpromptui.core.storagefilesystem.InteractionType.QUESTION;
+import static topicpromptui.core.domain.AnswerState.SUCCESS;
+import static topicpromptui.core.domain.AnswerType.OPEN_AI;
+import static topicpromptui.core.domain.InteractionType.QUESTION;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class StorageFilesystemTest extends BaseTest {

@@ -1,6 +1,6 @@
 package topicpromptui.ui.viewmodel.ui;
 
-import topicpromptui.core.storagefilesystem.AnswerType;
+import topicpromptui.core.domain.AnswerType;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 

@@ -1,4 +1,4 @@
-package topicpromptui.core.storagefilesystem;
+package topicpromptui.core.domain;
 
 import java.util.Map;
 import java.util.Optional;

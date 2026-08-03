@@ -1,10 +1,10 @@
 package topicpromptui.ui.model.question.question;
 
 import topicpromptui.core.ai.ConversationTurn;
-import topicpromptui.core.storagefilesystem.AnswerState;
-import topicpromptui.core.storagefilesystem.AnswerType;
-import topicpromptui.core.storagefilesystem.Interaction;
-import topicpromptui.core.storagefilesystem.InteractionId;
+import topicpromptui.core.domain.AnswerState;
+import topicpromptui.core.domain.AnswerType;
+import topicpromptui.core.domain.Interaction;
+import topicpromptui.core.domain.InteractionId;
 import topicpromptui.ui.model.storage.StorageModel;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

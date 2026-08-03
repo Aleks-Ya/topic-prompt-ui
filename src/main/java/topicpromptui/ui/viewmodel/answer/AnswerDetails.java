@@ -1,7 +1,7 @@
 package topicpromptui.ui.viewmodel.answer;
 
-import topicpromptui.core.storagefilesystem.AnswerType;
-import topicpromptui.core.storagefilesystem.InteractionId;
+import topicpromptui.core.domain.AnswerType;
+import topicpromptui.core.domain.InteractionId;
 
 import java.util.List;
 

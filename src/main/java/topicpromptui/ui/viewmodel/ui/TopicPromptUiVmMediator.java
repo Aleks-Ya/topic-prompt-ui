@@ -1,6 +1,6 @@
 package topicpromptui.ui.viewmodel.ui;
 
-import topicpromptui.core.storagefilesystem.AnswerType;
+import topicpromptui.core.domain.AnswerType;
 
 public interface TopicPromptUiVmMediator {
     void toggleExpandedAnswer(AnswerType answerType);

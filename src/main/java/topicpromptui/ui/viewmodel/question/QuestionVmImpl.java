@@ -2,20 +2,20 @@ package topicpromptui.ui.viewmodel.question;
 
 import com.google.inject.Singleton;
 import topicpromptui.core.util.Mdc;
-import topicpromptui.core.storagefilesystem.Interaction;
-import topicpromptui.core.storagefilesystem.InteractionType;
+import topicpromptui.core.domain.Interaction;
+import topicpromptui.core.domain.InteractionType;
 import topicpromptui.ui.viewmodel.mediator.QuestionMediator;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static topicpromptui.core.storagefilesystem.AnswerType.CLAUDE;
-import static topicpromptui.core.storagefilesystem.AnswerType.GCP;
-import static topicpromptui.core.storagefilesystem.AnswerType.GRAMMAR;
-import static topicpromptui.core.storagefilesystem.AnswerType.OPEN_AI;
-import static topicpromptui.core.storagefilesystem.InteractionType.DEFINITION;
-import static topicpromptui.core.storagefilesystem.InteractionType.FACT;
-import static topicpromptui.core.storagefilesystem.InteractionType.QUESTION;
+import static topicpromptui.core.domain.AnswerType.CLAUDE;
+import static topicpromptui.core.domain.AnswerType.GCP;
+import static topicpromptui.core.domain.AnswerType.GRAMMAR;
+import static topicpromptui.core.domain.AnswerType.OPEN_AI;
+import static topicpromptui.core.domain.InteractionType.DEFINITION;
+import static topicpromptui.core.domain.InteractionType.FACT;
+import static topicpromptui.core.domain.InteractionType.QUESTION;
 import static topicpromptui.ui.viewmodel.question.QuestionStyle.QUESTION_STYLE_EDITED;
 import static topicpromptui.ui.viewmodel.question.QuestionStyle.QUESTION_STYLE_FOLLOW_UP;
 

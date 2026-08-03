@@ -67,6 +67,8 @@ module TopicPromptUi.main {
     opens topicpromptui.ui.model.question.sound to com.google.gson, com.google.guice;
     exports topicpromptui.core.storagefilesystem;
     opens topicpromptui.core.storagefilesystem to com.google.guice;
+    exports topicpromptui.core.domain;
+    opens topicpromptui.core.domain to com.google.gson;
     exports topicpromptui.core.config;
     opens topicpromptui.core.config to com.google.guice;
 }

@@ -21,8 +21,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static topicpromptui.core.ai.AiModule.GCP_AI;
 import static topicpromptui.core.ai.ConversationTurn.Speaker.MODEL;
 import static topicpromptui.core.ai.ConversationTurn.Speaker.USER;
-import static topicpromptui.core.storagefilesystem.AnswerType.GCP;
-import static topicpromptui.core.storagefilesystem.InteractionType.DEFINITION;
+import static topicpromptui.core.domain.AnswerType.GCP;
+import static topicpromptui.core.domain.InteractionType.DEFINITION;
 
 class GcpApiIT {
     private static final Logger log = LoggerFactory.getLogger(GcpApiIT.class);

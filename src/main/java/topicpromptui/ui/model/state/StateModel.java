@@ -1,10 +1,10 @@
 package topicpromptui.ui.model.state;
 
-import topicpromptui.core.storagefilesystem.Interaction;
-import topicpromptui.core.storagefilesystem.InteractionId;
-import topicpromptui.core.storagefilesystem.InteractionType;
-import topicpromptui.core.storagefilesystem.Topic;
-import topicpromptui.core.storagefilesystem.TopicId;
+import topicpromptui.core.domain.Interaction;
+import topicpromptui.core.domain.InteractionId;
+import topicpromptui.core.domain.InteractionType;
+import topicpromptui.core.domain.Topic;
+import topicpromptui.core.domain.TopicId;
 
 import java.nio.file.Path;
 import java.util.List;

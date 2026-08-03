@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import topicpromptui.core.ai.AiApi;
 import topicpromptui.core.ai.ConversationTurn;
 import topicpromptui.core.config.ConfigurationModule;
-import topicpromptui.core.storagefilesystem.AnswerType;
+import topicpromptui.core.domain.AnswerType;
 import topicpromptui.ui.model.question.prompt.PromptFactory;
 import topicpromptui.ui.model.question.prompt.PromptModule;
 import topicpromptui.ui.model.storage.StorageModule;
@@ -23,7 +23,7 @@ import static topicpromptui.core.ai.AiModule.OPEN_AI;
 import static topicpromptui.core.ai.AiModule.OPEN_AI_GRAMMAR;
 import static topicpromptui.core.ai.ConversationTurn.Speaker.MODEL;
 import static topicpromptui.core.ai.ConversationTurn.Speaker.USER;
-import static topicpromptui.core.storagefilesystem.InteractionType.DEFINITION;
+import static topicpromptui.core.domain.InteractionType.DEFINITION;
 
 class OpenAiApiIT {
     private static final Logger log = LoggerFactory.getLogger(OpenAiApiIT.class);

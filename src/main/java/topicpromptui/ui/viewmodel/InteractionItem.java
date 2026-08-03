@@ -1,7 +1,7 @@
 package topicpromptui.ui.viewmodel;
 
-import topicpromptui.core.storagefilesystem.Interaction;
-import topicpromptui.core.storagefilesystem.Topic;
+import topicpromptui.core.domain.Interaction;
+import topicpromptui.core.domain.Topic;
 
 public record InteractionItem(Topic topic, Interaction interaction) {
     private static final int MAX_LENGTH = 150;

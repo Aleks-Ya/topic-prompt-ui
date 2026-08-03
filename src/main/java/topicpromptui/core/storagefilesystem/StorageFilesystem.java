@@ -1,5 +1,9 @@
 package topicpromptui.core.storagefilesystem;
 
+import topicpromptui.core.domain.Interaction;
+import topicpromptui.core.domain.InteractionId;
+import topicpromptui.core.domain.Topic;
+
 import java.nio.file.Path;
 import java.util.List;
 

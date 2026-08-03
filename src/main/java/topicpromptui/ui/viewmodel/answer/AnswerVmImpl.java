@@ -1,10 +1,10 @@
 package topicpromptui.ui.viewmodel.answer;
 
 import topicpromptui.core.util.Mdc;
-import topicpromptui.core.storagefilesystem.Answer;
-import topicpromptui.core.storagefilesystem.AnswerState;
-import topicpromptui.core.storagefilesystem.AnswerType;
-import topicpromptui.core.storagefilesystem.Interaction;
+import topicpromptui.core.domain.Answer;
+import topicpromptui.core.domain.AnswerState;
+import topicpromptui.core.domain.AnswerType;
+import topicpromptui.core.domain.Interaction;
 import topicpromptui.ui.viewmodel.mediator.AnswerMediator;
 import jakarta.inject.Inject;
 import javafx.scene.paint.Color;
@@ -14,11 +14,11 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 
-import static topicpromptui.core.storagefilesystem.AnswerState.NEW;
-import static topicpromptui.core.storagefilesystem.AnswerType.CLAUDE;
-import static topicpromptui.core.storagefilesystem.AnswerType.GCP;
-import static topicpromptui.core.storagefilesystem.AnswerType.GRAMMAR;
-import static topicpromptui.core.storagefilesystem.AnswerType.OPEN_AI;
+import static topicpromptui.core.domain.AnswerState.NEW;
+import static topicpromptui.core.domain.AnswerType.CLAUDE;
+import static topicpromptui.core.domain.AnswerType.GCP;
+import static topicpromptui.core.domain.AnswerType.GRAMMAR;
+import static topicpromptui.core.domain.AnswerType.OPEN_AI;
 import static javafx.scene.paint.Color.BLUE;
 import static javafx.scene.paint.Color.GREEN;
 import static javafx.scene.paint.Color.RED;

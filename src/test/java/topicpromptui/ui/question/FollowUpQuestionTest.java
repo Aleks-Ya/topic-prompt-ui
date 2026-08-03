@@ -4,7 +4,7 @@ import topicpromptui.BaseTopicPromptUiTest;
 import topicpromptui.ui.TestingData.I1;
 import org.junit.jupiter.api.Test;
 
-import static topicpromptui.core.storagefilesystem.AnswerType.OPEN_AI;
+import static topicpromptui.core.domain.AnswerType.OPEN_AI;
 import static topicpromptui.ui.viewmodel.question.QuestionStyle.QUESTION_STYLE_EMPTY;
 import static topicpromptui.ui.viewmodel.question.QuestionStyle.QUESTION_STYLE_FOLLOW_UP;
 import static java.time.Duration.ZERO;

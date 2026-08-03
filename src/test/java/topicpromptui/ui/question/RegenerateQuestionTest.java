@@ -3,13 +3,13 @@ package topicpromptui.ui.question;
 import topicpromptui.BaseTopicPromptUiTest;
 import topicpromptui.ui.TestingData.I1;
 import topicpromptui.ui.TestingData.I2;
-import topicpromptui.core.storagefilesystem.Interaction;
+import topicpromptui.core.domain.Interaction;
 import org.junit.jupiter.api.Test;
 
-import static topicpromptui.core.storagefilesystem.AnswerState.FAIL;
-import static topicpromptui.core.storagefilesystem.AnswerType.CLAUDE;
-import static topicpromptui.core.storagefilesystem.AnswerType.GCP;
-import static topicpromptui.core.storagefilesystem.AnswerType.OPEN_AI;
+import static topicpromptui.core.domain.AnswerState.FAIL;
+import static topicpromptui.core.domain.AnswerType.CLAUDE;
+import static topicpromptui.core.domain.AnswerType.GCP;
+import static topicpromptui.core.domain.AnswerType.OPEN_AI;
 import static topicpromptui.ui.viewmodel.question.QuestionStyle.QUESTION_STYLE_EMPTY;
 import static java.time.Duration.ZERO;
 import static javafx.scene.paint.Color.GREEN;

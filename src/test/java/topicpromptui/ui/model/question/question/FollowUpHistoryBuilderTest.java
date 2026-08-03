@@ -2,11 +2,11 @@ package topicpromptui.ui.model.question.question;
 
 import topicpromptui.BaseTest;
 import topicpromptui.core.ai.ConversationTurn;
-import topicpromptui.core.storagefilesystem.Answer;
-import topicpromptui.core.storagefilesystem.AnswerState;
-import topicpromptui.core.storagefilesystem.Interaction;
-import topicpromptui.core.storagefilesystem.InteractionId;
-import topicpromptui.core.storagefilesystem.InteractionType;
+import topicpromptui.core.domain.Answer;
+import topicpromptui.core.domain.AnswerState;
+import topicpromptui.core.domain.Interaction;
+import topicpromptui.core.domain.InteractionId;
+import topicpromptui.core.domain.InteractionType;
 import topicpromptui.ui.model.storage.StorageModel;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +14,7 @@ import java.util.Map;
 
 import static topicpromptui.core.ai.ConversationTurn.Speaker.MODEL;
 import static topicpromptui.core.ai.ConversationTurn.Speaker.USER;
-import static topicpromptui.core.storagefilesystem.AnswerType.OPEN_AI;
+import static topicpromptui.core.domain.AnswerType.OPEN_AI;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 

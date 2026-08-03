@@ -1,6 +1,6 @@
 package topicpromptui.ui.viewmodel.question;
 
-import topicpromptui.core.storagefilesystem.InteractionType;
+import topicpromptui.core.domain.InteractionType;
 
 public interface QuestionVmMediator {
     void displayCurrentInteraction();

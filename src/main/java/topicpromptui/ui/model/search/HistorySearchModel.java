@@ -1,7 +1,7 @@
 package topicpromptui.ui.model.search;
 
-import topicpromptui.core.storagefilesystem.Interaction;
-import topicpromptui.core.storagefilesystem.InteractionId;
+import topicpromptui.core.domain.Interaction;
+import topicpromptui.core.domain.InteractionId;
 
 import java.util.List;
 

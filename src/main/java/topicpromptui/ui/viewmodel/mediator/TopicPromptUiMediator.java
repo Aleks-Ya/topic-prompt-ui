@@ -1,6 +1,6 @@
 package topicpromptui.ui.viewmodel.mediator;
 
-import topicpromptui.core.storagefilesystem.Interaction;
+import topicpromptui.core.domain.Interaction;
 
 import java.util.Optional;
 

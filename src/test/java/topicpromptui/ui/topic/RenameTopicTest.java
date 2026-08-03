@@ -1,7 +1,7 @@
 package topicpromptui.ui.topic;
 
 import topicpromptui.BaseTopicPromptUiTest;
-import topicpromptui.core.storagefilesystem.Topic;
+import topicpromptui.core.domain.Topic;
 import topicpromptui.ui.TestingData.I1;
 import javafx.scene.input.KeyCode;
 import org.junit.jupiter.api.Test;

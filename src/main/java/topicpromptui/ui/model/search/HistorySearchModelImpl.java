@@ -1,7 +1,7 @@
 package topicpromptui.ui.model.search;
 
-import topicpromptui.core.storagefilesystem.Interaction;
-import topicpromptui.core.storagefilesystem.InteractionId;
+import topicpromptui.core.domain.Interaction;
+import topicpromptui.core.domain.InteractionId;
 import topicpromptui.ui.model.storage.StorageModel;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

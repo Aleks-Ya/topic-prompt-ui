@@ -1,6 +1,6 @@
 package topicpromptui.ui.view;
 
-import topicpromptui.core.storagefilesystem.AnswerType;
+import topicpromptui.core.domain.AnswerType;
 import topicpromptui.ui.viewmodel.answer.AnswerVmController;
 import topicpromptui.ui.viewmodel.answer.AnswerVmModule;
 import topicpromptui.ui.viewmodel.ui.TopicPromptUiVmController;
