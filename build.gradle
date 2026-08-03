@@ -42,9 +42,6 @@ dependencies {
             'org.slf4j:jul-to-slf4j:2.0.18',
             'com.gluonhq:ignite-guice:1.2.2',
             'com.google.inject:guice:7.0.0',
-            "org.apache.lucene:lucene-core:$luceneVersion",
-            "org.apache.lucene:lucene-analysis-common:$luceneVersion",
-            "org.apache.lucene:lucene-queryparser:$luceneVersion",
             'org.controlsfx:controlsfx:11.2.3',
             'org.freemarker:freemarker:2.3.34'
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion",

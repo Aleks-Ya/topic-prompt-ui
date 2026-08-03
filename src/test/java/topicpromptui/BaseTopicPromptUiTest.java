@@ -6,7 +6,6 @@ import topicpromptui.core.ai.gcp.MockGcpApi;
 import topicpromptui.core.ai.openai.MockOpenAiApi;
 import topicpromptui.ui.model.clipboard.ClipboardModel;
 import topicpromptui.ui.model.file.FileModelMock;
-import topicpromptui.ui.model.search.HistorySearchModel;
 import topicpromptui.ui.model.state.StateModel;
 import topicpromptui.ui.model.storage.StorageModel;
 import topicpromptui.core.domain.Topic;
@@ -38,7 +37,6 @@ public abstract class BaseTopicPromptUiTest extends ApplicationTest {
     protected final MockGcpApi gcpApi = app.getGuiceContext().getInstance(MockGcpApi.class);
     protected final MockClaudeApi claudeApi = app.getGuiceContext().getInstance(MockClaudeApi.class);
     protected final StorageModel storage = app.getGuiceContext().getInstance(StorageModel.class);
-    protected final HistorySearchModel search = app.getGuiceContext().getInstance(HistorySearchModel.class);
     protected final ClipboardModel clipboardModel = app.getGuiceContext().getInstance(ClipboardModel.class);
     protected final FileModelMock fileModel = app.getGuiceContext().getInstance(FileModelMock.class);
     private final HistoryInfo history = new HistoryInfo();

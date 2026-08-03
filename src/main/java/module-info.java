@@ -17,9 +17,6 @@ module TopicPromptUi.main {
 
     requires com.google.guice;
     requires ignite.guice;
-    requires org.apache.lucene.core;
-    requires org.apache.lucene.analysis.common;
-    requires org.apache.lucene.queryparser;
     requires org.controlsfx.controls;
     requires com.google.common;
     requires freemarker;
@@ -37,7 +34,6 @@ module TopicPromptUi.main {
     exports topicpromptui.ui.model.state;
     exports topicpromptui.ui.model.file;
     exports topicpromptui.ui.model.clipboard;
-    exports topicpromptui.ui.model.search;
     exports topicpromptui.core.util;
 
     opens topicpromptui.ui.model.storage to com.google.guice;
@@ -51,7 +47,6 @@ module TopicPromptUi.main {
     opens topicpromptui.ui.model.state to com.google.gson, com.google.guice, javafx.fxml;
     opens topicpromptui.ui.model.file to com.google.gson, com.google.guice, javafx.fxml;
     opens topicpromptui.ui.model.clipboard to com.google.gson, com.google.guice, javafx.fxml;
-    opens topicpromptui.ui.model.search to com.google.gson, com.google.guice, javafx.fxml;
     opens topicpromptui to com.google.gson, com.google.guice, javafx.fxml;
     opens topicpromptui.ui.viewmodel.question to com.google.gson, com.google.guice, javafx.fxml;
     opens topicpromptui.ui.viewmodel.topic to com.google.gson, com.google.guice, javafx.fxml;

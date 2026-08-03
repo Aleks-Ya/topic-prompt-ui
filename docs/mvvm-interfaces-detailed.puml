@@ -7,7 +7,6 @@ package model{
     class FileModel
     class QuestionModel
     class StorageModel
-    class HistorySearchModel
 }
 package viewmodel {
     interface QuestionVmController
