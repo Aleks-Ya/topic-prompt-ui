@@ -7,7 +7,7 @@ import topicpromptui.ui.model.file.FileModelModule;
 import topicpromptui.core.ai.claude.ClaudeModule;
 import topicpromptui.core.ai.gcp.GcpModule;
 import topicpromptui.core.ai.openai.OpenAiModule;
-import topicpromptui.ui.model.question.prompt.PromptModule;
+import topicpromptui.core.prompt.PromptModule;
 import topicpromptui.ui.model.question.question.QuestionModule;
 import topicpromptui.ui.model.search.SearchModule;
 import topicpromptui.ui.model.state.StateModelModule;

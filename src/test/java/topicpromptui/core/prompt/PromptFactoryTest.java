@@ -1,4 +1,4 @@
-package topicpromptui.ui.model.question.prompt;
+package topicpromptui.core.prompt;
 
 import topicpromptui.BaseTest;
 import topicpromptui.core.config.ConfigModel;

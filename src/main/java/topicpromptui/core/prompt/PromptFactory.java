@@ -1,4 +1,4 @@
-package topicpromptui.ui.model.question.prompt;
+package topicpromptui.core.prompt;
 
 import topicpromptui.core.domain.AnswerType;
 import topicpromptui.core.domain.InteractionType;

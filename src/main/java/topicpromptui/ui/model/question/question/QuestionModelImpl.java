@@ -4,7 +4,7 @@ import topicpromptui.core.ai.AiApi;
 import topicpromptui.core.ai.AiResponse;
 import topicpromptui.core.ai.ConversationTurn;
 import topicpromptui.ui.model.question.QuestionModel;
-import topicpromptui.ui.model.question.prompt.PromptFactory;
+import topicpromptui.core.prompt.PromptFactory;
 import topicpromptui.ui.model.question.sound.SoundService;
 import topicpromptui.core.domain.Answer;
 import topicpromptui.core.domain.AnswerType;

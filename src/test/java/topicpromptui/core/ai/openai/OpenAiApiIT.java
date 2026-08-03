@@ -11,8 +11,8 @@ import topicpromptui.core.ai.AiApi;
 import topicpromptui.core.ai.ConversationTurn;
 import topicpromptui.core.config.ConfigurationModule;
 import topicpromptui.core.domain.AnswerType;
-import topicpromptui.ui.model.question.prompt.PromptFactory;
-import topicpromptui.ui.model.question.prompt.PromptModule;
+import topicpromptui.core.prompt.PromptFactory;
+import topicpromptui.core.prompt.PromptModule;
 import topicpromptui.ui.model.storage.StorageModule;
 
 import java.util.List;
