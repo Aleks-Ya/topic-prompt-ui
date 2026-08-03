@@ -4,34 +4,36 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
+import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import topicpromptui.core.ai.AiApi;
 import topicpromptui.core.ai.ConversationTurn;
 import topicpromptui.core.config.ConfigurationModule;
 import topicpromptui.ui.model.storage.StorageModule;
-import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static topicpromptui.core.ai.AiModule.CLAUDE_AI;
 import static topicpromptui.core.ai.ConversationTurn.Speaker.MODEL;
 import static topicpromptui.core.ai.ConversationTurn.Speaker.USER;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ClaudeApiIT {
+    private static final Logger log = LoggerFactory.getLogger(ClaudeApiIT.class);
     private final Injector injector = Guice.createInjector(new ClaudeModule(), new ConfigurationModule(), new StorageModule());
     private final AiApi api = injector.getInstance(Key.get(AiApi.class, Names.named(CLAUDE_AI)));
 
     @Test
     void send() {
         var response = api.send("What is the last Java version?");
-        System.out.println(response.text());
-        System.out.println("responseId: " + response.responseId());
-        System.out.println("modelId: " + response.modelId());
-        System.out.println("effortLevel: " + response.effortLevel());
-        System.out.println("finishReason: " + response.finishReason());
-        System.out.println("tokens: input=" + response.inputTokens() + " output=" + response.outputTokens()
-                + " total=" + response.totalTokens());
+        log.info("Response text: {}", response.text());
+        log.info("Response ID: {}", response.responseId());
+        log.info("Model ID: {}", response.modelId());
+        log.info("Effort Level: {}", response.effortLevel());
+        log.info("Finish Reason: {}", response.finishReason());
+        log.info("Tokens: input={}, output={}, total={}", response.inputTokens(), response.outputTokens(), response.totalTokens());
         assertThat(response.text()).isNotBlank();
         assertThat(response.responseId()).isNotBlank();
         assertThat(response.modelId()).isNotBlank();
@@ -49,7 +51,7 @@ class ClaudeApiIT {
                 new ConversationTurn(MODEL, "Got it."),
                 new ConversationTurn(USER, "What fruit did I say was my favorite? Answer with just the fruit name."));
         var response = api.send(turns);
-        System.out.println(response.text());
+        log.info("Response text: {}", response.text());
         assertThat(response.text().toLowerCase()).contains("mango");
     }
 
@@ -57,7 +59,7 @@ class ClaudeApiIT {
     void sendStreaming() {
         var deltas = new java.util.concurrent.CopyOnWriteArrayList<String>();
         var response = api.send("List the last 5 Java LTS versions with one sentence about each.", deltas::add);
-        System.out.println("deltas: " + deltas.size());
+        log.info("Deltas count: {}", deltas.size());
         assertThat(deltas).hasSizeGreaterThan(1);
         assertThat(String.join("", deltas)).isEqualTo(response.text());
         assertThat(response.responseId()).isNotBlank();
@@ -71,9 +73,9 @@ class ClaudeApiIT {
         // a green run proves the MCP tool-use/tool-result blocks in the stream don't break assemble().
         var response = api.send("Using the Context7 documentation, briefly explain what the Context7 MCP "
                 + "server provides for developers. Consult the library docs before answering.");
-        System.out.println(response.text());
-        System.out.println("finishReason: " + response.finishReason());
-        System.out.println("toolCalls: " + response.toolCalls());
+        log.info("Response text: {}", response.text());
+        log.info("Finish Reason: {}", response.finishReason());
+        log.info("Tool Calls: {}", response.toolCalls());
         assertThat(response.text()).isNotBlank();
         assertThat(response.finishReason()).isIn("end_turn", "pause_turn");
         assertThat(response.toolCalls()).isNotEmpty();
