@@ -32,7 +32,6 @@ module TopicPromptUi.main {
     exports topicpromptui.core.ai.openai;
     exports topicpromptui.core.ai.gcp;
     exports topicpromptui.core.ai.claude;
-    exports topicpromptui.ui.model.question.question;
     exports topicpromptui.core.prompt;
     exports topicpromptui.core.sound;
     exports topicpromptui.ui.model.state;
@@ -46,7 +45,6 @@ module TopicPromptUi.main {
     opens topicpromptui.core.ai.openai to com.google.gson, com.google.guice;
     opens topicpromptui.core.ai.gcp to com.google.gson, com.google.guice;
     opens topicpromptui.core.ai.claude to com.google.gson, com.google.guice;
-    opens topicpromptui.ui.model.question.question to com.google.gson, com.google.guice;
     opens topicpromptui.ui.view to com.google.gson, com.google.guice, javafx.fxml;
     opens topicpromptui.ui.model to com.google.gson, com.google.guice, javafx.fxml;
     opens topicpromptui.ui.viewmodel to com.google.gson, com.google.guice, javafx.fxml;

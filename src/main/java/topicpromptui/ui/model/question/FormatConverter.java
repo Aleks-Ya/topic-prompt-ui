@@ -1,4 +1,4 @@
-package topicpromptui.ui.model.question.question;
+package topicpromptui.ui.model.question;
 
 import com.vladsch.flexmark.ast.FencedCodeBlock;
 import com.vladsch.flexmark.ext.tables.TablesExtension;

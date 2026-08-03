@@ -1,7 +1,6 @@
-package topicpromptui.ui.model.question.question;
+package topicpromptui.ui.model.question;
 
 import com.google.inject.AbstractModule;
-import topicpromptui.ui.model.question.QuestionModel;
 import topicpromptui.core.sound.SoundModule;
 
 public class QuestionModule extends AbstractModule {

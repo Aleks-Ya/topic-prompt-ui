@@ -1,4 +1,4 @@
-package topicpromptui.ui.model.question.question;
+package topicpromptui.ui.model.question;
 
 import topicpromptui.BaseTest;
 import org.junit.jupiter.params.ParameterizedTest;

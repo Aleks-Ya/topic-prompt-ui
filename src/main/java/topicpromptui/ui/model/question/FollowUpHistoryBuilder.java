@@ -1,4 +1,4 @@
-package topicpromptui.ui.model.question.question;
+package topicpromptui.ui.model.question;
 
 import topicpromptui.core.ai.ConversationTurn;
 import topicpromptui.core.domain.AnswerState;
