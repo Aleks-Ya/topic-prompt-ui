@@ -74,7 +74,7 @@ class OpenAiApiIT {
     @Test
     void definitionOpenAi() {
         var system = promptFactory.getSystemPrompt(DEFINITION, "AWS S3", AnswerType.OPEN_AI).orElse(null);
-        var prompt = promptFactory.getPrompt(DEFINITION, "AWS S3", "Bucket", AnswerType.OPEN_AI).orElseThrow();
+        var prompt = promptFactory.getPrompt(DEFINITION, "Bucket", AnswerType.OPEN_AI).orElseThrow();
         var response = api.send(system, List.of(new ConversationTurn(USER, prompt)), _ -> {
         });
         log.info("Response text: {}", response.text());
@@ -86,7 +86,7 @@ class OpenAiApiIT {
     @Test
     void definitionGrammar() {
         var system = promptFactory.getSystemPrompt(DEFINITION, "AWS S3", AnswerType.GRAMMAR).orElse(null);
-        var prompt = promptFactory.getPrompt(DEFINITION, "AWS S3", "Bucket", AnswerType.GRAMMAR).orElseThrow();
+        var prompt = promptFactory.getPrompt(DEFINITION, "Bucket", AnswerType.GRAMMAR).orElseThrow();
         var response = grammarApi.send(system, List.of(new ConversationTurn(USER, prompt)), _ -> {
         });
         log.info("Response text: {}", response.text());

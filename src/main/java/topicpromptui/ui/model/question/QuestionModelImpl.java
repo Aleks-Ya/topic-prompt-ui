@@ -126,7 +126,6 @@ class QuestionModelImpl implements QuestionModel {
         var topic = storage.getTopic(interaction.topicId()).title();
         var promptOpt = promptFactory.getPrompt(
                 interaction.type(),
-                topic,
                 interaction.question(),
                 answerType);
         if (promptOpt.isPresent()) {

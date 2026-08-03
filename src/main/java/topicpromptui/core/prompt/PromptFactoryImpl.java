@@ -61,8 +61,8 @@ class PromptFactoryImpl implements PromptFactory {
     }
 
     @Override
-    public Optional<String> getPrompt(InteractionType interactionType, String topic, String question, AnswerType answerType) {
-        var data = Map.of("topic", topic, "question", question);
+    public Optional<String> getPrompt(InteractionType interactionType, String question, AnswerType answerType) {
+        var data = Map.of("question", question);
         return switch (interactionType) {
             case QUESTION -> switch (answerType) {
                 case GRAMMAR -> render(GRAMMAR_TEMPLATE, data);

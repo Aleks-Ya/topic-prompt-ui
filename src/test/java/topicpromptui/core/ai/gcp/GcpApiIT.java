@@ -53,7 +53,7 @@ class GcpApiIT {
     @Test
     void definition() {
         var system = promptFactory.getSystemPrompt(DEFINITION, "AWS S3", GCP).orElse(null);
-        var prompt = promptFactory.getPrompt(DEFINITION, "AWS S3", "Bucket", GCP).orElseThrow();
+        var prompt = promptFactory.getPrompt(DEFINITION, "Bucket", GCP).orElseThrow();
         var response = api.send(system, List.of(new ConversationTurn(USER, prompt)), _ -> { });
         log.info("Response text: {}", response.text());
         log.info("responseId: {}", response.responseId());

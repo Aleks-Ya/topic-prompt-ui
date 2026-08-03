@@ -6,8 +6,8 @@ import topicpromptui.core.domain.InteractionType;
 import java.util.Optional;
 
 public interface PromptFactory {
-    /** The user message (topic + question). Empty for the interaction {@code GRAMMAR} × non-grammar skip case. */
-    Optional<String> getPrompt(InteractionType interactionType, String topic, String question, AnswerType answerType);
+    /** The user message (question only). Empty for the interaction {@code GRAMMAR} × non-grammar skip case. */
+    Optional<String> getPrompt(InteractionType interactionType, String question, AnswerType answerType);
 
     /**
      * The system prompt (stable behavioral instructions, plus the conversation's topic) for the
