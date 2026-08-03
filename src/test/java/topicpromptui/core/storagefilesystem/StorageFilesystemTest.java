@@ -2,11 +2,8 @@ package topicpromptui.core.storagefilesystem;
 
 import topicpromptui.BaseTest;
 import topicpromptui.core.domain.Answer;
-import topicpromptui.core.domain.AnswerState;
-import topicpromptui.core.domain.AnswerType;
 import topicpromptui.core.domain.Interaction;
 import topicpromptui.core.domain.InteractionId;
-import topicpromptui.core.domain.InteractionType;
 import topicpromptui.core.domain.Topic;
 import topicpromptui.core.domain.TopicId;
 import org.junit.jupiter.api.Test;
