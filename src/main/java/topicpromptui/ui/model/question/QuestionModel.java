@@ -6,11 +6,6 @@ import topicpromptui.core.domain.InteractionId;
 import java.util.function.Consumer;
 
 public interface QuestionModel {
-    default void requestAnswer(InteractionId interactionId, AnswerType answerType, Runnable callback) {
-        requestAnswer(interactionId, answerType, callback, html -> {
-        });
-    }
-
     /**
      * {@code progressHtml} receives throttled partial-answer HTML snapshots on the JavaFX
      * Application Thread while the answer streams; the final answer is delivered via
@@ -20,7 +15,7 @@ public interface QuestionModel {
                        Consumer<String> progressHtml);
 
     default void requestFollowUpAnswer(InteractionId interactionId, AnswerType answerType, Runnable callback) {
-        requestFollowUpAnswer(interactionId, answerType, callback, html -> {
+        requestFollowUpAnswer(interactionId, answerType, callback, _ -> {
         });
     }
 
