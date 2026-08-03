@@ -1,4 +1,4 @@
-package topicpromptui.ui.model.question.sound;
+package topicpromptui.core.sound;
 
 import topicpromptui.BaseTest;
 import topicpromptui.core.domain.AnswerType;

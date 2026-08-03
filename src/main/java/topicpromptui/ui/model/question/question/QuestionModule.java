@@ -2,7 +2,7 @@ package topicpromptui.ui.model.question.question;
 
 import com.google.inject.AbstractModule;
 import topicpromptui.ui.model.question.QuestionModel;
-import topicpromptui.ui.model.question.sound.SoundModule;
+import topicpromptui.core.sound.SoundModule;
 
 public class QuestionModule extends AbstractModule {
     @Override

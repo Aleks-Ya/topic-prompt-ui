@@ -5,6 +5,7 @@ package topicpromptui {
     package core {
         package ai {}
         package prompt {}
+        package sound {}
         package util #orange {}
         package domain #green {}
         package storagefilesystem {}
@@ -26,11 +27,13 @@ viewmodel -[#green]-> domain
 viewmodel -[#orange]-> util
 model --> ai
 model --> prompt
+model --> sound
 model --> storagefilesystem
 model -[#green]-> domain
 model -[#orange]-> util
 prompt -[#green]-> domain
 prompt -[#orange]-> util
+sound -[#green]-> domain
 storagefilesystem -[#green]-> domain
 storagefilesystem -[#orange]-> util
 domain -[#orange]-> util

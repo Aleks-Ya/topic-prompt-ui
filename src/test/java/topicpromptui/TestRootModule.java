@@ -9,8 +9,8 @@ import topicpromptui.core.ai.gcp.MockGcpApi;
 import topicpromptui.core.ai.openai.MockOpenAiApi;
 import topicpromptui.ui.model.file.FileModel;
 import topicpromptui.ui.model.file.FileModelMock;
-import topicpromptui.ui.model.question.sound.SoundService;
-import topicpromptui.ui.model.question.sound.SoundServiceMock;
+import topicpromptui.core.sound.SoundService;
+import topicpromptui.core.sound.SoundServiceMock;
 
 import java.nio.file.FileSystem;
 
