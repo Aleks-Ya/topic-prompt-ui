@@ -31,6 +31,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static topicpromptui.core.ai.AiModule.CLAUDE_AI;
 import static topicpromptui.core.ai.ConversationTurn.Speaker.MODEL;
 import static topicpromptui.core.ai.ConversationTurn.Speaker.USER;
+import static topicpromptui.core.ai.TestConsumers.NO_OP;
 import static topicpromptui.core.domain.InteractionType.DEFINITION;
 
 class ClaudeApiIT {
@@ -41,7 +42,7 @@ class ClaudeApiIT {
 
     @Test
     void send() {
-        var response = api.send("What is the last Java version?");
+        var response = api.send(null, List.of(new ConversationTurn(USER, "What is the last Java version?")), NO_OP);
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("claude-opus-5"),
@@ -56,8 +57,7 @@ class ClaudeApiIT {
     void definitionClaude() {
         var system = promptFactory.getSystemPrompt(DEFINITION, "AWS S3", AnswerType.CLAUDE).orElseThrow();
         var prompt = promptFactory.getPrompt(DEFINITION, "Bucket", AnswerType.CLAUDE).orElseThrow();
-        var response = api.send(system, List.of(new ConversationTurn(USER, prompt)), _ -> {
-        });
+        var response = api.send(system, List.of(new ConversationTurn(USER, prompt)), NO_OP);
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("claude-opus-5"),
@@ -74,7 +74,7 @@ class ClaudeApiIT {
                 new ConversationTurn(USER, "My favorite fruit is mango. Just acknowledge, don't say anything else."),
                 new ConversationTurn(MODEL, "Got it."),
                 new ConversationTurn(USER, "What fruit did I say was my favorite? Answer with just the fruit name."));
-        var response = api.send(turns);
+        var response = api.send(null, turns, NO_OP);
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("claude-opus-5"),
@@ -88,7 +88,8 @@ class ClaudeApiIT {
     @Test
     void sendStreaming() {
         var deltas = new CopyOnWriteArrayList<String>();
-        var response = api.send("List the last 5 Java LTS versions with one sentence about each.", deltas::add);
+        var response = api.send(null, List.of(new ConversationTurn(USER,
+                "List the last 5 Java LTS versions with one sentence about each.")), deltas::add);
         assertThat(deltas).hasSizeGreaterThan(1);
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
@@ -104,8 +105,9 @@ class ClaudeApiIT {
     void sendWithContext7Docs() {
         // Exercises the server-side Context7 MCP connector end to end (context7.api.key must be set):
         // a green run proves the MCP tool-use/tool-result blocks in the stream don't break assemble().
-        var response = api.send("Using the Context7 documentation, briefly explain what the Context7 MCP "
-                + "server provides for developers. Consult the library docs before answering.");
+        var response = api.send(null, List.of(new ConversationTurn(USER, "Using the Context7 documentation, briefly "
+                + "explain what the Context7 MCP server provides for developers. Consult the library docs before "
+                + "answering.")), NO_OP);
         assertThat(Grader.combine(response,
                 new ToolCallsContainGrader("Context7"),
                 new ResponseIdNotEmptyGrader(),
@@ -118,7 +120,7 @@ class ClaudeApiIT {
 
     @Test
     void error() {
-        assertThatThrownBy(() -> api.send((String) null))
+        assertThatThrownBy(() -> api.send(null, List.of(new ConversationTurn(USER, null)), NO_OP))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("invalid_request_error");
     }

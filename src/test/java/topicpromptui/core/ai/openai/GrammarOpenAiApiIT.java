@@ -28,6 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static topicpromptui.core.ai.AiModule.OPEN_AI_GRAMMAR;
 import static topicpromptui.core.ai.ConversationTurn.Speaker.USER;
+import static topicpromptui.core.ai.TestConsumers.NO_OP;
 import static topicpromptui.core.domain.AnswerType.GRAMMAR;
 import static topicpromptui.core.domain.InteractionType.DEFINITION;
 import static topicpromptui.core.domain.InteractionType.QUESTION;
@@ -40,7 +41,8 @@ class GrammarOpenAiApiIT {
 
     @Test
     void sendGrammar() {
-        var response = grammarApi.send("What is the last Java version?");
+        var response = grammarApi.send(null, List.of(new ConversationTurn(USER, "What is the last Java version?")),
+                NO_OP);
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gpt-5.6-luna"),
@@ -55,8 +57,7 @@ class GrammarOpenAiApiIT {
     void definitionGrammarIncorrect() {
         var system = promptFactory.getSystemPrompt(DEFINITION, "Java", AnswerType.GRAMMAR).orElseThrow();
         var prompt = promptFactory.getPrompt(DEFINITION, "Garbaj collector", AnswerType.GRAMMAR).orElseThrow();
-        var response = grammarApi.send(system, List.of(new ConversationTurn(USER, prompt)), _ -> {
-        });
+        var response = grammarApi.send(system, List.of(new ConversationTurn(USER, prompt)), NO_OP);
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gpt-5.6-luna"),
@@ -71,8 +72,7 @@ class GrammarOpenAiApiIT {
     void definitionGrammarCorrect() {
         var system = promptFactory.getSystemPrompt(DEFINITION, "Java", AnswerType.GRAMMAR).orElseThrow();
         var prompt = promptFactory.getPrompt(DEFINITION, "Garbage collector", AnswerType.GRAMMAR).orElseThrow();
-        var response = grammarApi.send(system, List.of(new ConversationTurn(USER, prompt)), _ -> {
-        });
+        var response = grammarApi.send(system, List.of(new ConversationTurn(USER, prompt)), NO_OP);
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gpt-5.6-luna"),
@@ -87,8 +87,7 @@ class GrammarOpenAiApiIT {
     void questionGrammarIncorrect() {
         var system = promptFactory.getSystemPrompt(QUESTION, "Java", GRAMMAR).orElseThrow();
         var prompt = promptFactory.getPrompt(QUESTION, "What's latest Java version?", GRAMMAR).orElseThrow();
-        var response = grammarApi.send(system, List.of(new ConversationTurn(USER, prompt)), _ -> {
-        });
+        var response = grammarApi.send(system, List.of(new ConversationTurn(USER, prompt)), NO_OP);
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gpt-5.6-luna"),
@@ -103,8 +102,7 @@ class GrammarOpenAiApiIT {
     void questionGrammarCorrect() {
         var system = promptFactory.getSystemPrompt(QUESTION, "Java", GRAMMAR).orElseThrow();
         var prompt = promptFactory.getPrompt(QUESTION, "What's the latest Java version?", GRAMMAR).orElseThrow();
-        var response = grammarApi.send(system, List.of(new ConversationTurn(USER, prompt)), _ -> {
-        });
+        var response = grammarApi.send(system, List.of(new ConversationTurn(USER, prompt)), NO_OP);
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gpt-5.6-luna"),
@@ -119,8 +117,7 @@ class GrammarOpenAiApiIT {
     void questionGrammarHowTo() {
         var system = promptFactory.getSystemPrompt(QUESTION, "Java", GRAMMAR).orElseThrow();
         var prompt = promptFactory.getPrompt(QUESTION, "How to prevent thread locks in an application?", GRAMMAR).orElseThrow();
-        var response = grammarApi.send(system, List.of(new ConversationTurn(USER, prompt)), _ -> {
-        });
+        var response = grammarApi.send(system, List.of(new ConversationTurn(USER, prompt)), NO_OP);
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gpt-5.6-luna"),
@@ -135,8 +132,7 @@ class GrammarOpenAiApiIT {
     void questionGrammarCapitalLetters() {
         var system = promptFactory.getSystemPrompt(QUESTION, "Java", GRAMMAR).orElseThrow();
         var prompt = promptFactory.getPrompt(QUESTION, "In which Java version was the Garbage Collector introduced?", GRAMMAR).orElseThrow();
-        var response = grammarApi.send(system, List.of(new ConversationTurn(USER, prompt)), _ -> {
-        });
+        var response = grammarApi.send(system, List.of(new ConversationTurn(USER, prompt)), NO_OP);
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gpt-5.6-luna"),
@@ -149,7 +145,7 @@ class GrammarOpenAiApiIT {
 
     @Test
     void errorGrammar() {
-        assertThatThrownBy(() -> grammarApi.send((String) null))
+        assertThatThrownBy(() -> grammarApi.send(null, List.of(new ConversationTurn(USER, null)), NO_OP))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("invalid_request_error");
     }
