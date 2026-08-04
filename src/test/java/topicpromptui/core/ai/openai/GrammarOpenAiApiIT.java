@@ -145,7 +145,8 @@ class GrammarOpenAiApiIT {
 
     @Test
     void errorGrammar() {
-        assertThatThrownBy(() -> grammarApi.send(null, List.of(new ConversationTurn(USER, null)), NO_OP))
+        var turns = List.of(new ConversationTurn(USER, null));
+        assertThatThrownBy(() -> grammarApi.send(null, turns, NO_OP))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("invalid_request_error");
     }
