@@ -5,6 +5,9 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import topicpromptui.core.ai.AiApi;
 import topicpromptui.core.ai.ConversationTurn;
 import topicpromptui.core.ai.grader.Grader;
@@ -23,6 +26,7 @@ import topicpromptui.core.prompt.PromptModule;
 import topicpromptui.ui.model.storage.StorageModule;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -83,64 +87,29 @@ class GrammarOpenAiApiIT {
         )).isEqualTo(Score.MAX);
     }
 
-    @Test
-    void questionGrammarIncorrect() {
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("questionGrammarCases")
+    void questionGrammar(String caseName, String question, String expected) {
         var system = promptFactory.getSystemPrompt(QUESTION, "Java", GRAMMAR).orElseThrow();
-        var prompt = promptFactory.getPrompt(QUESTION, "What's latest Java version?", GRAMMAR).orElseThrow();
+        var prompt = promptFactory.getPrompt(QUESTION, question, GRAMMAR).orElseThrow();
         var response = grammarApi.send(system, List.of(new ConversationTurn(USER, prompt)), NO_OP);
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gpt-5.6-luna"),
-                new ResponseTextExactGrader("What's **the** latest Java version?"),
+                new ResponseTextExactGrader(expected),
                 new EffortLevelGrader("MEDIUM"),
                 new FinishReasonGrader("completed"),
                 new TokensGrader()
         )).isEqualTo(Score.MAX);
     }
 
-    @Test
-    void questionGrammarCorrect() {
-        var system = promptFactory.getSystemPrompt(QUESTION, "Java", GRAMMAR).orElseThrow();
-        var prompt = promptFactory.getPrompt(QUESTION, "What's the latest Java version?", GRAMMAR).orElseThrow();
-        var response = grammarApi.send(system, List.of(new ConversationTurn(USER, prompt)), NO_OP);
-        assertThat(Grader.combine(response,
-                new ResponseIdNotEmptyGrader(),
-                new ModelIdGrader("gpt-5.6-luna"),
-                new ResponseTextExactGrader("Correct"),
-                new EffortLevelGrader("MEDIUM"),
-                new FinishReasonGrader("completed"),
-                new TokensGrader()
-        )).isEqualTo(Score.MAX);
-    }
-
-    @Test
-    void questionGrammarHowTo() {
-        var system = promptFactory.getSystemPrompt(QUESTION, "Java", GRAMMAR).orElseThrow();
-        var prompt = promptFactory.getPrompt(QUESTION, "How to prevent thread locks in an application?", GRAMMAR).orElseThrow();
-        var response = grammarApi.send(system, List.of(new ConversationTurn(USER, prompt)), NO_OP);
-        assertThat(Grader.combine(response,
-                new ResponseIdNotEmptyGrader(),
-                new ModelIdGrader("gpt-5.6-luna"),
-                new ResponseTextExactGrader("Correct"),
-                new EffortLevelGrader("MEDIUM"),
-                new FinishReasonGrader("completed"),
-                new TokensGrader()
-        )).isEqualTo(Score.MAX);
-    }
-
-    @Test
-    void questionGrammarCapitalLetters() {
-        var system = promptFactory.getSystemPrompt(QUESTION, "Java", GRAMMAR).orElseThrow();
-        var prompt = promptFactory.getPrompt(QUESTION, "In which Java version was the Garbage Collector introduced?", GRAMMAR).orElseThrow();
-        var response = grammarApi.send(system, List.of(new ConversationTurn(USER, prompt)), NO_OP);
-        assertThat(Grader.combine(response,
-                new ResponseIdNotEmptyGrader(),
-                new ModelIdGrader("gpt-5.6-luna"),
-                new ResponseTextExactGrader("Correct"),
-                new EffortLevelGrader("MEDIUM"),
-                new FinishReasonGrader("completed"),
-                new TokensGrader()
-        )).isEqualTo(Score.MAX);
+    static Stream<Arguments> questionGrammarCases() {
+        return Stream.of(
+                Arguments.of("incorrect", "What's latest Java version?", "What's **the** latest Java version?"),
+                Arguments.of("correct", "What's the latest Java version?", "Correct"),
+                Arguments.of("howTo", "How to prevent thread locks in an application?", "Correct"),
+                Arguments.of("capitalLetters", "In which Java version was the Garbage Collector introduced?", "Correct")
+        );
     }
 
     @Test
