@@ -29,18 +29,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static topicpromptui.core.ai.AiModule.OPEN_AI;
-import static topicpromptui.core.ai.AiModule.OPEN_AI_GRAMMAR;
 import static topicpromptui.core.ai.ConversationTurn.Speaker.MODEL;
 import static topicpromptui.core.ai.ConversationTurn.Speaker.USER;
-import static topicpromptui.core.domain.AnswerType.GRAMMAR;
 import static topicpromptui.core.domain.InteractionType.DEFINITION;
-import static topicpromptui.core.domain.InteractionType.QUESTION;
 
 class OpenAiApiIT {
     private final Injector injector = Guice.createInjector(new OpenAiModule(), new ConfigurationModule(),
             new StorageModule(), new PromptModule());
     private final AiApi api = injector.getInstance(Key.get(AiApi.class, Names.named(OPEN_AI)));
-    private final AiApi grammarApi = injector.getInstance(Key.get(AiApi.class, Names.named(OPEN_AI_GRAMMAR)));
     private final PromptFactory promptFactory = injector.getInstance(PromptFactory.class);
 
     @Test
@@ -57,19 +53,6 @@ class OpenAiApiIT {
     }
 
     @Test
-    void sendGrammar() {
-        var response = grammarApi.send("What is the last Java version?");
-        assertThat(Grader.combine(response,
-                new ResponseIdNotEmptyGrader(),
-                new ModelIdGrader("gpt-5.6-luna"),
-                new ResponseTextNotBlankGrader(),
-                new EffortLevelGrader("MEDIUM"),
-                new FinishReasonGrader("completed"),
-                new TokensGrader()
-        )).isEqualTo(Score.MAX);
-    }
-
-    @Test
     void definitionOpenAi() {
         var system = promptFactory.getSystemPrompt(DEFINITION, "AWS S3", AnswerType.OPEN_AI).orElseThrow();
         var prompt = promptFactory.getPrompt(DEFINITION, "Bucket", AnswerType.OPEN_AI).orElseThrow();
@@ -80,38 +63,6 @@ class OpenAiApiIT {
                 new ModelIdGrader("gpt-5.6-sol"),
                 new ResponseTextNotBlankGrader(),
                 new EffortLevelGrader("XHIGH"),
-                new FinishReasonGrader("completed"),
-                new TokensGrader()
-        )).isEqualTo(Score.MAX);
-    }
-
-    @Test
-    void definitionGrammar() {
-        var system = promptFactory.getSystemPrompt(DEFINITION, "Java", AnswerType.GRAMMAR).orElseThrow();
-        var prompt = promptFactory.getPrompt(DEFINITION, "Garbaj collector", AnswerType.GRAMMAR).orElseThrow();
-        var response = grammarApi.send(system, List.of(new ConversationTurn(USER, prompt)), _ -> {
-        });
-        assertThat(Grader.combine(response,
-                new ResponseIdNotEmptyGrader(),
-                new ModelIdGrader("gpt-5.6-luna"),
-                new ResponseTextExactGrader("Garbage collector"),
-                new EffortLevelGrader("MEDIUM"),
-                new FinishReasonGrader("completed"),
-                new TokensGrader()
-        )).isEqualTo(Score.MAX);
-    }
-
-    @Test
-    void questionGrammar() {
-        var system = promptFactory.getSystemPrompt(QUESTION, "Java", GRAMMAR).orElseThrow();
-        var prompt = promptFactory.getPrompt(QUESTION, "What's latest Java version?", GRAMMAR).orElseThrow();
-        var response = grammarApi.send(system, List.of(new ConversationTurn(USER, prompt)), _ -> {
-        });
-        assertThat(Grader.combine(response,
-                new ResponseIdNotEmptyGrader(),
-                new ModelIdGrader("gpt-5.6-luna"),
-                new ResponseTextExactGrader("What's **the** latest Java version?"),
-                new EffortLevelGrader("MEDIUM"),
                 new FinishReasonGrader("completed"),
                 new TokensGrader()
         )).isEqualTo(Score.MAX);
@@ -173,10 +124,4 @@ class OpenAiApiIT {
                 .hasMessageContaining("invalid_request_error");
     }
 
-    @Test
-    void errorGrammar() {
-        assertThatThrownBy(() -> grammarApi.send((String) null))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("invalid_request_error");
-    }
 }
