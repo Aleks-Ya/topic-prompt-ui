@@ -47,7 +47,7 @@ class PromptFactoryTest extends BaseTest {
     void definitionUserMessage() {
         var definition = "Term: `Question A`";
         assertThat(factory.getPrompt(DEFINITION, "Question A", GRAMMAR).orElseThrow()).contains("""
-                Text to grammar-check:
+                Sentence or phrase to check:
                 ```
                 Question A
                 ```""");
@@ -106,9 +106,7 @@ class PromptFactoryTest extends BaseTest {
                 Provide a concise single-sentence definition of the given term in the context of the topic `Topic A`.
                 Format your answer as `[the term] is/are`.
                 Do not repeat the context in your answer if possible.""";
-        assertThat(factory.getSystemPrompt(DEFINITION, "Topic A", GRAMMAR).orElseThrow()).contains("""
-                Check the grammar of the given text in the context of the topic `Topic A`.
-                If the text is correct, answer `Correct`.""");
+        assertThat(factory.getSystemPrompt(DEFINITION, "Topic A", GRAMMAR).orElseThrow()).contains(GRAMMAR_SYSTEM).contains(GRAMMAR_SYSTEM_TOPIC);
         assertThat(factory.getSystemPrompt(DEFINITION, "Topic A", OPEN_AI).orElseThrow()).contains(definition);
         assertThat(factory.getSystemPrompt(DEFINITION, "Topic A", CLAUDE).orElseThrow()).contains(definition);
         assertThat(factory.getSystemPrompt(DEFINITION, "Topic A", GCP).orElseThrow()).contains(definition);
@@ -135,7 +133,7 @@ class PromptFactoryTest extends BaseTest {
     void userModifiesTemplate() throws IOException {
         var expDefaultPrompt = "Term: `Question A`";
 
-        var templateFile = configModel.getAppDataPath().resolve("templates").resolve("definition-gcp.ftl");
+        var templateFile = configModel.getAppDataPath().resolve("templates").resolve("definition.ftl");
         assertThat(factory.getPrompt(DEFINITION, "Question A", GCP).orElseThrow()).contains(expDefaultPrompt);
 
         Files.writeString(templateFile, "Answer ${question}");
