@@ -5,27 +5,34 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import topicpromptui.core.ai.AiApi;
 import topicpromptui.core.ai.ConversationTurn;
+import topicpromptui.core.ai.grader.Grader;
+import topicpromptui.core.ai.grader.Score;
+import topicpromptui.core.ai.grader.graders.EffortLevelGrader;
+import topicpromptui.core.ai.grader.graders.FinishReasonGrader;
+import topicpromptui.core.ai.grader.graders.ModelIdGrader;
+import topicpromptui.core.ai.grader.graders.ResponseIdNotEmptyGrader;
+import topicpromptui.core.ai.grader.graders.ResponseTextExactGrader;
+import topicpromptui.core.ai.grader.graders.ResponseTextNotBlankGrader;
+import topicpromptui.core.ai.grader.graders.TokensGrader;
 import topicpromptui.core.config.ConfigurationModule;
+import topicpromptui.core.domain.AnswerType;
 import topicpromptui.core.prompt.PromptFactory;
 import topicpromptui.core.prompt.PromptModule;
 import topicpromptui.ui.model.storage.StorageModule;
 
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static topicpromptui.core.ai.AiModule.GCP_AI;
 import static topicpromptui.core.ai.ConversationTurn.Speaker.MODEL;
 import static topicpromptui.core.ai.ConversationTurn.Speaker.USER;
-import static topicpromptui.core.domain.AnswerType.GCP;
 import static topicpromptui.core.domain.InteractionType.DEFINITION;
 
 class GcpApiIT {
-    private static final Logger log = LoggerFactory.getLogger(GcpApiIT.class);
     private final Injector injector = Guice.createInjector(new GcpModule(), new ConfigurationModule(),
             new StorageModule(), new PromptModule());
     private final AiApi api = injector.getInstance(Key.get(AiApi.class, Names.named(GCP_AI)));
@@ -34,31 +41,30 @@ class GcpApiIT {
     @Test
     void send() {
         var response = api.send("What is the last Java version?");
-        log.info("Response text: {}", response.text());
-        log.info("responseId: {}", response.responseId());
-        log.info("modelId: {}", response.modelId());
-        log.info("effortLevel: {}", response.effortLevel());
-        log.info("finishReason: {}", response.finishReason());
-        log.info("tokens: input={} output={} total={}", response.inputTokens(), response.outputTokens(), response.totalTokens());
-        assertThat(response.text()).isNotBlank();
-        assertThat(response.responseId()).isNotBlank();
-        assertThat(response.modelId()).isNotBlank();
-        assertThat(response.effortLevel()).isNotBlank();
-        assertThat(response.finishReason()).isEqualTo("STOP");
-        assertThat(response.inputTokens()).isPositive();
-        assertThat(response.outputTokens()).isPositive();
-        assertThat(response.totalTokens()).isPositive();
+        assertThat(Grader.combine(response,
+                new ResponseIdNotEmptyGrader(),
+                new ModelIdGrader("gemini-3.1-pro-preview"),
+                new ResponseTextNotBlankGrader(),
+                new EffortLevelGrader("HIGH"),
+                new FinishReasonGrader("STOP"),
+                new TokensGrader()
+        )).isEqualTo(Score.MAX);
     }
 
     @Test
     void definition() {
-        var system = promptFactory.getSystemPrompt(DEFINITION, "AWS S3", GCP).orElse(null);
-        var prompt = promptFactory.getPrompt(DEFINITION, "Bucket", GCP).orElseThrow();
-        var response = api.send(system, List.of(new ConversationTurn(USER, prompt)), _ -> { });
-        log.info("Response text: {}", response.text());
-        log.info("responseId: {}", response.responseId());
-        assertThat(response.text()).isNotBlank();
-        assertThat(response.responseId()).isNotBlank();
+        var system = promptFactory.getSystemPrompt(DEFINITION, "AWS S3", AnswerType.GCP).orElseThrow();
+        var prompt = promptFactory.getPrompt(DEFINITION, "Bucket", AnswerType.GCP).orElseThrow();
+        var response = api.send(system, List.of(new ConversationTurn(USER, prompt)), _ -> {
+        });
+        assertThat(Grader.combine(response,
+                new ResponseIdNotEmptyGrader(),
+                new ModelIdGrader("gemini-3.1-pro-preview"),
+                new ResponseTextNotBlankGrader(),
+                new EffortLevelGrader("HIGH"),
+                new FinishReasonGrader("STOP"),
+                new TokensGrader()
+        )).isEqualTo(Score.MAX);
     }
 
     @Test
@@ -68,20 +74,29 @@ class GcpApiIT {
                 new ConversationTurn(MODEL, "Got it."),
                 new ConversationTurn(USER, "What fruit did I say was my favorite? Answer with just the fruit name."));
         var response = api.send(turns);
-        log.info("Response text: {}", response.text());
-        assertThat(response.text().toLowerCase()).contains("mango");
+        assertThat(Grader.combine(response,
+                new ResponseIdNotEmptyGrader(),
+                new ModelIdGrader("gemini-3.1-pro-preview"),
+                new ResponseTextExactGrader("Mango"),
+                new EffortLevelGrader("HIGH"),
+                new FinishReasonGrader("STOP"),
+                new TokensGrader()
+        )).isEqualTo(Score.MAX);
     }
 
     @Test
     void sendStreaming() {
-        var deltas = new java.util.concurrent.CopyOnWriteArrayList<String>();
+        var deltas = new CopyOnWriteArrayList<String>();
         var response = api.send("List the last 5 Java LTS versions with one sentence about each.", deltas::add);
-        log.info("Deltas count: {}", deltas.size());
         assertThat(deltas).hasSizeGreaterThan(1);
-        assertThat(String.join("", deltas)).isEqualTo(response.text());
-        assertThat(response.responseId()).isNotBlank();
-        assertThat(response.finishReason()).isEqualTo("STOP");
-        assertThat(response.totalTokens()).isPositive();
+        assertThat(Grader.combine(response,
+                new ResponseIdNotEmptyGrader(),
+                new ModelIdGrader("gemini-3.1-pro-preview"),
+                new ResponseTextExactGrader(String.join("", deltas)),
+                new EffortLevelGrader("HIGH"),
+                new FinishReasonGrader("STOP"),
+                new TokensGrader()
+        )).isEqualTo(Score.MAX);
     }
 
     @Test

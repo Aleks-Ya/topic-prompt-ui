@@ -5,43 +5,67 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import topicpromptui.core.ai.AiApi;
 import topicpromptui.core.ai.ConversationTurn;
+import topicpromptui.core.ai.grader.Grader;
+import topicpromptui.core.ai.grader.Score;
+import topicpromptui.core.ai.grader.graders.EffortLevelGrader;
+import topicpromptui.core.ai.grader.graders.FinishReasonGrader;
+import topicpromptui.core.ai.grader.graders.ModelIdGrader;
+import topicpromptui.core.ai.grader.graders.ResponseIdNotEmptyGrader;
+import topicpromptui.core.ai.grader.graders.ResponseTextExactGrader;
+import topicpromptui.core.ai.grader.graders.ResponseTextNotBlankGrader;
+import topicpromptui.core.ai.grader.graders.TokensGrader;
+import topicpromptui.core.ai.grader.graders.ToolCallsContainGrader;
 import topicpromptui.core.config.ConfigurationModule;
+import topicpromptui.core.domain.AnswerType;
+import topicpromptui.core.prompt.PromptFactory;
+import topicpromptui.core.prompt.PromptModule;
 import topicpromptui.ui.model.storage.StorageModule;
 
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static topicpromptui.core.ai.AiModule.CLAUDE_AI;
 import static topicpromptui.core.ai.ConversationTurn.Speaker.MODEL;
 import static topicpromptui.core.ai.ConversationTurn.Speaker.USER;
+import static topicpromptui.core.domain.InteractionType.DEFINITION;
 
 class ClaudeApiIT {
-    private static final Logger log = LoggerFactory.getLogger(ClaudeApiIT.class);
-    private final Injector injector = Guice.createInjector(new ClaudeModule(), new ConfigurationModule(), new StorageModule());
+    private final Injector injector = Guice.createInjector(new ClaudeModule(), new ConfigurationModule(),
+            new StorageModule(), new PromptModule());
     private final AiApi api = injector.getInstance(Key.get(AiApi.class, Names.named(CLAUDE_AI)));
+    private final PromptFactory promptFactory = injector.getInstance(PromptFactory.class);
 
     @Test
     void send() {
         var response = api.send("What is the last Java version?");
-        log.info("Response text: {}", response.text());
-        log.info("Response ID: {}", response.responseId());
-        log.info("Model ID: {}", response.modelId());
-        log.info("Effort Level: {}", response.effortLevel());
-        log.info("Finish Reason: {}", response.finishReason());
-        log.info("Tokens: input={}, output={}, total={}", response.inputTokens(), response.outputTokens(), response.totalTokens());
-        assertThat(response.text()).isNotBlank();
-        assertThat(response.responseId()).isNotBlank();
-        assertThat(response.modelId()).isNotBlank();
-        assertThat(response.effortLevel()).isNotBlank();
-        assertThat(response.finishReason()).isEqualTo("end_turn");
-        assertThat(response.inputTokens()).isPositive();
-        assertThat(response.outputTokens()).isPositive();
-        assertThat(response.totalTokens()).isPositive();
+        assertThat(Grader.combine(response,
+                new ResponseIdNotEmptyGrader(),
+                new ModelIdGrader("claude-opus-5"),
+                new ResponseTextNotBlankGrader(),
+                new EffortLevelGrader("XHIGH"),
+                new FinishReasonGrader("end_turn"),
+                new TokensGrader()
+        )).isEqualTo(Score.MAX);
+    }
+
+    @Test
+    void definitionClaude() {
+        var system = promptFactory.getSystemPrompt(DEFINITION, "AWS S3", AnswerType.CLAUDE).orElseThrow();
+        var prompt = promptFactory.getPrompt(DEFINITION, "Bucket", AnswerType.CLAUDE).orElseThrow();
+        var response = api.send(system, List.of(new ConversationTurn(USER, prompt)), _ -> {
+        });
+        assertThat(Grader.combine(response,
+                new ResponseIdNotEmptyGrader(),
+                new ModelIdGrader("claude-opus-5"),
+                new ResponseTextNotBlankGrader(),
+                new EffortLevelGrader("XHIGH"),
+                new FinishReasonGrader("end_turn"),
+                new TokensGrader()
+        )).isEqualTo(Score.MAX);
     }
 
     @Test
@@ -51,20 +75,29 @@ class ClaudeApiIT {
                 new ConversationTurn(MODEL, "Got it."),
                 new ConversationTurn(USER, "What fruit did I say was my favorite? Answer with just the fruit name."));
         var response = api.send(turns);
-        log.info("Response text: {}", response.text());
-        assertThat(response.text().toLowerCase()).contains("mango");
+        assertThat(Grader.combine(response,
+                new ResponseIdNotEmptyGrader(),
+                new ModelIdGrader("claude-opus-5"),
+                new ResponseTextExactGrader("Mango"),
+                new EffortLevelGrader("XHIGH"),
+                new FinishReasonGrader("end_turn"),
+                new TokensGrader()
+        )).isEqualTo(Score.MAX);
     }
 
     @Test
     void sendStreaming() {
-        var deltas = new java.util.concurrent.CopyOnWriteArrayList<String>();
+        var deltas = new CopyOnWriteArrayList<String>();
         var response = api.send("List the last 5 Java LTS versions with one sentence about each.", deltas::add);
-        log.info("Deltas count: {}", deltas.size());
         assertThat(deltas).hasSizeGreaterThan(1);
-        assertThat(String.join("", deltas)).isEqualTo(response.text());
-        assertThat(response.responseId()).isNotBlank();
-        assertThat(response.finishReason()).isEqualTo("end_turn");
-        assertThat(response.totalTokens()).isPositive();
+        assertThat(Grader.combine(response,
+                new ResponseIdNotEmptyGrader(),
+                new ModelIdGrader("claude-opus-5"),
+                new ResponseTextExactGrader(String.join("", deltas)),
+                new EffortLevelGrader("XHIGH"),
+                new FinishReasonGrader("end_turn"),
+                new TokensGrader()
+        )).isEqualTo(Score.MAX);
     }
 
     @Test
@@ -73,12 +106,14 @@ class ClaudeApiIT {
         // a green run proves the MCP tool-use/tool-result blocks in the stream don't break assemble().
         var response = api.send("Using the Context7 documentation, briefly explain what the Context7 MCP "
                 + "server provides for developers. Consult the library docs before answering.");
-        log.info("Response text: {}", response.text());
-        log.info("Finish Reason: {}", response.finishReason());
-        log.info("Tool Calls: {}", response.toolCalls());
-        assertThat(response.text()).isNotBlank();
-        assertThat(response.finishReason()).isIn("end_turn", "pause_turn");
-        assertThat(response.toolCalls()).isNotEmpty();
+        assertThat(Grader.combine(response,
+                new ToolCallsContainGrader("Context7"),
+                new ResponseIdNotEmptyGrader(),
+                new ModelIdGrader("claude-opus-5"),
+                new ResponseTextNotBlankGrader(),
+                new EffortLevelGrader("XHIGH"),
+                new TokensGrader()
+        )).isEqualTo(Score.MAX);
     }
 
     @Test
