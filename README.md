@@ -5,8 +5,9 @@ Run `topicpromptui.TopicPromptUiMain` class.
 
 ## Unit-tests
 Compile: `./gradlew compileTestJava`
-Run unit-tests (including integration tests): `./gradlew test`
-Run unit-tests (skip integration tests): `./gradlew -PskipIntegrationTests test`
+Run all tests: `./gradlew test`
+Run unit tests only: `./gradlew -PskipIntegrationTests test`
+Run integration tests only: `./gradlew -PskipUnitTests test`
 
 ## Link
 `./gradlew -x test clean jlink`

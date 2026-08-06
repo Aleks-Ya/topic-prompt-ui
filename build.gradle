@@ -79,6 +79,9 @@ test {
     if (project.hasProperty('skipIntegrationTests')) {
         exclude '**/*IT.class'
     }
+    if (project.hasProperty('skipUnitTests')) {
+        include '**/*IT.class'
+    }
     def xvfbBinary = new File('/usr/bin/Xvfb')
     if (xvfbBinary.exists() && !project.hasProperty('onRealDisplay')) {
         finalizedBy stopVirtualDisplay
