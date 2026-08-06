@@ -42,11 +42,11 @@ class OpenAiApiIT {
 
     @Test
     void send() {
-        var response = api.send(null, List.of(new ConversationTurn(USER, "Who created Java?")), NO_OP);
+        var response = api.send(null, List.of(new ConversationTurn(USER, "Give me the name of the Java creator")), NO_OP);
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gpt-5.6-sol"),
-                new ResponseTextLengthGrader(100, 1000),
+                new ResponseTextLengthGrader(10, 500),
                 new EffortLevelGrader("XHIGH"),
                 new FinishReasonGrader("completed"),
                 new TokensGrader()
@@ -105,14 +105,14 @@ class OpenAiApiIT {
     void sendWithContext7Docs() {
         // Exercises the server-side Context7 MCP tool end to end (context7.api.key must be set): a green
         // run proves the extra mcp_list_tools/mcp_call outputs don't break parseResponse's selection.
-        var response = api.send(null, List.of(new ConversationTurn(USER, "Using the Context7 documentation, briefly "
-                + "explain what the Context7 MCP server provides for developers. Consult the library docs before "
-                + "answering.")), NO_OP);
+        var response = api.send(null, List.of(new ConversationTurn(USER, "Consult the Context7 library docs, then "
+                + "say in a single sentence of at most 25 words what the Context7 MCP server provides for "
+                + "developers. Output only that sentence.")), NO_OP);
         assertThat(Grader.combine(response,
                 new ToolCallsContainGrader("Context7"),
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gpt-5.6-sol"),
-                new ResponseTextLengthGrader(100, 1000),
+                new ResponseTextLengthGrader(20, 400),
                 new EffortLevelGrader("XHIGH"),
                 new FinishReasonGrader("completed"),
                 new TokensGrader()

@@ -42,11 +42,11 @@ class ClaudeApiIT {
 
     @Test
     void send() {
-        var response = api.send(null, List.of(new ConversationTurn(USER, "What is the last Java version?")), NO_OP);
+        var response = api.send(null, List.of(new ConversationTurn(USER, "Give me the name of the Java creator")), NO_OP);
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("claude-opus-5"),
-                new ResponseTextLengthGrader(100, 2000),
+                new ResponseTextLengthGrader(10, 500),
                 new EffortLevelGrader("XHIGH"),
                 new FinishReasonGrader("end_turn"),
                 new TokensGrader()
@@ -105,14 +105,14 @@ class ClaudeApiIT {
     void sendWithContext7Docs() {
         // Exercises the server-side Context7 MCP connector end to end (context7.api.key must be set):
         // a green run proves the MCP tool-use/tool-result blocks in the stream don't break assemble().
-        var response = api.send(null, List.of(new ConversationTurn(USER, "Using the Context7 documentation, briefly "
-                + "explain what the Context7 MCP server provides for developers. Consult the library docs before "
-                + "answering.")), NO_OP);
+        var response = api.send(null, List.of(new ConversationTurn(USER, "Consult the Context7 library docs, then "
+                + "say in a single sentence of at most 25 words what the Context7 MCP server provides for "
+                + "developers. Output only that sentence.")), NO_OP);
         assertThat(Grader.combine(response,
                 new ToolCallsContainGrader("Context7"),
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("claude-opus-5"),
-                new ResponseTextLengthGrader(100, 3000),
+                new ResponseTextLengthGrader(20, 400),
                 new EffortLevelGrader("XHIGH"),
                 new TokensGrader()
         )).isEqualTo(Score.MAX);

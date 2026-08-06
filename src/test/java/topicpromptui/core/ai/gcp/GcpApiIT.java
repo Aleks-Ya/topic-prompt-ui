@@ -41,11 +41,11 @@ class GcpApiIT {
 
     @Test
     void send() {
-        var response = api.send(null, List.of(new ConversationTurn(USER, "What is the last Java version?")), NO_OP);
+        var response = api.send(null, List.of(new ConversationTurn(USER, "Give me the name of the Java creator")), NO_OP);
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gemini-3.1-pro-preview"),
-                new ResponseTextLengthGrader(100, 1000),
+                new ResponseTextLengthGrader(100, 500),
                 new EffortLevelGrader("HIGH"),
                 new FinishReasonGrader("STOP"),
                 new TokensGrader()
@@ -60,7 +60,7 @@ class GcpApiIT {
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gemini-3.1-pro-preview"),
-                new ResponseTextLengthGrader(100, 1000),
+                new ResponseTextLengthGrader(10, 500),
                 new EffortLevelGrader("HIGH"),
                 new FinishReasonGrader("STOP"),
                 new TokensGrader()
