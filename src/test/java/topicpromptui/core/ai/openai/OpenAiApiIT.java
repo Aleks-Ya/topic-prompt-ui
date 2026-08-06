@@ -17,7 +17,7 @@ import topicpromptui.core.ai.grader.graders.ResponseTextExactGrader;
 import topicpromptui.core.ai.grader.graders.ResponseTextLengthGrader;
 import topicpromptui.core.ai.grader.graders.TokensGrader;
 import topicpromptui.core.ai.grader.graders.ToolCallsContainGrader;
-import topicpromptui.core.config.ConfigurationModule;
+import topicpromptui.core.config.ProjectTemplatesConfigurationModule;
 import topicpromptui.core.domain.AnswerType;
 import topicpromptui.core.prompt.PromptFactory;
 import topicpromptui.core.prompt.PromptModule;
@@ -35,8 +35,8 @@ import static topicpromptui.core.ai.TestConsumers.NO_OP;
 import static topicpromptui.core.domain.InteractionType.DEFINITION;
 
 class OpenAiApiIT {
-    private final Injector injector = Guice.createInjector(new OpenAiModule(), new ConfigurationModule(),
-            new StorageModule(), new PromptModule());
+    private final Injector injector = Guice.createInjector(new OpenAiModule(),
+            new ProjectTemplatesConfigurationModule(), new StorageModule(), new PromptModule());
     private final AiApi api = injector.getInstance(Key.get(AiApi.class, Names.named(OPEN_AI)));
     private final PromptFactory promptFactory = injector.getInstance(PromptFactory.class);
 
