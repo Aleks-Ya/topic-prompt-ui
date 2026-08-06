@@ -17,7 +17,7 @@ import topicpromptui.core.ai.grader.graders.FinishReasonGrader;
 import topicpromptui.core.ai.grader.graders.ModelIdGrader;
 import topicpromptui.core.ai.grader.graders.ResponseIdNotEmptyGrader;
 import topicpromptui.core.ai.grader.graders.ResponseTextExactGrader;
-import topicpromptui.core.ai.grader.graders.ResponseTextNotBlankGrader;
+import topicpromptui.core.ai.grader.graders.ResponseTextLengthGrader;
 import topicpromptui.core.ai.grader.graders.TokensGrader;
 import topicpromptui.core.config.ConfigurationModule;
 import topicpromptui.core.domain.AnswerType;
@@ -50,7 +50,7 @@ class GrammarOpenAiApiIT {
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gpt-5.6-luna"),
-                new ResponseTextNotBlankGrader(),
+                new ResponseTextLengthGrader(100, 1000),
                 new EffortLevelGrader("MEDIUM"),
                 new FinishReasonGrader("completed"),
                 new TokensGrader()
@@ -65,7 +65,7 @@ class GrammarOpenAiApiIT {
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gpt-5.6-luna"),
-                new ResponseTextExactGrader("Garbage collector"),
+                new ResponseTextExactGrader("**Garbage** collector"),
                 new EffortLevelGrader("MEDIUM"),
                 new FinishReasonGrader("completed"),
                 new TokensGrader()

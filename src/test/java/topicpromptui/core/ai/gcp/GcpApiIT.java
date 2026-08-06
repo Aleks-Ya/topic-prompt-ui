@@ -14,7 +14,7 @@ import topicpromptui.core.ai.grader.graders.FinishReasonGrader;
 import topicpromptui.core.ai.grader.graders.ModelIdGrader;
 import topicpromptui.core.ai.grader.graders.ResponseIdNotEmptyGrader;
 import topicpromptui.core.ai.grader.graders.ResponseTextExactGrader;
-import topicpromptui.core.ai.grader.graders.ResponseTextNotBlankGrader;
+import topicpromptui.core.ai.grader.graders.ResponseTextLengthGrader;
 import topicpromptui.core.ai.grader.graders.TokensGrader;
 import topicpromptui.core.config.ConfigurationModule;
 import topicpromptui.core.domain.AnswerType;
@@ -45,7 +45,7 @@ class GcpApiIT {
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gemini-3.1-pro-preview"),
-                new ResponseTextNotBlankGrader(),
+                new ResponseTextLengthGrader(100, 1000),
                 new EffortLevelGrader("HIGH"),
                 new FinishReasonGrader("STOP"),
                 new TokensGrader()
@@ -60,7 +60,7 @@ class GcpApiIT {
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gemini-3.1-pro-preview"),
-                new ResponseTextNotBlankGrader(),
+                new ResponseTextLengthGrader(100, 1000),
                 new EffortLevelGrader("HIGH"),
                 new FinishReasonGrader("STOP"),
                 new TokensGrader()

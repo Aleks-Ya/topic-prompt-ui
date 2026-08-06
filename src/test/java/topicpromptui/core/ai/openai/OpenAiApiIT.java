@@ -14,7 +14,7 @@ import topicpromptui.core.ai.grader.graders.FinishReasonGrader;
 import topicpromptui.core.ai.grader.graders.ModelIdGrader;
 import topicpromptui.core.ai.grader.graders.ResponseIdNotEmptyGrader;
 import topicpromptui.core.ai.grader.graders.ResponseTextExactGrader;
-import topicpromptui.core.ai.grader.graders.ResponseTextNotBlankGrader;
+import topicpromptui.core.ai.grader.graders.ResponseTextLengthGrader;
 import topicpromptui.core.ai.grader.graders.TokensGrader;
 import topicpromptui.core.ai.grader.graders.ToolCallsContainGrader;
 import topicpromptui.core.config.ConfigurationModule;
@@ -46,7 +46,7 @@ class OpenAiApiIT {
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gpt-5.6-sol"),
-                new ResponseTextNotBlankGrader(),
+                new ResponseTextLengthGrader(100, 1000),
                 new EffortLevelGrader("XHIGH"),
                 new FinishReasonGrader("completed"),
                 new TokensGrader()
@@ -61,7 +61,7 @@ class OpenAiApiIT {
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gpt-5.6-sol"),
-                new ResponseTextNotBlankGrader(),
+                new ResponseTextLengthGrader(10, 1000),
                 new EffortLevelGrader("XHIGH"),
                 new FinishReasonGrader("completed"),
                 new TokensGrader()
@@ -112,7 +112,7 @@ class OpenAiApiIT {
                 new ToolCallsContainGrader("Context7"),
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gpt-5.6-sol"),
-                new ResponseTextNotBlankGrader(),
+                new ResponseTextLengthGrader(100, 1000),
                 new EffortLevelGrader("XHIGH"),
                 new FinishReasonGrader("completed"),
                 new TokensGrader()

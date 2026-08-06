@@ -14,7 +14,7 @@ import topicpromptui.core.ai.grader.graders.FinishReasonGrader;
 import topicpromptui.core.ai.grader.graders.ModelIdGrader;
 import topicpromptui.core.ai.grader.graders.ResponseIdNotEmptyGrader;
 import topicpromptui.core.ai.grader.graders.ResponseTextExactGrader;
-import topicpromptui.core.ai.grader.graders.ResponseTextNotBlankGrader;
+import topicpromptui.core.ai.grader.graders.ResponseTextLengthGrader;
 import topicpromptui.core.ai.grader.graders.TokensGrader;
 import topicpromptui.core.ai.grader.graders.ToolCallsContainGrader;
 import topicpromptui.core.config.ConfigurationModule;
@@ -46,7 +46,7 @@ class ClaudeApiIT {
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("claude-opus-5"),
-                new ResponseTextNotBlankGrader(),
+                new ResponseTextLengthGrader(100, 2000),
                 new EffortLevelGrader("XHIGH"),
                 new FinishReasonGrader("end_turn"),
                 new TokensGrader()
@@ -61,7 +61,7 @@ class ClaudeApiIT {
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("claude-opus-5"),
-                new ResponseTextNotBlankGrader(),
+                new ResponseTextLengthGrader(100, 1000),
                 new EffortLevelGrader("XHIGH"),
                 new FinishReasonGrader("end_turn"),
                 new TokensGrader()
@@ -112,7 +112,7 @@ class ClaudeApiIT {
                 new ToolCallsContainGrader("Context7"),
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("claude-opus-5"),
-                new ResponseTextNotBlankGrader(),
+                new ResponseTextLengthGrader(100, 3000),
                 new EffortLevelGrader("XHIGH"),
                 new TokensGrader()
         )).isEqualTo(Score.MAX);
