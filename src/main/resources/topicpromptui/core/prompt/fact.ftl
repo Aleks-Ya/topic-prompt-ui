@@ -1,4 +1,4 @@
 <#--noinspection HtmlUnknownTag-->
-<statement-to-fact-check>
+<statement>
 ${question}
-</statement-to-fact-check>
+</statement>

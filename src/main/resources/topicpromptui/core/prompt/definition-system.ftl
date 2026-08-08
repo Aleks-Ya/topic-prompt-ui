@@ -15,9 +15,11 @@ Provide a concise single-sentence definition of the given term in the context of
         Drop side remarks such as `often a model, rule, or script` or `also known as ...`; if such detail is essential,
         fold it into the main clause instead of setting it off.
         <example>
+            <example-topic>Artificial Intelligence</example-topic>
             <example-term>Grader</example-term>
             <wrong>
-                A grader is a component—often a model, rule, or script—that automatically scores an AI system's outputs against expected criteria.
+                A grader is a component—often a model, rule, or script—that automatically scores an AI system's outputs
+                against expected criteria.
             </wrong>
             <right>
                 A grader is a component that automatically scores an AI system's outputs against expected criteria.

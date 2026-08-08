@@ -21,6 +21,10 @@ Check if the sentence or phrase has grammatical mistakes.
         </example>
     </guideline>
     <guideline>
+        Correct grammar only: never swap a term for another one, never rephrase, and never change the meaning of my
+        sentence.
+    </guideline>
+    <guideline>
         Mark every word you changed or added by wrapping it in Markdown bold: **word**.
         <example>
             <user-sentence>How to configure a EC2 instance?</user-sentence>

@@ -22,9 +22,9 @@ class PromptFactoryTest extends BaseTest {
     private static final String GRAMMAR_SYSTEM_TOPIC = "in the context of the topic `Topic A`";
     // The grammar user message is shared by every interaction type's GRAMMAR answer.
     private static final String GRAMMAR_USER_MESSAGE = """
-            <sentence-or-phrase-to-check>
+            <sentence-or-phrase>
             Question A
-            </sentence-or-phrase-to-check>""";
+            </sentence-or-phrase>""";
     private final PromptFactory factory = injector.getInstance(PromptFactory.class);
     private final ConfigModel configModel = injector.getInstance(ConfigModel.class);
 
@@ -65,9 +65,9 @@ class PromptFactoryTest extends BaseTest {
     @Test
     void factUserMessage() {
         var fact = """
-                <statement-to-fact-check>
+                <statement>
                 Question A
-                </statement-to-fact-check>""";
+                </statement>""";
         assertThat(factory.getPrompt(FACT, "Question A", GRAMMAR).orElseThrow()).contains(GRAMMAR_USER_MESSAGE);
         assertThat(factory.getPrompt(FACT, "Question A", OPEN_AI).orElseThrow()).contains(fact);
         assertThat(factory.getPrompt(FACT, "Question A", CLAUDE).orElseThrow()).contains(fact);
