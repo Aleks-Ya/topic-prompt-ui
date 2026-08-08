@@ -15,6 +15,7 @@ import topicpromptui.core.ai.grader.graders.ModelIdGrader;
 import topicpromptui.core.ai.grader.graders.ResponseIdNotEmptyGrader;
 import topicpromptui.core.ai.grader.graders.ResponseTextExactGrader;
 import topicpromptui.core.ai.grader.graders.ResponseTextLengthGrader;
+import topicpromptui.core.ai.grader.graders.ResponseTextNotContainsGrader;
 import topicpromptui.core.ai.grader.graders.TokensGrader;
 import topicpromptui.core.config.ProjectTemplatesConfigurationModule;
 import topicpromptui.core.domain.AnswerType;
@@ -63,7 +64,8 @@ class GcpApiIT {
                 new ResponseTextLengthGrader(10, 500),
                 new EffortLevelGrader("HIGH"),
                 new FinishReasonGrader("STOP"),
-                new TokensGrader()
+                new TokensGrader(),
+                ResponseTextNotContainsGrader.noAsidePunctuation()
         )).isEqualTo(Score.MAX);
     }
 

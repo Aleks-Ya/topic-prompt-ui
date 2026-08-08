@@ -20,6 +20,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 class PromptFactoryTest extends BaseTest {
     private static final String GRAMMAR_SYSTEM = "Check if the sentence or phrase has grammatical mistakes.";
     private static final String GRAMMAR_SYSTEM_TOPIC = "in the context of the topic `Topic A`";
+    // The grammar user message is shared by every interaction type's GRAMMAR answer.
+    private static final String GRAMMAR_USER_MESSAGE = """
+            <sentence-or-phrase-to-check>
+            Question A
+            </sentence-or-phrase-to-check>""";
     private final PromptFactory factory = injector.getInstance(PromptFactory.class);
     private final ConfigModel configModel = injector.getInstance(ConfigModel.class);
 
@@ -27,17 +32,11 @@ class PromptFactoryTest extends BaseTest {
 
     @Test
     void questionUserMessage() {
-        var grammar = """
-                Sentence or phrase to check:
-                ```
-                Question A
-                ```""";
         var question = """
-                Question:
-                ```
+                <question>
                 Question A
-                ```""";
-        assertThat(factory.getPrompt(QUESTION, "Question A", GRAMMAR).orElseThrow()).contains(grammar);
+                </question>""";
+        assertThat(factory.getPrompt(QUESTION, "Question A", GRAMMAR).orElseThrow()).contains(GRAMMAR_USER_MESSAGE);
         assertThat(factory.getPrompt(QUESTION, "Question A", OPEN_AI).orElseThrow()).contains(question);
         assertThat(factory.getPrompt(QUESTION, "Question A", CLAUDE).orElseThrow()).contains(question);
         assertThat(factory.getPrompt(QUESTION, "Question A", GCP).orElseThrow()).contains(question);
@@ -45,12 +44,11 @@ class PromptFactoryTest extends BaseTest {
 
     @Test
     void definitionUserMessage() {
-        var definition = "Term: `Question A`";
-        assertThat(factory.getPrompt(DEFINITION, "Question A", GRAMMAR).orElseThrow()).contains("""
-                Sentence or phrase to check:
-                ```
+        var definition = """
+                <term>
                 Question A
-                ```""");
+                </term>""";
+        assertThat(factory.getPrompt(DEFINITION, "Question A", GRAMMAR).orElseThrow()).contains(GRAMMAR_USER_MESSAGE);
         assertThat(factory.getPrompt(DEFINITION, "Question A", OPEN_AI).orElseThrow()).contains(definition);
         assertThat(factory.getPrompt(DEFINITION, "Question A", CLAUDE).orElseThrow()).contains(definition);
         assertThat(factory.getPrompt(DEFINITION, "Question A", GCP).orElseThrow()).contains(definition);
@@ -58,11 +56,7 @@ class PromptFactoryTest extends BaseTest {
 
     @Test
     void grammarUserMessage() {
-        assertThat(factory.getPrompt(InteractionType.GRAMMAR, "Question A", GRAMMAR).orElseThrow()).contains("""
-                Sentence or phrase to check:
-                ```
-                Question A
-                ```""");
+        assertThat(factory.getPrompt(InteractionType.GRAMMAR, "Question A", GRAMMAR).orElseThrow()).contains(GRAMMAR_USER_MESSAGE);
         assertThat(factory.getPrompt(InteractionType.GRAMMAR, "Question A", OPEN_AI)).isEmpty();
         assertThat(factory.getPrompt(InteractionType.GRAMMAR, "Question A", CLAUDE)).isEmpty();
         assertThat(factory.getPrompt(InteractionType.GRAMMAR, "Question A", GCP)).isEmpty();
@@ -71,15 +65,10 @@ class PromptFactoryTest extends BaseTest {
     @Test
     void factUserMessage() {
         var fact = """
-                Statement to fact-check:
-                ```
+                <statement-to-fact-check>
                 Question A
-                ```""";
-        assertThat(factory.getPrompt(FACT, "Question A", GRAMMAR).orElseThrow()).contains("""
-                Sentence or phrase to check:
-                ```
-                Question A
-                ```""");
+                </statement-to-fact-check>""";
+        assertThat(factory.getPrompt(FACT, "Question A", GRAMMAR).orElseThrow()).contains(GRAMMAR_USER_MESSAGE);
         assertThat(factory.getPrompt(FACT, "Question A", OPEN_AI).orElseThrow()).contains(fact);
         assertThat(factory.getPrompt(FACT, "Question A", CLAUDE).orElseThrow()).contains(fact);
         assertThat(factory.getPrompt(FACT, "Question A", GCP).orElseThrow()).contains(fact);
@@ -91,9 +80,9 @@ class PromptFactoryTest extends BaseTest {
     void questionSystemPrompt() {
         var question = """
                 You answer the user's questions in the context of the topic `Topic A`.
-                Do not repeat the question in your answer.
-                Avoid repeating the topic in your answer.
-                Format your answer into Markdown.""";
+
+                <guidelines>
+                    <guideline>Format your answer into Markdown</guideline>""";
         assertThat(factory.getSystemPrompt(QUESTION, "Topic A", GRAMMAR).orElseThrow()).contains(GRAMMAR_SYSTEM).contains(GRAMMAR_SYSTEM_TOPIC);
         assertThat(factory.getSystemPrompt(QUESTION, "Topic A", OPEN_AI).orElseThrow()).contains(question);
         assertThat(factory.getSystemPrompt(QUESTION, "Topic A", CLAUDE).orElseThrow()).contains(question);
@@ -104,12 +93,15 @@ class PromptFactoryTest extends BaseTest {
     void definitionSystemPrompt() {
         var definition = """
                 Provide a concise single-sentence definition of the given term in the context of the topic `Topic A`.
-                Format your answer as `[the term] is/are`.
-                Do not repeat the context in your answer if possible.""";
+
+                <guidelines>
+                    <guideline>Format your answer as `[the term] is/are`</guideline>
+                    <guideline>Do not repeat the context in your answer if possible</guideline>""";
+        var noAsides = "Do not use em dashes (—), en dashes (–), double hyphens (--), parentheses or brackets anywhere in the answer.";
         assertThat(factory.getSystemPrompt(DEFINITION, "Topic A", GRAMMAR).orElseThrow()).contains(GRAMMAR_SYSTEM).contains(GRAMMAR_SYSTEM_TOPIC);
-        assertThat(factory.getSystemPrompt(DEFINITION, "Topic A", OPEN_AI).orElseThrow()).contains(definition);
-        assertThat(factory.getSystemPrompt(DEFINITION, "Topic A", CLAUDE).orElseThrow()).contains(definition);
-        assertThat(factory.getSystemPrompt(DEFINITION, "Topic A", GCP).orElseThrow()).contains(definition);
+        assertThat(factory.getSystemPrompt(DEFINITION, "Topic A", OPEN_AI).orElseThrow()).contains(definition).contains(noAsides).contains("</guidelines>");
+        assertThat(factory.getSystemPrompt(DEFINITION, "Topic A", CLAUDE).orElseThrow()).contains(definition).contains(noAsides).contains("</guidelines>");
+        assertThat(factory.getSystemPrompt(DEFINITION, "Topic A", GCP).orElseThrow()).contains(definition).contains(noAsides).contains("</guidelines>");
     }
 
     @Test
@@ -131,7 +123,10 @@ class PromptFactoryTest extends BaseTest {
 
     @Test
     void userModifiesTemplate() throws IOException {
-        var expDefaultPrompt = "Term: `Question A`";
+        var expDefaultPrompt = """
+                <term>
+                Question A
+                </term>""";
 
         var templateFile = configModel.getAppDataPath().resolve("templates").resolve("definition.ftl");
         assertThat(factory.getPrompt(DEFINITION, "Question A", GCP).orElseThrow()).contains(expDefaultPrompt);

@@ -1,4 +1,4 @@
-Sentence or phrase to check:
-```
+<#--noinspection HtmlUnknownTag-->
+<sentence-or-phrase-to-check>
 ${question}
-```
+</sentence-or-phrase-to-check>
