@@ -1,21 +1,21 @@
 package topicpromptui.ui.model.question;
 
-import topicpromptui.core.ai.AiApi;
-import topicpromptui.core.ai.AiResponse;
-import topicpromptui.core.ai.ConversationTurn;
-import topicpromptui.core.prompt.PromptFactory;
-import topicpromptui.core.sound.SoundService;
-import topicpromptui.core.domain.Answer;
-import topicpromptui.core.domain.AnswerType;
-import topicpromptui.core.domain.InteractionId;
-import topicpromptui.ui.model.storage.StorageModel;
-import topicpromptui.core.util.Mdc;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import topicpromptui.core.ai.AiApi;
+import topicpromptui.core.ai.AiResponse;
+import topicpromptui.core.ai.ConversationTurn;
+import topicpromptui.core.domain.Answer;
+import topicpromptui.core.domain.AnswerType;
+import topicpromptui.core.domain.InteractionId;
+import topicpromptui.core.prompt.PromptFactory;
+import topicpromptui.core.sound.SoundService;
+import topicpromptui.core.util.Mdc;
+import topicpromptui.ui.model.storage.StorageModel;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -26,17 +26,16 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
-import static topicpromptui.core.ai.ConversationTurn.Speaker.USER;
-
+import static java.util.concurrent.CompletableFuture.runAsync;
 import static topicpromptui.core.ai.AiModule.CLAUDE_AI;
 import static topicpromptui.core.ai.AiModule.GCP_AI;
 import static topicpromptui.core.ai.AiModule.OPEN_AI;
 import static topicpromptui.core.ai.AiModule.OPEN_AI_GRAMMAR;
+import static topicpromptui.core.ai.ConversationTurn.Speaker.USER;
 import static topicpromptui.core.domain.AnswerState.FAIL;
 import static topicpromptui.core.domain.AnswerState.SENT;
 import static topicpromptui.core.domain.AnswerState.SUCCESS;
 import static topicpromptui.core.domain.AnswerType.GRAMMAR;
-import static java.util.concurrent.CompletableFuture.runAsync;
 
 @Singleton
 class QuestionModelImpl implements QuestionModel {
@@ -60,14 +59,16 @@ class QuestionModelImpl implements QuestionModel {
     private final AiApi claudeApi;
     private final SoundService soundService;
     private final FormatConverter formatConverter;
+    private final GrammarDiffMarker grammarDiffMarker;
     private final FollowUpHistoryBuilder followUpHistoryBuilder;
 
     @Inject
     QuestionModelImpl(StorageModel storage, PromptFactory promptFactory,
-                       @Named(OPEN_AI) AiApi openAiApi, @Named(OPEN_AI_GRAMMAR) AiApi openAiGrammarApi,
-                       @Named(GCP_AI) AiApi gcpApi, @Named(CLAUDE_AI) AiApi claudeApi,
-                       SoundService soundService, FormatConverter formatConverter,
-                       FollowUpHistoryBuilder followUpHistoryBuilder) {
+                      @Named(OPEN_AI) AiApi openAiApi, @Named(OPEN_AI_GRAMMAR) AiApi openAiGrammarApi,
+                      @Named(GCP_AI) AiApi gcpApi, @Named(CLAUDE_AI) AiApi claudeApi,
+                      SoundService soundService, FormatConverter formatConverter,
+                      GrammarDiffMarker grammarDiffMarker,
+                      FollowUpHistoryBuilder followUpHistoryBuilder) {
         this.storage = storage;
         this.promptFactory = promptFactory;
         this.openAiApi = openAiApi;
@@ -76,6 +77,7 @@ class QuestionModelImpl implements QuestionModel {
         this.claudeApi = claudeApi;
         this.soundService = soundService;
         this.formatConverter = formatConverter;
+        this.grammarDiffMarker = grammarDiffMarker;
         this.followUpHistoryBuilder = followUpHistoryBuilder;
     }
 
@@ -111,7 +113,7 @@ class QuestionModelImpl implements QuestionModel {
                 case GRAMMAR -> throw new IllegalArgumentException(
                         "Grammar checks don't support follow-up conversations");
             };
-        }, "The follow-up answer request finished.");
+        }, UnaryOperator.identity(), "The follow-up answer request finished.");
     }
 
     @Override
@@ -138,12 +140,15 @@ class QuestionModelImpl implements QuestionModel {
                             .withState(SENT),
                     callback);
             var turns = List.of(new ConversationTurn(USER, prompt));
+            UnaryOperator<String> postProcessMd = answerType == GRAMMAR
+                    ? md -> grammarDiffMarker.markChanges(interaction.question(), md)
+                    : UnaryOperator.identity();
             sendAsync(interactionId, answerType, callback, progressHtml, onTextDelta -> switch (answerType) {
                 case GCP -> gcpApi.send(systemPrompt, turns, onTextDelta);
                 case CLAUDE -> claudeApi.send(systemPrompt, turns, onTextDelta);
                 case OPEN_AI -> openAiApi.send(systemPrompt, turns, onTextDelta);
                 case GRAMMAR -> openAiGrammarApi.send(systemPrompt, turns, onTextDelta);
-            }, "The short answer request finished.");
+            }, postProcessMd, "The short answer request finished.");
         } else {
             log.info("The short answer was skipped.");
         }
@@ -151,14 +156,15 @@ class QuestionModelImpl implements QuestionModel {
 
     private void sendAsync(InteractionId interactionId, AnswerType answerType, Runnable callback,
                            Consumer<String> progressHtml, Function<Consumer<String>, AiResponse> send,
-                           String finishedMessage) {
+                           UnaryOperator<String> postProcessMd, String finishedMessage) {
         runAsync(() -> Mdc.run(interactionId.id(), () -> {
             log.trace("sendAsync");
             var throttler = new ProgressThrottler(progressHtml);
             var response = send.apply(throttler::onTextDelta);
-            var answerHtml = formatConverter.markdownToHtml(response.text());
+            var answerMd = postProcessMd.apply(response.text());
+            var answerHtml = formatConverter.markdownToHtml(answerMd);
             updateAnswer(interactionId, answerType, answer ->
-                    answer.withAnswerMd(response.text()).withAnswerHtml(answerHtml)
+                    answer.withAnswerMd(answerMd).withAnswerHtml(answerHtml)
                             .withResponseId(response.responseId())
                             .withModelInfo(response.modelId(), response.effortLevel(), response.finishReason(),
                                     response.inputTokens(), response.outputTokens(), response.totalTokens())
@@ -213,7 +219,7 @@ class QuestionModelImpl implements QuestionModel {
     }
 
     private synchronized void updateAnswer(InteractionId interactionId, AnswerType answerType,
-            UnaryOperator<Answer> update, Runnable callback) {
+                                           UnaryOperator<Answer> update, Runnable callback) {
         log.trace("updateAnswer: interactionId={}, answerType={}", interactionId, answerType);
         storage.updateInteraction(interactionId, interaction ->
                 interaction.withAnswer(update.apply(interaction.getAnswer(answerType).orElseThrow())));

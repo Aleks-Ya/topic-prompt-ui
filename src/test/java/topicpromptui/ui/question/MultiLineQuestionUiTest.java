@@ -53,9 +53,10 @@ class MultiLineQuestionUiTest extends BaseTopicPromptUiTest {
         var questionLine2 = "Question line 2";
         var questionLine3 = "Question line 3";
         overWrite(questionLine1).write("\n").write(questionLine2).write("\n").write(questionLine3);
+        var questionText = questionLine1 + "\n" + questionLine2 + "\n" + questionLine3;
 
         gptApi.clear()
-                .putGrammarResponse(I1.GRAMMAR_HTML, ZERO)
+                .putGrammarResponse(questionText, ZERO)
                 .putOpenAiResponse(I1.OPEN_AI_HTML, ZERO);
         claudeApi.clear().putClaudeResponse(I1.CLAUDE_HTML, ZERO);
         gcpApi.clear().putGcpResponse(I1.GCP_HTML, ZERO);
@@ -64,7 +65,6 @@ class MultiLineQuestionUiTest extends BaseTopicPromptUiTest {
         gptApi.waitUntilSent(2);
         claudeApi.waitUntilSent(1);
         gcpApi.waitUntilSent(1);
-        var questionText = questionLine1 + "\n" + questionLine2 + "\n" + questionLine3;
         assertion()
                 .focus(question().questionButton())
                 .historySize(1, 1)
@@ -80,7 +80,7 @@ class MultiLineQuestionUiTest extends BaseTopicPromptUiTest {
                 .questionStyle(QUESTION_STYLE_EMPTY)
                 .modelEditedQuestion(questionText)
                 .modelIsEnteringNewQuestion(false)
-                .grammarA().text(I1.EXP_GRAMMAR_HTML_BODY)
+                .grammarA().text("<p>" + questionText + "</p>\n")
                 .openAiA().text(I1.EXP_OPEN_AI_HTML_BODY)
                 .claudeA().text(I1.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I1.EXP_GCP_HTML_BODY)

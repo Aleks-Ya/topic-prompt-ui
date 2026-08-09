@@ -51,7 +51,7 @@ class RegenerateQuestionUiTest extends BaseTopicPromptUiTest {
                 .assertApp();
 
         gptApi.clear()
-                .putGrammarResponse(I2.GRAMMAR_HTML, ZERO)
+                .putGrammarResponse(I1.GRAMMAR_ANSWER, ZERO)
                 .putOpenAiResponse(I2.OPEN_AI_HTML, ZERO);
         claudeApi.clear().putClaudeResponse(I2.CLAUDE_HTML, ZERO);
         gcpApi.clear().putGcpResponse(I2.GCP_HTML, ZERO);
@@ -74,7 +74,7 @@ class RegenerateQuestionUiTest extends BaseTopicPromptUiTest {
                 .questionStyle(QUESTION_STYLE_EMPTY)
                 .modelEditedQuestion(I1.QUESTION)
                 .modelIsEnteringNewQuestion(false)
-                .grammarA().text(I2.EXP_GRAMMAR_HTML_BODY)
+                .grammarA().text(I1.EXP_GRAMMAR_ANSWER_BODY)
                 .openAiA().text(I2.EXP_OPEN_AI_HTML_BODY)
                 .claudeA().text(I2.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I2.EXP_GCP_HTML_BODY)

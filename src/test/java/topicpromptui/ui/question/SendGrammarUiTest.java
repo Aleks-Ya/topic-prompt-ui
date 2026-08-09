@@ -48,7 +48,7 @@ class SendGrammarUiTest extends BaseTopicPromptUiTest {
                 .answerCircleColors(GREEN, GREEN, RED, GREEN)
                 .assertApp();
 
-        gptApi.clear().putGrammarResponse("Grammar answer 4", ZERO);
+        gptApi.clear().putGrammarResponse("Question four", ZERO);
         clickOn(question().textArea());
         overWrite("Question 4");
         clickOn(question().grammarButton());
@@ -67,7 +67,7 @@ class SendGrammarUiTest extends BaseTopicPromptUiTest {
                 .questionStyle(QUESTION_STYLE_EDITED)
                 .modelEditedQuestion("Question 4")
                 .modelIsEnteringNewQuestion(false)
-                .grammarA().text("<p>Grammar answer 4</p>\n")
+                .grammarA().text("<p>Question <strong>four</strong></p>\n")
                 .openAiA().text(I0.OPEN_AI_HTML)
                 .claudeA().text(I0.CLAUDE_HTML)
                 .gcpA().text(I0.GCP_HTML)

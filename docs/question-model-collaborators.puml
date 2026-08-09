@@ -25,6 +25,9 @@ interface SoundService {
 interface FormatConverter {
     markdownToHtml()
 }
+interface GrammarDiffMarker {
+    markChanges()
+}
 interface FollowUpHistoryBuilder {
     buildHistory()
 }
@@ -34,6 +37,7 @@ QuestionModel --> PromptFactory
 QuestionModel "1" --> "4" AiApi: GRAMMAR, OPEN_AI, CLAUDE, GCP
 QuestionModel --> SoundService
 QuestionModel --> FormatConverter
+QuestionModel --> GrammarDiffMarker: GRAMMAR only
 QuestionModel --> FollowUpHistoryBuilder
 
 FollowUpHistoryBuilder --> StorageModel

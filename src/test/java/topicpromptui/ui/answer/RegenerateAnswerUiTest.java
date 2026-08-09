@@ -1,15 +1,15 @@
 package topicpromptui.ui.answer;
 
+import org.junit.jupiter.api.Test;
 import topicpromptui.BaseTopicPromptUiTest;
 import topicpromptui.ui.TestingData.I1;
 import topicpromptui.ui.TestingData.I2;
 import topicpromptui.ui.TestingData.I3;
-import org.junit.jupiter.api.Test;
 
-import static topicpromptui.ui.viewmodel.question.QuestionStyle.QUESTION_STYLE_EMPTY;
 import static java.time.Duration.ZERO;
 import static javafx.scene.paint.Color.GREEN;
 import static javafx.scene.paint.Color.RED;
+import static topicpromptui.ui.viewmodel.question.QuestionStyle.QUESTION_STYLE_EMPTY;
 
 class RegenerateAnswerUiTest extends BaseTopicPromptUiTest {
 
@@ -44,13 +44,13 @@ class RegenerateAnswerUiTest extends BaseTopicPromptUiTest {
                 .answerCircleColors(GREEN, GREEN, RED, GREEN)
 
                 .work("Wait for Regenerate Grammar Answer Response", () -> {
-                    gptApi.clear().putGrammarResponse(I3.GRAMMAR_HTML, ZERO);
+                    gptApi.clear().putGrammarResponse(I2.GRAMMAR_ANSWER, ZERO);
                     clickOn(grammarAnswer().regenerateButton());
                     gptApi.waitUntilSent(1);
                 })
                 .focus(grammarAnswer().regenerateButton())
                 .historyItems(storage.readInteraction(I2.INTERACTION.id()).orElseThrow(), I1.INTERACTION)
-                .grammarA().text(I3.EXP_GRAMMAR_HTML_BODY)
+                .grammarA().text(I2.EXP_GRAMMAR_ANSWER_BODY)
 
                 .work("regenerateOpenAiAnswer", () -> {
                     gptApi.clear().putOpenAiResponse(I3.OPEN_AI_HTML, ZERO);

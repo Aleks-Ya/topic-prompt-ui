@@ -20,6 +20,7 @@ module TopicPromptUi.main {
     requires org.controlsfx.controls;
     requires com.google.common;
     requires freemarker;
+    requires io.github.javadiffutils;
 
     exports topicpromptui;
     exports topicpromptui.ui.view;

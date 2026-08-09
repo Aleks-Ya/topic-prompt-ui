@@ -40,7 +40,9 @@ public class TestingData {
         public static final String OPEN_AI_HTML = "OpenAI answer HTML 1";
         public static final String CLAUDE_HTML = "Claude answer HTML 1";
         public static final String GCP_HTML = "GCP answer HTML 1";
-        public static final String EXP_GRAMMAR_HTML_BODY = wrapExpectedWebViewContent(GRAMMAR_HTML);
+        /** What the grammar check answers when the question has no mistakes: the question itself, unchanged. */
+        public static final String GRAMMAR_ANSWER = QUESTION;
+        public static final String EXP_GRAMMAR_ANSWER_BODY = wrapExpectedWebViewContent(GRAMMAR_ANSWER);
         public static final String EXP_OPEN_AI_HTML_BODY = wrapExpectedWebViewContent(OPEN_AI_HTML);
         public static final String EXP_CLAUDE_HTML_BODY = wrapExpectedWebViewContent(CLAUDE_HTML);
         public static final String EXP_GCP_HTML_BODY = wrapExpectedWebViewContent(GCP_HTML);
@@ -60,7 +62,9 @@ public class TestingData {
         public static final String OPEN_AI_HTML = "OpenAI answer HTML 2";
         public static final String CLAUDE_HTML = "Claude answer HTML 2".repeat(CLAUDE_ANSWER_MULTIPLIER);
         public static final String GCP_HTML = "GCP answer HTML 2";
-        public static final String EXP_GRAMMAR_HTML_BODY = wrapExpectedWebViewContent(I2.GRAMMAR_HTML);
+        /** What the grammar check answers when the question has no mistakes: the question itself, unchanged. */
+        public static final String GRAMMAR_ANSWER = QUESTION;
+        public static final String EXP_GRAMMAR_ANSWER_BODY = wrapExpectedWebViewContent(GRAMMAR_ANSWER);
         public static final String EXP_OPEN_AI_HTML_BODY = wrapExpectedWebViewContent(I2.OPEN_AI_HTML);
         public static final String EXP_CLAUDE_HTML_BODY = wrapExpectedWebViewContent(I2.CLAUDE_HTML);
         public static final String EXP_GCP_HTML_BODY = wrapExpectedWebViewContent(I2.GCP_HTML);
@@ -80,7 +84,6 @@ public class TestingData {
         public static final String OPEN_AI_HTML = "OpenAI answer HTML 3";
         public static final String CLAUDE_HTML = "Claude answer HTML 3".repeat(CLAUDE_ANSWER_MULTIPLIER);
         public static final String GCP_HTML = "GCP answer HTML 3";
-        public static final String EXP_GRAMMAR_HTML_BODY = wrapExpectedWebViewContent(I3.GRAMMAR_HTML);
         public static final String EXP_OPEN_AI_HTML_BODY = wrapExpectedWebViewContent(I3.OPEN_AI_HTML);
         public static final String EXP_CLAUDE_HTML_BODY = wrapExpectedWebViewContent(I3.CLAUDE_HTML);
         public static final String EXP_GCP_HTML_BODY = wrapExpectedWebViewContent(I3.GCP_HTML);

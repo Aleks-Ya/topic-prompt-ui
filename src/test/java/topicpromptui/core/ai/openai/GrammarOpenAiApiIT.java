@@ -65,7 +65,7 @@ class GrammarOpenAiApiIT {
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gpt-5.6-luna"),
-                new ResponseTextExactGrader("**Garbage** collector"),
+                new ResponseTextExactGrader("Garbage collector"),
                 new EffortLevelGrader("MEDIUM"),
                 new FinishReasonGrader("completed"),
                 new TokensGrader()
@@ -105,7 +105,7 @@ class GrammarOpenAiApiIT {
 
     static Stream<Arguments> questionGrammarCases() {
         return Stream.of(
-                Arguments.of("incorrect", "What's latest Java version?", "What's **the** latest Java version?"),
+                Arguments.of("incorrect", "What's latest Java version?", "What's the latest Java version?"),
                 Arguments.of("correct", "What's the latest Java version?", "Correct"),
                 Arguments.of("howTo", "How to prevent thread locks in an application?", "Correct"),
                 Arguments.of("capitalLetters", "In which Java version was the Garbage Collector introduced?", "Correct")

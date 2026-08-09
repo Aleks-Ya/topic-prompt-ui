@@ -47,7 +47,7 @@ class SendFactUiTest extends BaseTopicPromptUiTest {
                 .assertApp();
 
         gptApi.clear()
-                .putGrammarResponse("Grammar answer 4", ZERO)
+                .putGrammarResponse("Question 4", ZERO)
                 .putFactResponse("Fact answer 4", ZERO);
         claudeApi.clear().putFactResponse("Fact answer 4", ZERO);
         gcpApi.clear().putFactResponse("Fact answer 4", ZERO);
@@ -69,7 +69,7 @@ class SendFactUiTest extends BaseTopicPromptUiTest {
                 .questionStyle(QUESTION_STYLE_EDITED)
                 .modelEditedQuestion("Question 4")
                 .modelIsEnteringNewQuestion(false)
-                .grammarA().text("<p>Grammar answer 4</p>\n")
+                .grammarA().text("<p>Question 4</p>\n")
                 .openAiA().text("<p>Fact answer 4</p>\n")
                 .claudeA().text("<p>Fact answer 4</p>\n")
                 .gcpA().text("<p>Fact answer 4</p>\n")

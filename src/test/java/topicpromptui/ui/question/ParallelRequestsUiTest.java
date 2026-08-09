@@ -80,7 +80,7 @@ class ParallelRequestsUiTest extends BaseTopicPromptUiTest {
                 .assertApp();
 
         gptApi
-                .putGrammarResponse(I1.GRAMMAR_HTML, ofMillis(10000))
+                .putGrammarResponse(I1.GRAMMAR_ANSWER, ofMillis(10000))
                 .putOpenAiResponse(I1.OPEN_AI_HTML, ofMillis(10500));
         claudeApi.putClaudeResponse(I1.CLAUDE_HTML, ofMillis(11000));
         gcpApi.putGcpResponse(I1.GCP_HTML, ofMillis(11500));
@@ -136,7 +136,7 @@ class ParallelRequestsUiTest extends BaseTopicPromptUiTest {
                 .assertApp();
 
         gptApi
-                .putGrammarResponse(I2.GRAMMAR_HTML, ofMillis(1000))
+                .putGrammarResponse(I2.GRAMMAR_ANSWER, ofMillis(1000))
                 .putOpenAiResponse(I2.OPEN_AI_HTML, ofMillis(1500));
         claudeApi.putClaudeResponse(I2.CLAUDE_HTML, ofMillis(2000));
         gcpApi.putGcpResponse(I2.GCP_HTML, ofMillis(2500));
@@ -182,7 +182,7 @@ class ParallelRequestsUiTest extends BaseTopicPromptUiTest {
                 .questionStyle(QUESTION_STYLE_EDITED)
                 .modelEditedQuestion(I2.QUESTION)
                 .modelIsEnteringNewQuestion(false)
-                .grammarA().text(I2.EXP_GRAMMAR_HTML_BODY)
+                .grammarA().text(I2.EXP_GRAMMAR_ANSWER_BODY)
                 .openAiA().text(I2.EXP_OPEN_AI_HTML_BODY)
                 .claudeA().text(I2.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I2.EXP_GCP_HTML_BODY)
@@ -209,7 +209,7 @@ class ParallelRequestsUiTest extends BaseTopicPromptUiTest {
                 .questionStyle(QUESTION_STYLE_EDITED)
                 .modelEditedQuestion(I2.QUESTION)
                 .modelIsEnteringNewQuestion(false)
-                .grammarA().text(I2.EXP_GRAMMAR_HTML_BODY)
+                .grammarA().text(I2.EXP_GRAMMAR_ANSWER_BODY)
                 .openAiA().text(I2.EXP_OPEN_AI_HTML_BODY)
                 .claudeA().text(I2.EXP_CLAUDE_HTML_BODY)
                 .gcpA().text(I2.EXP_GCP_HTML_BODY)

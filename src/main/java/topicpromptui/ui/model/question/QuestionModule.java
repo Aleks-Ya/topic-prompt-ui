@@ -9,6 +9,7 @@ public class QuestionModule extends AbstractModule {
         install(new SoundModule());
         bind(QuestionModel.class).to(QuestionModelImpl.class);
         bind(FormatConverter.class);
+        bind(GrammarDiffMarker.class);
         bind(FollowUpHistoryBuilder.class);
     }
 }
