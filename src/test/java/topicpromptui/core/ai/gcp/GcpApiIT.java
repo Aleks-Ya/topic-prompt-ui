@@ -17,6 +17,7 @@ import topicpromptui.core.ai.grader.graders.ResponseTextExactGrader;
 import topicpromptui.core.ai.grader.graders.ResponseTextLengthGrader;
 import topicpromptui.core.ai.grader.graders.ResponseTextNotContainsGrader;
 import topicpromptui.core.ai.grader.graders.TokensGrader;
+import topicpromptui.core.ai.grader.graders.ToolCallsContainGrader;
 import topicpromptui.core.config.ProjectTemplatesConfigurationModule;
 import topicpromptui.core.domain.AnswerType;
 import topicpromptui.core.prompt.PromptFactory;
@@ -40,13 +41,15 @@ class GcpApiIT {
     private final AiApi api = injector.getInstance(Key.get(AiApi.class, Names.named(GCP_AI)));
     private final PromptFactory promptFactory = injector.getInstance(PromptFactory.class);
 
+    // Lower bound relaxed from 100 to 10: attaching the web tools tightens Gemini's answers even
+    // when it doesn't search (~136-173 chars before, ~62 after).
     @Test
     void send() {
         var response = api.send(null, List.of(new ConversationTurn(USER, "Give me the name of the Java creator")), NO_OP);
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gemini-3.1-pro-preview"),
-                new ResponseTextLengthGrader(100, 500),
+                new ResponseTextLengthGrader(10, 500),
                 new EffortLevelGrader("HIGH"),
                 new FinishReasonGrader("STOP"),
                 new TokensGrader()
@@ -96,6 +99,23 @@ class GcpApiIT {
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gemini-3.1-pro-preview"),
                 new ResponseTextExactGrader(String.join("", deltas)),
+                new EffortLevelGrader("HIGH"),
+                new FinishReasonGrader("STOP"),
+                new TokensGrader()
+        )).isEqualTo(Score.MAX);
+    }
+
+    @Test
+    void sendWithWebSearch() {
+        // Instructing Gemini to search is not enough - asked something it believes it knows, it
+        // answers from memory and returns no groundingMetadata. Hence the time-bound prompt.
+        var response = api.send(null, List.of(new ConversationTurn(USER,
+                "What are today's top technology news headlines? List three.")), NO_OP);
+        assertThat(Grader.combine(response,
+                new ToolCallsContainGrader("web_search"),
+                new ResponseIdNotEmptyGrader(),
+                new ModelIdGrader("gemini-3.1-pro-preview"),
+                new ResponseTextLengthGrader(50, 4000),
                 new EffortLevelGrader("HIGH"),
                 new FinishReasonGrader("STOP"),
                 new TokensGrader()

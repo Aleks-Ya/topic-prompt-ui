@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 record RequestBody(String model, Integer max_tokens, String system, List<Message> messages,
-                   OutputConfig output_config, Boolean stream, List<McpServer> mcp_servers, List<McpToolset> tools) {
+                   OutputConfig output_config, Boolean stream, List<McpServer> mcp_servers, List<Tool> tools) {
 }
 
 record Message(String role, String content) {
@@ -16,7 +16,9 @@ record Message(String role, String content) {
 record McpServer(String type, String name, String url, String authorization_token) {
 }
 
-record McpToolset(String type, String mcp_server_name) {
+// Covers both tool shapes: Gson skips nulls, so an mcp_toolset entry omits "name" and a web tool
+// omits "mcp_server_name".
+record Tool(String type, String name, String mcp_server_name) {
 }
 
 record OutputConfig(Effort effort) {

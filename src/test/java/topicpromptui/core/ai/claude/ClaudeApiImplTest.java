@@ -214,6 +214,66 @@ class ClaudeApiImplTest {
     }
 
     @Test
+    void assembleCapturesServerToolUseAsToolCall() {
+        // Same input_json_delta shape as mcp_tool_use but with no server_name, so the display line
+        // carries no server prefix.
+        var deltas = new ArrayList<String>();
+        var response = api.assemble(sse(
+                "message_start", """
+                        {"type": "message_start", "message": {"id": "msg_5", "usage": {"input_tokens": 40}}}""",
+                "content_block_start", """
+                        {"type": "content_block_start", "index": 0, "content_block": \
+                        {"type": "server_tool_use", "name": "web_search"}}""",
+                "content_block_delta", """
+                        {"type": "content_block_delta", "index": 0, \
+                        "delta": {"type": "input_json_delta", "partial_json": "{\\"query\\":\\"java 25 lts\\"}"}}""",
+                "content_block_stop", """
+                        {"type": "content_block_stop", "index": 0}""",
+                "content_block_start", """
+                        {"type": "content_block_start", "index": 1, \
+                        "content_block": {"type": "web_search_tool_result", "tool_use_id": "srvtoolu_1"}}""",
+                "content_block_stop", """
+                        {"type": "content_block_stop", "index": 1}""",
+                "content_block_delta", """
+                        {"type": "content_block_delta", "index": 2, \
+                        "delta": {"type": "text_delta", "text": "Java 25 is the latest LTS."}}""",
+                "message_delta", """
+                        {"type": "message_delta", "delta": {"stop_reason": "end_turn"}, "usage": {"output_tokens": 25}}"""
+        ), deltas::add);
+        assertThat(deltas).containsExactly("Java 25 is the latest LTS.");
+        assertThat(response.text()).isEqualTo("Java 25 is the latest LTS.");
+        assertThat(response.toolCalls()).containsExactly("web_search {\"query\":\"java 25 lts\"}");
+    }
+
+    @Test
+    void buildRequestBodyAttachesWebToolsWhenEnabled() {
+        var enabled = new ClaudeApiImpl("claude-opus", null, true);
+        var body = enabled.buildRequestBody("sys", List.of(new ConversationTurn(USER, "hi")), null);
+        // No Context7 key: web tools still attach, and no MCP server is declared (so no beta header).
+        assertThat(body.mcp_servers()).isNull();
+        assertThat(body.tools()).satisfiesExactly(
+                tool -> {
+                    assertThat(tool.type()).isEqualTo("web_search_20260209");
+                    assertThat(tool.name()).isEqualTo("web_search");
+                    assertThat(tool.mcp_server_name()).isNull();
+                },
+                tool -> {
+                    assertThat(tool.type()).isEqualTo("web_fetch_20260209");
+                    assertThat(tool.name()).isEqualTo("web_fetch");
+                    assertThat(tool.mcp_server_name()).isNull();
+                });
+    }
+
+    @Test
+    void buildRequestBodyCombinesWebToolsAndContext7() {
+        var enabled = new ClaudeApiImpl("claude-opus", null, true);
+        var body = enabled.buildRequestBody("sys", List.of(new ConversationTurn(USER, "hi")), "ctx7-key");
+        assertThat(body.mcp_servers()).hasSize(1);
+        assertThat(body.tools()).extracting(Tool::type)
+                .containsExactly("web_search_20260209", "web_fetch_20260209", "mcp_toolset");
+    }
+
+    @Test
     void buildRequestBodyAttachesContext7WhenKeyPresent() {
         var body = api.buildRequestBody("sys", List.of(new ConversationTurn(USER, "hi")), "ctx7-key");
         assertThat(body.system()).isEqualTo("sys");
@@ -241,7 +301,7 @@ class ClaudeApiImplTest {
 
     @Test
     void context7KeyNullWhenDisabled() {
-        // context7Enabled=false on this api instance; the config is never consulted.
+        // toolsEnabled=false on this api instance; the config is never consulted.
         assertThat(api.context7Key()).isNull();
     }
 

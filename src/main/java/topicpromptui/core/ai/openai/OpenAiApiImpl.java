@@ -17,8 +17,10 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -31,21 +33,23 @@ class OpenAiApiImpl implements AiApi {
     private static final String CONTEXT7_MCP_URL = "https://mcp.context7.com/mcp";
     private static final String CONTEXT7_NAME = "context7";
     private static final String CONTEXT7_KEY_PROPERTY = "context7.api.key";
+    // Also reads URLs appearing in the conversation, so there is no separate web-fetch tool to
+    // declare here (unlike Claude and Gemini).
+    private static final Tool WEB_SEARCH_TOOL = new Tool("web_search", null, null, null, null);
     private static final Gson gson = new Gson();
     private static final URI endpoint = URI.create("https://api.openai.com/v1/responses");
     private final String model;
     private final ReasoningEffort effort;
-    // When true (and context7.api.key is set), this binding attaches the Context7 documentation MCP
-    // server so the model can look up current library docs. Off for the grammar binding.
-    private final boolean context7Enabled;
+    // Off for the grammar binding: a grammar check is single-shot and never needs a lookup.
+    private final boolean toolsEnabled;
     // Package-private for member injection by Guice and direct assignment in unit tests.
     @Inject
     ConfigModel configModel;
 
-    OpenAiApiImpl(String model, ReasoningEffort effort, boolean context7Enabled) {
+    OpenAiApiImpl(String model, ReasoningEffort effort, boolean toolsEnabled) {
         this.model = model;
         this.effort = effort;
-        this.context7Enabled = context7Enabled;
+        this.toolsEnabled = toolsEnabled;
     }
 
     @Override
@@ -135,8 +139,8 @@ class OpenAiApiImpl implements AiApi {
             throw new AiApiException("Multiple contents in output: " + contents);
         }
         var toolCalls = outputs.stream()
-                .filter(output -> "mcp_call".equalsIgnoreCase(output.type()))
-                .map(output -> ToolCalls.line(output.server_label(), output.name(), output.arguments()))
+                .map(OpenAiApiImpl::toolCallLine)
+                .filter(Objects::nonNull)
                 .toList();
         var usage = responseBody.usage();
         return new AiResponse(contents.getFirst().text(), responseBody.id(), model,
@@ -147,15 +151,32 @@ class OpenAiApiImpl implements AiApi {
                 usage != null ? usage.total_tokens() : null, toolCalls);
     }
 
+    // A web_search_call carries no server_label/name/arguments and describes itself in "action"
+    // instead, so without its own branch it would render as "(unknown)".
+    private static String toolCallLine(ResponseBody.Outputs output) {
+        if ("mcp_call".equalsIgnoreCase(output.type())) {
+            return ToolCalls.line(output.server_label(), output.name(), output.arguments());
+        }
+        if ("web_search_call".equalsIgnoreCase(output.type())) {
+            var action = output.action();
+            var detail = action == null ? null : (action.query() != null ? action.query() : action.url());
+            return ToolCalls.line("openai", "web_search", detail);
+        }
+        return null;
+    }
+
     RequestBody buildRequestBody(String systemPrompt, List<ConversationTurn> turns, String context7Key) {
         var reasoning = effort != null ? new Reasoning(effort) : null;
         var input = turns.stream().map(turn -> new InputItem(role(turn.speaker()), turn.content())).toList();
-        List<Tool> tools = null;
+        var tools = new ArrayList<Tool>();
+        if (toolsEnabled) {
+            tools.add(WEB_SEARCH_TOOL);
+        }
         if (context7Key != null) {
-            tools = List.of(new Tool("mcp", CONTEXT7_NAME, CONTEXT7_MCP_URL,
+            tools.add(new Tool("mcp", CONTEXT7_NAME, CONTEXT7_MCP_URL,
                     Map.of("Authorization", "Bearer " + context7Key), "never"));
         }
-        return new RequestBody(model, systemPrompt, input, reasoning, true, tools);
+        return new RequestBody(model, systemPrompt, input, reasoning, true, tools.isEmpty() ? null : List.copyOf(tools));
     }
 
     HttpRequest buildHttpRequest(String token, String json) {
@@ -164,12 +185,14 @@ class OpenAiApiImpl implements AiApi {
                 .header("Authorization", "Bearer " + token)
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(json))
-                .timeout(Duration.ofMinutes(1))
+                // Bounds time-to-headers only (the body is read as a line stream); a server-side
+                // web search or MCP call can delay the first byte well past a minute.
+                .timeout(Duration.ofMinutes(3))
                 .build();
     }
 
     String context7Key() {
-        if (!context7Enabled) {
+        if (!toolsEnabled) {
             return null;
         }
         var key = configModel.getProperty(CONTEXT7_KEY_PROPERTY);

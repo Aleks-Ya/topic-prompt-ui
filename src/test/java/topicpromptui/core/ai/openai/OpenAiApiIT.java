@@ -122,6 +122,23 @@ class OpenAiApiIT {
     }
 
     @Test
+    void sendWithWebSearch() {
+        // An invalid tool type string compiles fine and is only rejected at request time, so this is
+        // the gate for it - and for web_search_call outputs not breaking parseResponse's selection.
+        var response = api.send(null, List.of(new ConversationTurn(USER, "Search the web for the current "
+                + "stable version number of Node.js, then answer with just that version number.")), NO_OP);
+        assertThat(Grader.combine(response,
+                new ToolCallsContainGrader("web_search"),
+                new ResponseIdNotEmptyGrader(),
+                new ModelIdGrader("gpt-5.6-sol"),
+                new ResponseTextLengthGrader(1, 400),
+                new EffortLevelGrader("XHIGH"),
+                new FinishReasonGrader("completed"),
+                new TokensGrader()
+        )).isEqualTo(Score.MAX);
+    }
+
+    @Test
     void error() {
         var turns = List.of(new ConversationTurn(USER, null));
         assertThatThrownBy(() -> api.send(null, turns, NO_OP))

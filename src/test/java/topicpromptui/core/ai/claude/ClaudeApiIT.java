@@ -41,13 +41,15 @@ class ClaudeApiIT {
     private final AiApi api = injector.getInstance(Key.get(AiApi.class, Names.named(CLAUDE_AI)));
     private final PromptFactory promptFactory = injector.getInstance(PromptFactory.class);
 
+    // Upper bound relaxed from 500 to 900: attaching the web tools makes Claude more expansive even
+    // when it doesn't search (623/634 chars on two runs that had passed before).
     @Test
     void send() {
         var response = api.send(null, List.of(new ConversationTurn(USER, "Give me the name of the Java creator")), NO_OP);
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("claude-opus-5"),
-                new ResponseTextLengthGrader(10, 500),
+                new ResponseTextLengthGrader(10, 900),
                 new EffortLevelGrader("XHIGH"),
                 new FinishReasonGrader("end_turn"),
                 new TokensGrader()
@@ -116,6 +118,37 @@ class ClaudeApiIT {
                 new ModelIdGrader("claude-opus-5"),
                 new ResponseTextLengthGrader(20, 400),
                 new EffortLevelGrader("XHIGH"),
+                new TokensGrader()
+        )).isEqualTo(Score.MAX);
+    }
+
+    @Test
+    void sendWithWebSearch() {
+        // An invalid tool type string compiles fine and is only rejected at request time, so this is
+        // the gate for it - and for server_tool_use blocks not breaking assemble().
+        var response = api.send(null, List.of(new ConversationTurn(USER, "Search the web for the current "
+                + "stable version number of Node.js, then answer with just that version number.")), NO_OP);
+        assertThat(Grader.combine(response,
+                new ToolCallsContainGrader("web_search"),
+                new ResponseIdNotEmptyGrader(),
+                new ModelIdGrader("claude-opus-5"),
+                new ResponseTextLengthGrader(1, 400),
+                new EffortLevelGrader("XHIGH"),
+                new TokensGrader()
+        )).isEqualTo(Score.MAX);
+    }
+
+    @Test
+    void sendWithWebFetch() {
+        // The URL may be resolved by web_fetch or by a web_search, so this asserts only that some
+        // tool touched it rather than pinning the tool name.
+        var response = api.send(null, List.of(new ConversationTurn(USER, "Read https://openjdk.org/projects/jdk/25/ "
+                + "and say in one sentence what that page is about.")), NO_OP);
+        assertThat(Grader.combine(response,
+                new ToolCallsContainGrader("openjdk.org"),
+                new ResponseIdNotEmptyGrader(),
+                new ModelIdGrader("claude-opus-5"),
+                new ResponseTextLengthGrader(20, 500),
                 new TokensGrader()
         )).isEqualTo(Score.MAX);
     }

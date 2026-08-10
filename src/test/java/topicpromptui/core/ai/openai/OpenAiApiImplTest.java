@@ -169,6 +169,52 @@ class OpenAiApiImplTest {
     }
 
     @Test
+    void parseResponseCollectsWebSearchCalls() {
+        // web_search_call outputs carry no name/arguments; without the "action" mapping they would
+        // render as "(unknown)".
+        var json = """
+                {
+                  "id": "resp_8",
+                  "output": [
+                    {"type": "reasoning", "status": "completed"},
+                    {"type": "web_search_call", "status": "completed", \
+                     "action": {"type": "search", "query": "java 25 lts release"}},
+                    {"type": "web_search_call", "status": "completed", \
+                     "action": {"type": "open_page", "url": "https://openjdk.org/projects/jdk/25/"}},
+                    {"type": "message", "content": [{"text": "Java 25 is the latest LTS."}], "status": "completed"}
+                  ],
+                  "usage": {"input_tokens": 100, "output_tokens": 40, "total_tokens": 140}
+                }
+                """;
+        var responseBody = gson.fromJson(json, ResponseBody.class);
+        var response = api.parseResponse(responseBody);
+        assertThat(response.text()).isEqualTo("Java 25 is the latest LTS.");
+        assertThat(response.toolCalls()).containsExactly(
+                "openai · web_search java 25 lts release",
+                "openai · web_search https://openjdk.org/projects/jdk/25/");
+    }
+
+    @Test
+    void buildRequestBodyAttachesWebSearchWhenEnabled() {
+        var enabled = new OpenAiApiImpl("gpt-5", null, true);
+        // No Context7 key: web search still attaches on its own.
+        var body = enabled.buildRequestBody("sys", List.of(new ConversationTurn(USER, "hi")), null);
+        assertThat(body.tools()).singleElement().satisfies(tool -> {
+            assertThat(tool.type()).isEqualTo("web_search");
+            assertThat(tool.server_label()).isNull();
+            assertThat(tool.require_approval()).isNull();
+        });
+        assertThat(gson.toJson(body)).contains("\"tools\":[{\"type\":\"web_search\"}]");
+    }
+
+    @Test
+    void buildRequestBodyCombinesWebSearchAndContext7() {
+        var enabled = new OpenAiApiImpl("gpt-5", null, true);
+        var body = enabled.buildRequestBody("sys", List.of(new ConversationTurn(USER, "hi")), "ctx7-key");
+        assertThat(body.tools()).extracting(Tool::type).containsExactly("web_search", "mcp");
+    }
+
+    @Test
     void buildRequestBodyAttachesContext7WhenKeyPresent() {
         var body = api.buildRequestBody("sys", List.of(new ConversationTurn(USER, "hi")), "ctx7-key");
         assertThat(body.instructions()).isEqualTo("sys");
@@ -192,7 +238,7 @@ class OpenAiApiImplTest {
 
     @Test
     void context7KeyNullWhenDisabled() {
-        // context7Enabled=false on this api instance; the config is never consulted.
+        // toolsEnabled=false on this api instance; the config is never consulted.
         assertThat(api.context7Key()).isNull();
     }
 

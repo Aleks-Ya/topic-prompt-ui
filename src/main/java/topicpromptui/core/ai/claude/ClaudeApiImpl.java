@@ -41,22 +41,25 @@ class ClaudeApiImpl implements AiApi {
     private static final String CONTEXT7_MCP_URL = "https://mcp.context7.com/mcp";
     private static final String CONTEXT7_NAME = "context7";
     private static final String CONTEXT7_KEY_PROPERTY = "context7.api.key";
+    // The dated types are the dynamic-filtering variants: they run code internally, so do NOT also
+    // declare a code_execution tool - a second execution environment confuses the model.
+    private static final Tool WEB_SEARCH_TOOL = new Tool("web_search_20260209", "web_search", null);
+    private static final Tool WEB_FETCH_TOOL = new Tool("web_fetch_20260209", "web_fetch", null);
     private static final Integer MAX_TOKENS = 32768;
     private static final Gson gson = new Gson();
     private static final URI endpoint = URI.create("https://api.anthropic.com/v1/messages");
     private final String model;
     private final Effort effort;
-    // When true (and context7.api.key is set), this binding attaches the Context7 documentation MCP
-    // server so the model can look up current library docs. Off for the grammar binding.
-    private final boolean context7Enabled;
+    // Off for the grammar binding: a grammar check is single-shot and never needs a lookup.
+    private final boolean toolsEnabled;
     // Package-private for member injection by Guice and direct assignment in unit tests.
     @Inject
     ConfigModel configModel;
 
-    ClaudeApiImpl(String model, Effort effort, boolean context7Enabled) {
+    ClaudeApiImpl(String model, Effort effort, boolean toolsEnabled) {
         this.model = model;
         this.effort = effort;
-        this.context7Enabled = context7Enabled;
+        this.toolsEnabled = toolsEnabled;
     }
 
     @Override
@@ -132,7 +135,9 @@ class ClaudeApiImpl implements AiApi {
         }
     }
 
-    // Opens a pending tool call for each mcp_tool_use block; its input arrives via input_json_delta.
+    // Opens a pending tool call for each tool-use block; its input arrives via input_json_delta.
+    // server_tool_use (the web tools) carries no server_name, which ToolCalls.line renders as a
+    // bare tool name.
     // A tool-using turn interleaves multiple "text" blocks around the tool blocks; their deltas would
     // otherwise be concatenated with no gap (e.g. "...term.## Verdict:"), so a paragraph break is
     // inserted whenever a new text block opens after text has already been accumulated.
@@ -141,7 +146,7 @@ class ClaudeApiImpl implements AiApi {
             return;
         }
         var blockType = event.content_block().type();
-        if (event.index() != null && "mcp_tool_use".equals(blockType)) {
+        if (event.index() != null && ("mcp_tool_use".equals(blockType) || "server_tool_use".equals(blockType))) {
             state.pendingToolCalls.put(event.index(),
                     new ToolCallAccumulator(event.content_block().server_name(), event.content_block().name()));
         } else if ("text".equals(blockType) && !state.text.isEmpty()) {
@@ -215,15 +220,21 @@ class ClaudeApiImpl implements AiApi {
         var outputConfig = effort != null ? new OutputConfig(effort) : null;
         var messages = turns.stream().map(turn -> new Message(role(turn.speaker()), turn.content())).toList();
         List<McpServer> mcpServers = null;
-        List<McpToolset> tools = null;
+        var tools = new ArrayList<Tool>();
+        if (toolsEnabled) {
+            tools.add(WEB_SEARCH_TOOL);
+            tools.add(WEB_FETCH_TOOL);
+        }
         if (context7Key != null) {
             mcpServers = List.of(new McpServer("url", CONTEXT7_NAME, CONTEXT7_MCP_URL, context7Key));
-            tools = List.of(new McpToolset("mcp_toolset", CONTEXT7_NAME));
+            tools.add(new Tool("mcp_toolset", null, CONTEXT7_NAME));
         }
-        return new RequestBody(model, MAX_TOKENS, systemPrompt, messages, outputConfig, true, mcpServers, tools);
+        return new RequestBody(model, MAX_TOKENS, systemPrompt, messages, outputConfig, true, mcpServers,
+                tools.isEmpty() ? null : List.copyOf(tools));
     }
 
-    // mcpEnabled adds the beta header required by the server-side MCP connector.
+    // mcpEnabled adds the beta header required by the server-side MCP connector. The web tools
+    // don't need it, so this stays keyed on mcp_servers rather than on toolsEnabled.
     HttpRequest buildHttpRequest(String apiKey, String json, boolean mcpEnabled) {
         var requestBuilder = HttpRequest.newBuilder()
                 .uri(endpoint)
@@ -231,7 +242,9 @@ class ClaudeApiImpl implements AiApi {
                 .header("anthropic-version", ANTHROPIC_VERSION)
                 .header("content-type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(json))
-                .timeout(Duration.ofMinutes(1));
+                // Bounds time-to-headers only (the body is read as a line stream); a server-side
+                // web search or MCP call can delay the first byte well past a minute.
+                .timeout(Duration.ofMinutes(3));
         if (mcpEnabled) {
             requestBuilder.header("anthropic-beta", MCP_BETA);
         }
@@ -239,7 +252,7 @@ class ClaudeApiImpl implements AiApi {
     }
 
     String context7Key() {
-        if (!context7Enabled) {
+        if (!toolsEnabled) {
             return null;
         }
         var key = configModel.getProperty(CONTEXT7_KEY_PROPERTY);

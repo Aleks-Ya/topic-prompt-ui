@@ -12,6 +12,6 @@ public class GcpModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(AiApi.class).annotatedWith(Names.named(GCP_AI)).toInstance(new GcpApiImpl(MODEL, EFFORT));
+        bind(AiApi.class).annotatedWith(Names.named(GCP_AI)).toInstance(new GcpApiImpl(MODEL, EFFORT, true));
     }
 }

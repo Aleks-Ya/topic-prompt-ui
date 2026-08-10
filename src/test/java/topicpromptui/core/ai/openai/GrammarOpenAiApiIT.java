@@ -113,6 +113,15 @@ class GrammarOpenAiApiIT {
     }
 
     @Test
+    void grammarBindingRunsWithoutTools() {
+        // Guards against a future change flipping toolsEnabled on for both OpenAI bindings at once.
+        var system = promptFactory.getSystemPrompt(QUESTION, "Java", GRAMMAR).orElseThrow();
+        var prompt = promptFactory.getPrompt(QUESTION, "What is last version of Node.js?", GRAMMAR).orElseThrow();
+        var response = grammarApi.send(system, List.of(new ConversationTurn(USER, prompt)), NO_OP);
+        assertThat(response.toolCalls()).isEmpty();
+    }
+
+    @Test
     void errorGrammar() {
         var turns = List.of(new ConversationTurn(USER, null));
         assertThatThrownBy(() -> grammarApi.send(null, turns, NO_OP))
