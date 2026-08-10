@@ -158,11 +158,16 @@ class OpenAiApiImpl implements AiApi {
             return ToolCalls.line(output.server_label(), output.name(), output.arguments());
         }
         if ("web_search_call".equalsIgnoreCase(output.type())) {
-            var action = output.action();
-            var detail = action == null ? null : (action.query() != null ? action.query() : action.url());
-            return ToolCalls.line("openai", "web_search", detail);
+            return ToolCalls.line("openai", "web_search", webSearchDetail(output.action()));
         }
         return null;
+    }
+
+    private static String webSearchDetail(ResponseBody.Action action) {
+        if (action == null) {
+            return null;
+        }
+        return action.query() != null ? action.query() : action.url();
     }
 
     RequestBody buildRequestBody(String systemPrompt, List<ConversationTurn> turns, String context7Key) {

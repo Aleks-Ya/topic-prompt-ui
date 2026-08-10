@@ -13,10 +13,12 @@ record RequestBody(List<Content> contents, Content systemInstruction, Generation
 record Tool(GoogleSearch googleSearch, UrlContext urlContext) {
 }
 
-record GoogleSearch() {
+// Empty on purpose: Gson must serialize each as the "{}" config Gemini expects, so they can be
+// neither filled in nor turned into interfaces.
+record GoogleSearch() { // NOSONAR
 }
 
-record UrlContext() {
+record UrlContext() { // NOSONAR
 }
 
 record Content(List<Part> parts, String role) {
