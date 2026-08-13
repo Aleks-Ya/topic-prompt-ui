@@ -49,7 +49,35 @@ public class TopicController extends BaseController {
     @FXML
     void onAddButtonClicked(ActionEvent ignore) {
         log.trace("onAddButtonClicked");
-        vm.onTopicFilterHistoryCheckBoxClicked();
+        newTopicDialog.show();
+        newTopicDialog.getEditor().clear();
+        newTopicDialog.getEditor().requestFocus();
+        newTopicDialog.hide();
+        newTopicDialog.showAndWait().ifPresent(topic -> vm.addNewTopic(topic));
+    }
+
+    @FXML
+    void onRenameButtonClicked(ActionEvent ignore) {
+        log.trace("onRenameButtonClicked");
+        var currentTopic = topicComboBox.getValue();
+        renameTopicDialog.show();
+        renameTopicDialog.getEditor().setText(currentTopic != null ? currentTopic.title() : "");
+        renameTopicDialog.getEditor().selectAll();
+        renameTopicDialog.getEditor().requestFocus();
+        renameTopicDialog.hide();
+        renameTopicDialog.showAndWait().ifPresent(newTitle -> vm.renameCurrentTopic(newTitle));
+    }
+
+    @FXML
+    void onDeleteButtonClicked(ActionEvent ignore) {
+        log.trace("onDeleteButtonClicked");
+        var currentTopic = topicComboBox.getValue();
+        deleteTopicDialog.setHeaderText("Delete topic \"" + currentTopic.title() + "\"?");
+        deleteTopicDialog.setContentText("This will also delete " + vm.getInteractionCountInCurrentTopic()
+                + " interaction(s) in this topic.");
+        deleteTopicDialog.showAndWait()
+                .filter(buttonType -> buttonType == ButtonType.OK)
+                .ifPresent(_ -> vm.deleteCurrentTopic());
     }
 
     @Override
@@ -69,13 +97,6 @@ public class TopicController extends BaseController {
                 .disableProperty().bind(Bindings.createBooleanBinding(
                         () -> newTopicDialog.getEditor().getText().isBlank(),
                         newTopicDialog.getEditor().textProperty()));
-        addButton.setOnAction(_ -> {
-            newTopicDialog.show();
-            newTopicDialog.getEditor().clear();
-            newTopicDialog.getEditor().requestFocus();
-            newTopicDialog.hide();
-            newTopicDialog.showAndWait().ifPresent(topic -> vm.addNewTopic(topic));
-        });
 
         renameTopicDialog.setTitle("Rename topic");
         renameTopicDialog.setHeaderText("New topic name:");
@@ -83,29 +104,11 @@ public class TopicController extends BaseController {
                 .disableProperty().bind(Bindings.createBooleanBinding(
                         () -> renameTopicDialog.getEditor().getText().isBlank(),
                         renameTopicDialog.getEditor().textProperty()));
-        renameButton.setOnAction(_ -> {
-            var currentTopic = topicComboBox.getValue();
-            renameTopicDialog.show();
-            renameTopicDialog.getEditor().setText(currentTopic != null ? currentTopic.title() : "");
-            renameTopicDialog.getEditor().selectAll();
-            renameTopicDialog.getEditor().requestFocus();
-            renameTopicDialog.hide();
-            renameTopicDialog.showAndWait().ifPresent(newTitle -> vm.renameCurrentTopic(newTitle));
-        });
 
         vm.properties().deleteButtonDisable.bindBidirectional(deleteButton.disableProperty());
         deleteTopicDialog.setTitle("Delete topic");
         ((Button) deleteTopicDialog.getDialogPane().lookupButton(ButtonType.OK)).setDefaultButton(false);
         ((Button) deleteTopicDialog.getDialogPane().lookupButton(ButtonType.CANCEL)).setDefaultButton(true);
-        deleteButton.setOnAction(_ -> {
-            var currentTopic = topicComboBox.getValue();
-            deleteTopicDialog.setHeaderText("Delete topic \"" + currentTopic.title() + "\"?");
-            deleteTopicDialog.setContentText("This will also delete " + vm.getInteractionCountInCurrentTopic()
-                    + " interaction(s) in this topic.");
-            deleteTopicDialog.showAndWait()
-                    .filter(buttonType -> buttonType == ButtonType.OK)
-                    .ifPresent(_ -> vm.deleteCurrentTopic());
-        });
         topicLabel.setLabelFor(topicComboBox);
         topicComboBox.showingProperty()
                 .addListener((_, _, _) -> vm.onTopicComboBoxAction());
