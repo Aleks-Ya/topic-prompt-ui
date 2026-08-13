@@ -282,7 +282,7 @@ public class WindowAssertion {
             soft.assertThat(question.factButton().getText()).as(descr("Fact/Button/Text")).isEqualTo("_Fact");
             soft.assertThat(question.regenerateButton().getText()).as(descr("Regenerate/Button/Text")).isEqualTo("_Resend");
             soft.assertThat(question.textArea().getText()).as(descr("Question/TextArea/Text")).isEqualTo(questionText);
-            soft.assertThat(question.textArea().getStyle()).as(descr("Question/TextArea/Style")).isEqualTo(questionStyle);
+            soft.assertThat(question.textArea().getStyleClass()).as(descr("Question/TextArea/Style")).contains(questionStyle);
             soft.assertThat(app.stateModel.getEditedQuestion()).as(descr("Question/Model/EditedQuestion")).isEqualTo(modelEditedQuestion);
             soft.assertThat(app.stateModel.isEnteringNewQuestion()).as(descr("Question/Model/IsEnteringNewQuestion")).isEqualTo(isEnteringNewQuestion);
         }

@@ -2,9 +2,13 @@ package topicpromptui.ui.question;
 
 import topicpromptui.BaseTopicPromptUiTest;
 import topicpromptui.ui.TestingData.I1;
+import javafx.scene.layout.Region;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Paint;
 import org.junit.jupiter.api.Test;
 
 import static topicpromptui.core.domain.AnswerType.OPEN_AI;
+import static javafx.scene.paint.Color.LIGHTBLUE;
 import static topicpromptui.ui.viewmodel.question.QuestionStyle.QUESTION_STYLE_EMPTY;
 import static topicpromptui.ui.viewmodel.question.QuestionStyle.QUESTION_STYLE_FOLLOW_UP;
 import static java.time.Duration.ZERO;
@@ -49,12 +53,25 @@ class FollowUpQuestionUiTest extends BaseTopicPromptUiTest {
 
     @Test
     void followUpCheckboxTurnsQuestionBackgroundLightBlue() {
-        assertThat(question().textArea().getStyle()).isEqualTo(QUESTION_STYLE_EMPTY);
+        assertThat(question().textArea().getStyleClass())
+                .contains(QUESTION_STYLE_EMPTY).doesNotContain(QUESTION_STYLE_FOLLOW_UP);
 
         clickOn(question().followUpCheckBox());
-        assertThat(question().textArea().getStyle()).isEqualTo(QUESTION_STYLE_FOLLOW_UP);
+        assertThat(question().textArea().getStyleClass())
+                .contains(QUESTION_STYLE_FOLLOW_UP).doesNotContain(QUESTION_STYLE_EMPTY);
+        // The rendered colour, not just the class: proves app.css was found and its rule applied.
+        assertThat(questionTextAreaBackground()).isEqualTo(LIGHTBLUE);
 
         clickOn(question().followUpCheckBox());
-        assertThat(question().textArea().getStyle()).isEqualTo(QUESTION_STYLE_EMPTY);
+        assertThat(question().textArea().getStyleClass())
+                .contains(QUESTION_STYLE_EMPTY).doesNotContain(QUESTION_STYLE_FOLLOW_UP);
+    }
+
+    // Modena renders -fx-control-inner-background as a subtle top-down gradient whose bottom stop is the
+    // colour itself, so the plain Color only shows up there.
+    private Paint questionTextAreaBackground() {
+        var content = (Region) question().textArea().lookup(".content");
+        var fill = content.getBackground().getFills().getFirst().getFill();
+        return fill instanceof LinearGradient gradient ? gradient.getStops().getLast().getColor() : fill;
     }
 }

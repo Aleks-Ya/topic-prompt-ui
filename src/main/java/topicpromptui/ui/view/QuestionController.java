@@ -59,11 +59,23 @@ public class QuestionController extends BaseController {
         vm.onKeyTypedQuestionTextArea();
     }
 
+    private void applyQuestionStyleClass(String oldClass, String newClass) {
+        if (oldClass != null) {
+            questionTextArea.getStyleClass().remove(oldClass);
+        }
+        if (newClass != null) {
+            questionTextArea.getStyleClass().add(newClass);
+        }
+    }
+
     @Override
     protected void initialize() {
         vm.properties().followUpCheckBoxSelected.bindBidirectional(followUpCheckBox.selectedProperty());
         vm.properties().questionTaText.bindBidirectional(questionTextArea.textProperty());
-        vm.properties().questionTaStyle.bindBidirectional(questionTextArea.styleProperty());
+        // A style class can't be bound like a property, so swap it by hand. One-way is enough: the
+        // view model is the only writer.
+        applyQuestionStyleClass(null, vm.properties().questionTaStyle.get());
+        vm.properties().questionTaStyle.addListener((_, oldClass, newClass) -> applyQuestionStyleClass(oldClass, newClass));
         vm.properties().questionTaFocused.addListener((observable, oldValue, newValue) -> {
                     if (Boolean.TRUE.equals(newValue)) {
                         Platform.runLater(() -> questionTextArea.requestFocus());

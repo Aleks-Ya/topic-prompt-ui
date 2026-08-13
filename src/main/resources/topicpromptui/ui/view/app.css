@@ -1,0 +1,11 @@
+.question-edited {
+    -fx-control-inner-background: LightYellow;
+}
+
+.question-follow-up {
+    -fx-control-inner-background: LightBlue;
+}
+
+.monospace {
+    -fx-font-family: monospace;
+}

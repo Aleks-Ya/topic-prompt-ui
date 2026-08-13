@@ -9,7 +9,8 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.GridPane?>
-<DialogPane fx:id="dialogPane" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+<DialogPane fx:id="dialogPane" stylesheets="@app.css" xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="topicpromptui.ui.view.AnswerDetailsDialogController">
     <buttonTypes>
         <ButtonType fx:constant="CLOSE"/>
@@ -63,12 +64,11 @@
                      and tag boundaries are exactly what a proportional font hides. -->
                 <Label text="Answer MD:" GridPane.columnIndex="0" GridPane.rowIndex="11"/>
                 <TextArea fx:id="answerMdArea" editable="false" prefColumnCount="60" prefRowCount="10" wrapText="true"
-                          style="-fx-font-family: monospace" GridPane.columnIndex="1" GridPane.rowIndex="11"/>
+                          styleClass="monospace" GridPane.columnIndex="1" GridPane.rowIndex="11"/>
 
                 <Label text="Answer HTML:" GridPane.columnIndex="0" GridPane.rowIndex="12"/>
                 <TextArea fx:id="answerHtmlArea" editable="false" prefColumnCount="60" prefRowCount="10"
-                          wrapText="true" style="-fx-font-family: monospace" GridPane.columnIndex="1"
-                          GridPane.rowIndex="12"/>
+                          wrapText="true" styleClass="monospace" GridPane.columnIndex="1" GridPane.rowIndex="12"/>
             </GridPane>
         </ScrollPane>
     </content>
