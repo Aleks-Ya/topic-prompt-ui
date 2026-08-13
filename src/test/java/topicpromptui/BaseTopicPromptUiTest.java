@@ -295,5 +295,13 @@ public abstract class BaseTopicPromptUiTest extends ApplicationTest {
         public TextArea systemPromptArea() {
             return lookup("#systemPromptArea").queryAs(TextArea.class);
         }
+
+        public TextArea answerMdArea() {
+            return lookup("#answerMdArea").queryAs(TextArea.class);
+        }
+
+        public TextArea answerHtmlArea() {
+            return lookup("#answerHtmlArea").queryAs(TextArea.class);
+        }
     }
 }

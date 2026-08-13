@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
@@ -116,34 +117,21 @@ public class AnswerController extends BaseController {
         addInfoRow(grid, 6, "outputTokensField", "Output tokens:", Objects.toString(details.outputTokens(), ""));
         addInfoRow(grid, 7, "totalTokensField", "Total tokens:", Objects.toString(details.totalTokens(), ""));
 
-        var toolsUsedArea = new TextArea(formatToolCalls(details.toolCalls()));
-        toolsUsedArea.setId("toolsUsedArea");
-        toolsUsedArea.setEditable(false);
-        toolsUsedArea.setWrapText(true);
-        toolsUsedArea.setPrefRowCount(3);
-        toolsUsedArea.setPrefColumnCount(60);
-        grid.add(new Label("Tools used:"), 0, 8);
-        grid.add(toolsUsedArea, 1, 8);
+        addTextAreaRow(grid, 8, "toolsUsedArea", "Tools used:", formatToolCalls(details.toolCalls()), 3);
+        addTextAreaRow(grid, 9, "systemPromptArea", "System prompt:", details.systemPrompt(), 10);
+        addTextAreaRow(grid, 10, "promptArea", "Prompt:", details.prompt(), 10);
+        // Monospace: these two exist to diagnose WebView rendering, and indentation, code fences and tag
+        // boundaries are exactly what a proportional font hides.
+        addTextAreaRow(grid, 11, "answerMdArea", "Answer MD:", details.answerMd(), 10)
+                .setStyle("-fx-font-family: monospace");
+        addTextAreaRow(grid, 12, "answerHtmlArea", "Answer HTML:", details.answerHtml(), 10)
+                .setStyle("-fx-font-family: monospace");
 
-        var systemPromptArea = new TextArea(Objects.toString(details.systemPrompt(), ""));
-        systemPromptArea.setId("systemPromptArea");
-        systemPromptArea.setEditable(false);
-        systemPromptArea.setWrapText(true);
-        systemPromptArea.setPrefRowCount(10);
-        systemPromptArea.setPrefColumnCount(60);
-        grid.add(new Label("System prompt:"), 0, 9);
-        grid.add(systemPromptArea, 1, 9);
-
-        var promptArea = new TextArea(Objects.toString(details.prompt(), ""));
-        promptArea.setId("promptArea");
-        promptArea.setEditable(false);
-        promptArea.setWrapText(true);
-        promptArea.setPrefRowCount(10);
-        promptArea.setPrefColumnCount(60);
-        grid.add(new Label("Prompt:"), 0, 10);
-        grid.add(promptArea, 1, 10);
-
-        dialog.getDialogPane().setContent(grid);
+        var scrollPane = new ScrollPane(grid);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setPrefViewportHeight(600);
+        dialog.getDialogPane().setContent(scrollPane);
+        dialog.setResizable(true);
         dialog.showAndWait();
     }
 
@@ -157,6 +145,18 @@ public class AnswerController extends BaseController {
         field.setEditable(false);
         grid.add(new Label(labelText), 0, row);
         grid.add(field, 1, row);
+    }
+
+    private TextArea addTextAreaRow(GridPane grid, int row, String fieldId, String labelText, String value, int prefRowCount) {
+        var area = new TextArea(Objects.toString(value, ""));
+        area.setId(fieldId);
+        area.setEditable(false);
+        area.setWrapText(true);
+        area.setPrefRowCount(prefRowCount);
+        area.setPrefColumnCount(60);
+        grid.add(new Label(labelText), 0, row);
+        grid.add(area, 1, row);
+        return area;
     }
 
     private void onDocumentChanged(Document newValue) {

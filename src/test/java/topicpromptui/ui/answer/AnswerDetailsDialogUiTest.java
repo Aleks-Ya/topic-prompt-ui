@@ -52,6 +52,8 @@ class AnswerDetailsDialogUiTest extends BaseTopicPromptUiTest {
                         + "context7 · get-library-docs {\"context7CompatibleLibraryID\":\"/facebook/react\"}");
         assertThat(dialog.promptArea().getText()).isEqualTo("Grammar prompt");
         assertThat(dialog.systemPromptArea().getText()).isEqualTo("Grammar system prompt");
+        assertThat(dialog.answerMdArea().getText()).isEqualTo("Grammar MD");
+        assertThat(dialog.answerHtmlArea().getText()).isEqualTo("Grammar HTML");
 
         clickOn(dialog.openInteractionFileButton());
         assertThat(fileModel.getOpenedFiles()).containsExactly(storage.getInteractionFilePath(new InteractionId(100L)));
@@ -74,6 +76,8 @@ class AnswerDetailsDialogUiTest extends BaseTopicPromptUiTest {
         assertThat(dialog.toolsUsedArea().getText()).isEmpty();
         assertThat(dialog.promptArea().getText()).isEmpty();
         assertThat(dialog.systemPromptArea().getText()).isEmpty();
+        assertThat(dialog.answerMdArea().getText()).isEmpty();
+        assertThat(dialog.answerHtmlArea().getText()).isEmpty();
         type(KeyCode.ESCAPE);
     }
 }
