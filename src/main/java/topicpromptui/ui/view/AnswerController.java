@@ -1,30 +1,23 @@
 package topicpromptui.ui.view;
 
 import com.google.gson.Gson;
-import topicpromptui.ui.viewmodel.answer.AnswerDetails;
 import topicpromptui.ui.viewmodel.answer.AnswerVmController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Circle;
 import javafx.scene.web.WebView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
-import java.util.List;
-import java.util.Objects;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 
 import static topicpromptui.core.util.LogUtils.shorten;
+import static topicpromptui.core.util.ResourceUtils.resourceUrl;
 import static javafx.scene.input.KeyCode.DIGIT1; // NOSONAR - used in switch case labels below, S1128 false positive
 import static javafx.scene.input.KeyCode.DIGIT2; // NOSONAR - used in switch case labels below, S1128 false positive
 import static javafx.scene.input.KeyCode.DIGIT3; // NOSONAR - used in switch case labels below, S1128 false positive
@@ -73,7 +66,19 @@ public class AnswerController extends BaseController {
     @FXML
     void onAnswerButtonClick(ActionEvent ignoredEvent) {
         log.trace("onAnswerButtonClick");
-        showAnswerInfoDialog(vm.getAnswerDetails());
+        // A plain loader, not the Guice-provided one: FXMLLoader is bound only by Ignite's GuiceContext
+        // when the app boots, so injecting it here would break every test that builds a bare RootModule
+        // injector (requireExplicitBindings). AnswerDetailsDialogController needs nothing from Guice, so
+        // FXMLLoader's default reflective instantiation is enough. A fresh loader per open, since a
+        // loader keeps the root/controller of its last load and cannot be reused.
+        var loader = new FXMLLoader(resourceUrl(getClass(), "/topicpromptui/ui/view/AnswerDetailsDialog.fxml"));
+        try {
+            loader.load();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        AnswerDetailsDialogController dialogController = loader.getController();
+        dialogController.showDialog(vm.getAnswerDetails(), vm::onOpenInteractionFileButtonClick);
     }
 
     void initializeController(AnswerVmController vm) {
@@ -85,78 +90,6 @@ public class AnswerController extends BaseController {
         vm.properties().answerButtonText.bindBidirectional(answerButton.textProperty());
         vm.properties().copyButtonText.bindBidirectional(copyButton.textProperty());
         webView.addEventFilter(KEY_PRESSED, this::onWebViewKeyPressed);
-    }
-
-    private void showAnswerInfoDialog(AnswerDetails details) {
-        var dialog = new Dialog<Void>();
-        dialog.setTitle(details.answerType() + " answer info");
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-
-        var grid = new GridPane();
-        grid.setHgap(8);
-        grid.setVgap(8);
-        grid.setPadding(new Insets(8));
-        var interactionIdField = new TextField(
-                details.interactionId() == null ? "" : Objects.toString(details.interactionId().id(), ""));
-        interactionIdField.setId("interactionIdField");
-        interactionIdField.setEditable(false);
-        grid.add(new Label("Interaction ID:"), 0, 0);
-        grid.add(interactionIdField, 1, 0);
-
-        var openInteractionFileButton = new Button("…");
-        openInteractionFileButton.setId("openInteractionFileButton");
-        openInteractionFileButton.setDisable(details.interactionId() == null);
-        openInteractionFileButton.setOnAction(_ -> vm.onOpenInteractionFileButtonClick());
-        grid.add(openInteractionFileButton, 2, 0);
-
-        addInfoRow(grid, 1, "answerTypeField", "Answer type:", String.valueOf(details.answerType()));
-        addInfoRow(grid, 2, "modelIdField", "Model ID:", details.modelId());
-        addInfoRow(grid, 3, "effortLevelField", "Effort level:", details.effortLevel());
-        addInfoRow(grid, 4, "finishReasonField", "Finish reason:", details.finishReason());
-        addInfoRow(grid, 5, "inputTokensField", "Input tokens:", Objects.toString(details.inputTokens(), ""));
-        addInfoRow(grid, 6, "outputTokensField", "Output tokens:", Objects.toString(details.outputTokens(), ""));
-        addInfoRow(grid, 7, "totalTokensField", "Total tokens:", Objects.toString(details.totalTokens(), ""));
-
-        addTextAreaRow(grid, 8, "toolsUsedArea", "Tools used:", formatToolCalls(details.toolCalls()), 3);
-        addTextAreaRow(grid, 9, "systemPromptArea", "System prompt:", details.systemPrompt(), 10);
-        addTextAreaRow(grid, 10, "promptArea", "Prompt:", details.prompt(), 10);
-        // Monospace: these two exist to diagnose WebView rendering, and indentation, code fences and tag
-        // boundaries are exactly what a proportional font hides.
-        addTextAreaRow(grid, 11, "answerMdArea", "Answer MD:", details.answerMd(), 10)
-                .setStyle("-fx-font-family: monospace");
-        addTextAreaRow(grid, 12, "answerHtmlArea", "Answer HTML:", details.answerHtml(), 10)
-                .setStyle("-fx-font-family: monospace");
-
-        var scrollPane = new ScrollPane(grid);
-        scrollPane.setFitToWidth(true);
-        scrollPane.setPrefViewportHeight(600);
-        dialog.getDialogPane().setContent(scrollPane);
-        dialog.setResizable(true);
-        dialog.showAndWait();
-    }
-
-    private static String formatToolCalls(List<String> toolCalls) {
-        return toolCalls == null ? "" : String.join("\n", toolCalls);
-    }
-
-    private void addInfoRow(GridPane grid, int row, String fieldId, String labelText, String value) {
-        var field = new TextField(Objects.toString(value, ""));
-        field.setId(fieldId);
-        field.setEditable(false);
-        grid.add(new Label(labelText), 0, row);
-        grid.add(field, 1, row);
-    }
-
-    private TextArea addTextAreaRow(GridPane grid, int row, String fieldId, String labelText, String value, int prefRowCount) {
-        var area = new TextArea(Objects.toString(value, ""));
-        area.setId(fieldId);
-        area.setEditable(false);
-        area.setWrapText(true);
-        area.setPrefRowCount(prefRowCount);
-        area.setPrefColumnCount(60);
-        grid.add(new Label(labelText), 0, row);
-        grid.add(area, 1, row);
-        return area;
     }
 
     private void onDocumentChanged(Document newValue) {

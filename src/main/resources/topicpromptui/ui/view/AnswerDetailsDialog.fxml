@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonType?>
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
+<DialogPane fx:id="dialogPane" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="topicpromptui.ui.view.AnswerDetailsDialogController">
+    <buttonTypes>
+        <ButtonType fx:constant="CLOSE"/>
+    </buttonTypes>
+    <content>
+        <ScrollPane fitToWidth="true" prefViewportHeight="600.0">
+            <GridPane hgap="8.0" vgap="8.0">
+                <padding>
+                    <Insets topRightBottomLeft="8.0"/>
+                </padding>
+
+                <Label text="Interaction ID:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <TextField fx:id="interactionIdField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                <Button fx:id="openInteractionFileButton" onAction="#onOpenInteractionFileButtonClick" text="…"
+                        GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+
+                <Label text="Answer type:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <TextField fx:id="answerTypeField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                <Label text="Model ID:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                <TextField fx:id="modelIdField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                <Label text="Effort level:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                <TextField fx:id="effortLevelField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+                <Label text="Finish reason:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                <TextField fx:id="finishReasonField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+                <Label text="Input tokens:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                <TextField fx:id="inputTokensField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+
+                <Label text="Output tokens:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+                <TextField fx:id="outputTokensField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+
+                <Label text="Total tokens:" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+                <TextField fx:id="totalTokensField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+
+                <Label text="Tools used:" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
+                <TextArea fx:id="toolsUsedArea" editable="false" prefColumnCount="60" prefRowCount="3" wrapText="true"
+                          GridPane.columnIndex="1" GridPane.rowIndex="8"/>
+
+                <Label text="System prompt:" GridPane.columnIndex="0" GridPane.rowIndex="9"/>
+                <TextArea fx:id="systemPromptArea" editable="false" prefColumnCount="60" prefRowCount="10"
+                          wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="9"/>
+
+                <Label text="Prompt:" GridPane.columnIndex="0" GridPane.rowIndex="10"/>
+                <TextArea fx:id="promptArea" editable="false" prefColumnCount="60" prefRowCount="10" wrapText="true"
+                          GridPane.columnIndex="1" GridPane.rowIndex="10"/>
+
+                <!-- Monospace: these two exist to diagnose WebView rendering, and indentation, code fences
+                     and tag boundaries are exactly what a proportional font hides. -->
+                <Label text="Answer MD:" GridPane.columnIndex="0" GridPane.rowIndex="11"/>
+                <TextArea fx:id="answerMdArea" editable="false" prefColumnCount="60" prefRowCount="10" wrapText="true"
+                          style="-fx-font-family: monospace" GridPane.columnIndex="1" GridPane.rowIndex="11"/>
+
+                <Label text="Answer HTML:" GridPane.columnIndex="0" GridPane.rowIndex="12"/>
+                <TextArea fx:id="answerHtmlArea" editable="false" prefColumnCount="60" prefRowCount="10"
+                          wrapText="true" style="-fx-font-family: monospace" GridPane.columnIndex="1"
+                          GridPane.rowIndex="12"/>
+            </GridPane>
+        </ScrollPane>
+    </content>
+</DialogPane>
