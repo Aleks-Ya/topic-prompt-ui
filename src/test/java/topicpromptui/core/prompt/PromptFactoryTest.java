@@ -83,10 +83,11 @@ class PromptFactoryTest extends BaseTest {
 
                 <guidelines>
                     <guideline>Format your answer into Markdown</guideline>""";
+        var brevity = "Do not exceed roughly 200 words unless the question explicitly asks for depth";
         assertThat(factory.getSystemPrompt(QUESTION, "Topic A", GRAMMAR).orElseThrow()).contains(GRAMMAR_SYSTEM).contains(GRAMMAR_SYSTEM_TOPIC);
-        assertThat(factory.getSystemPrompt(QUESTION, "Topic A", OPEN_AI).orElseThrow()).contains(question);
-        assertThat(factory.getSystemPrompt(QUESTION, "Topic A", CLAUDE).orElseThrow()).contains(question);
-        assertThat(factory.getSystemPrompt(QUESTION, "Topic A", GCP).orElseThrow()).contains(question);
+        assertThat(factory.getSystemPrompt(QUESTION, "Topic A", OPEN_AI).orElseThrow()).contains(question).contains(brevity);
+        assertThat(factory.getSystemPrompt(QUESTION, "Topic A", CLAUDE).orElseThrow()).contains(question).contains(brevity);
+        assertThat(factory.getSystemPrompt(QUESTION, "Topic A", GCP).orElseThrow()).contains(question).contains(brevity);
     }
 
     @Test
