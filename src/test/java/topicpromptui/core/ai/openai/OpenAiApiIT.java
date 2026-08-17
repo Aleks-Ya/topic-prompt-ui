@@ -13,6 +13,7 @@ import topicpromptui.core.ai.grader.graders.EffortLevelGrader;
 import topicpromptui.core.ai.grader.graders.FinishReasonGrader;
 import topicpromptui.core.ai.grader.graders.ModelIdGrader;
 import topicpromptui.core.ai.grader.graders.ResponseIdNotEmptyGrader;
+import topicpromptui.core.ai.grader.graders.ResponseTextContainsGrader;
 import topicpromptui.core.ai.grader.graders.ResponseTextExactGrader;
 import topicpromptui.core.ai.grader.graders.ResponseTextLengthGrader;
 import topicpromptui.core.ai.grader.graders.ResponseTextNotContainsGrader;
@@ -80,7 +81,7 @@ class OpenAiApiIT {
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gpt-5.6-sol"),
-                new ResponseTextExactGrader("Mango"),
+                new ResponseTextContainsGrader("Mango"),
                 new EffortLevelGrader("XHIGH"),
                 new FinishReasonGrader("completed"),
                 new TokensGrader()

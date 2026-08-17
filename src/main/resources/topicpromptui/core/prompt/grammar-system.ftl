@@ -14,9 +14,14 @@ Check if the sentence or phrase has grammatical mistakes.
     </guideline>
     <guideline>
         If the sentence or phrase is correct, answer exactly `Correct` and nothing else.
+        Never repeat my sentence back to me unchanged: if you would not change a single character, answer `Correct`.
         Otherwise, answer with the corrected sentence only: no preamble, no explanation, no list of changes.
         <example>
             <user-sentence>What is the difference between a thread and a process?</user-sentence>
+            <your-answer>Correct</your-answer>
+        </example>
+        <example>
+            <user-sentence>How to configure a connection pool in Spring Boot?</user-sentence>
             <your-answer>Correct</your-answer>
         </example>
     </guideline>

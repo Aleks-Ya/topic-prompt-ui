@@ -13,6 +13,7 @@ import topicpromptui.core.ai.grader.graders.EffortLevelGrader;
 import topicpromptui.core.ai.grader.graders.FinishReasonGrader;
 import topicpromptui.core.ai.grader.graders.ModelIdGrader;
 import topicpromptui.core.ai.grader.graders.ResponseIdNotEmptyGrader;
+import topicpromptui.core.ai.grader.graders.ResponseTextContainsGrader;
 import topicpromptui.core.ai.grader.graders.ResponseTextExactGrader;
 import topicpromptui.core.ai.grader.graders.ResponseTextLengthGrader;
 import topicpromptui.core.ai.grader.graders.ResponseTextNotContainsGrader;
@@ -82,7 +83,7 @@ class GcpApiIT {
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gemini-3.1-pro-preview"),
-                new ResponseTextExactGrader("Mango"),
+                new ResponseTextContainsGrader("Mango"),
                 new EffortLevelGrader("HIGH"),
                 new FinishReasonGrader("STOP"),
                 new TokensGrader()

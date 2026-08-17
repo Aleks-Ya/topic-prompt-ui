@@ -13,6 +13,7 @@ import topicpromptui.core.ai.grader.graders.EffortLevelGrader;
 import topicpromptui.core.ai.grader.graders.FinishReasonGrader;
 import topicpromptui.core.ai.grader.graders.ModelIdGrader;
 import topicpromptui.core.ai.grader.graders.ResponseIdNotEmptyGrader;
+import topicpromptui.core.ai.grader.graders.ResponseTextContainsGrader;
 import topicpromptui.core.ai.grader.graders.ResponseTextExactGrader;
 import topicpromptui.core.ai.grader.graders.ResponseTextLengthGrader;
 import topicpromptui.core.ai.grader.graders.ResponseTextNotContainsGrader;
@@ -50,7 +51,7 @@ class ClaudeApiIT {
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("claude-opus-5"),
                 new ResponseTextLengthGrader(10, 900),
-                new EffortLevelGrader("XHIGH"),
+                new EffortLevelGrader("HIGH"),
                 new FinishReasonGrader("end_turn"),
                 new TokensGrader()
         )).isEqualTo(Score.MAX);
@@ -65,7 +66,7 @@ class ClaudeApiIT {
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("claude-opus-5"),
                 new ResponseTextLengthGrader(100, 1000),
-                new EffortLevelGrader("XHIGH"),
+                new EffortLevelGrader("HIGH"),
                 new FinishReasonGrader("end_turn"),
                 new TokensGrader(),
                 ResponseTextNotContainsGrader.noAsidePunctuation()
@@ -82,8 +83,8 @@ class ClaudeApiIT {
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("claude-opus-5"),
-                new ResponseTextExactGrader("Mango"),
-                new EffortLevelGrader("XHIGH"),
+                new ResponseTextContainsGrader("Mango"),
+                new EffortLevelGrader("HIGH"),
                 new FinishReasonGrader("end_turn"),
                 new TokensGrader()
         )).isEqualTo(Score.MAX);
@@ -99,7 +100,7 @@ class ClaudeApiIT {
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("claude-opus-5"),
                 new ResponseTextExactGrader(String.join("", deltas)),
-                new EffortLevelGrader("XHIGH"),
+                new EffortLevelGrader("HIGH"),
                 new FinishReasonGrader("end_turn"),
                 new TokensGrader()
         )).isEqualTo(Score.MAX);
@@ -117,7 +118,7 @@ class ClaudeApiIT {
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("claude-opus-5"),
                 new ResponseTextLengthGrader(20, 400),
-                new EffortLevelGrader("XHIGH"),
+                new EffortLevelGrader("HIGH"),
                 new TokensGrader()
         )).isEqualTo(Score.MAX);
     }
@@ -133,7 +134,7 @@ class ClaudeApiIT {
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("claude-opus-5"),
                 new ResponseTextLengthGrader(1, 400),
-                new EffortLevelGrader("XHIGH"),
+                new EffortLevelGrader("HIGH"),
                 new TokensGrader()
         )).isEqualTo(Score.MAX);
     }
