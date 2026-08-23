@@ -37,6 +37,10 @@ class XaiApiImpl implements AiApi {
     // Also reads URLs appearing in the conversation, so there is no separate web-fetch tool to
     // declare here (unlike Claude and Gemini).
     private static final Tool WEB_SEARCH_TOOL = new Tool("web_search", null, null, null, null);
+    // Grok leaks its raw end-of-sequence token into the answer text - seen both as a trailing
+    // response.output_text.delta of its own and inside the response.completed message - so it is
+    // stripped from the deltas and from the assembled text rather than reaching the UI or storage.
+    private static final String EOS_TOKEN = "<|eos|>";
     private static final Gson gson = new Gson();
     // xAI's Responses API is wire-compatible with OpenAI's, down to the SSE event names, so this
     // impl mirrors OpenAiApiImpl; see parseResponse for the one behavioural difference.
@@ -101,8 +105,9 @@ class XaiApiImpl implements AiApi {
             }
             switch (type) {
                 case "response.output_text.delta" -> {
-                    if (event.delta() != null) {
-                        onTextDelta.accept(event.delta());
+                    var delta = stripEosToken(event.delta());
+                    if (delta != null && !delta.isEmpty()) {
+                        onTextDelta.accept(delta);
                     }
                 }
                 case "response.completed" -> finalBody[0] = event.response();
@@ -140,10 +145,10 @@ class XaiApiImpl implements AiApi {
         if (!notCompleted.isEmpty()) {
             throw new AiApiException("Message output not completed in response: " + outputs);
         }
-        var text = messageOutputs.stream()
+        var text = stripEosToken(messageOutputs.stream()
                 .flatMap(message -> message.content().stream())
                 .map(ResponseBody.Content::text)
-                .collect(Collectors.joining());
+                .collect(Collectors.joining()));
         var toolCalls = outputs.stream()
                 .map(XaiApiImpl::toolCallLine)
                 .filter(Objects::nonNull)
@@ -155,6 +160,10 @@ class XaiApiImpl implements AiApi {
                 usage != null ? usage.input_tokens() : null,
                 usage != null ? usage.output_tokens() : null,
                 usage != null ? usage.total_tokens() : null, toolCalls);
+    }
+
+    private static String stripEosToken(String text) {
+        return text != null ? text.replace(EOS_TOKEN, "") : null;
     }
 
     // A web_search_call carries no server_label/name/arguments and describes itself in "action"

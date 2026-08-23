@@ -91,6 +91,26 @@ class XaiApiImplTest {
     }
 
     @Test
+    void assembleStripsEosTokenFromDeltasAndText() {
+        // Verified live against api.x.ai: Grok can end the stream with a bare "<|eos|>" delta and
+        // repeat it inside the response.completed message text.
+        var deltas = new ArrayList<String>();
+        var response = api.assemble(sse(
+                "response.output_text.delta", """
+                        {"type": "response.output_text.delta", "delta": "Bucket is a container."}""",
+                "response.output_text.delta", """
+                        {"type": "response.output_text.delta", "delta": "<|eos|>"}""",
+                "response.completed", """
+                        {"type": "response.completed", "response": {"id": "resp_11", \
+                        "output": [{"type": "message", "content": [{"text": "Bucket is a container.<|eos|>"}], \
+                        "status": "completed"}], \
+                        "usage": {"input_tokens": 10, "output_tokens": 20, "total_tokens": 30}}}"""
+        ), deltas::add);
+        assertThat(deltas).containsExactly("Bucket is a container.");
+        assertThat(response.text()).isEqualTo("Bucket is a container.");
+    }
+
+    @Test
     void assembleThrowsOnFailedEvent() {
         var lines = sse(
                 "response.failed", """
