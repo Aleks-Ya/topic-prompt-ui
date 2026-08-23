@@ -1,7 +1,6 @@
 package topicpromptui.ui.model.question;
 
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import javafx.application.Platform;
 import org.slf4j.Logger;
@@ -10,6 +9,7 @@ import topicpromptui.core.ai.AiApi;
 import topicpromptui.core.ai.AiResponse;
 import topicpromptui.core.ai.ConversationTurn;
 import topicpromptui.core.domain.Answer;
+import topicpromptui.core.domain.AiProvider;
 import topicpromptui.core.domain.AnswerType;
 import topicpromptui.core.domain.InteractionId;
 import topicpromptui.core.prompt.PromptFactory;
@@ -20,6 +20,7 @@ import topicpromptui.ui.model.storage.StorageModel;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
@@ -27,10 +28,6 @@ import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 import static java.util.concurrent.CompletableFuture.runAsync;
-import static topicpromptui.core.ai.AiModule.CLAUDE_AI;
-import static topicpromptui.core.ai.AiModule.GCP_AI;
-import static topicpromptui.core.ai.AiModule.OPEN_AI;
-import static topicpromptui.core.ai.AiModule.OPEN_AI_GRAMMAR;
 import static topicpromptui.core.ai.ConversationTurn.Speaker.USER;
 import static topicpromptui.core.domain.AnswerState.FAIL;
 import static topicpromptui.core.domain.AnswerState.SENT;
@@ -53,10 +50,7 @@ class QuestionModelImpl implements QuestionModel {
     private static final Duration PROGRESS_INTERVAL = Duration.ofMillis(250);
     private final StorageModel storage;
     private final PromptFactory promptFactory;
-    private final AiApi openAiApi;
-    private final AiApi openAiGrammarApi;
-    private final AiApi gcpApi;
-    private final AiApi claudeApi;
+    private final Map<AiProvider, AiApi> apis;
     private final SoundService soundService;
     private final FormatConverter formatConverter;
     private final GrammarDiffMarker grammarDiffMarker;
@@ -64,17 +58,13 @@ class QuestionModelImpl implements QuestionModel {
 
     @Inject
     QuestionModelImpl(StorageModel storage, PromptFactory promptFactory,
-                      @Named(OPEN_AI) AiApi openAiApi, @Named(OPEN_AI_GRAMMAR) AiApi openAiGrammarApi,
-                      @Named(GCP_AI) AiApi gcpApi, @Named(CLAUDE_AI) AiApi claudeApi,
+                      Map<AiProvider, AiApi> apis,
                       SoundService soundService, FormatConverter formatConverter,
                       GrammarDiffMarker grammarDiffMarker,
                       FollowUpHistoryBuilder followUpHistoryBuilder) {
         this.storage = storage;
         this.promptFactory = promptFactory;
-        this.openAiApi = openAiApi;
-        this.openAiGrammarApi = openAiGrammarApi;
-        this.gcpApi = gcpApi;
-        this.claudeApi = claudeApi;
+        this.apis = apis;
         this.soundService = soundService;
         this.formatConverter = formatConverter;
         this.grammarDiffMarker = grammarDiffMarker;
@@ -104,15 +94,14 @@ class QuestionModelImpl implements QuestionModel {
                         .withState(SENT),
                 callback);
         sendAsync(interactionId, answerType, callback, progressHtml, onTextDelta -> {
+            // Thrown inside the lambda, not hoisted to the top of the method: sendAsync's handler
+            // records it as a FAIL answer, whereas a synchronous throw would hit the FX thread.
+            if (answerType == GRAMMAR) {
+                throw new IllegalArgumentException("Grammar checks don't support follow-up conversations");
+            }
             var turns = new ArrayList<>(followUpHistoryBuilder.buildHistory(parentInteractionId, answerType));
             turns.add(new ConversationTurn(USER, prompt));
-            return switch (answerType) {
-                case GCP -> gcpApi.send(systemPrompt, turns, onTextDelta);
-                case CLAUDE -> claudeApi.send(systemPrompt, turns, onTextDelta);
-                case OPEN_AI -> openAiApi.send(systemPrompt, turns, onTextDelta);
-                case GRAMMAR -> throw new IllegalArgumentException(
-                        "Grammar checks don't support follow-up conversations");
-            };
+            return apis.get(answerType.provider()).send(systemPrompt, turns, onTextDelta);
         }, UnaryOperator.identity(), "The follow-up answer request finished.");
     }
 
@@ -143,12 +132,9 @@ class QuestionModelImpl implements QuestionModel {
             UnaryOperator<String> postProcessMd = answerType == GRAMMAR
                     ? md -> grammarDiffMarker.markChanges(interaction.question(), md)
                     : UnaryOperator.identity();
-            sendAsync(interactionId, answerType, callback, progressHtml, onTextDelta -> switch (answerType) {
-                case GCP -> gcpApi.send(systemPrompt, turns, onTextDelta);
-                case CLAUDE -> claudeApi.send(systemPrompt, turns, onTextDelta);
-                case OPEN_AI -> openAiApi.send(systemPrompt, turns, onTextDelta);
-                case GRAMMAR -> openAiGrammarApi.send(systemPrompt, turns, onTextDelta);
-            }, postProcessMd, "The short answer request finished.");
+            sendAsync(interactionId, answerType, callback, progressHtml,
+                    onTextDelta -> apis.get(answerType.provider()).send(systemPrompt, turns, onTextDelta),
+                    postProcessMd, "The short answer request finished.");
         } else {
             log.info("The short answer was skipped.");
         }

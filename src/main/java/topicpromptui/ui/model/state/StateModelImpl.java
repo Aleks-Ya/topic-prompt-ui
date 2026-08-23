@@ -20,10 +20,10 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static topicpromptui.core.domain.AnswerState.NEW;
-import static topicpromptui.core.domain.AnswerType.CLAUDE;
-import static topicpromptui.core.domain.AnswerType.GCP;
+import static topicpromptui.core.domain.AnswerType.AI_2;
+import static topicpromptui.core.domain.AnswerType.AI_3;
 import static topicpromptui.core.domain.AnswerType.GRAMMAR;
-import static topicpromptui.core.domain.AnswerType.OPEN_AI;
+import static topicpromptui.core.domain.AnswerType.AI_1;
 
 @Singleton
 class StateModelImpl implements StateModel {
@@ -92,9 +92,9 @@ class StateModelImpl implements StateModel {
             var question = getEditedQuestion();
             var interaction = new Interaction(interactionId, interactionType, topic.id(), question, Map.of(
                     GRAMMAR, new Answer(GRAMMAR, "", "", "", NEW, null, null, null, null, null, null, null),
-                    OPEN_AI, new Answer(OPEN_AI, "", "", "", NEW, null, null, null, null, null, null, null),
-                    CLAUDE, new Answer(CLAUDE, "", "", "", NEW, null, null, null, null, null, null, null),
-                    GCP, new Answer(GCP, "", "", "", NEW, null, null, null, null, null, null, null)
+                    AI_1, new Answer(AI_1, "", "", "", NEW, null, null, null, null, null, null, null),
+                    AI_2, new Answer(AI_2, "", "", "", NEW, null, null, null, null, null, null, null),
+                    AI_3, new Answer(AI_3, "", "", "", NEW, null, null, null, null, null, null, null)
             ), parentInteractionId);
             storage.saveInteraction(interaction);
             setCurrentInteractionId(interactionId);

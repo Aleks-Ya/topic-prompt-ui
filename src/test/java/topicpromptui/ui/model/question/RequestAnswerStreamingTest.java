@@ -24,7 +24,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import static topicpromptui.core.domain.AnswerState.NEW;
 import static topicpromptui.core.domain.AnswerState.SENT;
-import static topicpromptui.core.domain.AnswerType.OPEN_AI;
+import static topicpromptui.core.domain.AnswerType.AI_1;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
@@ -46,12 +46,12 @@ class RequestAnswerStreamingTest extends ApplicationTest {
 
         var snapshots = new CopyOnWriteArrayList<String>();
         var onFxThread = new CopyOnWriteArrayList<Boolean>();
-        questionModel.requestAnswer(interactionId, OPEN_AI, () -> {
+        questionModel.requestAnswer(interactionId, AI_1, () -> {
         }, html -> {
             snapshots.add(html);
             onFxThread.add(Platform.isFxApplicationThread());
         });
-        awaitTerminalState(interactionId, OPEN_AI);
+        awaitTerminalState(interactionId, AI_1);
 
         await().atMost(Duration.ofSeconds(5)).until(() -> snapshots.size() >= 3);
         assertThat(onFxThread).allMatch(Boolean::booleanValue);
@@ -59,7 +59,7 @@ class RequestAnswerStreamingTest extends ApplicationTest {
         assertThat(snapshots.get(1)).contains("James Gosling");
         assertThat(snapshots.getLast()).contains("James Gosling created Java.");
 
-        var answer = storage.readInteraction(interactionId).orElseThrow().getAnswer(OPEN_AI).orElseThrow();
+        var answer = storage.readInteraction(interactionId).orElseThrow().getAnswer(AI_1).orElseThrow();
         assertThat(answer.answerState()).isEqualTo(AnswerState.SUCCESS);
         assertThat(answer.answerMd()).isEqualTo("James Gosling created Java.");
     }
@@ -71,18 +71,18 @@ class RequestAnswerStreamingTest extends ApplicationTest {
                 List.of("chunk1 ", "chunk2"), Duration.ofMillis(400));
 
         var snapshots = new CopyOnWriteArrayList<String>();
-        questionModel.requestAnswer(interactionId, OPEN_AI, () -> {
+        questionModel.requestAnswer(interactionId, AI_1, () -> {
         }, snapshots::add);
 
         // While at least one chunk has streamed but the send hasn't finished, storage must be SENT
         // with no partial answer text.
         await().atMost(Duration.ofSeconds(5)).until(() -> !snapshots.isEmpty());
-        var midStream = storage.readInteraction(interactionId).orElseThrow().getAnswer(OPEN_AI).orElseThrow();
+        var midStream = storage.readInteraction(interactionId).orElseThrow().getAnswer(AI_1).orElseThrow();
         assertThat(midStream.answerState()).isEqualTo(SENT);
         assertThat(midStream.answerMd()).isEmpty();
 
-        awaitTerminalState(interactionId, OPEN_AI);
-        var answer = storage.readInteraction(interactionId).orElseThrow().getAnswer(OPEN_AI).orElseThrow();
+        awaitTerminalState(interactionId, AI_1);
+        var answer = storage.readInteraction(interactionId).orElseThrow().getAnswer(AI_1).orElseThrow();
         assertThat(answer.answerState()).isEqualTo(AnswerState.SUCCESS);
         assertThat(answer.answerMd()).isEqualTo("chunk1 chunk2");
     }
@@ -93,11 +93,11 @@ class RequestAnswerStreamingTest extends ApplicationTest {
         openAiApi.clear(); // no mock response registered -> send throws
 
         var snapshots = new CopyOnWriteArrayList<String>();
-        questionModel.requestAnswer(interactionId, OPEN_AI, () -> {
+        questionModel.requestAnswer(interactionId, AI_1, () -> {
         }, snapshots::add);
-        awaitTerminalState(interactionId, OPEN_AI);
+        awaitTerminalState(interactionId, AI_1);
 
-        var answer = storage.readInteraction(interactionId).orElseThrow().getAnswer(OPEN_AI).orElseThrow();
+        var answer = storage.readInteraction(interactionId).orElseThrow().getAnswer(AI_1).orElseThrow();
         assertThat(answer.answerState()).isEqualTo(AnswerState.FAIL);
         assertThat(snapshots).isEmpty();
     }
@@ -107,15 +107,15 @@ class RequestAnswerStreamingTest extends ApplicationTest {
         var topic = storage.addTopic("Java topic");
         var interactionId = new InteractionId(7L);
         storage.saveInteraction(new Interaction(interactionId, InteractionType.QUESTION, topic.id(), "What is Java?",
-                Map.of(OPEN_AI, new Answer(OPEN_AI, "", "", "", AnswerState.NEW, null,
+                Map.of(AI_1, new Answer(AI_1, "", "", "", AnswerState.NEW, null,
                         null, null, null, null, null, null)),
                 null));
         openAiApi.clear().putResponse("What is Java?", "Java is a language.", Duration.ZERO);
 
-        questionModel.requestAnswer(interactionId, OPEN_AI, () -> {
+        questionModel.requestAnswer(interactionId, AI_1, () -> {
         }, html -> {
         });
-        awaitTerminalState(interactionId, OPEN_AI);
+        awaitTerminalState(interactionId, AI_1);
 
         // Initial (non-follow-up) request: the behavioral instructions ride in the system prompt,
         // and the single user turn carries only the slim topic + question message.
@@ -124,7 +124,7 @@ class RequestAnswerStreamingTest extends ApplicationTest {
         assertThat(turns).hasSize(1);
         assertThat(turns.getLast().content()).contains("What is Java?");
 
-        var answer = storage.readInteraction(interactionId).orElseThrow().getAnswer(OPEN_AI).orElseThrow();
+        var answer = storage.readInteraction(interactionId).orElseThrow().getAnswer(AI_1).orElseThrow();
         assertThat(answer.systemPrompt()).contains("Do not repeat the question");
     }
 
@@ -135,13 +135,13 @@ class RequestAnswerStreamingTest extends ApplicationTest {
         var topic = storage.addTopic("Topic " + question);
         var parentId = new InteractionId(1L);
         storage.saveInteraction(new Interaction(parentId, InteractionType.QUESTION, topic.id(), "What is Java?",
-                Map.of(OPEN_AI, new Answer(OPEN_AI, "Explain Java briefly", "Java is a language.",
+                Map.of(AI_1, new Answer(AI_1, "Explain Java briefly", "Java is a language.",
                         "<p>Java is a language.</p>", AnswerState.SUCCESS, "resp_1",
                         null, null, null, null, null, null)),
                 null));
         var followUpId = new InteractionId(2L);
         storage.saveInteraction(new Interaction(followUpId, InteractionType.QUESTION, topic.id(), question,
-                Map.of(OPEN_AI, new Answer(OPEN_AI, "", "", "", AnswerState.NEW, null,
+                Map.of(AI_1, new Answer(AI_1, "", "", "", AnswerState.NEW, null,
                         null, null, null, null, null, null)),
                 parentId));
         return followUpId;

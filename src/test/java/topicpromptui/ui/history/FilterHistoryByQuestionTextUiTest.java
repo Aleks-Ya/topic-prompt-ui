@@ -40,9 +40,9 @@ class FilterHistoryByQuestionTextUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(I3.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I3.GRAMMAR_HTML)
-                .openAiA().text(I3.OPEN_AI_HTML)
-                .claudeA().text(I3.CLAUDE_HTML)
-                .gcpA().text(I3.GCP_HTML)
+                .ai1A().text(I3.AI_1_HTML)
+                .ai2A().text(I3.AI_2_HTML)
+                .ai3A().text(I3.AI_3_HTML)
                 .answerCircleColors(GREEN, GREEN, RED, GREEN)
 
                 // Lowercase filter matches "Question 1" only: proves case-insensitivity.
@@ -65,9 +65,9 @@ class FilterHistoryByQuestionTextUiTest extends BaseTopicPromptUiTest {
                 .questionText(I1.QUESTION)
                 .modelEditedQuestion(I1.QUESTION)
                 .grammarA().text(I1.GRAMMAR_HTML)
-                .openAiA().text(I1.OPEN_AI_HTML)
-                .claudeA().text(I1.CLAUDE_HTML)
-                .gcpA().text(I1.GCP_HTML)
+                .ai1A().text(I1.AI_1_HTML)
+                .ai2A().text(I1.AI_2_HTML)
+                .ai3A().text(I1.AI_3_HTML)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
 
                 .work("Clear filter", () -> clickOn(history().filterClearButton()))

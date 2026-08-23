@@ -38,9 +38,9 @@ class RegenerateAnswerUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(I2.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I2.GRAMMAR_HTML)
-                .openAiA().text(I2.OPEN_AI_HTML)
-                .claudeA().text(I2.CLAUDE_HTML)
-                .gcpA().text(I2.GCP_HTML)
+                .ai1A().text(I2.AI_1_HTML)
+                .ai2A().text(I2.AI_2_HTML)
+                .ai3A().text(I2.AI_3_HTML)
                 .answerCircleColors(GREEN, GREEN, RED, GREEN)
 
                 .work("Wait for Regenerate Grammar Answer Response", () -> {
@@ -53,32 +53,32 @@ class RegenerateAnswerUiTest extends BaseTopicPromptUiTest {
                 .grammarA().text(I2.EXP_GRAMMAR_ANSWER_BODY)
 
                 .work("regenerateOpenAiAnswer", () -> {
-                    gptApi.clear().putOpenAiResponse(I3.OPEN_AI_HTML, ZERO);
-                    clickOn(openAiAnswer().regenerateButton());
+                    gptApi.clear().putOpenAiResponse(I3.AI_1_HTML, ZERO);
+                    clickOn(ai1Answer().regenerateButton());
                     gptApi.waitUntilSent(1);
                 })
-                .focus(openAiAnswer().regenerateButton())
+                .focus(ai1Answer().regenerateButton())
                 .historyItems(storage.readInteraction(I2.INTERACTION.id()).orElseThrow(), I1.INTERACTION)
-                .openAiA().text(I3.EXP_OPEN_AI_HTML_BODY)
+                .ai1A().text(I3.EXP_AI_1_HTML_BODY)
 
                 .work("Regenerate Claude Answer", () -> {
-                    claudeApi.clear().putClaudeResponse(I3.CLAUDE_HTML, ZERO);
-                    clickOn(claudeAnswer().regenerateButton());
+                    claudeApi.clear().putClaudeResponse(I3.AI_2_HTML, ZERO);
+                    clickOn(ai2Answer().regenerateButton());
                     claudeApi.waitUntilSent(1);
                 })
-                .focus(claudeAnswer().regenerateButton())
+                .focus(ai2Answer().regenerateButton())
                 .historyItems(storage.readInteraction(I2.INTERACTION.id()).orElseThrow(), I1.INTERACTION)
-                .claudeA().text(I3.EXP_CLAUDE_HTML_BODY)
+                .ai2A().text(I3.EXP_AI_2_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
 
                 .work("Regenerate GCP Answer", () -> {
-                    gcpApi.clear().putGcpResponse(I3.GCP_HTML, ZERO);
-                    clickOn(gcpAnswer().regenerateButton());
+                    gcpApi.clear().putGcpResponse(I3.AI_3_HTML, ZERO);
+                    clickOn(ai3Answer().regenerateButton());
                     gcpApi.waitUntilSent(1);
                 })
-                .focus(gcpAnswer().regenerateButton())
+                .focus(ai3Answer().regenerateButton())
                 .historyItems(storage.readInteraction(I2.INTERACTION.id()).orElseThrow(), I1.INTERACTION)
-                .gcpA().text(I3.EXP_GCP_HTML_BODY)
+                .ai3A().text(I3.EXP_AI_3_HTML_BODY)
 
                 .work("Choose Interaction 1 from history", () -> {
                     clickOn(history().comboBox());
@@ -90,18 +90,18 @@ class RegenerateAnswerUiTest extends BaseTopicPromptUiTest {
                 .questionText(I1.QUESTION)
                 .modelEditedQuestion(I1.QUESTION)
                 .grammarA().text(I1.GRAMMAR_HTML)
-                .openAiA().text(I1.OPEN_AI_HTML)
-                .claudeA().text(I1.CLAUDE_HTML)
-                .gcpA().text(I1.GCP_HTML)
+                .ai1A().text(I1.AI_1_HTML)
+                .ai2A().text(I1.AI_2_HTML)
+                .ai3A().text(I1.AI_3_HTML)
 
                 .work("Regenerate GCP Answer", () -> {
-                    gcpApi.clear().putGcpResponse(I3.GCP_HTML, ZERO);
-                    clickOn(gcpAnswer().regenerateButton());
+                    gcpApi.clear().putGcpResponse(I3.AI_3_HTML, ZERO);
+                    clickOn(ai3Answer().regenerateButton());
                     gcpApi.waitUntilSent(1);
                 })
-                .focus(gcpAnswer().regenerateButton())
+                .focus(ai3Answer().regenerateButton())
                 .historyItems(storage.readInteraction(I2.INTERACTION.id()).orElseThrow(), storage.readInteraction(I1.INTERACTION.id()).orElseThrow())
-                .gcpA().text(I3.EXP_GCP_HTML_BODY)
+                .ai3A().text(I3.EXP_AI_3_HTML_BODY)
 
                 .assertApp();
     }

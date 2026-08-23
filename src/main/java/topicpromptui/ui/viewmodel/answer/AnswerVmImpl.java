@@ -15,10 +15,10 @@ import java.util.List;
 import java.util.Map;
 
 import static topicpromptui.core.domain.AnswerState.NEW;
-import static topicpromptui.core.domain.AnswerType.CLAUDE;
-import static topicpromptui.core.domain.AnswerType.GCP;
+import static topicpromptui.core.domain.AnswerType.AI_2;
+import static topicpromptui.core.domain.AnswerType.AI_3;
 import static topicpromptui.core.domain.AnswerType.GRAMMAR;
-import static topicpromptui.core.domain.AnswerType.OPEN_AI;
+import static topicpromptui.core.domain.AnswerType.AI_1;
 import static javafx.scene.paint.Color.BLUE;
 import static javafx.scene.paint.Color.GREEN;
 import static javafx.scene.paint.Color.RED;
@@ -39,8 +39,8 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
     private AnswerMediator mediator;
     private String currentWebViewContent = "";
     private final AnswerType answerType;
-    private static final Map<AnswerType, Integer> hotkeyDigitMap = Map.of(GRAMMAR, 1, OPEN_AI, 2, CLAUDE, 3, GCP, 4);
-    private static final Map<AnswerType, String> buttonTextMap = Map.of(GRAMMAR, "Grammar:", OPEN_AI, "OpenAI:", CLAUDE, "Claude:", GCP, "Gemini:");
+    // Pane position, not provider identity, so this stays here rather than moving onto AnswerType.
+    private static final Map<AnswerType, Integer> hotkeyDigitMap = Map.of(GRAMMAR, 1, AI_1, 2, AI_2, 3, AI_3, 4);
 
     @Override
     public void onCopyButtonClick() {
@@ -141,7 +141,7 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
     public void initialize() {
         Mdc.run(answerType.toString(), () -> {
             log.trace("displayInitialState");
-            vmProperties.answerButtonText.setValue(buttonTextMap.get(answerType));
+            vmProperties.answerButtonText.setValue(answerType.caption());
             vmProperties.copyButtonText.setValue(vmProperties.copyButtonText.getValue() + " _" + hotkeyDigitMap.get(answerType));
         });
     }

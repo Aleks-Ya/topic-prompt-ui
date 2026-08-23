@@ -29,51 +29,51 @@ class ExpandAnswerUiTest extends BaseTopicPromptUiTest {
 
     @Test
     void expandAndCollapseByButton() {
-        clickOn(openAiAnswer().expandButton());
+        clickOn(ai1Answer().expandButton());
         WaitForAsyncUtils.waitForFxEvents();
-        assertShown(openAiAnswer().pane());
+        assertShown(ai1Answer().pane());
         assertHidden(historyPane(), topicPane(), questionPane(),
-                grammarAnswer().pane(), claudeAnswer().pane(), gcpAnswer().pane());
+                grammarAnswer().pane(), ai2Answer().pane(), ai3Answer().pane());
 
-        clickOn(openAiAnswer().expandButton());
+        clickOn(ai1Answer().expandButton());
         WaitForAsyncUtils.waitForFxEvents();
         assertShown(historyPane(), topicPane(), questionPane(),
-                grammarAnswer().pane(), openAiAnswer().pane(), claudeAnswer().pane(), gcpAnswer().pane());
+                grammarAnswer().pane(), ai1Answer().pane(), ai2Answer().pane(), ai3Answer().pane());
     }
 
     @Test
     void switchExpandedPaneByAnotherExpandButtonAfterCollapse() {
-        clickOn(gcpAnswer().expandButton());
+        clickOn(ai3Answer().expandButton());
         WaitForAsyncUtils.waitForFxEvents();
-        assertShown(gcpAnswer().pane());
+        assertShown(ai3Answer().pane());
         assertHidden(historyPane(), topicPane(), questionPane(),
-                grammarAnswer().pane(), openAiAnswer().pane(), claudeAnswer().pane());
+                grammarAnswer().pane(), ai1Answer().pane(), ai2Answer().pane());
 
-        clickOn(gcpAnswer().expandButton());
-        clickOn(claudeAnswer().expandButton());
+        clickOn(ai3Answer().expandButton());
+        clickOn(ai2Answer().expandButton());
         WaitForAsyncUtils.waitForFxEvents();
-        assertShown(claudeAnswer().pane());
+        assertShown(ai2Answer().pane());
         assertHidden(historyPane(), topicPane(), questionPane(),
-                grammarAnswer().pane(), openAiAnswer().pane(), gcpAnswer().pane());
+                grammarAnswer().pane(), ai1Answer().pane(), ai3Answer().pane());
 
-        clickOn(claudeAnswer().expandButton());
+        clickOn(ai2Answer().expandButton());
         WaitForAsyncUtils.waitForFxEvents();
         assertShown(historyPane(), topicPane(), questionPane(),
-                grammarAnswer().pane(), openAiAnswer().pane(), claudeAnswer().pane(), gcpAnswer().pane());
+                grammarAnswer().pane(), ai1Answer().pane(), ai2Answer().pane(), ai3Answer().pane());
     }
 
     @Test
     void collapseByEscThenEscFocusesQuestion() {
-        clickOn(claudeAnswer().expandButton());
+        clickOn(ai2Answer().expandButton());
         WaitForAsyncUtils.waitForFxEvents();
-        assertShown(claudeAnswer().pane());
+        assertShown(ai2Answer().pane());
         assertHidden(historyPane(), topicPane(), questionPane(),
-                grammarAnswer().pane(), openAiAnswer().pane(), gcpAnswer().pane());
+                grammarAnswer().pane(), ai1Answer().pane(), ai3Answer().pane());
 
         press(ESCAPE).release(ESCAPE);
         WaitForAsyncUtils.waitForFxEvents();
         assertShown(historyPane(), topicPane(), questionPane(),
-                grammarAnswer().pane(), openAiAnswer().pane(), claudeAnswer().pane(), gcpAnswer().pane());
+                grammarAnswer().pane(), ai1Answer().pane(), ai2Answer().pane(), ai3Answer().pane());
         assertThat(question().textArea().isFocused()).isFalse();
 
         press(ESCAPE).release(ESCAPE);
@@ -85,14 +85,14 @@ class ExpandAnswerUiTest extends BaseTopicPromptUiTest {
     void expandAndCollapseByCtrlDigit() {
         press(CONTROL, DIGIT2).release(DIGIT2, CONTROL);
         WaitForAsyncUtils.waitForFxEvents();
-        assertShown(openAiAnswer().pane());
+        assertShown(ai1Answer().pane());
         assertHidden(historyPane(), topicPane(), questionPane(),
-                grammarAnswer().pane(), claudeAnswer().pane(), gcpAnswer().pane());
+                grammarAnswer().pane(), ai2Answer().pane(), ai3Answer().pane());
 
         press(CONTROL, DIGIT2).release(DIGIT2, CONTROL);
         WaitForAsyncUtils.waitForFxEvents();
         assertShown(historyPane(), topicPane(), questionPane(),
-                grammarAnswer().pane(), openAiAnswer().pane(), claudeAnswer().pane(), gcpAnswer().pane());
+                grammarAnswer().pane(), ai1Answer().pane(), ai2Answer().pane(), ai3Answer().pane());
     }
 
     @Test
@@ -101,36 +101,36 @@ class ExpandAnswerUiTest extends BaseTopicPromptUiTest {
         WaitForAsyncUtils.waitForFxEvents();
         assertShown(grammarAnswer().pane());
         assertHidden(historyPane(), topicPane(), questionPane(),
-                openAiAnswer().pane(), claudeAnswer().pane(), gcpAnswer().pane());
+                ai1Answer().pane(), ai2Answer().pane(), ai3Answer().pane());
         assertThat(grammarAnswer().pane().getMaxHeight()).isEqualTo(Double.MAX_VALUE);
 
         press(CONTROL, DIGIT3).release(DIGIT3, CONTROL);
         WaitForAsyncUtils.waitForFxEvents();
-        assertShown(claudeAnswer().pane());
+        assertShown(ai2Answer().pane());
         assertHidden(historyPane(), topicPane(), questionPane(),
-                grammarAnswer().pane(), openAiAnswer().pane(), gcpAnswer().pane());
+                grammarAnswer().pane(), ai1Answer().pane(), ai3Answer().pane());
         assertThat(grammarAnswer().pane().getMaxHeight()).isEqualTo(70.0);
         assertThat(VBox.getVgrow(grammarAnswer().pane())).isEqualTo(Priority.SOMETIMES);
 
         press(ESCAPE).release(ESCAPE);
         WaitForAsyncUtils.waitForFxEvents();
         assertShown(historyPane(), topicPane(), questionPane(),
-                grammarAnswer().pane(), openAiAnswer().pane(), claudeAnswer().pane(), gcpAnswer().pane());
+                grammarAnswer().pane(), ai1Answer().pane(), ai2Answer().pane(), ai3Answer().pane());
     }
 
     @Test
     void expandByCtrlDigitWhileWebViewFocused() {
-        clickOn(claudeAnswer().webView());
+        clickOn(ai2Answer().webView());
         press(CONTROL, DIGIT4).release(DIGIT4, CONTROL);
         WaitForAsyncUtils.waitForFxEvents();
-        assertShown(gcpAnswer().pane());
+        assertShown(ai3Answer().pane());
         assertHidden(historyPane(), topicPane(), questionPane(),
-                grammarAnswer().pane(), openAiAnswer().pane(), claudeAnswer().pane());
+                grammarAnswer().pane(), ai1Answer().pane(), ai2Answer().pane());
 
         press(CONTROL, DIGIT4).release(DIGIT4, CONTROL);
         WaitForAsyncUtils.waitForFxEvents();
         assertShown(historyPane(), topicPane(), questionPane(),
-                grammarAnswer().pane(), openAiAnswer().pane(), claudeAnswer().pane(), gcpAnswer().pane());
+                grammarAnswer().pane(), ai1Answer().pane(), ai2Answer().pane(), ai3Answer().pane());
     }
 
     @Test
@@ -143,7 +143,7 @@ class ExpandAnswerUiTest extends BaseTopicPromptUiTest {
         WaitForAsyncUtils.waitForFxEvents();
         assertShown(grammarAnswer().pane());
         assertHidden(historyPane(), topicPane(), questionPane(),
-                openAiAnswer().pane(), claudeAnswer().pane(), gcpAnswer().pane());
+                ai1Answer().pane(), ai2Answer().pane(), ai3Answer().pane());
         assertThat(pane.getMaxHeight()).isEqualTo(Double.MAX_VALUE);
         assertThat(VBox.getVgrow(pane)).isEqualTo(Priority.ALWAYS);
 

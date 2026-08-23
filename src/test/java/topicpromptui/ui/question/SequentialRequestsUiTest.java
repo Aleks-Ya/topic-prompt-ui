@@ -46,9 +46,9 @@ class SequentialRequestsUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(null)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I0.GRAMMAR_HTML)
-                .openAiA().text(I0.OPEN_AI_HTML)
-                .claudeA().text(I0.CLAUDE_HTML)
-                .gcpA().text(I0.GCP_HTML)
+                .ai1A().text(I0.AI_1_HTML)
+                .ai2A().text(I0.AI_2_HTML)
+                .ai3A().text(I0.AI_3_HTML)
                 .answerCircleColors(WHITE, WHITE, WHITE, WHITE)
                 .assertApp();
     }
@@ -73,17 +73,17 @@ class SequentialRequestsUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(I1.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I0.GRAMMAR_HTML)
-                .openAiA().text(I0.OPEN_AI_HTML)
-                .claudeA().text(I0.CLAUDE_HTML)
-                .gcpA().text(I0.GCP_HTML)
+                .ai1A().text(I0.AI_1_HTML)
+                .ai2A().text(I0.AI_2_HTML)
+                .ai3A().text(I0.AI_3_HTML)
                 .answerCircleColors(WHITE, WHITE, WHITE, WHITE)
                 .assertApp();
 
         gptApi.clear()
                 .putGrammarResponse(I1.GRAMMAR_ANSWER, ofMillis(1000))
-                .putOpenAiResponse(I1.OPEN_AI_HTML, ofMillis(1500));
-        claudeApi.clear().putClaudeResponse(I1.CLAUDE_HTML, ofMillis(2000));
-        gcpApi.clear().putGcpResponse(I1.GCP_HTML, ofMillis(2500));
+                .putOpenAiResponse(I1.AI_1_HTML, ofMillis(1500));
+        claudeApi.clear().putClaudeResponse(I1.AI_2_HTML, ofMillis(2000));
+        gcpApi.clear().putGcpResponse(I1.AI_3_HTML, ofMillis(2500));
 
         clickOn(question().questionButton());
         assertion()
@@ -102,9 +102,9 @@ class SequentialRequestsUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(I1.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I0.GRAMMAR_HTML)
-                .openAiA().text(I0.OPEN_AI_HTML)
-                .claudeA().text(I0.CLAUDE_HTML)
-                .gcpA().text(I0.GCP_HTML)
+                .ai1A().text(I0.AI_1_HTML)
+                .ai2A().text(I0.AI_2_HTML)
+                .ai3A().text(I0.AI_3_HTML)
                 .answerCircleColors(BLUE, BLUE, BLUE, BLUE)
                 .assertApp();
 
@@ -127,15 +127,15 @@ class SequentialRequestsUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(I1.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I1.EXP_GRAMMAR_ANSWER_BODY)
-                .openAiA().text(I1.EXP_OPEN_AI_HTML_BODY)
-                .claudeA().text(I1.EXP_CLAUDE_HTML_BODY)
-                .gcpA().text(I1.EXP_GCP_HTML_BODY)
+                .ai1A().text(I1.EXP_AI_1_HTML_BODY)
+                .ai2A().text(I1.EXP_AI_2_HTML_BODY)
+                .ai3A().text(I1.EXP_AI_3_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
                 .assertApp();
 
-        clickOn(openAiAnswer().copyButton());
+        clickOn(ai1Answer().copyButton());
         assertion()
-                .focus(openAiAnswer().copyButton())
+                .focus(ai1Answer().copyButton())
                 .historySize(1, 1)
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(storage.readAllInteractions().getFirst())
@@ -150,16 +150,16 @@ class SequentialRequestsUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(I1.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I1.EXP_GRAMMAR_ANSWER_BODY)
-                .openAiA().text(I1.EXP_OPEN_AI_HTML_BODY)
-                .claudeA().text(I1.EXP_CLAUDE_HTML_BODY)
-                .gcpA().text(I1.EXP_GCP_HTML_BODY)
+                .ai1A().text(I1.EXP_AI_1_HTML_BODY)
+                .ai2A().text(I1.EXP_AI_2_HTML_BODY)
+                .ai3A().text(I1.EXP_AI_3_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
-                .clipboard(I1.EXP_OPEN_AI_HTML_BODY)
+                .clipboard(I1.EXP_AI_1_HTML_BODY)
                 .assertApp();
 
-        clickOn(claudeAnswer().copyButton());
+        clickOn(ai2Answer().copyButton());
         assertion()
-                .focus(claudeAnswer().copyButton())
+                .focus(ai2Answer().copyButton())
                 .historySize(1, 1)
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(storage.readAllInteractions().getFirst())
@@ -174,16 +174,16 @@ class SequentialRequestsUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(I1.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I1.EXP_GRAMMAR_ANSWER_BODY)
-                .openAiA().text(I1.EXP_OPEN_AI_HTML_BODY)
-                .claudeA().text(I1.EXP_CLAUDE_HTML_BODY)
-                .gcpA().text(I1.EXP_GCP_HTML_BODY)
+                .ai1A().text(I1.EXP_AI_1_HTML_BODY)
+                .ai2A().text(I1.EXP_AI_2_HTML_BODY)
+                .ai3A().text(I1.EXP_AI_3_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
-                .clipboard(I1.EXP_CLAUDE_HTML_BODY)
+                .clipboard(I1.EXP_AI_2_HTML_BODY)
                 .assertApp();
 
-        clickOn(gcpAnswer().copyButton());
+        clickOn(ai3Answer().copyButton());
         assertion()
-                .focus(gcpAnswer().copyButton())
+                .focus(ai3Answer().copyButton())
                 .historySize(1, 1)
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(storage.readAllInteractions().getFirst())
@@ -198,11 +198,11 @@ class SequentialRequestsUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(I1.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I1.EXP_GRAMMAR_ANSWER_BODY)
-                .openAiA().text(I1.EXP_OPEN_AI_HTML_BODY)
-                .claudeA().text(I1.EXP_CLAUDE_HTML_BODY)
-                .gcpA().text(I1.EXP_GCP_HTML_BODY)
+                .ai1A().text(I1.EXP_AI_1_HTML_BODY)
+                .ai2A().text(I1.EXP_AI_2_HTML_BODY)
+                .ai3A().text(I1.EXP_AI_3_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
-                .clipboard(I1.EXP_GCP_HTML_BODY)
+                .clipboard(I1.EXP_AI_3_HTML_BODY)
                 .assertApp();
     }
 
@@ -226,17 +226,17 @@ class SequentialRequestsUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(I2.QUESTION)
                 .modelIsEnteringNewQuestion(true)
                 .grammarA().text(I1.EXP_GRAMMAR_ANSWER_BODY)
-                .openAiA().text(I1.EXP_OPEN_AI_HTML_BODY)
-                .claudeA().text(I1.EXP_CLAUDE_HTML_BODY)
-                .gcpA().text(I1.EXP_GCP_HTML_BODY)
+                .ai1A().text(I1.EXP_AI_1_HTML_BODY)
+                .ai2A().text(I1.EXP_AI_2_HTML_BODY)
+                .ai3A().text(I1.EXP_AI_3_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
                 .assertApp();
 
         gptApi.clear()
                 .putGrammarResponse(I2.GRAMMAR_ANSWER, ofMillis(1000))
-                .putOpenAiResponse(I2.OPEN_AI_HTML, ofMillis(1500));
-        claudeApi.clear().putClaudeResponse(I2.CLAUDE_HTML, ofMillis(2000));
-        gcpApi.clear().putGcpResponse(I2.GCP_HTML, ofMillis(2500));
+                .putOpenAiResponse(I2.AI_1_HTML, ofMillis(1500));
+        claudeApi.clear().putClaudeResponse(I2.AI_2_HTML, ofMillis(2000));
+        gcpApi.clear().putGcpResponse(I2.AI_3_HTML, ofMillis(2500));
         clickOn(question().questionButton());
         assertion()
                 .focus(question().questionButton())
@@ -254,9 +254,9 @@ class SequentialRequestsUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(I2.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I0.GRAMMAR_HTML)
-                .openAiA().text(I0.OPEN_AI_HTML)
-                .claudeA().text(I0.CLAUDE_HTML)
-                .gcpA().text(I0.GCP_HTML)
+                .ai1A().text(I0.AI_1_HTML)
+                .ai2A().text(I0.AI_2_HTML)
+                .ai3A().text(I0.AI_3_HTML)
                 .answerCircleColors(BLUE, BLUE, BLUE, BLUE)
                 .assertApp();
 
@@ -280,15 +280,15 @@ class SequentialRequestsUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(I2.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I2.EXP_GRAMMAR_ANSWER_BODY)
-                .openAiA().text(I2.EXP_OPEN_AI_HTML_BODY)
-                .claudeA().text(I2.EXP_CLAUDE_HTML_BODY)
-                .gcpA().text(I2.EXP_GCP_HTML_BODY)
+                .ai1A().text(I2.EXP_AI_1_HTML_BODY)
+                .ai2A().text(I2.EXP_AI_2_HTML_BODY)
+                .ai3A().text(I2.EXP_AI_3_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
                 .assertApp();
 
-        clickOn(openAiAnswer().copyButton());
+        clickOn(ai1Answer().copyButton());
         assertion()
-                .focus(openAiAnswer().copyButton())
+                .focus(ai1Answer().copyButton())
                 .historySize(2, 2)
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(storage.readAllInteractions().getFirst())
@@ -303,16 +303,16 @@ class SequentialRequestsUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(I2.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I2.EXP_GRAMMAR_ANSWER_BODY)
-                .openAiA().text(I2.EXP_OPEN_AI_HTML_BODY)
-                .claudeA().text(I2.EXP_CLAUDE_HTML_BODY)
-                .gcpA().text(I2.EXP_GCP_HTML_BODY)
+                .ai1A().text(I2.EXP_AI_1_HTML_BODY)
+                .ai2A().text(I2.EXP_AI_2_HTML_BODY)
+                .ai3A().text(I2.EXP_AI_3_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
-                .clipboard(I2.EXP_OPEN_AI_HTML_BODY)
+                .clipboard(I2.EXP_AI_1_HTML_BODY)
                 .assertApp();
 
-        clickOn(claudeAnswer().copyButton());
+        clickOn(ai2Answer().copyButton());
         assertion()
-                .focus(claudeAnswer().copyButton())
+                .focus(ai2Answer().copyButton())
                 .historySize(2, 2)
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(storage.readAllInteractions().getFirst())
@@ -327,16 +327,16 @@ class SequentialRequestsUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(I2.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I2.EXP_GRAMMAR_ANSWER_BODY)
-                .openAiA().text(I2.EXP_OPEN_AI_HTML_BODY)
-                .claudeA().text(I2.EXP_CLAUDE_HTML_BODY)
-                .gcpA().text(I2.EXP_GCP_HTML_BODY)
+                .ai1A().text(I2.EXP_AI_1_HTML_BODY)
+                .ai2A().text(I2.EXP_AI_2_HTML_BODY)
+                .ai3A().text(I2.EXP_AI_3_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
-                .clipboard(I2.EXP_CLAUDE_HTML_BODY)
+                .clipboard(I2.EXP_AI_2_HTML_BODY)
                 .assertApp();
 
-        clickOn(gcpAnswer().copyButton());
+        clickOn(ai3Answer().copyButton());
         assertion()
-                .focus(gcpAnswer().copyButton())
+                .focus(ai3Answer().copyButton())
                 .historySize(2, 2)
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(storage.readAllInteractions().getFirst())
@@ -351,17 +351,17 @@ class SequentialRequestsUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(I2.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I2.EXP_GRAMMAR_ANSWER_BODY)
-                .openAiA().text(I2.EXP_OPEN_AI_HTML_BODY)
-                .claudeA().text(I2.EXP_CLAUDE_HTML_BODY)
-                .gcpA().text(I2.EXP_GCP_HTML_BODY)
+                .ai1A().text(I2.EXP_AI_1_HTML_BODY)
+                .ai2A().text(I2.EXP_AI_2_HTML_BODY)
+                .ai3A().text(I2.EXP_AI_3_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
-                .clipboard(I2.EXP_GCP_HTML_BODY)
+                .clipboard(I2.EXP_AI_3_HTML_BODY)
                 .assertApp();
     }
 
     private void choosePreviousInteraction() {
         assertion()
-                .focus(gcpAnswer().copyButton())
+                .focus(ai3Answer().copyButton())
                 .historySize(2, 2)
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(storage.readAllInteractions().getFirst())
@@ -376,9 +376,9 @@ class SequentialRequestsUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(I2.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I2.EXP_GRAMMAR_ANSWER_BODY)
-                .openAiA().text(I2.EXP_OPEN_AI_HTML_BODY)
-                .claudeA().text(I2.EXP_CLAUDE_HTML_BODY)
-                .gcpA().text(I2.EXP_GCP_HTML_BODY)
+                .ai1A().text(I2.EXP_AI_1_HTML_BODY)
+                .ai2A().text(I2.EXP_AI_2_HTML_BODY)
+                .ai3A().text(I2.EXP_AI_3_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
                 .assertApp();
 
@@ -399,15 +399,15 @@ class SequentialRequestsUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(I1.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I1.EXP_GRAMMAR_ANSWER_BODY)
-                .openAiA().text(I1.EXP_OPEN_AI_HTML_BODY)
-                .claudeA().text(I1.EXP_CLAUDE_HTML_BODY)
-                .gcpA().text(I1.EXP_GCP_HTML_BODY)
+                .ai1A().text(I1.EXP_AI_1_HTML_BODY)
+                .ai2A().text(I1.EXP_AI_2_HTML_BODY)
+                .ai3A().text(I1.EXP_AI_3_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
                 .assertApp();
 
-        clickOn(openAiAnswer().copyButton());
+        clickOn(ai1Answer().copyButton());
         assertion()
-                .focus(openAiAnswer().copyButton())
+                .focus(ai1Answer().copyButton())
                 .historySize(2, 2)
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(storage.readAllInteractions().get(1))
@@ -422,16 +422,16 @@ class SequentialRequestsUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(I1.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I1.EXP_GRAMMAR_ANSWER_BODY)
-                .openAiA().text(I1.EXP_OPEN_AI_HTML_BODY)
-                .claudeA().text(I1.EXP_CLAUDE_HTML_BODY)
-                .gcpA().text(I1.EXP_GCP_HTML_BODY)
+                .ai1A().text(I1.EXP_AI_1_HTML_BODY)
+                .ai2A().text(I1.EXP_AI_2_HTML_BODY)
+                .ai3A().text(I1.EXP_AI_3_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
-                .clipboard(I1.EXP_OPEN_AI_HTML_BODY)
+                .clipboard(I1.EXP_AI_1_HTML_BODY)
                 .assertApp();
 
-        clickOn(claudeAnswer().copyButton());
+        clickOn(ai2Answer().copyButton());
         assertion()
-                .focus(claudeAnswer().copyButton())
+                .focus(ai2Answer().copyButton())
                 .historySize(2, 2)
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(storage.readAllInteractions().get(1))
@@ -446,16 +446,16 @@ class SequentialRequestsUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(I1.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I1.EXP_GRAMMAR_ANSWER_BODY)
-                .openAiA().text(I1.EXP_OPEN_AI_HTML_BODY)
-                .claudeA().text(I1.EXP_CLAUDE_HTML_BODY)
-                .gcpA().text(I1.EXP_GCP_HTML_BODY)
+                .ai1A().text(I1.EXP_AI_1_HTML_BODY)
+                .ai2A().text(I1.EXP_AI_2_HTML_BODY)
+                .ai3A().text(I1.EXP_AI_3_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
-                .clipboard(I1.EXP_CLAUDE_HTML_BODY)
+                .clipboard(I1.EXP_AI_2_HTML_BODY)
                 .assertApp();
 
-        clickOn(gcpAnswer().copyButton());
+        clickOn(ai3Answer().copyButton());
         assertion()
-                .focus(gcpAnswer().copyButton())
+                .focus(ai3Answer().copyButton())
                 .historySize(2, 2)
                 .historyDeleteButtonDisabled(false)
                 .historySelectedItem(storage.readAllInteractions().get(1))
@@ -470,11 +470,11 @@ class SequentialRequestsUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(I1.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I1.EXP_GRAMMAR_ANSWER_BODY)
-                .openAiA().text(I1.EXP_OPEN_AI_HTML_BODY)
-                .claudeA().text(I1.EXP_CLAUDE_HTML_BODY)
-                .gcpA().text(I1.EXP_GCP_HTML_BODY)
+                .ai1A().text(I1.EXP_AI_1_HTML_BODY)
+                .ai2A().text(I1.EXP_AI_2_HTML_BODY)
+                .ai3A().text(I1.EXP_AI_3_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
-                .clipboard(I1.EXP_GCP_HTML_BODY)
+                .clipboard(I1.EXP_AI_3_HTML_BODY)
                 .assertApp();
     }
 }

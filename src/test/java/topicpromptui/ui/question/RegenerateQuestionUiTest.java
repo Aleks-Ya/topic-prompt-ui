@@ -7,9 +7,9 @@ import topicpromptui.core.domain.Interaction;
 import org.junit.jupiter.api.Test;
 
 import static topicpromptui.core.domain.AnswerState.FAIL;
-import static topicpromptui.core.domain.AnswerType.CLAUDE;
-import static topicpromptui.core.domain.AnswerType.GCP;
-import static topicpromptui.core.domain.AnswerType.OPEN_AI;
+import static topicpromptui.core.domain.AnswerType.AI_2;
+import static topicpromptui.core.domain.AnswerType.AI_3;
+import static topicpromptui.core.domain.AnswerType.AI_1;
 import static topicpromptui.ui.viewmodel.question.QuestionStyle.QUESTION_STYLE_EMPTY;
 import static java.time.Duration.ZERO;
 import static javafx.scene.paint.Color.GREEN;
@@ -17,9 +17,9 @@ import static javafx.scene.paint.Color.RED;
 
 class RegenerateQuestionUiTest extends BaseTopicPromptUiTest {
     private final Interaction interaction1 = I1.INTERACTION
-            .withAnswer(OPEN_AI, answer -> answer.withState(FAIL))
-            .withAnswer(CLAUDE, answer -> answer.withState(FAIL))
-            .withAnswer(GCP, answer -> answer.withState(FAIL));
+            .withAnswer(AI_1, answer -> answer.withState(FAIL))
+            .withAnswer(AI_2, answer -> answer.withState(FAIL))
+            .withAnswer(AI_3, answer -> answer.withState(FAIL));
 
     @Override
     public void init() {
@@ -44,17 +44,17 @@ class RegenerateQuestionUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(I1.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I1.GRAMMAR_HTML)
-                .openAiA().text(I1.OPEN_AI_HTML)
-                .claudeA().text(I1.CLAUDE_HTML)
-                .gcpA().text(I1.GCP_HTML)
+                .ai1A().text(I1.AI_1_HTML)
+                .ai2A().text(I1.AI_2_HTML)
+                .ai3A().text(I1.AI_3_HTML)
                 .answerCircleColors(GREEN, RED, RED, RED)
                 .assertApp();
 
         gptApi.clear()
                 .putGrammarResponse(I1.GRAMMAR_ANSWER, ZERO)
-                .putOpenAiResponse(I2.OPEN_AI_HTML, ZERO);
-        claudeApi.clear().putClaudeResponse(I2.CLAUDE_HTML, ZERO);
-        gcpApi.clear().putGcpResponse(I2.GCP_HTML, ZERO);
+                .putOpenAiResponse(I2.AI_1_HTML, ZERO);
+        claudeApi.clear().putClaudeResponse(I2.AI_2_HTML, ZERO);
+        gcpApi.clear().putGcpResponse(I2.AI_3_HTML, ZERO);
         clickOn(question().regenerateButton());
         gptApi.waitUntilSent(2);
         claudeApi.waitUntilSent(1);
@@ -75,9 +75,9 @@ class RegenerateQuestionUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(I1.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I1.EXP_GRAMMAR_ANSWER_BODY)
-                .openAiA().text(I2.EXP_OPEN_AI_HTML_BODY)
-                .claudeA().text(I2.EXP_CLAUDE_HTML_BODY)
-                .gcpA().text(I2.EXP_GCP_HTML_BODY)
+                .ai1A().text(I2.EXP_AI_1_HTML_BODY)
+                .ai2A().text(I2.EXP_AI_2_HTML_BODY)
+                .ai3A().text(I2.EXP_AI_3_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
                 .assertApp();
     }

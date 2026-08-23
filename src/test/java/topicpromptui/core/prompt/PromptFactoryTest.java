@@ -8,10 +8,10 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import static topicpromptui.core.domain.AnswerType.CLAUDE;
-import static topicpromptui.core.domain.AnswerType.GCP;
+import static topicpromptui.core.domain.AnswerType.AI_2;
+import static topicpromptui.core.domain.AnswerType.AI_3;
 import static topicpromptui.core.domain.AnswerType.GRAMMAR;
-import static topicpromptui.core.domain.AnswerType.OPEN_AI;
+import static topicpromptui.core.domain.AnswerType.AI_1;
 import static topicpromptui.core.domain.InteractionType.DEFINITION;
 import static topicpromptui.core.domain.InteractionType.FACT;
 import static topicpromptui.core.domain.InteractionType.QUESTION;
@@ -37,9 +37,9 @@ class PromptFactoryTest extends BaseTest {
                 Question A
                 </question>""";
         assertThat(factory.getPrompt(QUESTION, "Question A", GRAMMAR).orElseThrow()).contains(GRAMMAR_USER_MESSAGE);
-        assertThat(factory.getPrompt(QUESTION, "Question A", OPEN_AI).orElseThrow()).contains(question);
-        assertThat(factory.getPrompt(QUESTION, "Question A", CLAUDE).orElseThrow()).contains(question);
-        assertThat(factory.getPrompt(QUESTION, "Question A", GCP).orElseThrow()).contains(question);
+        assertThat(factory.getPrompt(QUESTION, "Question A", AI_1).orElseThrow()).contains(question);
+        assertThat(factory.getPrompt(QUESTION, "Question A", AI_2).orElseThrow()).contains(question);
+        assertThat(factory.getPrompt(QUESTION, "Question A", AI_3).orElseThrow()).contains(question);
     }
 
     @Test
@@ -49,17 +49,17 @@ class PromptFactoryTest extends BaseTest {
                 Question A
                 </term>""";
         assertThat(factory.getPrompt(DEFINITION, "Question A", GRAMMAR).orElseThrow()).contains(GRAMMAR_USER_MESSAGE);
-        assertThat(factory.getPrompt(DEFINITION, "Question A", OPEN_AI).orElseThrow()).contains(definition);
-        assertThat(factory.getPrompt(DEFINITION, "Question A", CLAUDE).orElseThrow()).contains(definition);
-        assertThat(factory.getPrompt(DEFINITION, "Question A", GCP).orElseThrow()).contains(definition);
+        assertThat(factory.getPrompt(DEFINITION, "Question A", AI_1).orElseThrow()).contains(definition);
+        assertThat(factory.getPrompt(DEFINITION, "Question A", AI_2).orElseThrow()).contains(definition);
+        assertThat(factory.getPrompt(DEFINITION, "Question A", AI_3).orElseThrow()).contains(definition);
     }
 
     @Test
     void grammarUserMessage() {
         assertThat(factory.getPrompt(InteractionType.GRAMMAR, "Question A", GRAMMAR).orElseThrow()).contains(GRAMMAR_USER_MESSAGE);
-        assertThat(factory.getPrompt(InteractionType.GRAMMAR, "Question A", OPEN_AI)).isEmpty();
-        assertThat(factory.getPrompt(InteractionType.GRAMMAR, "Question A", CLAUDE)).isEmpty();
-        assertThat(factory.getPrompt(InteractionType.GRAMMAR, "Question A", GCP)).isEmpty();
+        assertThat(factory.getPrompt(InteractionType.GRAMMAR, "Question A", AI_1)).isEmpty();
+        assertThat(factory.getPrompt(InteractionType.GRAMMAR, "Question A", AI_2)).isEmpty();
+        assertThat(factory.getPrompt(InteractionType.GRAMMAR, "Question A", AI_3)).isEmpty();
     }
 
     @Test
@@ -69,9 +69,9 @@ class PromptFactoryTest extends BaseTest {
                 Question A
                 </statement>""";
         assertThat(factory.getPrompt(FACT, "Question A", GRAMMAR).orElseThrow()).contains(GRAMMAR_USER_MESSAGE);
-        assertThat(factory.getPrompt(FACT, "Question A", OPEN_AI).orElseThrow()).contains(fact);
-        assertThat(factory.getPrompt(FACT, "Question A", CLAUDE).orElseThrow()).contains(fact);
-        assertThat(factory.getPrompt(FACT, "Question A", GCP).orElseThrow()).contains(fact);
+        assertThat(factory.getPrompt(FACT, "Question A", AI_1).orElseThrow()).contains(fact);
+        assertThat(factory.getPrompt(FACT, "Question A", AI_2).orElseThrow()).contains(fact);
+        assertThat(factory.getPrompt(FACT, "Question A", AI_3).orElseThrow()).contains(fact);
     }
 
     // --- system prompts (behavioral instructions + topic, no question) ---
@@ -85,9 +85,9 @@ class PromptFactoryTest extends BaseTest {
                     <guideline>Format your answer into Markdown</guideline>""";
         var brevity = "Do not exceed roughly 200 words unless the question explicitly asks for depth";
         assertThat(factory.getSystemPrompt(QUESTION, "Topic A", GRAMMAR).orElseThrow()).contains(GRAMMAR_SYSTEM).contains(GRAMMAR_SYSTEM_TOPIC);
-        assertThat(factory.getSystemPrompt(QUESTION, "Topic A", OPEN_AI).orElseThrow()).contains(question).contains(brevity);
-        assertThat(factory.getSystemPrompt(QUESTION, "Topic A", CLAUDE).orElseThrow()).contains(question).contains(brevity);
-        assertThat(factory.getSystemPrompt(QUESTION, "Topic A", GCP).orElseThrow()).contains(question).contains(brevity);
+        assertThat(factory.getSystemPrompt(QUESTION, "Topic A", AI_1).orElseThrow()).contains(question).contains(brevity);
+        assertThat(factory.getSystemPrompt(QUESTION, "Topic A", AI_2).orElseThrow()).contains(question).contains(brevity);
+        assertThat(factory.getSystemPrompt(QUESTION, "Topic A", AI_3).orElseThrow()).contains(question).contains(brevity);
     }
 
     @Test
@@ -100,17 +100,17 @@ class PromptFactoryTest extends BaseTest {
                     <guideline>Do not repeat the context in your answer if possible</guideline>""";
         var noAsides = "Do not use em dashes (—), en dashes (–), double hyphens (--), parentheses or brackets anywhere in the answer.";
         assertThat(factory.getSystemPrompt(DEFINITION, "Topic A", GRAMMAR).orElseThrow()).contains(GRAMMAR_SYSTEM).contains(GRAMMAR_SYSTEM_TOPIC);
-        assertThat(factory.getSystemPrompt(DEFINITION, "Topic A", OPEN_AI).orElseThrow()).contains(definition).contains(noAsides).contains("</guidelines>");
-        assertThat(factory.getSystemPrompt(DEFINITION, "Topic A", CLAUDE).orElseThrow()).contains(definition).contains(noAsides).contains("</guidelines>");
-        assertThat(factory.getSystemPrompt(DEFINITION, "Topic A", GCP).orElseThrow()).contains(definition).contains(noAsides).contains("</guidelines>");
+        assertThat(factory.getSystemPrompt(DEFINITION, "Topic A", AI_1).orElseThrow()).contains(definition).contains(noAsides).contains("</guidelines>");
+        assertThat(factory.getSystemPrompt(DEFINITION, "Topic A", AI_2).orElseThrow()).contains(definition).contains(noAsides).contains("</guidelines>");
+        assertThat(factory.getSystemPrompt(DEFINITION, "Topic A", AI_3).orElseThrow()).contains(definition).contains(noAsides).contains("</guidelines>");
     }
 
     @Test
     void grammarSystemPrompt() {
         assertThat(factory.getSystemPrompt(InteractionType.GRAMMAR, "Topic A", GRAMMAR).orElseThrow()).contains(GRAMMAR_SYSTEM).contains(GRAMMAR_SYSTEM_TOPIC);
-        assertThat(factory.getSystemPrompt(InteractionType.GRAMMAR, "Topic A", OPEN_AI)).isEmpty();
-        assertThat(factory.getSystemPrompt(InteractionType.GRAMMAR, "Topic A", CLAUDE)).isEmpty();
-        assertThat(factory.getSystemPrompt(InteractionType.GRAMMAR, "Topic A", GCP)).isEmpty();
+        assertThat(factory.getSystemPrompt(InteractionType.GRAMMAR, "Topic A", AI_1)).isEmpty();
+        assertThat(factory.getSystemPrompt(InteractionType.GRAMMAR, "Topic A", AI_2)).isEmpty();
+        assertThat(factory.getSystemPrompt(InteractionType.GRAMMAR, "Topic A", AI_3)).isEmpty();
     }
 
     @Test
@@ -119,9 +119,9 @@ class PromptFactoryTest extends BaseTest {
         var brevity = "Do not exceed roughly 100 words.";
         var correction = "**Correct version:**";
         assertThat(factory.getSystemPrompt(FACT, "Topic A", GRAMMAR).orElseThrow()).contains(GRAMMAR_SYSTEM).contains(GRAMMAR_SYSTEM_TOPIC);
-        assertThat(factory.getSystemPrompt(FACT, "Topic A", OPEN_AI).orElseThrow()).contains(fact).contains(brevity).contains(correction);
-        assertThat(factory.getSystemPrompt(FACT, "Topic A", CLAUDE).orElseThrow()).contains(fact).contains(brevity).contains(correction);
-        assertThat(factory.getSystemPrompt(FACT, "Topic A", GCP).orElseThrow()).contains(fact).contains(brevity).contains(correction);
+        assertThat(factory.getSystemPrompt(FACT, "Topic A", AI_1).orElseThrow()).contains(fact).contains(brevity).contains(correction);
+        assertThat(factory.getSystemPrompt(FACT, "Topic A", AI_2).orElseThrow()).contains(fact).contains(brevity).contains(correction);
+        assertThat(factory.getSystemPrompt(FACT, "Topic A", AI_3).orElseThrow()).contains(fact).contains(brevity).contains(correction);
     }
 
     @Test
@@ -132,13 +132,13 @@ class PromptFactoryTest extends BaseTest {
                 </term>""";
 
         var templateFile = configModel.getAppDataPath().resolve("templates").resolve("definition.ftl");
-        assertThat(factory.getPrompt(DEFINITION, "Question A", GCP).orElseThrow()).contains(expDefaultPrompt);
+        assertThat(factory.getPrompt(DEFINITION, "Question A", AI_3).orElseThrow()).contains(expDefaultPrompt);
 
         Files.writeString(templateFile, "Answer ${question}");
-        assertThat(factory.getPrompt(DEFINITION, "Question A", GCP).orElseThrow())
+        assertThat(factory.getPrompt(DEFINITION, "Question A", AI_3).orElseThrow())
                 .contains("Answer Question A");
 
         Files.delete(templateFile);
-        assertThat(factory.getPrompt(DEFINITION, "Question A", GCP).orElseThrow()).contains(expDefaultPrompt);
+        assertThat(factory.getPrompt(DEFINITION, "Question A", AI_3).orElseThrow()).contains(expDefaultPrompt);
     }
 }

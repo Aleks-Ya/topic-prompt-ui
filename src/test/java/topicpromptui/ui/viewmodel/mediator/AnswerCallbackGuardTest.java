@@ -15,7 +15,7 @@ import org.mockito.ArgumentCaptor;
 
 import java.util.function.Consumer;
 
-import static topicpromptui.core.domain.AnswerType.GCP;
+import static topicpromptui.core.domain.AnswerType.AI_3;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -83,10 +83,10 @@ class AnswerCallbackGuardTest {
 
     @SuppressWarnings("unchecked")
     private Callbacks captureCallbacks() {
-        mediator.requestAnswer(streamedId, GCP);
+        mediator.requestAnswer(streamedId, AI_3);
         var completion = ArgumentCaptor.forClass(Runnable.class);
         var progress = ArgumentCaptor.forClass(Consumer.class);
-        verify(questionModel).requestAnswer(eq(streamedId), eq(GCP), completion.capture(), progress.capture());
+        verify(questionModel).requestAnswer(eq(streamedId), eq(AI_3), completion.capture(), progress.capture());
         return new Callbacks(completion.getValue(), progress.getValue());
     }
 }

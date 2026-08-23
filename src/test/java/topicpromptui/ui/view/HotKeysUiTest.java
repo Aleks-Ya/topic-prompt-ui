@@ -72,9 +72,9 @@ class HotKeysUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(I3.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I3.GRAMMAR_HTML)
-                .openAiA().text(I3.OPEN_AI_HTML)
-                .claudeA().text(I3.CLAUDE_HTML)
-                .gcpA().text(I3.GCP_HTML)
+                .ai1A().text(I3.AI_1_HTML)
+                .ai2A().text(I3.AI_2_HTML)
+                .ai3A().text(I3.AI_3_HTML)
                 .answerCircleColors(GREEN, GREEN, RED, GREEN)
 
                 .work("Copy Grammar Answer By Alt-1", () -> press(ALT, DIGIT1).release(DIGIT1, ALT))
@@ -82,22 +82,22 @@ class HotKeysUiTest extends BaseTopicPromptUiTest {
                 .clipboard(I3.GRAMMAR_HTML)
 
                 .work("Copy OpenAI Answer By Alt-2", () -> press(ALT, DIGIT2).release(DIGIT2, ALT))
-                .focus(openAiAnswer().copyButton())
-                .clipboard(I3.OPEN_AI_HTML)
+                .focus(ai1Answer().copyButton())
+                .clipboard(I3.AI_1_HTML)
 
                 .work("Copy Claude Answer By Alt-3", () -> press(ALT, DIGIT3).release(DIGIT3, ALT))
-                .focus(claudeAnswer().copyButton())
-                .clipboard(I3.CLAUDE_HTML)
+                .focus(ai2Answer().copyButton())
+                .clipboard(I3.AI_2_HTML)
 
                 .work("Copy GCP Answer By Alt-4", () -> press(ALT, DIGIT4).release(DIGIT4, ALT))
-                .focus(gcpAnswer().copyButton())
-                .clipboard(I3.GCP_HTML)
+                .focus(ai3Answer().copyButton())
+                .clipboard(I3.AI_3_HTML)
 
                 .work("Paste Question From Clipboard By Ctrl-Alt-V", () -> {
                     executeSyncInFxThread(() -> clipboardModel.putHtmlToClipboard(CLIPBOARD_CONTENT_WRAPPED));
                     press(CONTROL, ALT, V).release(V, ALT, CONTROL);
                 })
-                .focus(gcpAnswer().copyButton())
+                .focus(ai3Answer().copyButton())
                 .questionText(CLIPBOARD_CONTENT_WRAPPED)
                 .clipboard(CLIPBOARD_CONTENT)
                 .modelIsEnteringNewQuestion(true)
@@ -208,7 +208,7 @@ class HotKeysUiTest extends BaseTopicPromptUiTest {
     @Test
     void selectPreviousInteractionByCtrlAltDown_FocusOnWebView() {
         clickOn(history().comboBox()).clickOn(String.format("[Q] %s: %s", I3.TOPIC.title(), I3.QUESTION));
-        clickOn(claudeAnswer().webView());
+        clickOn(ai2Answer().webView());
         assertThat(history().comboBox().getSelectionModel().getSelectedItem().interaction()).isEqualTo(I3.INTERACTION);
 
         press(CONTROL, ALT, DOWN).release(CONTROL, ALT, DOWN);
@@ -218,7 +218,7 @@ class HotKeysUiTest extends BaseTopicPromptUiTest {
     @Test
     void selectNextInteractionByCtrlAltUp_FocusOnWebView() {
         clickOn(history().comboBox()).clickOn(String.format("[Q] %s: %s", I2.TOPIC.title(), I2.QUESTION));
-        clickOn(claudeAnswer().webView());
+        clickOn(ai2Answer().webView());
         scroll(10, VerticalDirection.DOWN);
         assertThat(history().comboBox().getSelectionModel().getSelectedItem().interaction()).isEqualTo(I2.INTERACTION);
 
@@ -254,7 +254,7 @@ class HotKeysUiTest extends BaseTopicPromptUiTest {
 
     @Test
     void focusFilterByCtrlF_FocusOnWebView() {
-        clickOn(claudeAnswer().webView());
+        clickOn(ai2Answer().webView());
         assertThat(history().filterTextField().isFocused()).isFalse();
         press(CONTROL, F).release(F, CONTROL);
         WaitForAsyncUtils.waitForFxEvents();

@@ -6,9 +6,9 @@ package view {
     together {
         class TopicPromptUiApplication
         class "AnswerController" as grammarAnswerController <<GRAMMAR>>
-        class "AnswerController" as openAiAnswerController <<OPEN_AI>>
-        class "AnswerController" as claudeAnswerController <<CLAUDE>>
-        class "AnswerController" as gcpAnswerController <<GCP>>
+        class "AnswerController" as ai1AnswerController <<AI_1>>
+        class "AnswerController" as ai2AnswerController <<AI_2>>
+        class "AnswerController" as ai3AnswerController <<AI_3>>
         class HistoryController
         class QuestionController
         class TopicController
@@ -17,9 +17,9 @@ package view {
 
 package viewmodel {
     class "AnswerVM" as grammarAnswerVM <<GRAMMAR>>
-    class "AnswerVM" as openAiAnswerVM <<OPEN_AI>>
-    class "AnswerVM" as claudeAnswerVM <<CLAUDE>>
-    class "AnswerVM" as gcpAnswerVM <<GCP>>
+    class "AnswerVM" as ai1AnswerVM <<AI_1>>
+    class "AnswerVM" as ai2AnswerVM <<AI_2>>
+    class "AnswerVM" as ai3AnswerVM <<AI_3>>
     class TopicPromptUiVM
     class HistoryVM
     class QuestionVM
@@ -39,30 +39,30 @@ TopicController ---> TopicVM
 QuestionController ---> QuestionVM
 HistoryController ---> HistoryVM
 grammarAnswerController --> grammarAnswerVM
-openAiAnswerController --> openAiAnswerVM
-claudeAnswerController --> claudeAnswerVM
-gcpAnswerController --> gcpAnswerVM
+ai1AnswerController --> ai1AnswerVM
+ai2AnswerController --> ai2AnswerVM
+ai3AnswerController --> ai3AnswerVM
 TopicPromptUiApplication --> TopicPromptUiVM
 
 TopicPromptUiController --> grammarAnswerController
-TopicPromptUiController --> openAiAnswerController
-TopicPromptUiController --> claudeAnswerController
-TopicPromptUiController --> gcpAnswerController
+TopicPromptUiController --> ai1AnswerController
+TopicPromptUiController --> ai2AnswerController
+TopicPromptUiController --> ai3AnswerController
 
 TopicPromptUiController --> TopicPromptUiVM
 TopicPromptUiController --> grammarAnswerVM
-TopicPromptUiController --> openAiAnswerVM
-TopicPromptUiController --> claudeAnswerVM
-TopicPromptUiController --> gcpAnswerVM
+TopicPromptUiController --> ai1AnswerVM
+TopicPromptUiController --> ai2AnswerVM
+TopicPromptUiController --> ai3AnswerVM
 
 TopicVM <--> ViewModelMediator
 QuestionVM <--> ViewModelMediator
 HistoryVM <--> ViewModelMediator
 TopicPromptUiVM --> ViewModelMediator
 grammarAnswerVM <--> ViewModelMediator
-openAiAnswerVM <--> ViewModelMediator
-claudeAnswerVM <--> ViewModelMediator
-gcpAnswerVM <--> ViewModelMediator
+ai1AnswerVM <--> ViewModelMediator
+ai2AnswerVM <--> ViewModelMediator
+ai3AnswerVM <--> ViewModelMediator
 
 TopicVM ---> StateModel
 HistoryVM ---> StateModel
@@ -71,19 +71,19 @@ QuestionVM ---> QuestionModel
 QuestionVM ---> ClipboardModel
 
 grammarAnswerVM --> StateModel
-openAiAnswerVM --> StateModel
-claudeAnswerVM --> StateModel
-gcpAnswerVM --> StateModel
+ai1AnswerVM --> StateModel
+ai2AnswerVM --> StateModel
+ai3AnswerVM --> StateModel
 
 grammarAnswerVM --> QuestionModel
-openAiAnswerVM --> QuestionModel
-claudeAnswerVM --> QuestionModel
-gcpAnswerVM --> QuestionModel
+ai1AnswerVM --> QuestionModel
+ai2AnswerVM --> QuestionModel
+ai3AnswerVM --> QuestionModel
 
 grammarAnswerVM --> ClipboardModel
-openAiAnswerVM --> ClipboardModel
-claudeAnswerVM --> ClipboardModel
-gcpAnswerVM --> ClipboardModel
+ai1AnswerVM --> ClipboardModel
+ai2AnswerVM --> ClipboardModel
+ai3AnswerVM --> ClipboardModel
 
 
 @enduml

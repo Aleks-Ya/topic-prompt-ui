@@ -26,9 +26,9 @@ class SoundServiceImpl implements SoundService {
 
     public SoundServiceImpl() {
         tones.put(AnswerType.GRAMMAR, tone(440));
-        tones.put(AnswerType.OPEN_AI, tone(550));
-        tones.put(AnswerType.CLAUDE, tone(660));
-        tones.put(AnswerType.GCP, tone(880));
+        tones.put(AnswerType.AI_1, tone(550));
+        tones.put(AnswerType.AI_2, tone(660));
+        tones.put(AnswerType.AI_3, tone(880));
     }
 
     private static byte[] tone(double frequencyHz) {

@@ -22,7 +22,7 @@ import java.util.Map;
 import static topicpromptui.core.domain.AnswerState.NEW;
 import static topicpromptui.core.domain.AnswerState.SENT;
 import static topicpromptui.core.domain.AnswerType.GRAMMAR;
-import static topicpromptui.core.domain.AnswerType.OPEN_AI;
+import static topicpromptui.core.domain.AnswerType.AI_1;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.awaitility.Awaitility.await;
@@ -41,24 +41,24 @@ class RequestFollowUpAnswerTest extends ApplicationTest {
         var topic = storage.addTopic("Topic 1");
         var parentId = new InteractionId(1L);
         storage.saveInteraction(new Interaction(parentId, InteractionType.QUESTION, topic.id(), "What is Java?",
-                Map.of(OPEN_AI, new Answer(OPEN_AI, "Explain Java briefly", "Java is a language.",
+                Map.of(AI_1, new Answer(AI_1, "Explain Java briefly", "Java is a language.",
                         "<p>Java is a language.</p>", AnswerState.SUCCESS, "resp_1",
                         null, null, null, null, null, null)),
                 null));
 
         var followUpId = new InteractionId(2L);
         storage.saveInteraction(new Interaction(followUpId, InteractionType.QUESTION, topic.id(), "Who created it?",
-                Map.of(OPEN_AI, new Answer(OPEN_AI, "", "", "", AnswerState.NEW, null,
+                Map.of(AI_1, new Answer(AI_1, "", "", "", AnswerState.NEW, null,
                         null, null, null, null, null, null)),
                 parentId));
 
         openAiApi.clear().putResponse("Who created it?", "James Gosling created Java.", Duration.ZERO);
 
-        questionModel.requestFollowUpAnswer(followUpId, OPEN_AI, () -> {
+        questionModel.requestFollowUpAnswer(followUpId, AI_1, () -> {
         });
-        awaitTerminalState(followUpId, OPEN_AI);
+        awaitTerminalState(followUpId, AI_1);
 
-        var answer = storage.readInteraction(followUpId).orElseThrow().getAnswer(OPEN_AI).orElseThrow();
+        var answer = storage.readInteraction(followUpId).orElseThrow().getAnswer(AI_1).orElseThrow();
         assertThat(answer.answerState()).isEqualTo(AnswerState.SUCCESS);
         assertThat(answer.prompt()).isEqualTo("Who created it?");
         assertThat(answer.answerMd()).isEqualTo("James Gosling created Java.");
@@ -82,10 +82,10 @@ class RequestFollowUpAnswerTest extends ApplicationTest {
         var topic = storage.addTopic("Topic 2");
         var standaloneId = storage.newInteractionId();
         storage.saveInteraction(new Interaction(standaloneId, InteractionType.QUESTION, topic.id(), "A question",
-                Map.of(OPEN_AI, new Answer(OPEN_AI, "", "", "", AnswerState.NEW, null,
+                Map.of(AI_1, new Answer(AI_1, "", "", "", AnswerState.NEW, null,
                         null, null, null, null, null, null)), null));
 
-        assertThatThrownBy(() -> questionModel.requestFollowUpAnswer(standaloneId, OPEN_AI, () -> {
+        assertThatThrownBy(() -> questionModel.requestFollowUpAnswer(standaloneId, AI_1, () -> {
         })).isInstanceOf(IllegalStateException.class);
     }
 

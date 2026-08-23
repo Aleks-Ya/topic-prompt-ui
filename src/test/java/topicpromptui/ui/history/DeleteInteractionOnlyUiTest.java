@@ -34,9 +34,9 @@ class DeleteInteractionOnlyUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(I1.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I1.GRAMMAR_HTML)
-                .openAiA().text(I1.OPEN_AI_HTML)
-                .claudeA().text(I1.CLAUDE_HTML)
-                .gcpA().text(I1.GCP_HTML)
+                .ai1A().text(I1.AI_1_HTML)
+                .ai2A().text(I1.AI_2_HTML)
+                .ai3A().text(I1.AI_3_HTML)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
                 .assertApp();
 
@@ -58,9 +58,9 @@ class DeleteInteractionOnlyUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(I1.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I0.GRAMMAR_HTML)
-                .openAiA().text(I0.OPEN_AI_HTML)
-                .claudeA().text(I0.CLAUDE_HTML)
-                .gcpA().text(I0.GCP_HTML)
+                .ai1A().text(I0.AI_1_HTML)
+                .ai2A().text(I0.AI_2_HTML)
+                .ai3A().text(I0.AI_3_HTML)
                 .answerCircleColors(WHITE, WHITE, WHITE, WHITE)
                 .assertApp();
     }

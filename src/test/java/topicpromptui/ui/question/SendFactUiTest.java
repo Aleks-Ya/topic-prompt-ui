@@ -40,9 +40,9 @@ class SendFactUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(I3.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I3.GRAMMAR_HTML)
-                .openAiA().text(I3.OPEN_AI_HTML)
-                .claudeA().text(I3.CLAUDE_HTML)
-                .gcpA().text(I3.GCP_HTML)
+                .ai1A().text(I3.AI_1_HTML)
+                .ai2A().text(I3.AI_2_HTML)
+                .ai3A().text(I3.AI_3_HTML)
                 .answerCircleColors(GREEN, GREEN, RED, GREEN)
                 .assertApp();
 
@@ -70,9 +70,9 @@ class SendFactUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion("Question 4")
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text("<p>Question 4</p>\n")
-                .openAiA().text("<p>Fact answer 4</p>\n")
-                .claudeA().text("<p>Fact answer 4</p>\n")
-                .gcpA().text("<p>Fact answer 4</p>\n")
+                .ai1A().text("<p>Fact answer 4</p>\n")
+                .ai2A().text("<p>Fact answer 4</p>\n")
+                .ai3A().text("<p>Fact answer 4</p>\n")
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
                 .assertApp();
     }

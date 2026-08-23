@@ -49,9 +49,9 @@ public class WindowAssertion {
     private Boolean isEnteringNewQuestion;
     private String modelEditedQuestion;
     private final AnswerInfo grammarAnswer = new AnswerInfo();
-    private final AnswerInfo openAiAnswer = new AnswerInfo();
-    private final AnswerInfo claudeAnswer = new AnswerInfo();
-    private final AnswerInfo gcpAnswer = new AnswerInfo();
+    private final AnswerInfo ai1Answer = new AnswerInfo();
+    private final AnswerInfo ai2Answer = new AnswerInfo();
+    private final AnswerInfo ai3Answer = new AnswerInfo();
     private String testName = "Initialize";
     private String clipboard = null;
 
@@ -185,24 +185,24 @@ public class WindowAssertion {
         return grammarAnswer;
     }
 
-    public AnswerInfo openAiA() {
-        return openAiAnswer;
+    public AnswerInfo ai1A() {
+        return ai1Answer;
     }
 
-    public AnswerInfo claudeA() {
-        return claudeAnswer;
+    public AnswerInfo ai2A() {
+        return ai2Answer;
     }
 
-    public AnswerInfo gcpA() {
-        return gcpAnswer;
+    public AnswerInfo ai3A() {
+        return ai3Answer;
     }
 
-    public WindowAssertion answerCircleColors(Color answerGrammarCircleColor, Color answerOpenAiCircleColor,
-                                              Color answerClaudeCircleColor, Color answerGcpCircleColor) {
+    public WindowAssertion answerCircleColors(Color answerGrammarCircleColor, Color answerAi1CircleColor,
+                                              Color answerAi2CircleColor, Color answerAi3CircleColor) {
         grammarA().circleColor(answerGrammarCircleColor);
-        openAiA().circleColor(answerOpenAiCircleColor);
-        claudeA().circleColor(answerClaudeCircleColor);
-        gcpA().circleColor(answerGcpCircleColor);
+        ai1A().circleColor(answerAi1CircleColor);
+        ai2A().circleColor(answerAi2CircleColor);
+        ai3A().circleColor(answerAi3CircleColor);
         return this;
     }
 
@@ -298,33 +298,33 @@ public class WindowAssertion {
         }
 
         {
-            var answer = app.openAiAnswer();
-            soft.assertThat(answer.button().getText()).as(descr("Answer/OpenAI/Button/Text")).isEqualTo("OpenAI:");
-            soft.assertThat(answer.copyButton().getText()).as(descr("Answer/OpenAI/CopyButton/Text")).isEqualTo("Copy _2");
-            soft.assertThat(answer.regenerateButton().getText()).as(descr("Answer/OpenAI/RegenerateButton/Text")).isEqualTo("⟳");
-            soft.assertThat(answer.expandButton().getText()).as(descr("Answer/OpenAI/ExpandButton/Text")).isEqualTo("⛶");
-            app.verifyWebViewBody(soft, descr("Answer/OpenAI/WebView/Body"), answer.webView(), openAiA().text);
-            soft.assertThat(colorToString(answer.circle().getFill())).as(descr("Answer/OpenAI/Circle/Fill")).isEqualTo(colorToString(openAiA().circleColor));
+            var answer = app.ai1Answer();
+            soft.assertThat(answer.button().getText()).as(descr("Answer/Ai1/Button/Text")).isEqualTo("OpenAI:");
+            soft.assertThat(answer.copyButton().getText()).as(descr("Answer/Ai1/CopyButton/Text")).isEqualTo("Copy _2");
+            soft.assertThat(answer.regenerateButton().getText()).as(descr("Answer/Ai1/RegenerateButton/Text")).isEqualTo("⟳");
+            soft.assertThat(answer.expandButton().getText()).as(descr("Answer/Ai1/ExpandButton/Text")).isEqualTo("⛶");
+            app.verifyWebViewBody(soft, descr("Answer/Ai1/WebView/Body"), answer.webView(), ai1A().text);
+            soft.assertThat(colorToString(answer.circle().getFill())).as(descr("Answer/Ai1/Circle/Fill")).isEqualTo(colorToString(ai1A().circleColor));
         }
 
         {
-            var answer = app.claudeAnswer();
-            soft.assertThat(answer.button().getText()).as(descr("Answer/Claude/Button/Text")).isEqualTo("Claude:");
-            soft.assertThat(answer.copyButton().getText()).as(descr("Answer/Claude/CopyButton/Text")).isEqualTo("Copy _3");
-            soft.assertThat(answer.regenerateButton().getText()).as(descr("Answer/Claude/RegenerateButton/Text")).isEqualTo("⟳");
-            soft.assertThat(answer.expandButton().getText()).as(descr("Answer/Claude/ExpandButton/Text")).isEqualTo("⛶");
-            app.verifyWebViewBody(soft, descr("Answer/Claude/WebView/Body"), answer.webView(), claudeA().text);
-            soft.assertThat(colorToString(answer.circle().getFill())).as(descr("Answer/Claude/Circle/Fill")).isEqualTo(colorToString(claudeA().circleColor));
+            var answer = app.ai2Answer();
+            soft.assertThat(answer.button().getText()).as(descr("Answer/Ai2/Button/Text")).isEqualTo("Claude:");
+            soft.assertThat(answer.copyButton().getText()).as(descr("Answer/Ai2/CopyButton/Text")).isEqualTo("Copy _3");
+            soft.assertThat(answer.regenerateButton().getText()).as(descr("Answer/Ai2/RegenerateButton/Text")).isEqualTo("⟳");
+            soft.assertThat(answer.expandButton().getText()).as(descr("Answer/Ai2/ExpandButton/Text")).isEqualTo("⛶");
+            app.verifyWebViewBody(soft, descr("Answer/Ai2/WebView/Body"), answer.webView(), ai2A().text);
+            soft.assertThat(colorToString(answer.circle().getFill())).as(descr("Answer/Ai2/Circle/Fill")).isEqualTo(colorToString(ai2A().circleColor));
         }
 
         {
-            var answer = app.gcpAnswer();
-            soft.assertThat(answer.button().getText()).as(descr("Answer/GCP/Button/Text")).isEqualTo("Gemini:");
-            soft.assertThat(answer.copyButton().getText()).as(descr("Answer/GCP/CopyButton/Text")).isEqualTo("Copy _4");
-            soft.assertThat(answer.regenerateButton().getText()).as(descr("Answer/GCP/RegenerateButton/Text")).isEqualTo("⟳");
-            soft.assertThat(answer.expandButton().getText()).as(descr("Answer/GCP/ExpandButton/Text")).isEqualTo("⛶");
-            app.verifyWebViewBody(soft, descr("Answer/GCP/WebView/Body"), answer.webView(), gcpA().text);
-            soft.assertThat(colorToString(answer.circle().getFill())).as(descr("Answer/GCP/Circle/Fill")).isEqualTo(colorToString(gcpA().circleColor));
+            var answer = app.ai3Answer();
+            soft.assertThat(answer.button().getText()).as(descr("Answer/Ai3/Button/Text")).isEqualTo("Gemini:");
+            soft.assertThat(answer.copyButton().getText()).as(descr("Answer/Ai3/CopyButton/Text")).isEqualTo("Copy _4");
+            soft.assertThat(answer.regenerateButton().getText()).as(descr("Answer/Ai3/RegenerateButton/Text")).isEqualTo("⟳");
+            soft.assertThat(answer.expandButton().getText()).as(descr("Answer/Ai3/ExpandButton/Text")).isEqualTo("⛶");
+            app.verifyWebViewBody(soft, descr("Answer/Ai3/WebView/Body"), answer.webView(), ai3A().text);
+            soft.assertThat(colorToString(answer.circle().getFill())).as(descr("Answer/Ai3/Circle/Fill")).isEqualTo(colorToString(ai3A().circleColor));
         }
 
         {

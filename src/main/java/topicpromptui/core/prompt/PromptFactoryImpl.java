@@ -61,19 +61,19 @@ class PromptFactoryImpl implements PromptFactory {
         return switch (interactionType) {
             case QUESTION -> switch (answerType) {
                 case GRAMMAR -> render(GRAMMAR_TEMPLATE, data);
-                case OPEN_AI, CLAUDE, GCP -> render(QUESTION_TEMPLATE, data);
+                case AI_1, AI_2, AI_3 -> render(QUESTION_TEMPLATE, data);
             };
             case DEFINITION -> switch (answerType) {
                 case GRAMMAR -> render(GRAMMAR_TEMPLATE, data);
-                case OPEN_AI, CLAUDE, GCP -> render(DEFINITION_TEMPLATE, data);
+                case AI_1, AI_2, AI_3 -> render(DEFINITION_TEMPLATE, data);
             };
             case GRAMMAR -> switch (answerType) {
                 case GRAMMAR -> render(GRAMMAR_TEMPLATE, data);
-                case OPEN_AI, CLAUDE, GCP -> Optional.empty();
+                case AI_1, AI_2, AI_3 -> Optional.empty();
             };
             case FACT -> switch (answerType) {
                 case GRAMMAR -> render(GRAMMAR_TEMPLATE, data);
-                case OPEN_AI, CLAUDE, GCP -> render(FACT_TEMPLATE, data);
+                case AI_1, AI_2, AI_3 -> render(FACT_TEMPLATE, data);
             };
         };
     }
@@ -84,19 +84,19 @@ class PromptFactoryImpl implements PromptFactory {
         return switch (interactionType) {
             case QUESTION -> switch (answerType) {
                 case GRAMMAR -> render(GRAMMAR_SYSTEM_TEMPLATE, data);
-                case OPEN_AI, CLAUDE, GCP -> render(QUESTION_SYSTEM_TEMPLATE, data);
+                case AI_1, AI_2, AI_3 -> render(QUESTION_SYSTEM_TEMPLATE, data);
             };
             case DEFINITION -> switch (answerType) {
                 case GRAMMAR -> render(GRAMMAR_SYSTEM_TEMPLATE, data);
-                case OPEN_AI, CLAUDE, GCP -> render(DEFINITION_SYSTEM_TEMPLATE, data);
+                case AI_1, AI_2, AI_3 -> render(DEFINITION_SYSTEM_TEMPLATE, data);
             };
             case GRAMMAR -> switch (answerType) {
                 case GRAMMAR -> render(GRAMMAR_SYSTEM_TEMPLATE, data);
-                case OPEN_AI, CLAUDE, GCP -> Optional.empty();
+                case AI_1, AI_2, AI_3 -> Optional.empty();
             };
             case FACT -> switch (answerType) {
                 case GRAMMAR -> render(GRAMMAR_SYSTEM_TEMPLATE, data);
-                case OPEN_AI, CLAUDE, GCP -> render(FACT_SYSTEM_TEMPLATE, data);
+                case AI_1, AI_2, AI_3 -> render(FACT_SYSTEM_TEMPLATE, data);
             };
         };
     }

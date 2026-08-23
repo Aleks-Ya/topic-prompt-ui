@@ -55,13 +55,13 @@ class XaiApiIT {
         )).isEqualTo(Score.MAX);
     }
 
-    // There is no AnswerType.XAI yet (Grok is not wired to the UI). AnswerType.OPEN_AI renders the
-    // same templates: PromptFactoryImpl groups "case OPEN_AI, CLAUDE, GCP" onto one .ftl per
-    // interaction type, so the prompts here are exactly what an XAI constant would produce.
+    // Answer types are pane slots, not providers, so there is no Grok-specific one to pass here:
+    // PromptFactoryImpl groups "case AI_1, AI_2, AI_3" onto one .ftl per interaction type, so any
+    // non-GRAMMAR slot renders the same prompts whichever provider currently backs it.
     @Test
     void definition() {
-        var system = promptFactory.getSystemPrompt(DEFINITION, "AWS S3", AnswerType.OPEN_AI).orElseThrow();
-        var prompt = promptFactory.getPrompt(DEFINITION, "Bucket", AnswerType.OPEN_AI).orElseThrow();
+        var system = promptFactory.getSystemPrompt(DEFINITION, "AWS S3", AnswerType.AI_1).orElseThrow();
+        var prompt = promptFactory.getPrompt(DEFINITION, "Bucket", AnswerType.AI_1).orElseThrow();
         var response = api.send(system, List.of(new ConversationTurn(USER, prompt)), NO_OP);
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),

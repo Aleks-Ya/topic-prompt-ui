@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import static topicpromptui.core.domain.AnswerState.SUCCESS;
-import static topicpromptui.core.domain.AnswerType.OPEN_AI;
+import static topicpromptui.core.domain.AnswerType.AI_1;
 import static topicpromptui.core.domain.InteractionType.QUESTION;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -40,7 +40,7 @@ class StorageFilesystemTest extends BaseTest {
         assertThat(storageFileSystem.readAllInteractions()).isEmpty();
         var parent = new Interaction(new InteractionId(1L), QUESTION, new TopicId(1L), "question1", null, null);
         var followUp = new Interaction(new InteractionId(2L), QUESTION, new TopicId(1L), "question2", Map.of(
-                OPEN_AI, new Answer(OPEN_AI, "prompt2", "answerMd2", "answerHtml2", SUCCESS, "resp_123",
+                AI_1, new Answer(AI_1, "prompt2", "answerMd2", "answerHtml2", SUCCESS, "resp_123",
                         null, null, null, null, null, null)),
                 parent.id());
         storageFileSystem.saveInteraction(parent);

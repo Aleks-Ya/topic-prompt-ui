@@ -30,10 +30,10 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 
-import static topicpromptui.core.domain.AnswerType.CLAUDE;
-import static topicpromptui.core.domain.AnswerType.GCP;
+import static topicpromptui.core.domain.AnswerType.AI_2;
+import static topicpromptui.core.domain.AnswerType.AI_3;
 import static topicpromptui.core.domain.AnswerType.GRAMMAR;
-import static topicpromptui.core.domain.AnswerType.OPEN_AI;
+import static topicpromptui.core.domain.AnswerType.AI_1;
 import static topicpromptui.core.domain.InteractionType.QUESTION;
 import static javafx.scene.input.KeyCode.DIGIT1;
 import static javafx.scene.input.KeyCode.DIGIT2;
@@ -54,9 +54,9 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
         TopicPromptUiMediator, TopicPromptUiApplicationMediator {
     private static final Logger log = LoggerFactory.getLogger(MediatorImpl.class);
     private final AnswerVmMediator grammarAnswerVM;
-    private final AnswerVmMediator openAiAnswerVM;
-    private final AnswerVmMediator claudeAnswerVM;
-    private final AnswerVmMediator gcpAnswerVM;
+    private final AnswerVmMediator ai1AnswerVM;
+    private final AnswerVmMediator ai2AnswerVM;
+    private final AnswerVmMediator ai3AnswerVM;
     private final HistoryVmMediator historyVM;
     private final QuestionVmMediator questionVM;
     private final TopicVmMediator topicVM;
@@ -68,9 +68,9 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
 
     @Inject
     MediatorImpl(@Named(AnswerVmModule.GRAMMAR) AnswerVmMediator grammarAnswerVM,
-                 @Named(AnswerVmModule.OPEN_AI) AnswerVmMediator openAiAnswerVM,
-                 @Named(AnswerVmModule.CLAUDE) AnswerVmMediator claudeAnswerVM,
-                 @Named(AnswerVmModule.GCP) AnswerVmMediator gcpAnswerVM,
+                 @Named(AnswerVmModule.AI_1) AnswerVmMediator ai1AnswerVM,
+                 @Named(AnswerVmModule.AI_2) AnswerVmMediator ai2AnswerVM,
+                 @Named(AnswerVmModule.AI_3) AnswerVmMediator ai3AnswerVM,
                  HistoryVmMediator historyVM,
                  QuestionVmMediator questionVM,
                  TopicVmMediator topicVM,
@@ -80,9 +80,9 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
                  ClipboardModel clipboardModel,
                  FileModel fileModel) {
         this.grammarAnswerVM = grammarAnswerVM;
-        this.openAiAnswerVM = openAiAnswerVM;
-        this.claudeAnswerVM = claudeAnswerVM;
-        this.gcpAnswerVM = gcpAnswerVM;
+        this.ai1AnswerVM = ai1AnswerVM;
+        this.ai2AnswerVM = ai2AnswerVM;
+        this.ai3AnswerVM = ai3AnswerVM;
         this.historyVM = historyVM;
         this.questionVM = questionVM;
         this.topicVM = topicVM;
@@ -97,9 +97,9 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
     public void stageShowed() {
         log.trace("stageShowed");
         grammarAnswerVM.initialize();
-        openAiAnswerVM.initialize();
-        claudeAnswerVM.initialize();
-        gcpAnswerVM.initialize();
+        ai1AnswerVM.initialize();
+        ai2AnswerVM.initialize();
+        ai3AnswerVM.initialize();
         historyVM.displayCurrentInteraction();
         topicVM.initialize();
         topicVM.setLabel();
@@ -117,9 +117,9 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
         historyVM.displayCurrentInteraction();
         questionVM.displayCurrentInteraction();
         grammarAnswerVM.displayCurrentAnswer();
-        openAiAnswerVM.displayCurrentAnswer();
-        claudeAnswerVM.displayCurrentAnswer();
-        gcpAnswerVM.displayCurrentAnswer();
+        ai1AnswerVM.displayCurrentAnswer();
+        ai2AnswerVM.displayCurrentAnswer();
+        ai3AnswerVM.displayCurrentAnswer();
         questionVM.focusOnQuestionAndSelect();
     }
 
@@ -133,9 +133,9 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
         if (interactionId.equals(stateModel.getCurrentInteractionId())) {
             switch (answerType) {
                 case GRAMMAR -> grammarAnswerVM.displayCompletedAnswer();
-                case OPEN_AI -> openAiAnswerVM.displayCompletedAnswer();
-                case CLAUDE -> claudeAnswerVM.displayCompletedAnswer();
-                case GCP -> gcpAnswerVM.displayCompletedAnswer();
+                case AI_1 -> ai1AnswerVM.displayCompletedAnswer();
+                case AI_2 -> ai2AnswerVM.displayCompletedAnswer();
+                case AI_3 -> ai3AnswerVM.displayCompletedAnswer();
             }
         }
         historyVM.displayCurrentInteraction();
@@ -149,9 +149,9 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
         }
         switch (answerType) {
             case GRAMMAR -> grammarAnswerVM.displayPartialAnswer(html);
-            case OPEN_AI -> openAiAnswerVM.displayPartialAnswer(html);
-            case CLAUDE -> claudeAnswerVM.displayPartialAnswer(html);
-            case GCP -> gcpAnswerVM.displayPartialAnswer(html);
+            case AI_1 -> ai1AnswerVM.displayPartialAnswer(html);
+            case AI_2 -> ai2AnswerVM.displayPartialAnswer(html);
+            case AI_3 -> ai3AnswerVM.displayPartialAnswer(html);
         }
     }
 
@@ -163,9 +163,9 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
         }
         historyVM.displayCurrentInteraction();
         grammarAnswerVM.displayCurrentAnswer();
-        openAiAnswerVM.displayCurrentAnswer();
-        claudeAnswerVM.displayCurrentAnswer();
-        gcpAnswerVM.displayCurrentAnswer();
+        ai1AnswerVM.displayCurrentAnswer();
+        ai2AnswerVM.displayCurrentAnswer();
+        ai3AnswerVM.displayCurrentAnswer();
     }
 
     @Override
@@ -176,9 +176,9 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
         topicVM.updateComboBoxItems();
         topicVM.updateComboBoxSelectedItemFromCurrentInteraction();
         grammarAnswerVM.displayCurrentAnswer();
-        openAiAnswerVM.displayCurrentAnswer();
-        claudeAnswerVM.displayCurrentAnswer();
-        gcpAnswerVM.displayCurrentAnswer();
+        ai1AnswerVM.displayCurrentAnswer();
+        ai2AnswerVM.displayCurrentAnswer();
+        ai3AnswerVM.displayCurrentAnswer();
     }
 
     @Override
@@ -193,9 +193,9 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
         accelerators.put(new KeyCodeCombination(F, CONTROL_DOWN), historyVM::focusOnFilterAndSelect);
         // Digit order must match the Alt-1..4 copy shortcuts (AnswerVmImpl.hotkeyDigitMap)
         accelerators.put(new KeyCodeCombination(DIGIT1, CONTROL_DOWN), () -> uiVM.toggleExpandedAnswer(GRAMMAR));
-        accelerators.put(new KeyCodeCombination(DIGIT2, CONTROL_DOWN), () -> uiVM.toggleExpandedAnswer(OPEN_AI));
-        accelerators.put(new KeyCodeCombination(DIGIT3, CONTROL_DOWN), () -> uiVM.toggleExpandedAnswer(CLAUDE));
-        accelerators.put(new KeyCodeCombination(DIGIT4, CONTROL_DOWN), () -> uiVM.toggleExpandedAnswer(GCP));
+        accelerators.put(new KeyCodeCombination(DIGIT2, CONTROL_DOWN), () -> uiVM.toggleExpandedAnswer(AI_1));
+        accelerators.put(new KeyCodeCombination(DIGIT3, CONTROL_DOWN), () -> uiVM.toggleExpandedAnswer(AI_2));
+        accelerators.put(new KeyCodeCombination(DIGIT4, CONTROL_DOWN), () -> uiVM.toggleExpandedAnswer(AI_3));
     }
 
     private void escapePressed() {
@@ -349,9 +349,9 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
         var interaction = stateModel.createInteraction(interactionType, parentInteractionId);
         topicVM.updateComboBoxItems();
         grammarAnswerVM.displayCurrentAnswer();
-        openAiAnswerVM.displayCurrentAnswer();
-        claudeAnswerVM.displayCurrentAnswer();
-        gcpAnswerVM.displayCurrentAnswer();
+        ai1AnswerVM.displayCurrentAnswer();
+        ai2AnswerVM.displayCurrentAnswer();
+        ai3AnswerVM.displayCurrentAnswer();
         return interaction;
     }
 

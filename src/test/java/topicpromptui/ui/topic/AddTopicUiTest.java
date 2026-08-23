@@ -29,9 +29,9 @@ class AddTopicUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(null)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I0.GRAMMAR_HTML)
-                .openAiA().text(I0.OPEN_AI_HTML)
-                .claudeA().text(I0.CLAUDE_HTML)
-                .gcpA().text(I0.GCP_HTML)
+                .ai1A().text(I0.AI_1_HTML)
+                .ai2A().text(I0.AI_2_HTML)
+                .ai3A().text(I0.AI_3_HTML)
                 .answerCircleColors(WHITE, WHITE, WHITE, WHITE)
 
                 .work("Add Topic 1", () ->
@@ -71,9 +71,9 @@ class AddTopicUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(null)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I0.GRAMMAR_HTML)
-                .openAiA().text(I0.OPEN_AI_HTML)
-                .claudeA().text(I0.CLAUDE_HTML)
-                .gcpA().text(I0.GCP_HTML)
+                .ai1A().text(I0.AI_1_HTML)
+                .ai2A().text(I0.AI_2_HTML)
+                .ai3A().text(I0.AI_3_HTML)
                 .answerCircleColors(WHITE, WHITE, WHITE, WHITE)
 
                 // Whitespace-only input must leave the OK button disabled, so ENTER does not submit

@@ -27,35 +27,35 @@ public class TopicPromptUiController extends BaseController {
     @FXML
     private HBox grammarAnswer;
     @FXML
-    private HBox openAiAnswer;
+    private HBox ai1Answer;
     @FXML
-    private HBox claudeAnswer;
+    private HBox ai2Answer;
     @FXML
-    private HBox gcpAnswer;
+    private HBox ai3Answer;
     @FXML
     @SuppressWarnings("unused")
     private AnswerController grammarAnswerController;
     @FXML
     @SuppressWarnings("unused")
-    private AnswerController claudeAnswerController;
+    private AnswerController ai2AnswerController;
     @FXML
     @SuppressWarnings("unused")
-    private AnswerController openAiAnswerController;
+    private AnswerController ai1AnswerController;
     @FXML
     @SuppressWarnings("unused")
-    private AnswerController gcpAnswerController;
+    private AnswerController ai3AnswerController;
     @Inject
     @Named(AnswerVmModule.GRAMMAR)
     private AnswerVmController grammarAnswerVM;
     @Inject
-    @Named(AnswerVmModule.OPEN_AI)
-    private AnswerVmController openAiAnswerVM;
+    @Named(AnswerVmModule.AI_1)
+    private AnswerVmController ai1AnswerVM;
     @Inject
-    @Named(AnswerVmModule.CLAUDE)
-    private AnswerVmController claudeAnswerVM;
+    @Named(AnswerVmModule.AI_2)
+    private AnswerVmController ai2AnswerVM;
     @Inject
-    @Named(AnswerVmModule.GCP)
-    private AnswerVmController gcpAnswerVM;
+    @Named(AnswerVmModule.AI_3)
+    private AnswerVmController ai3AnswerVM;
     private HBox expandedPane;
     private double savedMaxHeight;
     private Priority savedVgrow;
@@ -64,9 +64,9 @@ public class TopicPromptUiController extends BaseController {
     protected void initialize() {
         log.trace("initialize");
         grammarAnswerController.initializeController(grammarAnswerVM);
-        openAiAnswerController.initializeController(openAiAnswerVM);
-        claudeAnswerController.initializeController(claudeAnswerVM);
-        gcpAnswerController.initializeController(gcpAnswerVM);
+        ai1AnswerController.initializeController(ai1AnswerVM);
+        ai2AnswerController.initializeController(ai2AnswerVM);
+        ai3AnswerController.initializeController(ai3AnswerVM);
         vm.properties().expandedAnswerType.addListener((_, _, newType) -> onExpandedAnswerChanged(newType));
         vm.initialize();
     }
@@ -99,9 +99,9 @@ public class TopicPromptUiController extends BaseController {
     private HBox paneFor(AnswerType answerType) {
         return switch (answerType) {
             case GRAMMAR -> grammarAnswer;
-            case OPEN_AI -> openAiAnswer;
-            case CLAUDE -> claudeAnswer;
-            case GCP -> gcpAnswer;
+            case AI_1 -> ai1Answer;
+            case AI_2 -> ai2Answer;
+            case AI_3 -> ai3Answer;
         };
     }
 }

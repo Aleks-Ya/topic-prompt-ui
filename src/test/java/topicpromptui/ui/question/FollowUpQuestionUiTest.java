@@ -7,7 +7,7 @@ import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Paint;
 import org.junit.jupiter.api.Test;
 
-import static topicpromptui.core.domain.AnswerType.OPEN_AI;
+import static topicpromptui.core.domain.AnswerType.AI_1;
 import static javafx.scene.paint.Color.LIGHTBLUE;
 import static topicpromptui.ui.viewmodel.question.QuestionStyle.QUESTION_STYLE_EMPTY;
 import static topicpromptui.ui.viewmodel.question.QuestionStyle.QUESTION_STYLE_FOLLOW_UP;
@@ -40,7 +40,7 @@ class FollowUpQuestionUiTest extends BaseTopicPromptUiTest {
         var followUpInteraction = storage.readInteraction(followUpInteractionId).orElseThrow();
         assertThat(followUpInteraction.parentInteractionId()).isEqualTo(I1.INTERACTION.id());
 
-        var openAiAncestorAnswer = I1.INTERACTION.getAnswer(OPEN_AI).orElseThrow();
+        var openAiAncestorAnswer = I1.INTERACTION.getAnswer(AI_1).orElseThrow();
         var turns = gptApi.getTurnsSendHistory().stream().filter(t -> t.size() > 1).findFirst().orElseThrow();
         assertThat(turns).hasSize(3);
         assertThat(turns.get(0).content()).isEqualTo(openAiAncestorAnswer.prompt());

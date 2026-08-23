@@ -39,9 +39,9 @@ class MultiLineQuestionUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(null)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I0.GRAMMAR_HTML)
-                .openAiA().text(I0.OPEN_AI_HTML)
-                .claudeA().text(I0.CLAUDE_HTML)
-                .gcpA().text(I0.GCP_HTML)
+                .ai1A().text(I0.AI_1_HTML)
+                .ai2A().text(I0.AI_2_HTML)
+                .ai3A().text(I0.AI_3_HTML)
                 .answerCircleColors(WHITE, WHITE, WHITE, WHITE)
                 .assertApp();
     }
@@ -57,9 +57,9 @@ class MultiLineQuestionUiTest extends BaseTopicPromptUiTest {
 
         gptApi.clear()
                 .putGrammarResponse(questionText, ZERO)
-                .putOpenAiResponse(I1.OPEN_AI_HTML, ZERO);
-        claudeApi.clear().putClaudeResponse(I1.CLAUDE_HTML, ZERO);
-        gcpApi.clear().putGcpResponse(I1.GCP_HTML, ZERO);
+                .putOpenAiResponse(I1.AI_1_HTML, ZERO);
+        claudeApi.clear().putClaudeResponse(I1.AI_2_HTML, ZERO);
+        gcpApi.clear().putGcpResponse(I1.AI_3_HTML, ZERO);
         clickOn(question().questionButton());
 
         gptApi.waitUntilSent(2);
@@ -81,9 +81,9 @@ class MultiLineQuestionUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(questionText)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text("<p>" + questionText + "</p>\n")
-                .openAiA().text(I1.EXP_OPEN_AI_HTML_BODY)
-                .claudeA().text(I1.EXP_CLAUDE_HTML_BODY)
-                .gcpA().text(I1.EXP_GCP_HTML_BODY)
+                .ai1A().text(I1.EXP_AI_1_HTML_BODY)
+                .ai2A().text(I1.EXP_AI_2_HTML_BODY)
+                .ai3A().text(I1.EXP_AI_3_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
                 .assertApp();
     }

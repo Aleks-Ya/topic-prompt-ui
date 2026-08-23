@@ -9,10 +9,10 @@ import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static topicpromptui.core.domain.AnswerType.CLAUDE;
-import static topicpromptui.core.domain.AnswerType.GCP;
+import static topicpromptui.core.domain.AnswerType.AI_2;
+import static topicpromptui.core.domain.AnswerType.AI_3;
 import static topicpromptui.core.domain.AnswerType.GRAMMAR;
-import static topicpromptui.core.domain.AnswerType.OPEN_AI;
+import static topicpromptui.core.domain.AnswerType.AI_1;
 import static topicpromptui.core.domain.InteractionType.DEFINITION;
 import static topicpromptui.core.domain.InteractionType.FACT;
 import static topicpromptui.core.domain.InteractionType.QUESTION;
@@ -67,10 +67,10 @@ class QuestionVmImpl implements QuestionVmController, QuestionVmMediator {
         var interactionId = mediator.getCurrentInteractionId();
         Mdc.run(interactionId.id(), () -> {
             log.info("Regenerate question: {}", interactionId);
-            mediator.requestAnswer(interactionId, CLAUDE);
-            mediator.requestAnswer(interactionId, OPEN_AI);
+            mediator.requestAnswer(interactionId, AI_2);
+            mediator.requestAnswer(interactionId, AI_1);
             mediator.requestAnswer(interactionId, GRAMMAR);
-            mediator.requestAnswer(interactionId, GCP);
+            mediator.requestAnswer(interactionId, AI_3);
         });
     }
 
@@ -132,9 +132,9 @@ class QuestionVmImpl implements QuestionVmController, QuestionVmMediator {
         log.debug("createNewInteractionAndRequestAnswers: interactionType={}", interactionType);
         var parentInteractionId = properties.followUpCheckBoxSelected.get() ? mediator.getCurrentInteractionId() : null;
         var interactionId = mediator.createInteraction(interactionType, parentInteractionId);
-        mediator.requestAnswer(interactionId, GCP);
-        mediator.requestAnswer(interactionId, CLAUDE);
-        mediator.requestAnswer(interactionId, OPEN_AI);
+        mediator.requestAnswer(interactionId, AI_3);
+        mediator.requestAnswer(interactionId, AI_2);
+        mediator.requestAnswer(interactionId, AI_1);
         mediator.requestAnswer(interactionId, GRAMMAR);
     }
 

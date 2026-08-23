@@ -36,9 +36,9 @@ class DeleteInteractionBottomUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(I2.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I2.GRAMMAR_HTML)
-                .openAiA().text(I2.OPEN_AI_HTML)
-                .claudeA().text(I2.CLAUDE_HTML)
-                .gcpA().text(I2.GCP_HTML)
+                .ai1A().text(I2.AI_1_HTML)
+                .ai2A().text(I2.AI_2_HTML)
+                .ai3A().text(I2.AI_3_HTML)
                 .answerCircleColors(GREEN, GREEN, RED, GREEN)
                 .assertApp();
 
@@ -60,9 +60,9 @@ class DeleteInteractionBottomUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(I2.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I2.GRAMMAR_HTML)
-                .openAiA().text(I2.OPEN_AI_HTML)
-                .claudeA().text(I2.CLAUDE_HTML)
-                .gcpA().text(I2.GCP_HTML)
+                .ai1A().text(I2.AI_1_HTML)
+                .ai2A().text(I2.AI_2_HTML)
+                .ai3A().text(I2.AI_3_HTML)
                 .answerCircleColors(GREEN, GREEN, RED, GREEN)
                 .assertApp();
     }

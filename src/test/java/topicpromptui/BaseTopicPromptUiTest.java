@@ -43,9 +43,9 @@ public abstract class BaseTopicPromptUiTest extends ApplicationTest {
     private final TopicInfo topic = new TopicInfo();
     private final QuestionInfo question = new QuestionInfo();
     private final AnswerInfo answerGrammar = new AnswerInfo("#grammarAnswer");
-    private final AnswerInfo answerOpenAi = new AnswerInfo("#openAiAnswer");
-    private final AnswerInfo answerClaude = new AnswerInfo("#claudeAnswer");
-    private final AnswerInfo answerGcp = new AnswerInfo("#gcpAnswer");
+    private final AnswerInfo answerAi1 = new AnswerInfo("#ai1Answer");
+    private final AnswerInfo answerAi2 = new AnswerInfo("#ai2Answer");
+    private final AnswerInfo answerAi3 = new AnswerInfo("#ai3Answer");
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -72,16 +72,16 @@ public abstract class BaseTopicPromptUiTest extends ApplicationTest {
         return answerGrammar;
     }
 
-    protected AnswerInfo openAiAnswer() {
-        return answerOpenAi;
+    protected AnswerInfo ai1Answer() {
+        return answerAi1;
     }
 
-    protected AnswerInfo claudeAnswer() {
-        return answerClaude;
+    protected AnswerInfo ai2Answer() {
+        return answerAi2;
     }
 
-    protected AnswerInfo gcpAnswer() {
-        return answerGcp;
+    protected AnswerInfo ai3Answer() {
+        return answerAi3;
     }
 
     private String extractWebViewContent(WebView webView) {

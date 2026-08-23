@@ -22,6 +22,7 @@ public class ModelModule extends AbstractModule {
         install(new GcpModule());
         install(new ClaudeModule());
         install(new XaiModule());
+        install(new AiProviderModule());
         install(new QuestionModule());
         install(new StorageModule());
         install(new StateModelModule());

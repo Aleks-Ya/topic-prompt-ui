@@ -34,7 +34,7 @@ interface FollowUpHistoryBuilder {
 
 QuestionModel --> StorageModel
 QuestionModel --> PromptFactory
-QuestionModel "1" --> "4" AiApi: GRAMMAR, OPEN_AI, CLAUDE, GCP
+QuestionModel "1" --> "*" AiApi: Map<AiProvider, AiApi>
 QuestionModel --> SoundService
 QuestionModel --> FormatConverter
 QuestionModel --> GrammarDiffMarker: GRAMMAR only

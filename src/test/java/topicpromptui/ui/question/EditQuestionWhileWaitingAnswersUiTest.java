@@ -44,9 +44,9 @@ class EditQuestionWhileWaitingAnswersUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(null)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I0.GRAMMAR_HTML)
-                .openAiA().text(I0.OPEN_AI_HTML)
-                .claudeA().text(I0.CLAUDE_HTML)
-                .gcpA().text(I0.GCP_HTML)
+                .ai1A().text(I0.AI_1_HTML)
+                .ai2A().text(I0.AI_2_HTML)
+                .ai3A().text(I0.AI_3_HTML)
                 .answerCircleColors(WHITE, WHITE, WHITE, WHITE)
                 .assertApp();
     }
@@ -71,17 +71,17 @@ class EditQuestionWhileWaitingAnswersUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(I1.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I0.GRAMMAR_HTML)
-                .openAiA().text(I0.OPEN_AI_HTML)
-                .claudeA().text(I0.CLAUDE_HTML)
-                .gcpA().text(I0.GCP_HTML)
+                .ai1A().text(I0.AI_1_HTML)
+                .ai2A().text(I0.AI_2_HTML)
+                .ai3A().text(I0.AI_3_HTML)
                 .answerCircleColors(WHITE, WHITE, WHITE, WHITE)
                 .assertApp();
 
         gptApi.clear()
                 .putGrammarResponse(I1.GRAMMAR_ANSWER, ofMillis(5000))
-                .putOpenAiResponse(I1.OPEN_AI_HTML, ofMillis(5500));
-        claudeApi.clear().putClaudeResponse(I1.CLAUDE_HTML, ofMillis(6000));
-        gcpApi.putGcpResponse(I1.GCP_HTML, ofMillis(6500));
+                .putOpenAiResponse(I1.AI_1_HTML, ofMillis(5500));
+        claudeApi.clear().putClaudeResponse(I1.AI_2_HTML, ofMillis(6000));
+        gcpApi.putGcpResponse(I1.AI_3_HTML, ofMillis(6500));
 
         clickOn(question().questionButton());
         assertion()
@@ -100,9 +100,9 @@ class EditQuestionWhileWaitingAnswersUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(I1.QUESTION)
                 .modelIsEnteringNewQuestion(false)
                 .grammarA().text(I0.GRAMMAR_HTML)
-                .openAiA().text(I0.OPEN_AI_HTML)
-                .claudeA().text(I0.CLAUDE_HTML)
-                .gcpA().text(I0.GCP_HTML)
+                .ai1A().text(I0.AI_1_HTML)
+                .ai2A().text(I0.AI_2_HTML)
+                .ai3A().text(I0.AI_3_HTML)
                 .answerCircleColors(BLUE, BLUE, BLUE, BLUE)
                 .assertApp();
     }
@@ -127,9 +127,9 @@ class EditQuestionWhileWaitingAnswersUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(I2.QUESTION)
                 .modelIsEnteringNewQuestion(true)
                 .grammarA().text(I0.GRAMMAR_HTML)
-                .openAiA().text(I0.OPEN_AI_HTML)
-                .claudeA().text(I0.CLAUDE_HTML)
-                .gcpA().text(I0.GCP_HTML)
+                .ai1A().text(I0.AI_1_HTML)
+                .ai2A().text(I0.AI_2_HTML)
+                .ai3A().text(I0.AI_3_HTML)
                 .answerCircleColors(BLUE, BLUE, BLUE, BLUE)
                 .assertApp();
 
@@ -152,9 +152,9 @@ class EditQuestionWhileWaitingAnswersUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion(I2.QUESTION)
                 .modelIsEnteringNewQuestion(true)
                 .grammarA().text(I1.EXP_GRAMMAR_ANSWER_BODY)
-                .openAiA().text(I1.EXP_OPEN_AI_HTML_BODY)
-                .claudeA().text(I1.EXP_CLAUDE_HTML_BODY)
-                .gcpA().text(I1.EXP_GCP_HTML_BODY)
+                .ai1A().text(I1.EXP_AI_1_HTML_BODY)
+                .ai2A().text(I1.EXP_AI_2_HTML_BODY)
+                .ai3A().text(I1.EXP_AI_3_HTML_BODY)
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
                 .assertApp();
     }

@@ -25,19 +25,19 @@ class SoundServiceIT {
 
     @Test
     void beenOnAnswerOpenAi() throws InterruptedException {
-        assertThatCode(() -> soundService.beenOnAnswer(AnswerType.OPEN_AI)).doesNotThrowAnyException();
+        assertThatCode(() -> soundService.beenOnAnswer(AnswerType.AI_1)).doesNotThrowAnyException();
         Thread.sleep(3000);
     }
 
     @Test
     void beenOnAnswerClaude() throws InterruptedException {
-        assertThatCode(() -> soundService.beenOnAnswer(AnswerType.CLAUDE)).doesNotThrowAnyException();
+        assertThatCode(() -> soundService.beenOnAnswer(AnswerType.AI_2)).doesNotThrowAnyException();
         Thread.sleep(3000);
     }
 
     @Test
     void beenOnAnswerGcp() throws InterruptedException {
-        assertThatCode(() -> soundService.beenOnAnswer(AnswerType.GCP)).doesNotThrowAnyException();
+        assertThatCode(() -> soundService.beenOnAnswer(AnswerType.AI_3)).doesNotThrowAnyException();
         Thread.sleep(3000);
     }
 }

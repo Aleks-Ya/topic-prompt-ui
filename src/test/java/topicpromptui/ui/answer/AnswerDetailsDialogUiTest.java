@@ -63,10 +63,10 @@ class AnswerDetailsDialogUiTest extends BaseTopicPromptUiTest {
 
     @Test
     void showsBlankFieldsForUnansweredPane() {
-        clickOn(openAiAnswer().button());
+        clickOn(ai1Answer().button());
         var dialog = answerDetailsDialog();
         assertThat(dialog.interactionIdField().getText()).isEqualTo("100");
-        assertThat(dialog.answerTypeField().getText()).isEqualTo("OPEN_AI");
+        assertThat(dialog.answerTypeField().getText()).isEqualTo("AI_1");
         assertThat(dialog.modelIdField().getText()).isEmpty();
         assertThat(dialog.effortLevelField().getText()).isEmpty();
         assertThat(dialog.finishReasonField().getText()).isEmpty();

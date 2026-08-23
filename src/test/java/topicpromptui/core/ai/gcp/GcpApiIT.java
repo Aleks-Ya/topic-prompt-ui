@@ -59,8 +59,8 @@ class GcpApiIT {
 
     @Test
     void definition() {
-        var system = promptFactory.getSystemPrompt(DEFINITION, "AWS S3", AnswerType.GCP).orElseThrow();
-        var prompt = promptFactory.getPrompt(DEFINITION, "Bucket", AnswerType.GCP).orElseThrow();
+        var system = promptFactory.getSystemPrompt(DEFINITION, "AWS S3", AnswerType.AI_3).orElseThrow();
+        var prompt = promptFactory.getPrompt(DEFINITION, "Bucket", AnswerType.AI_3).orElseThrow();
         var response = api.send(system, List.of(new ConversationTurn(USER, prompt)), NO_OP);
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),

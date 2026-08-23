@@ -57,8 +57,8 @@ class OpenAiApiIT {
 
     @Test
     void definitionOpenAi() {
-        var system = promptFactory.getSystemPrompt(DEFINITION, "AWS S3", AnswerType.OPEN_AI).orElseThrow();
-        var prompt = promptFactory.getPrompt(DEFINITION, "Bucket", AnswerType.OPEN_AI).orElseThrow();
+        var system = promptFactory.getSystemPrompt(DEFINITION, "AWS S3", AnswerType.AI_1).orElseThrow();
+        var prompt = promptFactory.getPrompt(DEFINITION, "Bucket", AnswerType.AI_1).orElseThrow();
         var response = api.send(system, List.of(new ConversationTurn(USER, prompt)), NO_OP);
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),

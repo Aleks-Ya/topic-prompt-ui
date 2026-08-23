@@ -7,6 +7,7 @@ import topicpromptui.core.ai.AiApi;
 import topicpromptui.core.ai.claude.MockClaudeApi;
 import topicpromptui.core.ai.gcp.MockGcpApi;
 import topicpromptui.core.ai.openai.MockOpenAiApi;
+import topicpromptui.core.ai.xai.MockXaiApi;
 import topicpromptui.ui.model.file.FileModel;
 import topicpromptui.ui.model.file.FileModelMock;
 import topicpromptui.core.sound.SoundService;
@@ -19,6 +20,7 @@ import static topicpromptui.core.ai.AiModule.CLAUDE_AI;
 import static topicpromptui.core.ai.AiModule.GCP_AI;
 import static topicpromptui.core.ai.AiModule.OPEN_AI;
 import static topicpromptui.core.ai.AiModule.OPEN_AI_GRAMMAR;
+import static topicpromptui.core.ai.AiModule.XAI;
 
 public class TestRootModule extends AbstractModule {
     @Override
@@ -26,10 +28,12 @@ public class TestRootModule extends AbstractModule {
         bind(MockOpenAiApi.class);
         bind(MockGcpApi.class);
         bind(MockClaudeApi.class);
+        bind(MockXaiApi.class);
         bind(AiApi.class).annotatedWith(Names.named(OPEN_AI)).to(MockOpenAiApi.class);
         bind(AiApi.class).annotatedWith(Names.named(OPEN_AI_GRAMMAR)).to(MockOpenAiApi.class);
         bind(AiApi.class).annotatedWith(Names.named(GCP_AI)).to(MockGcpApi.class);
         bind(AiApi.class).annotatedWith(Names.named(CLAUDE_AI)).to(MockClaudeApi.class);
+        bind(AiApi.class).annotatedWith(Names.named(XAI)).to(MockXaiApi.class);
         bind(SoundService.class).to(SoundServiceMock.class);
         bind(FileModelMock.class);
         bind(FileModel.class).to(FileModelMock.class);
