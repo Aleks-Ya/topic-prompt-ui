@@ -53,11 +53,11 @@ class RegenerateQuestionUiTest extends BaseTopicPromptUiTest {
         gptApi.clear()
                 .putGrammarResponse(I1.GRAMMAR_ANSWER, ZERO)
                 .putOpenAiResponse(I2.AI_1_HTML, ZERO);
-        claudeApi.clear().putClaudeResponse(I2.AI_2_HTML, ZERO);
+        xaiApi.clear().putGrokResponse(I2.AI_2_HTML, ZERO);
         gcpApi.clear().putGcpResponse(I2.AI_3_HTML, ZERO);
         clickOn(question().regenerateButton());
         gptApi.waitUntilSent(2);
-        claudeApi.waitUntilSent(1);
+        xaiApi.waitUntilSent(1);
         gcpApi.waitUntilSent(1);
 
         assertion()

@@ -24,7 +24,7 @@ class SyncFollowUpCheckboxOnNavigationUiTest extends BaseTopicPromptUiTest {
     void followUpCheckboxTracksCurrentInteractionAsHistoryIsNavigated() {
         // Send a follow-up question, producing interaction B (parentInteractionId == I1) as current.
         gptApi.clear().putGrammarResponse("Correct", ZERO).putResponse("Who created it?", "James Gosling created it.", ZERO);
-        claudeApi.clear().putResponse("Who created it?", "James Gosling created it.", ZERO);
+        xaiApi.clear().putResponse("Who created it?", "James Gosling created it.", ZERO);
         gcpApi.clear().putResponse("Who created it?", "James Gosling created it.", ZERO);
 
         clickOn(question().followUpCheckBox());
@@ -33,7 +33,7 @@ class SyncFollowUpCheckboxOnNavigationUiTest extends BaseTopicPromptUiTest {
         clickOn(question().questionButton());
 
         gptApi.waitUntilSent(2);
-        claudeApi.waitUntilSent(1);
+        xaiApi.waitUntilSent(1);
         gcpApi.waitUntilSent(1);
 
         var followUp = storage.readInteraction(stateModel.getCurrentInteractionId()).orElseThrow();

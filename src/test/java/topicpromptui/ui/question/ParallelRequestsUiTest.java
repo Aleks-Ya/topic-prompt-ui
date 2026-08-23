@@ -82,7 +82,7 @@ class ParallelRequestsUiTest extends BaseTopicPromptUiTest {
         gptApi
                 .putGrammarResponse(I1.GRAMMAR_ANSWER, ofMillis(10000))
                 .putOpenAiResponse(I1.AI_1_HTML, ofMillis(10500));
-        claudeApi.putClaudeResponse(I1.AI_2_HTML, ofMillis(11000));
+        xaiApi.putGrokResponse(I1.AI_2_HTML, ofMillis(11000));
         gcpApi.putGcpResponse(I1.AI_3_HTML, ofMillis(11500));
 
         clickOn(question().questionButton());
@@ -138,7 +138,7 @@ class ParallelRequestsUiTest extends BaseTopicPromptUiTest {
         gptApi
                 .putGrammarResponse(I2.GRAMMAR_ANSWER, ofMillis(1000))
                 .putOpenAiResponse(I2.AI_1_HTML, ofMillis(1500));
-        claudeApi.putClaudeResponse(I2.AI_2_HTML, ofMillis(2000));
+        xaiApi.putGrokResponse(I2.AI_2_HTML, ofMillis(2000));
         gcpApi.putGcpResponse(I2.AI_3_HTML, ofMillis(2500));
         clickOn(question().questionButton());
         assertion()
@@ -165,7 +165,7 @@ class ParallelRequestsUiTest extends BaseTopicPromptUiTest {
 
 
         gptApi.waitUntilSent(2);
-        claudeApi.waitUntilSent(1);
+        xaiApi.waitUntilSent(1);
         gcpApi.waitUntilSent(1);
         assertion()
                 .focus(question().questionButton())
@@ -192,7 +192,7 @@ class ParallelRequestsUiTest extends BaseTopicPromptUiTest {
 
     private void firstRequestFinished() {
         gptApi.waitUntilSent(4);
-        claudeApi.waitUntilSent(2);
+        xaiApi.waitUntilSent(2);
         gcpApi.waitUntilSent(2);
         assertion()
                 .focus(question().questionButton())

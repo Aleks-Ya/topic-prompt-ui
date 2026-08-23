@@ -61,10 +61,10 @@ class RegenerateAnswerUiTest extends BaseTopicPromptUiTest {
                 .historyItems(storage.readInteraction(I2.INTERACTION.id()).orElseThrow(), I1.INTERACTION)
                 .ai1A().text(I3.EXP_AI_1_HTML_BODY)
 
-                .work("Regenerate Claude Answer", () -> {
-                    claudeApi.clear().putClaudeResponse(I3.AI_2_HTML, ZERO);
+                .work("Regenerate Grok Answer", () -> {
+                    xaiApi.clear().putGrokResponse(I3.AI_2_HTML, ZERO);
                     clickOn(ai2Answer().regenerateButton());
-                    claudeApi.waitUntilSent(1);
+                    xaiApi.waitUntilSent(1);
                 })
                 .focus(ai2Answer().regenerateButton())
                 .historyItems(storage.readInteraction(I2.INTERACTION.id()).orElseThrow(), I1.INTERACTION)

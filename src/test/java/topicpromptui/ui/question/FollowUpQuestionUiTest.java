@@ -24,7 +24,7 @@ class FollowUpQuestionUiTest extends BaseTopicPromptUiTest {
     @Test
     void followUpCheckboxLinksNewInteractionAndSendsHistory() {
         gptApi.clear().putGrammarResponse("Correct", ZERO).putResponse("Who created it?", "James Gosling created it.", ZERO);
-        claudeApi.clear().putResponse("Who created it?", "James Gosling created it.", ZERO);
+        xaiApi.clear().putResponse("Who created it?", "James Gosling created it.", ZERO);
         gcpApi.clear().putResponse("Who created it?", "James Gosling created it.", ZERO);
 
         clickOn(question().followUpCheckBox());
@@ -33,7 +33,7 @@ class FollowUpQuestionUiTest extends BaseTopicPromptUiTest {
         clickOn(question().questionButton());
 
         gptApi.waitUntilSent(2);
-        claudeApi.waitUntilSent(1);
+        xaiApi.waitUntilSent(1);
         gcpApi.waitUntilSent(1);
 
         var followUpInteractionId = stateModel.getCurrentInteractionId();
@@ -47,7 +47,7 @@ class FollowUpQuestionUiTest extends BaseTopicPromptUiTest {
         assertThat(turns.get(1).content()).isEqualTo(openAiAncestorAnswer.answerMd());
         assertThat(turns.get(2).content()).isEqualTo("Who created it?");
 
-        assertThat(claudeApi.getTurnsSendHistory().getLast()).hasSize(3);
+        assertThat(xaiApi.getTurnsSendHistory().getLast()).hasSize(3);
         assertThat(gcpApi.getTurnsSendHistory().getLast()).hasSize(3);
     }
 

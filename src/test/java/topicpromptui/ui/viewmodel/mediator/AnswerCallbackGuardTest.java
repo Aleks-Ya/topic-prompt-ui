@@ -32,12 +32,12 @@ import static org.mockito.Mockito.when;
 class AnswerCallbackGuardTest {
     private final AnswerVmMediator grammarAnswerVM = mock(AnswerVmMediator.class);
     private final AnswerVmMediator openAiAnswerVM = mock(AnswerVmMediator.class);
-    private final AnswerVmMediator claudeAnswerVM = mock(AnswerVmMediator.class);
+    private final AnswerVmMediator grokAnswerVM = mock(AnswerVmMediator.class);
     private final AnswerVmMediator gcpAnswerVM = mock(AnswerVmMediator.class);
     private final HistoryVmMediator historyVM = mock(HistoryVmMediator.class);
     private final StateModel stateModel = mock(StateModel.class);
     private final QuestionModel questionModel = mock(QuestionModel.class);
-    private final MediatorImpl mediator = new MediatorImpl(grammarAnswerVM, openAiAnswerVM, claudeAnswerVM,
+    private final MediatorImpl mediator = new MediatorImpl(grammarAnswerVM, openAiAnswerVM, grokAnswerVM,
             gcpAnswerVM, historyVM, mock(QuestionVmMediator.class), mock(TopicVmMediator.class),
             mock(TopicPromptUiVmMediator.class), stateModel, questionModel,
             mock(ClipboardModel.class), mock(FileModel.class));

@@ -4,26 +4,12 @@ import topicpromptui.core.ai.AiApi;
 import topicpromptui.ui.model.question.BaseMockApi;
 import jakarta.inject.Singleton;
 
-import java.time.Duration;
-
+/**
+ * Bound in {@code TestRootModule} even though no {@code AnswerType} slot currently uses Claude: without
+ * it, pointing a slot at {@link topicpromptui.core.domain.AiProvider#CLAUDE} would silently send every
+ * UI test to the real Claude API. Stubbing helpers live on {@link BaseMockApi}; add named ones here
+ * only once a slot uses Claude.
+ */
 @Singleton
 public class MockClaudeApi extends BaseMockApi implements AiApi {
-
-    @SuppressWarnings("UnusedReturnValue")
-    public MockClaudeApi putClaudeResponse(String response, Duration timeout) {
-        put("Do not repeat the question", "a short response", response, timeout);
-        return this;
-    }
-
-    @SuppressWarnings("UnusedReturnValue")
-    public MockClaudeApi putFactResponse(String response, Duration timeout) {
-        put("factually correct", null, response, timeout);
-        return this;
-    }
-
-    @Override
-    public MockClaudeApi clear() {
-        super.clear();
-        return this;
-    }
 }

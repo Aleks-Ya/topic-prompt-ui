@@ -49,7 +49,7 @@ class SendFactUiTest extends BaseTopicPromptUiTest {
         gptApi.clear()
                 .putGrammarResponse("Question 4", ZERO)
                 .putFactResponse("Fact answer 4", ZERO);
-        claudeApi.clear().putFactResponse("Fact answer 4", ZERO);
+        xaiApi.clear().putFactResponse("Fact answer 4", ZERO);
         gcpApi.clear().putFactResponse("Fact answer 4", ZERO);
         clickOn(question().textArea());
         overWrite("Question 4");

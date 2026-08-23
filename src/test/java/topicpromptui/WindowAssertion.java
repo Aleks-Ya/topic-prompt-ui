@@ -309,7 +309,7 @@ public class WindowAssertion {
 
         {
             var answer = app.ai2Answer();
-            soft.assertThat(answer.button().getText()).as(descr("Answer/Ai2/Button/Text")).isEqualTo("Claude:");
+            soft.assertThat(answer.button().getText()).as(descr("Answer/Ai2/Button/Text")).isEqualTo("Grok:");
             soft.assertThat(answer.copyButton().getText()).as(descr("Answer/Ai2/CopyButton/Text")).isEqualTo("Copy _3");
             soft.assertThat(answer.regenerateButton().getText()).as(descr("Answer/Ai2/RegenerateButton/Text")).isEqualTo("⟳");
             soft.assertThat(answer.expandButton().getText()).as(descr("Answer/Ai2/ExpandButton/Text")).isEqualTo("⛶");

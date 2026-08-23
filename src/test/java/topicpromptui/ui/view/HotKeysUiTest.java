@@ -85,7 +85,7 @@ class HotKeysUiTest extends BaseTopicPromptUiTest {
                 .focus(ai1Answer().copyButton())
                 .clipboard(I3.AI_1_HTML)
 
-                .work("Copy Claude Answer By Alt-3", () -> press(ALT, DIGIT3).release(DIGIT3, ALT))
+                .work("Copy Grok Answer By Alt-3", () -> press(ALT, DIGIT3).release(DIGIT3, ALT))
                 .focus(ai2Answer().copyButton())
                 .clipboard(I3.AI_2_HTML)
 
@@ -139,14 +139,14 @@ class HotKeysUiTest extends BaseTopicPromptUiTest {
     void resendByAltR() {
         gptApi.clear();
         gcpApi.clear();
-        claudeApi.clear();
+        xaiApi.clear();
         assertThat(gptApi.getSendHistory()).isEmpty();
         assertThat(gcpApi.getSendHistory()).isEmpty();
-        assertThat(claudeApi.getSendHistory()).isEmpty();
+        assertThat(xaiApi.getSendHistory()).isEmpty();
         press(ALT, R).release(R, ALT);
         assertThat(gptApi.getSendHistory()).hasSize(2);
         assertThat(gcpApi.getSendHistory()).hasSize(1);
-        assertThat(claudeApi.getSendHistory()).hasSize(1);
+        assertThat(xaiApi.getSendHistory()).hasSize(1);
     }
 
     @Test

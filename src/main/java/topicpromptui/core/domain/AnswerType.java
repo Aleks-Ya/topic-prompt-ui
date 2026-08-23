@@ -17,7 +17,7 @@ package topicpromptui.core.domain;
 public enum AnswerType {
     GRAMMAR(AiProvider.OPEN_AI_GRAMMAR, "Grammar:"),
     AI_1(AiProvider.OPEN_AI, "OpenAI:"),
-    AI_2(AiProvider.CLAUDE, "Claude:"),
+    AI_2(AiProvider.XAI, "Grok:"),
     AI_3(AiProvider.GCP, "Gemini:");
 
     private final AiProvider provider;

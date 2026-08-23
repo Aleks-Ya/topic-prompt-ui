@@ -82,7 +82,7 @@ class SequentialRequestsUiTest extends BaseTopicPromptUiTest {
         gptApi.clear()
                 .putGrammarResponse(I1.GRAMMAR_ANSWER, ofMillis(1000))
                 .putOpenAiResponse(I1.AI_1_HTML, ofMillis(1500));
-        claudeApi.clear().putClaudeResponse(I1.AI_2_HTML, ofMillis(2000));
+        xaiApi.clear().putGrokResponse(I1.AI_2_HTML, ofMillis(2000));
         gcpApi.clear().putGcpResponse(I1.AI_3_HTML, ofMillis(2500));
 
         clickOn(question().questionButton());
@@ -109,7 +109,7 @@ class SequentialRequestsUiTest extends BaseTopicPromptUiTest {
                 .assertApp();
 
         gptApi.waitUntilSent(2);
-        claudeApi.waitUntilSent(1);
+        xaiApi.waitUntilSent(1);
         gcpApi.waitUntilSent(1);
         assertion()
                 .focus(question().questionButton())
@@ -235,7 +235,7 @@ class SequentialRequestsUiTest extends BaseTopicPromptUiTest {
         gptApi.clear()
                 .putGrammarResponse(I2.GRAMMAR_ANSWER, ofMillis(1000))
                 .putOpenAiResponse(I2.AI_1_HTML, ofMillis(1500));
-        claudeApi.clear().putClaudeResponse(I2.AI_2_HTML, ofMillis(2000));
+        xaiApi.clear().putGrokResponse(I2.AI_2_HTML, ofMillis(2000));
         gcpApi.clear().putGcpResponse(I2.AI_3_HTML, ofMillis(2500));
         clickOn(question().questionButton());
         assertion()
@@ -262,7 +262,7 @@ class SequentialRequestsUiTest extends BaseTopicPromptUiTest {
 
 
         gptApi.waitUntilSent(2);
-        claudeApi.waitUntilSent(1);
+        xaiApi.waitUntilSent(1);
         gcpApi.waitUntilSent(1);
         assertion()
                 .focus(question().questionButton())

@@ -58,12 +58,12 @@ class MultiLineQuestionUiTest extends BaseTopicPromptUiTest {
         gptApi.clear()
                 .putGrammarResponse(questionText, ZERO)
                 .putOpenAiResponse(I1.AI_1_HTML, ZERO);
-        claudeApi.clear().putClaudeResponse(I1.AI_2_HTML, ZERO);
+        xaiApi.clear().putGrokResponse(I1.AI_2_HTML, ZERO);
         gcpApi.clear().putGcpResponse(I1.AI_3_HTML, ZERO);
         clickOn(question().questionButton());
 
         gptApi.waitUntilSent(2);
-        claudeApi.waitUntilSent(1);
+        xaiApi.waitUntilSent(1);
         gcpApi.waitUntilSent(1);
         assertion()
                 .focus(question().questionButton())

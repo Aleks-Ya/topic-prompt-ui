@@ -1,7 +1,7 @@
 package topicpromptui;
 
 import com.google.inject.util.Modules;
-import topicpromptui.core.ai.claude.MockClaudeApi;
+import topicpromptui.core.ai.xai.MockXaiApi;
 import topicpromptui.core.ai.gcp.MockGcpApi;
 import topicpromptui.core.ai.openai.MockOpenAiApi;
 import topicpromptui.ui.model.clipboard.ClipboardModel;
@@ -35,7 +35,7 @@ public abstract class BaseTopicPromptUiTest extends ApplicationTest {
     protected final StateModel stateModel = app.getGuiceContext().getInstance(StateModel.class);
     protected final MockOpenAiApi gptApi = app.getGuiceContext().getInstance(MockOpenAiApi.class);
     protected final MockGcpApi gcpApi = app.getGuiceContext().getInstance(MockGcpApi.class);
-    protected final MockClaudeApi claudeApi = app.getGuiceContext().getInstance(MockClaudeApi.class);
+    protected final MockXaiApi xaiApi = app.getGuiceContext().getInstance(MockXaiApi.class);
     protected final StorageModel storage = app.getGuiceContext().getInstance(StorageModel.class);
     protected final ClipboardModel clipboardModel = app.getGuiceContext().getInstance(ClipboardModel.class);
     protected final FileModelMock fileModel = app.getGuiceContext().getInstance(FileModelMock.class);
