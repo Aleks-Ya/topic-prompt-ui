@@ -29,6 +29,9 @@ sonar {
         property "sonar.organization", "aleks-ya"
         property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml"
+        // xai is a deliberate near-copy of openai (xAI's Responses API is wire-compatible with
+        // OpenAI's - see CLAUDE.md), so CPD duplication between the two is expected, not a defect.
+        property "sonar.cpd.exclusions", "src/main/java/topicpromptui/core/ai/xai/**"
     }
 }
 application {
