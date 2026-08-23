@@ -7,4 +7,5 @@ public class AiModule extends AbstractModule {
     public static final String GCP_AI = "GCP";
     public static final String OPEN_AI = "OpenAiApiImpl";
     public static final String OPEN_AI_GRAMMAR = "OpenAiApiImplGrammar";
+    public static final String XAI = "XaiApiImpl";
 }

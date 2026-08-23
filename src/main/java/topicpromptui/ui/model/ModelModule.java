@@ -7,6 +7,7 @@ import topicpromptui.ui.model.file.FileModelModule;
 import topicpromptui.core.ai.claude.ClaudeModule;
 import topicpromptui.core.ai.gcp.GcpModule;
 import topicpromptui.core.ai.openai.OpenAiModule;
+import topicpromptui.core.ai.xai.XaiModule;
 import topicpromptui.core.prompt.PromptModule;
 import topicpromptui.ui.model.question.QuestionModule;
 import topicpromptui.ui.model.state.StateModelModule;
@@ -20,6 +21,7 @@ public class ModelModule extends AbstractModule {
         install(new OpenAiModule());
         install(new GcpModule());
         install(new ClaudeModule());
+        install(new XaiModule());
         install(new QuestionModule());
         install(new StorageModule());
         install(new StateModelModule());

@@ -33,4 +33,6 @@ SonarCloud project: https://sonarcloud.io/project/overview?id=Aleks-Ya_topic-pro
     1. `openai.token`
     2. `gcp.api.key`
     3. `claude.api.key`
+    4. `xai.key`
+    5. `context7.api.key`
 7. Log file: `~/.topic-prompt-ui/console.log`

@@ -1,0 +1,154 @@
+package topicpromptui.core.ai.xai;
+
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Key;
+import com.google.inject.name.Names;
+import org.junit.jupiter.api.Test;
+import topicpromptui.core.ai.AiApi;
+import topicpromptui.core.ai.ConversationTurn;
+import topicpromptui.core.ai.grader.Grader;
+import topicpromptui.core.ai.grader.Score;
+import topicpromptui.core.ai.grader.graders.EffortLevelGrader;
+import topicpromptui.core.ai.grader.graders.FinishReasonGrader;
+import topicpromptui.core.ai.grader.graders.ModelIdGrader;
+import topicpromptui.core.ai.grader.graders.ResponseIdNotEmptyGrader;
+import topicpromptui.core.ai.grader.graders.ResponseTextContainsGrader;
+import topicpromptui.core.ai.grader.graders.ResponseTextExactGrader;
+import topicpromptui.core.ai.grader.graders.ResponseTextLengthGrader;
+import topicpromptui.core.ai.grader.graders.ResponseTextNotContainsGrader;
+import topicpromptui.core.ai.grader.graders.TokensGrader;
+import topicpromptui.core.ai.grader.graders.ToolCallsContainGrader;
+import topicpromptui.core.config.ProjectTemplatesConfigurationModule;
+import topicpromptui.core.domain.AnswerType;
+import topicpromptui.core.prompt.PromptFactory;
+import topicpromptui.core.prompt.PromptModule;
+import topicpromptui.ui.model.storage.StorageModule;
+
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static topicpromptui.core.ai.AiModule.XAI;
+import static topicpromptui.core.ai.ConversationTurn.Speaker.MODEL;
+import static topicpromptui.core.ai.ConversationTurn.Speaker.USER;
+import static topicpromptui.core.ai.TestConsumers.NO_OP;
+import static topicpromptui.core.domain.InteractionType.DEFINITION;
+
+class XaiApiIT {
+    private final Injector injector = Guice.createInjector(new XaiModule(),
+            new ProjectTemplatesConfigurationModule(), new StorageModule(), new PromptModule());
+    private final AiApi api = injector.getInstance(Key.get(AiApi.class, Names.named(XAI)));
+    private final PromptFactory promptFactory = injector.getInstance(PromptFactory.class);
+
+    @Test
+    void send() {
+        var response = api.send(null, List.of(new ConversationTurn(USER, "Give me the name of the Java creator")), NO_OP);
+        assertThat(Grader.combine(response,
+                new ResponseIdNotEmptyGrader(),
+                new ModelIdGrader("grok-4.6"),
+                new ResponseTextLengthGrader(10, 900),
+                new EffortLevelGrader("XHIGH"),
+                new FinishReasonGrader("completed"),
+                new TokensGrader()
+        )).isEqualTo(Score.MAX);
+    }
+
+    // There is no AnswerType.XAI yet (Grok is not wired to the UI). AnswerType.OPEN_AI renders the
+    // same templates: PromptFactoryImpl groups "case OPEN_AI, CLAUDE, GCP" onto one .ftl per
+    // interaction type, so the prompts here are exactly what an XAI constant would produce.
+    @Test
+    void definition() {
+        var system = promptFactory.getSystemPrompt(DEFINITION, "AWS S3", AnswerType.OPEN_AI).orElseThrow();
+        var prompt = promptFactory.getPrompt(DEFINITION, "Bucket", AnswerType.OPEN_AI).orElseThrow();
+        var response = api.send(system, List.of(new ConversationTurn(USER, prompt)), NO_OP);
+        assertThat(Grader.combine(response,
+                new ResponseIdNotEmptyGrader(),
+                new ModelIdGrader("grok-4.6"),
+                new ResponseTextLengthGrader(10, 1000),
+                new EffortLevelGrader("XHIGH"),
+                new FinishReasonGrader("completed"),
+                new TokensGrader(),
+                ResponseTextNotContainsGrader.noAsidePunctuation()
+        )).isEqualTo(Score.MAX);
+    }
+
+    @Test
+    void sendMultiTurn() {
+        var turns = List.of(
+                new ConversationTurn(USER, "My favorite fruit is mango. Just acknowledge, don't say anything else."),
+                new ConversationTurn(MODEL, "Got it."),
+                new ConversationTurn(USER, "What fruit did I say was my favorite? Answer with just the fruit name."));
+        var response = api.send(null, turns, NO_OP);
+        assertThat(Grader.combine(response,
+                new ResponseIdNotEmptyGrader(),
+                new ModelIdGrader("grok-4.6"),
+                new ResponseTextContainsGrader("Mango"),
+                new EffortLevelGrader("XHIGH"),
+                new FinishReasonGrader("completed"),
+                new TokensGrader()
+        )).isEqualTo(Score.MAX);
+    }
+
+    @Test
+    void sendStreaming() {
+        var deltas = new CopyOnWriteArrayList<String>();
+        var response = api.send(null, List.of(new ConversationTurn(USER,
+                "List the last 5 Java LTS versions with one sentence about each.")), deltas::add);
+        assertThat(deltas).hasSizeGreaterThan(1);
+        assertThat(Grader.combine(response,
+                new ResponseIdNotEmptyGrader(),
+                new ModelIdGrader("grok-4.6"),
+                new ResponseTextExactGrader(String.join("", deltas)),
+                new EffortLevelGrader("XHIGH"),
+                new FinishReasonGrader("completed"),
+                new TokensGrader()
+        )).isEqualTo(Score.MAX);
+    }
+
+    @Test
+    void sendWithContext7Docs() {
+        // Exercises the hosted Context7 MCP tool end to end (context7.api.key must be set). Grok
+        // interleaves commentary messages between its mcp_call outputs, so a green run also proves
+        // parseResponse joins them instead of rejecting the response.
+        var response = api.send(null, List.of(new ConversationTurn(USER, "Consult the Context7 library docs, then "
+                + "say in a single sentence of at most 25 words what the Context7 MCP server provides for "
+                + "developers. Output only that sentence.")), NO_OP);
+        assertThat(Grader.combine(response,
+                new ToolCallsContainGrader("Context7"),
+                new ResponseIdNotEmptyGrader(),
+                new ModelIdGrader("grok-4.6"),
+                new ResponseTextLengthGrader(20, 800),
+                new EffortLevelGrader("XHIGH"),
+                new FinishReasonGrader("completed"),
+                new TokensGrader()
+        )).isEqualTo(Score.MAX);
+    }
+
+    @Test
+    void sendWithWebSearch() {
+        // An invalid tool type string compiles fine and is only rejected at request time, so this is
+        // the gate for it - and for web_search_call outputs not breaking parseResponse's selection.
+        var response = api.send(null, List.of(new ConversationTurn(USER, "Search the web for the current "
+                + "stable version number of Node.js, then answer with just that version number.")), NO_OP);
+        assertThat(Grader.combine(response,
+                new ToolCallsContainGrader("web_search"),
+                new ResponseIdNotEmptyGrader(),
+                new ModelIdGrader("grok-4.6"),
+                new ResponseTextLengthGrader(1, 400),
+                new EffortLevelGrader("XHIGH"),
+                new FinishReasonGrader("completed"),
+                new TokensGrader()
+        )).isEqualTo(Score.MAX);
+    }
+
+    @Test
+    void error() {
+        // Gson omits the null content, so xAI rejects the input item with HTTP 422 before generating.
+        var turns = List.of(new ConversationTurn(USER, null));
+        assertThatThrownBy(() -> api.send(null, turns, NO_OP))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("Failed to deserialize");
+    }
+}
