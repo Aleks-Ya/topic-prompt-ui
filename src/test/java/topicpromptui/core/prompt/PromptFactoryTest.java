@@ -116,11 +116,12 @@ class PromptFactoryTest extends BaseTest {
     @Test
     void factSystemPrompt() {
         var fact = "Check whether the given statement is factually correct in the context of the topic `Topic A`.";
-        var brevity = "Do not exceed roughly 80 words.";
+        var brevity = "Do not exceed roughly 100 words.";
+        var correction = "**Correct version:**";
         assertThat(factory.getSystemPrompt(FACT, "Topic A", GRAMMAR).orElseThrow()).contains(GRAMMAR_SYSTEM).contains(GRAMMAR_SYSTEM_TOPIC);
-        assertThat(factory.getSystemPrompt(FACT, "Topic A", OPEN_AI).orElseThrow()).contains(fact).contains(brevity);
-        assertThat(factory.getSystemPrompt(FACT, "Topic A", CLAUDE).orElseThrow()).contains(fact).contains(brevity);
-        assertThat(factory.getSystemPrompt(FACT, "Topic A", GCP).orElseThrow()).contains(fact).contains(brevity);
+        assertThat(factory.getSystemPrompt(FACT, "Topic A", OPEN_AI).orElseThrow()).contains(fact).contains(brevity).contains(correction);
+        assertThat(factory.getSystemPrompt(FACT, "Topic A", CLAUDE).orElseThrow()).contains(fact).contains(brevity).contains(correction);
+        assertThat(factory.getSystemPrompt(FACT, "Topic A", GCP).orElseThrow()).contains(fact).contains(brevity).contains(correction);
     }
 
     @Test
