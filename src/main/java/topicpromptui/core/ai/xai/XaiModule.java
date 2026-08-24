@@ -7,7 +7,7 @@ import topicpromptui.core.ai.AiApi;
 import static topicpromptui.core.ai.AiModule.XAI;
 
 public class XaiModule extends AbstractModule {
-    private static final String MODEL = "grok-4.6";
+    private static final String MODEL = "grok-4.3";
     private static final ReasoningEffort EFFORT = ReasoningEffort.XHIGH;
 
     @Override
