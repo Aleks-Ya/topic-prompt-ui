@@ -10,7 +10,7 @@ import static topicpromptui.core.ai.AiModule.OPEN_AI_GRAMMAR;
 public class OpenAiModule extends AbstractModule {
     private static final String MODEL = "gpt-5.6-sol";
     private static final String GRAMMAR_MODEL = "gpt-5.6-luna";
-    private static final ReasoningEffort EFFORT = ReasoningEffort.XHIGH;
+    private static final ReasoningEffort EFFORT = ReasoningEffort.MEDIUM;
     private static final ReasoningEffort GRAMMAR_EFFORT = ReasoningEffort.MEDIUM;
 
     @Override

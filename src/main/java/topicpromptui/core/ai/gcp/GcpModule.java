@@ -8,7 +8,7 @@ import static topicpromptui.core.ai.AiModule.GCP_AI;
 
 public class GcpModule extends AbstractModule {
     private static final String MODEL = "gemini-3.1-pro-preview";
-    private static final ThinkingLevel EFFORT = ThinkingLevel.HIGH;
+    private static final ThinkingLevel EFFORT = ThinkingLevel.MEDIUM;
 
     @Override
     protected void configure() {
