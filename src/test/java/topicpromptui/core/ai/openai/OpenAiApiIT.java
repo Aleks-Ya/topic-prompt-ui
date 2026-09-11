@@ -49,7 +49,7 @@ class OpenAiApiIT {
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gpt-5.6-sol"),
                 new ResponseTextLengthGrader(10, 500),
-                new EffortLevelGrader("XHIGH"),
+                new EffortLevelGrader("LOW"),
                 new FinishReasonGrader("completed"),
                 new TokensGrader()
         )).isEqualTo(Score.MAX);
@@ -64,7 +64,7 @@ class OpenAiApiIT {
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gpt-5.6-sol"),
                 new ResponseTextLengthGrader(10, 1000),
-                new EffortLevelGrader("XHIGH"),
+                new EffortLevelGrader("LOW"),
                 new FinishReasonGrader("completed"),
                 new TokensGrader(),
                 ResponseTextNotContainsGrader.noAsidePunctuation()
@@ -82,7 +82,7 @@ class OpenAiApiIT {
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gpt-5.6-sol"),
                 new ResponseTextContainsGrader("Mango"),
-                new EffortLevelGrader("XHIGH"),
+                new EffortLevelGrader("LOW"),
                 new FinishReasonGrader("completed"),
                 new TokensGrader()
         )).isEqualTo(Score.MAX);
@@ -98,7 +98,7 @@ class OpenAiApiIT {
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gpt-5.6-sol"),
                 new ResponseTextExactGrader(String.join("", deltas)),
-                new EffortLevelGrader("XHIGH"),
+                new EffortLevelGrader("LOW"),
                 new FinishReasonGrader("completed"),
                 new TokensGrader()
         )).isEqualTo(Score.MAX);
@@ -116,7 +116,7 @@ class OpenAiApiIT {
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gpt-5.6-sol"),
                 new ResponseTextLengthGrader(20, 400),
-                new EffortLevelGrader("XHIGH"),
+                new EffortLevelGrader("LOW"),
                 new FinishReasonGrader("completed"),
                 new TokensGrader()
         )).isEqualTo(Score.MAX);
@@ -133,7 +133,7 @@ class OpenAiApiIT {
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gpt-5.6-sol"),
                 new ResponseTextLengthGrader(1, 400),
-                new EffortLevelGrader("XHIGH"),
+                new EffortLevelGrader("LOW"),
                 new FinishReasonGrader("completed"),
                 new TokensGrader()
         )).isEqualTo(Score.MAX);

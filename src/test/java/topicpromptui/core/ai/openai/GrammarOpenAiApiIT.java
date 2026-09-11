@@ -51,7 +51,7 @@ class GrammarOpenAiApiIT {
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gpt-5.6-luna"),
                 new ResponseTextLengthGrader(100, 1000),
-                new EffortLevelGrader("MEDIUM"),
+                new EffortLevelGrader("LOW"),
                 new FinishReasonGrader("completed"),
                 new TokensGrader()
         )).isEqualTo(Score.MAX);
@@ -66,7 +66,7 @@ class GrammarOpenAiApiIT {
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gpt-5.6-luna"),
                 new ResponseTextExactGrader("Garbage collector"),
-                new EffortLevelGrader("MEDIUM"),
+                new EffortLevelGrader("LOW"),
                 new FinishReasonGrader("completed"),
                 new TokensGrader()
         )).isEqualTo(Score.MAX);
@@ -81,7 +81,7 @@ class GrammarOpenAiApiIT {
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gpt-5.6-luna"),
                 new ResponseTextExactGrader("Correct"),
-                new EffortLevelGrader("MEDIUM"),
+                new EffortLevelGrader("LOW"),
                 new FinishReasonGrader("completed"),
                 new TokensGrader()
         )).isEqualTo(Score.MAX);
@@ -97,7 +97,7 @@ class GrammarOpenAiApiIT {
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gpt-5.6-luna"),
                 new ResponseTextExactGrader(expected),
-                new EffortLevelGrader("MEDIUM"),
+                new EffortLevelGrader("LOW"),
                 new FinishReasonGrader("completed"),
                 new TokensGrader()
         )).isEqualTo(Score.MAX);

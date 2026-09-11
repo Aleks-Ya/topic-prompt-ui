@@ -49,7 +49,7 @@ class XaiApiIT {
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("grok-4.3"),
                 new ResponseTextLengthGrader(10, 900),
-                new EffortLevelGrader("XHIGH"),
+                new EffortLevelGrader("LOW"),
                 new FinishReasonGrader("completed"),
                 new TokensGrader()
         )).isEqualTo(Score.MAX);
@@ -67,7 +67,7 @@ class XaiApiIT {
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("grok-4.3"),
                 new ResponseTextLengthGrader(10, 1000),
-                new EffortLevelGrader("XHIGH"),
+                new EffortLevelGrader("LOW"),
                 new FinishReasonGrader("completed"),
                 new TokensGrader(),
                 ResponseTextNotContainsGrader.noAsidePunctuation()
@@ -85,7 +85,7 @@ class XaiApiIT {
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("grok-4.3"),
                 new ResponseTextContainsGrader("Mango"),
-                new EffortLevelGrader("XHIGH"),
+                new EffortLevelGrader("LOW"),
                 new FinishReasonGrader("completed"),
                 new TokensGrader()
         )).isEqualTo(Score.MAX);
@@ -101,7 +101,7 @@ class XaiApiIT {
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("grok-4.3"),
                 new ResponseTextExactGrader(String.join("", deltas)),
-                new EffortLevelGrader("XHIGH"),
+                new EffortLevelGrader("LOW"),
                 new FinishReasonGrader("completed"),
                 new TokensGrader()
         )).isEqualTo(Score.MAX);
@@ -120,7 +120,7 @@ class XaiApiIT {
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("grok-4.3"),
                 new ResponseTextLengthGrader(20, 800),
-                new EffortLevelGrader("XHIGH"),
+                new EffortLevelGrader("LOW"),
                 new FinishReasonGrader("completed"),
                 new TokensGrader()
         )).isEqualTo(Score.MAX);
@@ -137,7 +137,7 @@ class XaiApiIT {
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("grok-4.3"),
                 new ResponseTextLengthGrader(1, 400),
-                new EffortLevelGrader("XHIGH"),
+                new EffortLevelGrader("LOW"),
                 new FinishReasonGrader("completed"),
                 new TokensGrader()
         )).isEqualTo(Score.MAX);

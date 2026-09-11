@@ -51,7 +51,7 @@ class GcpApiIT {
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gemini-3.1-pro-preview"),
                 new ResponseTextLengthGrader(10, 500),
-                new EffortLevelGrader("HIGH"),
+                new EffortLevelGrader("LOW"),
                 new FinishReasonGrader("STOP"),
                 new TokensGrader()
         )).isEqualTo(Score.MAX);
@@ -66,7 +66,7 @@ class GcpApiIT {
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gemini-3.1-pro-preview"),
                 new ResponseTextLengthGrader(10, 500),
-                new EffortLevelGrader("HIGH"),
+                new EffortLevelGrader("LOW"),
                 new FinishReasonGrader("STOP"),
                 new TokensGrader(),
                 ResponseTextNotContainsGrader.noAsidePunctuation()
@@ -84,7 +84,7 @@ class GcpApiIT {
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gemini-3.1-pro-preview"),
                 new ResponseTextContainsGrader("Mango"),
-                new EffortLevelGrader("HIGH"),
+                new EffortLevelGrader("LOW"),
                 new FinishReasonGrader("STOP"),
                 new TokensGrader()
         )).isEqualTo(Score.MAX);
@@ -100,7 +100,7 @@ class GcpApiIT {
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gemini-3.1-pro-preview"),
                 new ResponseTextExactGrader(String.join("", deltas)),
-                new EffortLevelGrader("HIGH"),
+                new EffortLevelGrader("LOW"),
                 new FinishReasonGrader("STOP"),
                 new TokensGrader()
         )).isEqualTo(Score.MAX);
@@ -117,7 +117,7 @@ class GcpApiIT {
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gemini-3.1-pro-preview"),
                 new ResponseTextLengthGrader(50, 4000),
-                new EffortLevelGrader("HIGH"),
+                new EffortLevelGrader("LOW"),
                 new FinishReasonGrader("STOP"),
                 new TokensGrader()
         )).isEqualTo(Score.MAX);

@@ -8,7 +8,7 @@ import static topicpromptui.core.ai.AiModule.CLAUDE_AI;
 
 public class ClaudeModule extends AbstractModule {
     private static final String MODEL = "claude-opus-5";
-    private static final Effort EFFORT = Effort.MEDIUM;
+    private static final Effort EFFORT = Effort.LOW;
 
     @Override
     protected void configure() {
