@@ -173,8 +173,9 @@ class ClaudeApiImpl implements AiApi {
         for (var result : results) {
             if (result.isJsonObject() && result.getAsJsonObject().has("url")) {
                 var object = result.getAsJsonObject();
-                var title = object.has("title") && !object.get("title").isJsonNull()
-                        ? object.get("title").getAsString() : null;
+                var titleElement = object.get("title");
+                var title = titleElement != null && !titleElement.isJsonNull()
+                        ? titleElement.getAsString() : null;
                 state.citations.add(new Citation(object.get("url").getAsString(), title));
             }
         }

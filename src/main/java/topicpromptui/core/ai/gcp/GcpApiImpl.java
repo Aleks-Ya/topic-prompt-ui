@@ -130,15 +130,7 @@ class GcpApiImpl implements AiApi {
         if (candidate.finishReason() != null) {
             state.finishReason = candidate.finishReason();
         }
-        // Each fragment repeats the full query and chunk lists, so replace rather than append.
-        if (candidate.groundingMetadata() != null) {
-            if (candidate.groundingMetadata().webSearchQueries() != null) {
-                state.webSearchQueries = List.copyOf(candidate.groundingMetadata().webSearchQueries());
-            }
-            if (candidate.groundingMetadata().groundingChunks() != null) {
-                state.citations = citations(candidate.groundingMetadata().groundingChunks());
-            }
-        }
+        applyGroundingMetadata(state, candidate.groundingMetadata());
         if (candidate.content() != null && candidate.content().parts() != null) {
             for (var part : candidate.content().parts()) {
                 if (part.text() != null) {
@@ -146,6 +138,19 @@ class GcpApiImpl implements AiApi {
                     onTextDelta.accept(part.text());
                 }
             }
+        }
+    }
+
+    // Each fragment repeats the full query and chunk lists, so replace rather than append.
+    private static void applyGroundingMetadata(StreamState state, ResponseBody.GroundingMetadata metadata) {
+        if (metadata == null) {
+            return;
+        }
+        if (metadata.webSearchQueries() != null) {
+            state.webSearchQueries = List.copyOf(metadata.webSearchQueries());
+        }
+        if (metadata.groundingChunks() != null) {
+            state.citations = citations(metadata.groundingChunks());
         }
     }
 
