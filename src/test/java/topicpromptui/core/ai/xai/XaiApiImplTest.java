@@ -2,7 +2,9 @@ package topicpromptui.core.ai.xai;
 
 import com.google.gson.Gson;
 import topicpromptui.core.ai.AiApiException;
+import topicpromptui.core.ai.Citation;
 import topicpromptui.core.ai.ConversationTurn;
+import topicpromptui.core.ai.TestConsumers;
 import topicpromptui.core.config.ConfigModel;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -66,6 +68,19 @@ class XaiApiImplTest {
         assertThat(response.responseId()).isEqualTo("resp_3");
         assertThat(response.finishReason()).isEqualTo("completed");
         assertThat(response.totalTokens()).isEqualTo(30);
+    }
+
+    @Test
+    void assembleCollectsUrlCitationAnnotations() {
+        var response = api.assemble(sse(
+                "response.completed", """
+                        {"type": "response.completed", "response": {"id": "resp_3", \
+                        "output": [{"type": "message", "status": "completed", "content": [{"text": "Node 24.", \
+                        "annotations": [{"type": "url_citation", "url": "https://nodejs.org/releases", \
+                        "title": "Releases"}, {"type": "url_citation", "url": "https://nodejs.org/releases", \
+                        "title": "Releases"}, {"type": "file_citation", "file_id": "f_1"}]}]}]}}"""
+        ), TestConsumers.NO_OP);
+        assertThat(response.citations()).containsExactly(new Citation("https://nodejs.org/releases", "Releases"));
     }
 
     @Test

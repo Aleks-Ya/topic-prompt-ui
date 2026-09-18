@@ -3,7 +3,12 @@ package topicpromptui.core.ai.xai;
 import java.util.List;
 
 record ResponseBody(String id, String model, List<Outputs> output, Error error, Usage usage) {
-    public record Content(String text) {
+    // annotations carries the web-search url_citation entries attached to the answer text.
+    public record Content(String text, List<Annotation> annotations) {
+    }
+
+    // url/title are set on "url_citation" annotations; other annotation types are ignored.
+    public record Annotation(String type, String url, String title) {
     }
 
     // type distinguishes the assistant "message" outputs from the bookkeeping ones that appear when

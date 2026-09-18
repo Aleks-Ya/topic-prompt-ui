@@ -9,6 +9,7 @@ import topicpromptui.core.ai.AiApi;
 import topicpromptui.core.ai.ConversationTurn;
 import topicpromptui.core.ai.grader.Grader;
 import topicpromptui.core.ai.grader.Score;
+import topicpromptui.core.ai.grader.graders.CitationsNotEmptyGrader;
 import topicpromptui.core.ai.grader.graders.EffortLevelGrader;
 import topicpromptui.core.ai.grader.graders.FinishReasonGrader;
 import topicpromptui.core.ai.grader.graders.ModelIdGrader;
@@ -131,6 +132,7 @@ class ClaudeApiIT {
                 + "stable version number of Node.js, then answer with just that version number.")), NO_OP);
         assertThat(Grader.combine(response,
                 new ToolCallsContainGrader("web_search"),
+                new CitationsNotEmptyGrader(),
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("claude-opus-5"),
                 new ResponseTextLengthGrader(1, 400),

@@ -1,7 +1,9 @@
 package topicpromptui.core.ai.claude;
 
 import topicpromptui.core.ai.AiApiException;
+import topicpromptui.core.ai.Citation;
 import topicpromptui.core.ai.ConversationTurn;
+import topicpromptui.core.ai.TestConsumers;
 import topicpromptui.core.config.ConfigModel;
 import org.junit.jupiter.api.Test;
 
@@ -69,6 +71,30 @@ class ClaudeApiImplTest {
         assertThat(response.inputTokens()).isEqualTo(10);
         assertThat(response.outputTokens()).isEqualTo(20);
         assertThat(response.totalTokens()).isEqualTo(30);
+    }
+
+    @Test
+    void assembleCollectsCitationsFromWebToolResults() {
+        var response = api.assemble(sse(
+                "message_start", """
+                        {"type": "message_start", "message": {"id": "msg_1"}}""",
+                "content_block_start", """
+                        {"type": "content_block_start", "index": 0, "content_block": \
+                        {"type": "web_search_tool_result", "content": [\
+                        {"type": "web_search_result", "url": "https://nodejs.org/releases", "title": "Releases"}, \
+                        {"type": "web_search_result", "url": "https://nodejs.org/releases", "title": "Releases"}]}}""",
+                "content_block_start", """
+                        {"type": "content_block_start", "index": 1, "content_block": \
+                        {"type": "web_fetch_tool_result", "content": {"type": "web_fetch_result", \
+                        "url": "https://openjdk.org/projects/jdk/25/"}}}""",
+                "content_block_delta", """
+                        {"type": "content_block_delta", "delta": {"type": "text_delta", "text": "Node 24."}}""",
+                "message_delta", """
+                        {"type": "message_delta", "delta": {"stop_reason": "end_turn"}}"""
+        ), TestConsumers.NO_OP);
+        assertThat(response.citations()).containsExactly(
+                new Citation("https://nodejs.org/releases", "Releases"),
+                new Citation("https://openjdk.org/projects/jdk/25/", null));
     }
 
     @Test

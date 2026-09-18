@@ -1,9 +1,12 @@
 package topicpromptui.core.ai.claude;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import topicpromptui.core.ai.AiApi;
 import topicpromptui.core.ai.AiApiException;
 import topicpromptui.core.ai.AiResponse;
+import topicpromptui.core.ai.Citation;
+import topicpromptui.core.ai.Citations;
 import topicpromptui.core.ai.ConversationTurn;
 import topicpromptui.core.ai.SseParser;
 import topicpromptui.core.ai.ToolCalls;
@@ -104,7 +107,8 @@ class ClaudeApiImpl implements AiApi {
                 ? state.inputTokens + state.outputTokens : null;
         return new AiResponse(state.text.toString(), state.responseId, model,
                 effort != null ? effort.name() : null,
-                state.stopReason, state.inputTokens, state.outputTokens, totalTokens, List.copyOf(state.toolCalls));
+                state.stopReason, state.inputTokens, state.outputTokens, totalTokens, List.copyOf(state.toolCalls),
+                Citations.dedup(state.citations));
     }
 
     // S6916 ("use a pattern-match guard") is a false positive on switch cases with constant
@@ -149,9 +153,30 @@ class ClaudeApiImpl implements AiApi {
         if (event.index() != null && ("mcp_tool_use".equals(blockType) || "server_tool_use".equals(blockType))) {
             state.pendingToolCalls.put(event.index(),
                     new ToolCallAccumulator(event.content_block().server_name(), event.content_block().name()));
+        } else if ("web_search_tool_result".equals(blockType) || "web_fetch_tool_result".equals(blockType)) {
+            addCitations(state, event.content_block().content());
         } else if ("text".equals(blockType) && !state.text.isEmpty()) {
             state.text.append("\n\n");
             onTextDelta.accept("\n\n");
+        }
+    }
+
+    // The _20260209 web tools report their sources only here: web_search_tool_result carries an
+    // array of web_search_result objects, web_fetch_tool_result a single web_fetch_result one. They
+    // emit no citations_delta events at all (verified live for both a terse and a "cite your
+    // sources" prompt), so the tool results are the only place a source URL appears.
+    private static void addCitations(StreamState state, JsonElement content) {
+        if (content == null) {
+            return;
+        }
+        var results = content.isJsonArray() ? content.getAsJsonArray() : List.of(content);
+        for (var result : results) {
+            if (result.isJsonObject() && result.getAsJsonObject().has("url")) {
+                var object = result.getAsJsonObject();
+                var title = object.has("title") && !object.get("title").isJsonNull()
+                        ? object.get("title").getAsString() : null;
+                state.citations.add(new Citation(object.get("url").getAsString(), title));
+            }
         }
     }
 
@@ -194,6 +219,7 @@ class ClaudeApiImpl implements AiApi {
     private static class StreamState {
         final StringBuilder text = new StringBuilder();
         final List<String> toolCalls = new ArrayList<>();
+        final List<Citation> citations = new ArrayList<>();
         final Map<Integer, ToolCallAccumulator> pendingToolCalls = new HashMap<>();
         String responseId;
         String stopReason;

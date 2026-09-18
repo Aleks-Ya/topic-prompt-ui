@@ -2,6 +2,7 @@ package topicpromptui.ui.model.question;
 
 import topicpromptui.core.ai.AiApi;
 import topicpromptui.core.ai.AiResponse;
+import topicpromptui.core.ai.Citation;
 import topicpromptui.core.ai.ConversationTurn;
 import javafx.application.Platform;
 import org.slf4j.Logger;
@@ -71,7 +72,8 @@ public abstract class BaseMockApi implements AiApi {
         }
         var newValue = receivedCounter.incrementAndGet();
         log.trace("receivedCounter was incremented: {}", newValue);
-        return new AiResponse(info.content(), null, null, null, null, null, null, null);
+        return new AiResponse(info.content(), null, null, null, null, null, null, null, List.of(),
+                info.citations());
     }
 
     public void waitUntilSent(int counter) {
@@ -95,7 +97,7 @@ public abstract class BaseMockApi implements AiApi {
 
     protected void put(String containsSubstring, String notContainSubstring, String response, Duration timeout) {
         var requestInfo = new RequestInfo(Optional.ofNullable(containsSubstring), Optional.ofNullable(notContainSubstring));
-        var responseInfo = new ResponseInfo(response, timeout, List.of(response), Duration.ZERO);
+        var responseInfo = new ResponseInfo(response, timeout, List.of(response), Duration.ZERO, List.of());
         contentSubstringToResponseMap.put(requestInfo, responseInfo);
     }
 
@@ -106,10 +108,18 @@ public abstract class BaseMockApi implements AiApi {
         return this;
     }
 
+    /** Mocks a web-search answer: the canned response also reports the given citations. */
+    public BaseMockApi putResponseWithCitations(String containsSubstring, String response, List<Citation> citations) {
+        var requestInfo = new RequestInfo(Optional.of(containsSubstring), Optional.empty());
+        contentSubstringToResponseMap.put(requestInfo,
+                new ResponseInfo(response, Duration.ZERO, List.of(response), Duration.ZERO, citations));
+        return this;
+    }
+
     /** The final response text is the concatenation of {@code chunks}, emitted one delta per chunk. */
     public BaseMockApi putStreamingResponse(String containsSubstring, List<String> chunks, Duration perChunkDelay) {
         var requestInfo = new RequestInfo(Optional.of(containsSubstring), Optional.empty());
-        var responseInfo = new ResponseInfo(String.join("", chunks), Duration.ZERO, chunks, perChunkDelay);
+        var responseInfo = new ResponseInfo(String.join("", chunks), Duration.ZERO, chunks, perChunkDelay, List.of());
         contentSubstringToResponseMap.put(requestInfo, responseInfo);
         return this;
     }
@@ -126,6 +136,7 @@ public abstract class BaseMockApi implements AiApi {
     public record RequestInfo(Optional<String> containsOpt, Optional<String> notContainOpt) {
     }
 
-    public record ResponseInfo(String content, Duration timeout, List<String> chunks, Duration perChunkDelay) {
+    public record ResponseInfo(String content, Duration timeout, List<String> chunks, Duration perChunkDelay,
+                               List<Citation> citations) {
     }
 }

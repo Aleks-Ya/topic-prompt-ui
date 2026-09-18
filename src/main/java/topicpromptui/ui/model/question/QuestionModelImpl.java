@@ -11,6 +11,7 @@ import topicpromptui.core.ai.ConversationTurn;
 import topicpromptui.core.domain.Answer;
 import topicpromptui.core.domain.AiProvider;
 import topicpromptui.core.domain.AnswerType;
+import topicpromptui.core.domain.Citation;
 import topicpromptui.core.domain.InteractionId;
 import topicpromptui.core.prompt.PromptFactory;
 import topicpromptui.core.sound.SoundService;
@@ -155,6 +156,7 @@ class QuestionModelImpl implements QuestionModel {
                             .withModelInfo(response.modelId(), response.effortLevel(), response.finishReason(),
                                     response.inputTokens(), response.outputTokens(), response.totalTokens())
                             .withToolCalls(response.toolCalls())
+                            .withCitations(toDomain(response.citations()))
                             .withState(SUCCESS), callback);
             soundService.beenOnAnswer(answerType);
             log.info(finishedMessage);
@@ -172,6 +174,12 @@ class QuestionModelImpl implements QuestionModel {
                 return res;
             }
         });
+    }
+
+    // core.ai keeps its own Citation DTO (it has no dependency on core.domain), so this model
+    // bridges the two the same way it bridges ConversationTurn.
+    private static List<Citation> toDomain(List<topicpromptui.core.ai.Citation> citations) {
+        return citations.stream().map(citation -> new Citation(citation.url(), citation.title())).toList();
     }
 
     /**

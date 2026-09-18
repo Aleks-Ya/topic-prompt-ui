@@ -9,6 +9,7 @@ import topicpromptui.core.ai.AiApi;
 import topicpromptui.core.ai.ConversationTurn;
 import topicpromptui.core.ai.grader.Grader;
 import topicpromptui.core.ai.grader.Score;
+import topicpromptui.core.ai.grader.graders.CitationsNotEmptyGrader;
 import topicpromptui.core.ai.grader.graders.EffortLevelGrader;
 import topicpromptui.core.ai.grader.graders.FinishReasonGrader;
 import topicpromptui.core.ai.grader.graders.ModelIdGrader;
@@ -114,6 +115,7 @@ class GcpApiIT {
                 "What are today's top technology news headlines? List three.")), NO_OP);
         assertThat(Grader.combine(response,
                 new ToolCallsContainGrader("web_search"),
+                new CitationsNotEmptyGrader(),
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader("gemini-3.1-pro-preview"),
                 new ResponseTextLengthGrader(50, 4000),

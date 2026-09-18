@@ -9,6 +9,7 @@ import topicpromptui.core.ai.openai.MockOpenAiApi;
 import topicpromptui.core.domain.Answer;
 import topicpromptui.core.domain.AnswerState;
 import topicpromptui.core.domain.AnswerType;
+import topicpromptui.core.domain.Citation;
 import topicpromptui.core.domain.Interaction;
 import topicpromptui.core.domain.InteractionId;
 import topicpromptui.core.domain.InteractionType;
@@ -126,6 +127,21 @@ class RequestAnswerStreamingTest extends ApplicationTest {
 
         var answer = storage.readInteraction(interactionId).orElseThrow().getAnswer(AI_1).orElseThrow();
         assertThat(answer.systemPrompt()).contains("Do not repeat the question");
+    }
+
+    @Test
+    void citationsFromTheResponseArePersistedOnTheAnswer() {
+        var interactionId = saveFollowUpInteraction("Which Node version is current?");
+        openAiApi.clear().putResponseWithCitations("Which Node version is current?", "Node 24.",
+                List.of(new topicpromptui.core.ai.Citation("https://nodejs.org/releases", "Releases")));
+
+        questionModel.requestAnswer(interactionId, AI_1, () -> {
+        }, html -> {
+        });
+        awaitTerminalState(interactionId, AI_1);
+
+        var answer = storage.readInteraction(interactionId).orElseThrow().getAnswer(AI_1).orElseThrow();
+        assertThat(answer.citations()).containsExactly(new Citation("https://nodejs.org/releases", "Releases"));
     }
 
     // A follow-up interaction sends the raw question text (no FreeMarker template), which lets

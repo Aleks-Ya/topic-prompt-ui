@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import topicpromptui.core.ai.AiApi;
 import topicpromptui.core.ai.AiApiException;
 import topicpromptui.core.ai.AiResponse;
+import topicpromptui.core.ai.Citation;
+import topicpromptui.core.ai.Citations;
 import topicpromptui.core.ai.ConversationTurn;
 import topicpromptui.core.ai.SseParser;
 import topicpromptui.core.ai.ToolCalls;
@@ -148,7 +150,16 @@ class OpenAiApiImpl implements AiApi {
                 message.status(),
                 usage != null ? usage.input_tokens() : null,
                 usage != null ? usage.output_tokens() : null,
-                usage != null ? usage.total_tokens() : null, toolCalls);
+                usage != null ? usage.total_tokens() : null, toolCalls, citations(contents));
+    }
+
+    private static List<Citation> citations(List<ResponseBody.Content> contents) {
+        return Citations.dedup(contents.stream()
+                .filter(content -> content.annotations() != null)
+                .flatMap(content -> content.annotations().stream())
+                .filter(annotation -> "url_citation".equalsIgnoreCase(annotation.type()))
+                .map(annotation -> new Citation(annotation.url(), annotation.title()))
+                .toList());
     }
 
     // A web_search_call carries no server_label/name/arguments and describes itself in "action"

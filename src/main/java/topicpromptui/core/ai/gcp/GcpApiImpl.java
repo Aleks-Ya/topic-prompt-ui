@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import topicpromptui.core.ai.AiApi;
 import topicpromptui.core.ai.AiApiException;
 import topicpromptui.core.ai.AiResponse;
+import topicpromptui.core.ai.Citation;
+import topicpromptui.core.ai.Citations;
 import topicpromptui.core.ai.ConversationTurn;
 import topicpromptui.core.ai.SseParser;
 import topicpromptui.core.ai.ToolCalls;
@@ -20,6 +22,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -110,7 +113,7 @@ class GcpApiImpl implements AiApi {
                 model, effort != null ? effort.name() : null, state.finishReason.name(),
                 state.usage != null ? state.usage.promptTokenCount() : null,
                 state.usage != null ? state.usage.candidatesTokenCount() : null,
-                state.usage != null ? state.usage.totalTokenCount() : null, toolCalls);
+                state.usage != null ? state.usage.totalTokenCount() : null, toolCalls, state.citations);
     }
 
     private static void applyFragment(StreamState state, ResponseBody fragment, Consumer<String> onTextDelta) {
@@ -127,9 +130,14 @@ class GcpApiImpl implements AiApi {
         if (candidate.finishReason() != null) {
             state.finishReason = candidate.finishReason();
         }
-        // Each fragment repeats the full query list, so replace rather than append.
-        if (candidate.groundingMetadata() != null && candidate.groundingMetadata().webSearchQueries() != null) {
-            state.webSearchQueries = List.copyOf(candidate.groundingMetadata().webSearchQueries());
+        // Each fragment repeats the full query and chunk lists, so replace rather than append.
+        if (candidate.groundingMetadata() != null) {
+            if (candidate.groundingMetadata().webSearchQueries() != null) {
+                state.webSearchQueries = List.copyOf(candidate.groundingMetadata().webSearchQueries());
+            }
+            if (candidate.groundingMetadata().groundingChunks() != null) {
+                state.citations = citations(candidate.groundingMetadata().groundingChunks());
+            }
         }
         if (candidate.content() != null && candidate.content().parts() != null) {
             for (var part : candidate.content().parts()) {
@@ -141,9 +149,18 @@ class GcpApiImpl implements AiApi {
         }
     }
 
+    private static List<Citation> citations(List<ResponseBody.GroundingChunk> chunks) {
+        return Citations.dedup(chunks.stream()
+                .map(ResponseBody.GroundingChunk::web)
+                .filter(Objects::nonNull)
+                .map(web -> new Citation(web.uri(), web.title()))
+                .toList());
+    }
+
     private static class StreamState {
         final StringBuilder text = new StringBuilder();
         List<String> webSearchQueries = List.of();
+        List<Citation> citations = List.of();
         String responseId;
         ResponseBody.FinishReason finishReason;
         ResponseBody.UsageMetadata usage;

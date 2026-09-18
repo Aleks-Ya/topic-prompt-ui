@@ -2,7 +2,9 @@ package topicpromptui.core.ai.gcp;
 
 import com.google.gson.Gson;
 import topicpromptui.core.ai.AiApiException;
+import topicpromptui.core.ai.Citation;
 import topicpromptui.core.ai.ConversationTurn;
+import topicpromptui.core.ai.TestConsumers;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -49,6 +51,24 @@ class GcpApiImplTest {
         assertThat(response.inputTokens()).isEqualTo(10);
         assertThat(response.outputTokens()).isEqualTo(20);
         assertThat(response.totalTokens()).isEqualTo(30);
+    }
+
+    @Test
+    void assembleCollectsGroundingChunksAsCitations() {
+        // Each fragment repeats the full chunk list, so the later one replaces the earlier.
+        var response = api.assemble(sse(
+                """
+                        {"candidates": [{"content": {"parts": [{"text": "Node 24."}], "role": "model"}, \
+                        "groundingMetadata": {"groundingChunks": [{"web": {"uri": "https://vertex/1", \
+                        "title": "nodejs.org"}}]}}]}""",
+                """
+                        {"candidates": [{"finishReason": "STOP", "groundingMetadata": {"groundingChunks": \
+                        [{"web": {"uri": "https://vertex/1", "title": "nodejs.org"}}, \
+                        {"web": {"uri": "https://vertex/2", "title": "blog.nodejs.org"}}, {}]}}]}"""
+        ), TestConsumers.NO_OP);
+        assertThat(response.citations()).containsExactly(
+                new Citation("https://vertex/1", "nodejs.org"),
+                new Citation("https://vertex/2", "blog.nodejs.org"));
     }
 
     @Test

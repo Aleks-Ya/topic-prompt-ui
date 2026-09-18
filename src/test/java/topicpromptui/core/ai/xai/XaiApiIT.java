@@ -9,6 +9,7 @@ import topicpromptui.core.ai.AiApi;
 import topicpromptui.core.ai.ConversationTurn;
 import topicpromptui.core.ai.grader.Grader;
 import topicpromptui.core.ai.grader.Score;
+import topicpromptui.core.ai.grader.graders.CitationsNotEmptyGrader;
 import topicpromptui.core.ai.grader.graders.EffortLevelGrader;
 import topicpromptui.core.ai.grader.graders.FinishReasonGrader;
 import topicpromptui.core.ai.grader.graders.ModelIdGrader;
@@ -139,6 +140,21 @@ class XaiApiIT {
                 new ResponseTextLengthGrader(1, 400),
                 new EffortLevelGrader("LOW"),
                 new FinishReasonGrader("completed"),
+                new TokensGrader()
+        )).isEqualTo(Score.MAX);
+    }
+
+    @Test
+    void sendWithWebSearchCitations() {
+        // A terse answer ("answer with just that version number") comes back with an empty
+        // annotations array - the model only attributes when it actually quotes a source - so the
+        // citation parsing needs a prompt that asks for sources.
+        var response = api.send(null, List.of(new ConversationTurn(USER, "Search the web and summarize in "
+                + "two sentences what is new in the latest Node.js release. Cite your sources.")), NO_OP);
+        assertThat(Grader.combine(response,
+                new CitationsNotEmptyGrader(),
+                new ToolCallsContainGrader("web_search"),
+                new ModelIdGrader("grok-4.3"),
                 new TokensGrader()
         )).isEqualTo(Score.MAX);
     }

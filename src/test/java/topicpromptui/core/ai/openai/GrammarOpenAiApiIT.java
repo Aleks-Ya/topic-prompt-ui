@@ -49,7 +49,8 @@ class GrammarOpenAiApiIT {
                 NO_OP);
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
-                new ModelIdGrader("gpt-5.6-luna"),
+                new ModelIdGrader(
+                        "gpt-5.6-luna"),
                 new ResponseTextLengthGrader(100, 1000),
                 new EffortLevelGrader("LOW"),
                 new FinishReasonGrader("completed"),
