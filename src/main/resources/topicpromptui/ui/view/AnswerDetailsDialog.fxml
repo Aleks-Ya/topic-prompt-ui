@@ -52,23 +52,27 @@
                 <TextArea fx:id="toolsUsedArea" editable="false" prefColumnCount="60" prefRowCount="3" wrapText="true"
                           GridPane.columnIndex="1" GridPane.rowIndex="8"/>
 
-                <Label text="System prompt:" GridPane.columnIndex="0" GridPane.rowIndex="9"/>
-                <TextArea fx:id="systemPromptArea" editable="false" prefColumnCount="60" prefRowCount="10"
-                          wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="9"/>
+                <Label text="Citations:" GridPane.columnIndex="0" GridPane.rowIndex="9"/>
+                <TextArea fx:id="citationsArea" editable="false" prefColumnCount="60" prefRowCount="3" wrapText="true"
+                          GridPane.columnIndex="1" GridPane.rowIndex="9"/>
 
-                <Label text="Prompt:" GridPane.columnIndex="0" GridPane.rowIndex="10"/>
+                <Label text="System prompt:" GridPane.columnIndex="0" GridPane.rowIndex="10"/>
+                <TextArea fx:id="systemPromptArea" editable="false" prefColumnCount="60" prefRowCount="10"
+                          wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="10"/>
+
+                <Label text="Prompt:" GridPane.columnIndex="0" GridPane.rowIndex="11"/>
                 <TextArea fx:id="promptArea" editable="false" prefColumnCount="60" prefRowCount="10" wrapText="true"
-                          GridPane.columnIndex="1" GridPane.rowIndex="10"/>
+                          GridPane.columnIndex="1" GridPane.rowIndex="11"/>
 
                 <!-- Monospace: these two exist to diagnose WebView rendering, and indentation, code fences
                      and tag boundaries are exactly what a proportional font hides. -->
-                <Label text="Answer MD:" GridPane.columnIndex="0" GridPane.rowIndex="11"/>
+                <Label text="Answer MD:" GridPane.columnIndex="0" GridPane.rowIndex="12"/>
                 <TextArea fx:id="answerMdArea" editable="false" prefColumnCount="60" prefRowCount="10" wrapText="true"
-                          styleClass="monospace" GridPane.columnIndex="1" GridPane.rowIndex="11"/>
+                          styleClass="monospace" GridPane.columnIndex="1" GridPane.rowIndex="12"/>
 
-                <Label text="Answer HTML:" GridPane.columnIndex="0" GridPane.rowIndex="12"/>
+                <Label text="Answer HTML:" GridPane.columnIndex="0" GridPane.rowIndex="13"/>
                 <TextArea fx:id="answerHtmlArea" editable="false" prefColumnCount="60" prefRowCount="10"
-                          wrapText="true" styleClass="monospace" GridPane.columnIndex="1" GridPane.rowIndex="12"/>
+                          wrapText="true" styleClass="monospace" GridPane.columnIndex="1" GridPane.rowIndex="13"/>
             </GridPane>
         </ScrollPane>
     </content>

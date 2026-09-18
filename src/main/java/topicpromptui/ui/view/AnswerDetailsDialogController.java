@@ -1,5 +1,6 @@
 package topicpromptui.ui.view;
 
+import topicpromptui.core.domain.Citation;
 import topicpromptui.ui.viewmodel.answer.AnswerDetails;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 // Unlike the other controllers this one is not Guice-bound: it has no injected collaborators, so
 // AnswerController loads it with a plain FXMLLoader (see the rationale there).
@@ -41,6 +43,8 @@ public class AnswerDetailsDialogController extends BaseController {
     @FXML
     private TextArea toolsUsedArea;
     @FXML
+    private TextArea citationsArea;
+    @FXML
     private TextArea systemPromptArea;
     @FXML
     private TextArea promptArea;
@@ -65,6 +69,7 @@ public class AnswerDetailsDialogController extends BaseController {
         outputTokensField.setText(Objects.toString(details.outputTokens(), ""));
         totalTokensField.setText(Objects.toString(details.totalTokens(), ""));
         toolsUsedArea.setText(formatToolCalls(details.toolCalls()));
+        citationsArea.setText(formatCitations(details.citations()));
         systemPromptArea.setText(Objects.toString(details.systemPrompt(), ""));
         promptArea.setText(Objects.toString(details.prompt(), ""));
         answerMdArea.setText(Objects.toString(details.answerMd(), ""));
@@ -85,6 +90,18 @@ public class AnswerDetailsDialogController extends BaseController {
 
     private static String formatToolCalls(List<String> toolCalls) {
         return toolCalls == null ? "" : String.join("\n", toolCalls);
+    }
+
+    // Titles are provider-dependent: a real page title from Claude/OpenAI, a bare domain from Gemini,
+    // and sometimes absent altogether - then the URL alone is the whole line.
+    private static String formatCitations(List<Citation> citations) {
+        if (citations == null) {
+            return "";
+        }
+        return citations.stream()
+                .map(citation -> citation.title() == null || citation.title().isBlank()
+                        ? citation.url() : citation.title() + " \u2014 " + citation.url())
+                .collect(Collectors.joining("\n"));
     }
 
     @Override

@@ -2,6 +2,7 @@ package topicpromptui.ui.answer;
 
 import topicpromptui.BaseTopicPromptUiTest;
 import topicpromptui.core.domain.Answer;
+import topicpromptui.core.domain.Citation;
 import topicpromptui.core.domain.Interaction;
 import topicpromptui.core.domain.InteractionId;
 import topicpromptui.core.domain.InteractionType;
@@ -25,6 +26,8 @@ class AnswerDetailsDialogUiTest extends BaseTopicPromptUiTest {
             SUCCESS, "resp-1", "grammar-model", "low", "completed", 10, 20, 30)
             .withToolCalls(List.of("context7 · resolve-library-id {\"libraryName\":\"react\"}",
                     "context7 · get-library-docs {\"context7CompatibleLibraryID\":\"/facebook/react\"}"))
+            .withCitations(List.of(new Citation("https://nodejs.org/releases", "Node.js Releases"),
+                    new Citation("https://blog.nodejs.org/v24", null)))
             .withSystemPrompt("Grammar system prompt");
     private static final Interaction INTERACTION = new Interaction(new InteractionId(100L), InteractionType.QUESTION,
             TOPIC_ID, "Details question", Map.of(GRAMMAR, GRAMMAR_ANSWER), null);
@@ -50,6 +53,8 @@ class AnswerDetailsDialogUiTest extends BaseTopicPromptUiTest {
         assertThat(dialog.toolsUsedArea().getText()).isEqualTo(
                 "context7 · resolve-library-id {\"libraryName\":\"react\"}\n"
                         + "context7 · get-library-docs {\"context7CompatibleLibraryID\":\"/facebook/react\"}");
+        assertThat(dialog.citationsArea().getText()).isEqualTo(
+                "Node.js Releases \u2014 https://nodejs.org/releases\nhttps://blog.nodejs.org/v24");
         assertThat(dialog.promptArea().getText()).isEqualTo("Grammar prompt");
         assertThat(dialog.systemPromptArea().getText()).isEqualTo("Grammar system prompt");
         assertThat(dialog.answerMdArea().getText()).isEqualTo("Grammar MD");
@@ -74,6 +79,7 @@ class AnswerDetailsDialogUiTest extends BaseTopicPromptUiTest {
         assertThat(dialog.outputTokensField().getText()).isEmpty();
         assertThat(dialog.totalTokensField().getText()).isEmpty();
         assertThat(dialog.toolsUsedArea().getText()).isEmpty();
+        assertThat(dialog.citationsArea().getText()).isEmpty();
         assertThat(dialog.promptArea().getText()).isEmpty();
         assertThat(dialog.systemPromptArea().getText()).isEmpty();
         assertThat(dialog.answerMdArea().getText()).isEmpty();

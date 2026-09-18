@@ -1,12 +1,13 @@
 package topicpromptui.ui.viewmodel.answer;
 
 import topicpromptui.core.domain.AnswerType;
+import topicpromptui.core.domain.Citation;
 import topicpromptui.core.domain.InteractionId;
 
 import java.util.List;
 
 public record AnswerDetails(InteractionId interactionId, AnswerType answerType, String modelId, String effortLevel,
                              String finishReason, Integer inputTokens, Integer outputTokens, Integer totalTokens,
-                             String prompt, String systemPrompt, List<String> toolCalls,
+                             String prompt, String systemPrompt, List<String> toolCalls, List<Citation> citations,
                              String answerMd, String answerHtml) {
 }

@@ -288,6 +288,10 @@ public abstract class BaseTopicPromptUiTest extends ApplicationTest {
             return lookup("#toolsUsedArea").queryAs(TextArea.class);
         }
 
+        public TextArea citationsArea() {
+            return lookup("#citationsArea").queryAs(TextArea.class);
+        }
+
         public TextArea promptArea() {
             return lookup("#promptArea").queryAs(TextArea.class);
         }
