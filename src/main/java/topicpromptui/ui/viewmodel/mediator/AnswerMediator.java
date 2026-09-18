@@ -24,4 +24,6 @@ public interface AnswerMediator {
     void toggleExpandedAnswer(AnswerType answerType);
 
     void openInteractionFile(InteractionId interactionId);
+
+    void openUrl(String url);
 }

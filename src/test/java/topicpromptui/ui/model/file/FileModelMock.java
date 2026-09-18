@@ -12,6 +12,7 @@ import java.util.List;
 public class FileModelMock implements FileModel {
     private final FileModel delegate = new FileModelImpl();
     private final List<Path> openedFiles = new ArrayList<>();
+    private final List<String> openedUrls = new ArrayList<>();
 
     @Override
     public InputStream getAppIcon() {
@@ -33,7 +34,16 @@ public class FileModelMock implements FileModel {
         openedFiles.add(path);
     }
 
+    @Override
+    public synchronized void openUrl(String url) {
+        openedUrls.add(url);
+    }
+
     public synchronized List<Path> getOpenedFiles() {
         return List.copyOf(openedFiles);
+    }
+
+    public synchronized List<String> getOpenedUrls() {
+        return List.copyOf(openedUrls);
     }
 }

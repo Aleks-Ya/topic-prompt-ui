@@ -12,4 +12,6 @@ public interface FileModel {
     URL getFxmlLocation();
 
     void openFile(Path path);
+
+    void openUrl(String url);
 }

@@ -66,6 +66,14 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
     }
 
     @Override
+    public void onSourceLinkClick(String url) {
+        Mdc.run(answerType.toString(), () -> {
+            log.trace("onSourceLinkClick: {}", url);
+            mediator.openUrl(url);
+        });
+    }
+
+    @Override
     public void onOpenInteractionFileButtonClick() {
         Mdc.run(answerType.toString(), () -> {
             log.trace("onOpenInteractionFileButtonClick");
@@ -106,7 +114,8 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
             log.trace("displayCurrentAnswer, preserveScroll={}", preserveScroll);
             mediator.getCurrentInteractionOpt().map(interaction -> interaction.getAnswer(answerType)).ifPresentOrElse(answerOpt -> {
                 log.trace("Display answer: {}", answerOpt.map(Answer::toShortString));
-                var html = answerOpt.isPresent() ? answerOpt.get().answerHtml() : "";
+                var html = answerOpt.map(answer -> CitationsHtmlRenderer.withSources(answer.answerHtml(),
+                        answer.citations())).orElse("");
                 var state = answerOpt.isPresent() ? answerOpt.get().answerState() : NEW;
                 if (!currentWebViewContent.equals(html)) {
                     setWebViewContent(html, preserveScroll);

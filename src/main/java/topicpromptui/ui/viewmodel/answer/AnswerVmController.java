@@ -7,6 +7,9 @@ public interface AnswerVmController {
 
     void onExpandButtonClick();
 
+    /** A link inside the answer was clicked; opens it outside the WebView. */
+    void onSourceLinkClick(String url);
+
     void onOpenInteractionFileButtonClick();
 
     AnswerVmProperties properties();

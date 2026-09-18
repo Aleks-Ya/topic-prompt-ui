@@ -31,6 +31,26 @@ public class AnswerController extends BaseController {
     private static final Logger log = LoggerFactory.getLogger(AnswerController.class);
     // Used only to build JS string literals (escapes quotes, <, >, & and U+2028/U+2029)
     private static final Gson GSON = new Gson();
+    private static final String LINK_ALERT_PREFIX = "topicpromptui:open-url:";
+    // The click interception lives in JavaScript and reports back through window.alert (handled by
+    // setOnAlert) rather than through a Java org.w3c.dom EventListener: WebKit's listener
+    // registration retains the listener - and with it this controller and the whole object graph
+    // behind its view model - for every document ever loaded, which exhausts the heap of a UI test
+    // suite that boots the app once per test. One delegated listener per document, not one per
+    // anchor, because replaceBodyInPlace swaps body.innerHTML without reloading the document.
+    private static final String CLICK_INTERCEPT_SCRIPT = """
+            document.addEventListener('click', function (event) {
+                for (var node = event.target; node; node = node.parentNode) {
+                    if (node.tagName === 'A') {
+                        var href = node.getAttribute('href') || '';
+                        if (href.indexOf('http://') === 0 || href.indexOf('https://') === 0) {
+                            event.preventDefault();
+                            alert('%s' + href);
+                        }
+                        return;
+                    }
+                }
+            }, false);""".formatted(LINK_ALERT_PREFIX);
     @FXML
     private Button answerButton;
     @FXML
@@ -89,6 +109,7 @@ public class AnswerController extends BaseController {
         vm.properties().statusCircleFill.bindBidirectional(statusCircle.fillProperty());
         vm.properties().answerButtonText.bindBidirectional(answerButton.textProperty());
         vm.properties().copyButtonText.bindBidirectional(copyButton.textProperty());
+        webView.getEngine().setOnAlert(event -> onWebViewAlert(event.getData()));
         webView.addEventFilter(KEY_PRESSED, this::onWebViewKeyPressed);
     }
 
@@ -96,6 +117,7 @@ public class AnswerController extends BaseController {
         if (newValue == null) {
             return;
         }
+        webView.getEngine().executeScript(CLICK_INTERCEPT_SCRIPT);
         var currentContent = vm.properties().webViewContent.getValue();
         var newContent = (String) webView.getEngine().executeScript("document.documentElement.outerHTML");
         if (!newContent.equals(currentContent)) {
@@ -142,6 +164,16 @@ public class AnswerController extends BaseController {
         } finally {
             readingBackFromEngine = false;
         }
+    }
+
+    private void onWebViewAlert(String data) {
+        if (data == null || !data.startsWith(LINK_ALERT_PREFIX)) {
+            log.debug("Alert from WebView: {}", data);
+            return;
+        }
+        var url = data.substring(LINK_ALERT_PREFIX.length());
+        log.trace("Link clicked: {}", url);
+        vm.onSourceLinkClick(url);
     }
 
     // Scene accelerators don't fire while the WebView has focus (WebView consumes key events),

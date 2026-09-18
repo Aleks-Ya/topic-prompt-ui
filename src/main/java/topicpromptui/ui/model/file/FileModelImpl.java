@@ -8,6 +8,7 @@ import java.awt.Desktop;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -59,6 +60,18 @@ class FileModelImpl implements FileModel {
         var topicPromptUiFxml = resourceUrl(getClass(), "/topicpromptui/ui/view/TopicPromptUi.fxml");
         log.info("TopicPromptUi.fxml: {}", topicPromptUiFxml);
         return requireNonNull(topicPromptUiFxml);
+    }
+
+    @Override
+    public void openUrl(String url) {
+        log.info("Opening URL: {}", url);
+        EXECUTOR.execute(() -> {
+            try {
+                Desktop.getDesktop().browse(URI.create(url));
+            } catch (IOException | RuntimeException e) {
+                log.error("Failed to open URL: {}", url, e);
+            }
+        });
     }
 
     @Override
