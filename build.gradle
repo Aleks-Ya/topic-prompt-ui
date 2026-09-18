@@ -113,6 +113,13 @@ test {
             } else {
                 logger.warn('openbox not found - ComboBox popup clicks may not register in TestFX tests')
             }
+            // A Wayland session leaks WAYLAND_DISPLAY/XDG_SESSION_TYPE into the test JVM, and
+            // TestFX's default java.awt.Robot then drives the *real* desktop through the
+            // xdg-desktop-portal RemoteDesktop interface (the "An app wants to share your screen"
+            // prompt) instead of the Xvfb display set below. Dropping them forces plain X11.
+            environment = environment.findAll { it.key != 'WAYLAND_DISPLAY' }
+            environment 'XDG_SESSION_TYPE', 'x11'
+            environment 'GDK_BACKEND', 'x11'
             environment 'DISPLAY', display
             logger.lifecycle("Running tests on virtual display $display")
         }
