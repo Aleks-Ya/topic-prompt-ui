@@ -48,7 +48,7 @@ class XaiApiIT {
         var response = api.send(null, List.of(new ConversationTurn(USER, "Give me the name of the Java creator")), NO_OP);
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
-                new ModelIdGrader("grok-4.3"),
+                new ModelIdGrader("grok-4.7"),
                 new ResponseTextLengthGrader(10, 900),
                 new EffortLevelGrader("LOW"),
                 new FinishReasonGrader("completed"),
@@ -66,7 +66,7 @@ class XaiApiIT {
         var response = api.send(system, List.of(new ConversationTurn(USER, prompt)), NO_OP);
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
-                new ModelIdGrader("grok-4.3"),
+                new ModelIdGrader("grok-4.7"),
                 new ResponseTextLengthGrader(10, 1000),
                 new EffortLevelGrader("LOW"),
                 new FinishReasonGrader("completed"),
@@ -84,7 +84,7 @@ class XaiApiIT {
         var response = api.send(null, turns, NO_OP);
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
-                new ModelIdGrader("grok-4.3"),
+                new ModelIdGrader("grok-4.7"),
                 new ResponseTextContainsGrader("Mango"),
                 new EffortLevelGrader("LOW"),
                 new FinishReasonGrader("completed"),
@@ -100,7 +100,7 @@ class XaiApiIT {
         assertThat(deltas).hasSizeGreaterThan(1);
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
-                new ModelIdGrader("grok-4.3"),
+                new ModelIdGrader("grok-4.7"),
                 new ResponseTextExactGrader(String.join("", deltas)),
                 new EffortLevelGrader("LOW"),
                 new FinishReasonGrader("completed"),
@@ -119,7 +119,7 @@ class XaiApiIT {
         assertThat(Grader.combine(response,
                 new ToolCallsContainGrader("Context7"),
                 new ResponseIdNotEmptyGrader(),
-                new ModelIdGrader("grok-4.3"),
+                new ModelIdGrader("grok-4.7"),
                 new ResponseTextLengthGrader(20, 800),
                 new EffortLevelGrader("LOW"),
                 new FinishReasonGrader("completed"),
@@ -136,7 +136,7 @@ class XaiApiIT {
         assertThat(Grader.combine(response,
                 new ToolCallsContainGrader("web_search"),
                 new ResponseIdNotEmptyGrader(),
-                new ModelIdGrader("grok-4.3"),
+                new ModelIdGrader("grok-4.7"),
                 new ResponseTextLengthGrader(1, 400),
                 new EffortLevelGrader("LOW"),
                 new FinishReasonGrader("completed"),
@@ -154,7 +154,7 @@ class XaiApiIT {
         assertThat(Grader.combine(response,
                 new CitationsNotEmptyGrader(),
                 new ToolCallsContainGrader("web_search"),
-                new ModelIdGrader("grok-4.3"),
+                new ModelIdGrader("grok-4.7"),
                 new TokensGrader()
         )).isEqualTo(Score.MAX);
     }

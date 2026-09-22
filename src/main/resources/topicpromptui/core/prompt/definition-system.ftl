@@ -26,4 +26,8 @@ Provide a concise single-sentence definition of the given term in the context of
             </right>
         </example>
     </guideline>
+    <guideline>
+        Do not put citations, reference markers or links in the answer text: no `[1]`, no footnote markers and no
+        Markdown links. Sources are displayed separately.
+    </guideline>
 </guidelines>
