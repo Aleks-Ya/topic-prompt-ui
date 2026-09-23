@@ -46,7 +46,9 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
     public void onCopyButtonClick() {
         Mdc.run(answerType.toString(), () -> {
             log.trace("onCopyButtonClick");
-            var content = vmProperties.webViewContent.get();
+            // Copies what the pane shows minus the Sources footer: the footer is composed for display
+            // only and pasting an answer elsewhere should not drag the citation list along.
+            var content = CitationsHtmlRenderer.withoutSources(vmProperties.webViewContent.get());
             mediator.putHtmlToClipboard(content);
         });
     }

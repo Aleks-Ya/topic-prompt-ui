@@ -44,6 +44,17 @@ class AnswerCitationsUiTest extends BaseTopicPromptUiTest {
         assertThat(webViewContent(ai1Answer().webView())).contains(I1.AI_1_HTML);
     }
 
+    @Test
+    void copyingAnAnswerExcludesTheSourcesFooter() {
+        clickOn(ai1Answer().copyButton());
+
+        var copied = new String[1];
+        executeSyncInFxThread(() -> copied[0] = clipboardModel.getTextFromClipboard());
+        assertThat(copied[0]).contains(I1.AI_1_HTML)
+                .doesNotContain("Sources")
+                .doesNotContain(CITATION.url());
+    }
+
     private String webViewContent(WebView webView) {
         var content = new String[1];
         executeSyncInFxThread(() -> content[0] =
