@@ -70,11 +70,60 @@ dependencies {
 // TestFX/JavaFX popups (ComboBox dropdowns) need a window manager to register mouse clicks
 // correctly; plain Xvfb has none. Openbox's default keybindings (e.g. Ctrl+Alt+Up/Down) collide
 // with the app's own hotkeys, so it starts with an empty keyboard/mouse config.
-def virtualDisplay = [xvfb: null, openbox: null]
+def virtualDisplays = []
 def stopVirtualDisplay = tasks.register('stopVirtualDisplay') {
     doLast {
-        virtualDisplay.openbox?.destroyForcibly()
-        virtualDisplay.xvfb?.destroyForcibly()
+        virtualDisplays.each { it.destroyForcibly() }
+        virtualDisplays.clear()
+    }
+}
+// Applied to every Test task, not just `test`, so a test JVM added later cannot reach the desktop
+// by omission.
+// Applied to every Test task, not just `test`, so a test JVM added later cannot reach the desktop
+// by omission.
+tasks.withType(Test).configureEach {
+    def xvfbBinary = new File('/usr/bin/Xvfb')
+    def onVirtualDisplay = xvfbBinary.exists() && !project.hasProperty('onRealDisplay')
+    if (onVirtualDisplay) {
+        finalizedBy stopVirtualDisplay
+    }
+    doFirst {
+        // A Wayland session leaks WAYLAND_DISPLAY/XDG_SESSION_TYPE into the forked test JVM, and
+        // TestFX's default java.awt.Robot then drives the *real* desktop through the
+        // xdg-desktop-portal RemoteDesktop interface (the "An app wants to share your screen"
+        // prompt) instead of the display this task picked. Dropping them forces plain X11 - also
+        // under -PonRealDisplay, where the real X display, not the portal, is the intended target.
+        environment = environment.findAll { it.key != 'WAYLAND_DISPLAY' }
+        environment 'XDG_SESSION_TYPE', 'x11'
+        environment 'GDK_BACKEND', 'x11'
+        if (!onVirtualDisplay) {
+            return
+        }
+        def xvfb = new ProcessBuilder(xvfbBinary.path, '-displayfd', '1', '-screen', '0', '1920x1080x24').start()
+        virtualDisplays.add(xvfb)
+        // -displayfd 1 makes Xvfb print the auto-picked free display number to stdout
+        // once the server is ready, so this read doubles as the readiness wait.
+        def displayNumber = xvfb.inputStream.newReader().readLine()
+        if (displayNumber == null) {
+            throw new GradleException("Xvfb failed to start: ${xvfb.errorStream.text}")
+        }
+        // Plain String, not a GString: ProcessBuilder.environment() rejects non-String values
+        def display = ':' + displayNumber
+        def openboxBinary = new File('/usr/bin/openbox')
+        if (openboxBinary.exists()) {
+            def rcXml = new File(temporaryDir, 'openbox-rc.xml')
+            // xmlns="http://openbox.org/3.4/rc" is openbox's fixed XML namespace URI, matched
+            // literally by openbox's config parser, never dereferenced over the network.
+            rcXml.text = '<?xml version="1.0" encoding="UTF-8"?><openbox_config xmlns="http://openbox.org/3.4/rc"><keyboard></keyboard><mouse></mouse></openbox_config>' // NOSONAR
+            def openboxBuilder = new ProcessBuilder(openboxBinary.path, '--config-file', rcXml.path)
+            openboxBuilder.environment().put('DISPLAY', display)
+            virtualDisplays.add(openboxBuilder.start())
+            sleep(2000) // give the window manager a moment to take over the display
+        } else {
+            logger.warn('openbox not found - ComboBox popup clicks may not register in TestFX tests')
+        }
+        environment 'DISPLAY', display
+        logger.lifecycle("Running tests on virtual display $display")
     }
 }
 test {
@@ -85,44 +134,6 @@ test {
     }
     if (project.hasProperty('skipUnitTests')) {
         include '**/*IT.class'
-    }
-    def xvfbBinary = new File('/usr/bin/Xvfb')
-    if (xvfbBinary.exists() && !project.hasProperty('onRealDisplay')) {
-        finalizedBy stopVirtualDisplay
-        doFirst {
-            def xvfb = new ProcessBuilder(xvfbBinary.path, '-displayfd', '1', '-screen', '0', '1920x1080x24').start()
-            virtualDisplay.xvfb = xvfb
-            // -displayfd 1 makes Xvfb print the auto-picked free display number to stdout
-            // once the server is ready, so this read doubles as the readiness wait.
-            def displayNumber = xvfb.inputStream.newReader().readLine()
-            if (displayNumber == null) {
-                throw new GradleException("Xvfb failed to start: ${xvfb.errorStream.text}")
-            }
-            // Plain String, not a GString: ProcessBuilder.environment() rejects non-String values
-            def display = ':' + displayNumber
-            def openboxBinary = new File('/usr/bin/openbox')
-            if (openboxBinary.exists()) {
-                def rcXml = new File(temporaryDir, 'openbox-rc.xml')
-                // xmlns="http://openbox.org/3.4/rc" is openbox's fixed XML namespace URI, matched
-                // literally by openbox's config parser, never dereferenced over the network.
-                rcXml.text = '<?xml version="1.0" encoding="UTF-8"?><openbox_config xmlns="http://openbox.org/3.4/rc"><keyboard></keyboard><mouse></mouse></openbox_config>' // NOSONAR
-                def openboxBuilder = new ProcessBuilder(openboxBinary.path, '--config-file', rcXml.path)
-                openboxBuilder.environment().put('DISPLAY', display)
-                virtualDisplay.openbox = openboxBuilder.start()
-                sleep(2000) // give the window manager a moment to take over the display
-            } else {
-                logger.warn('openbox not found - ComboBox popup clicks may not register in TestFX tests')
-            }
-            // A Wayland session leaks WAYLAND_DISPLAY/XDG_SESSION_TYPE into the test JVM, and
-            // TestFX's default java.awt.Robot then drives the *real* desktop through the
-            // xdg-desktop-portal RemoteDesktop interface (the "An app wants to share your screen"
-            // prompt) instead of the Xvfb display set below. Dropping them forces plain X11.
-            environment = environment.findAll { it.key != 'WAYLAND_DISPLAY' }
-            environment 'XDG_SESSION_TYPE', 'x11'
-            environment 'GDK_BACKEND', 'x11'
-            environment 'DISPLAY', display
-            logger.lifecycle("Running tests on virtual display $display")
-        }
     }
     finalizedBy jacocoTestReport
 }
