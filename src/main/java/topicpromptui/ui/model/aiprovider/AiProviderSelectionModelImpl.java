@@ -68,7 +68,7 @@ class AiProviderSelectionModelImpl implements AiProviderSelectionModel {
         AiProvider provider;
         try {
             provider = AiProvider.valueOf(value.trim().toUpperCase(Locale.ROOT));
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException _) {
             log.warn("Unknown AI provider in '{}={}', falling back to {}. Known providers: {}",
                     key, value, fallback, Arrays.toString(AiProvider.values()));
             return fallback;

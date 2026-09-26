@@ -2,17 +2,13 @@ package topicpromptui.ui.model.aiprovider;
 
 import org.junit.jupiter.api.Test;
 import topicpromptui.core.ai.AiApi;
-import topicpromptui.core.ai.AiResponse;
-import topicpromptui.core.ai.ConversationTurn;
 import topicpromptui.core.config.ConfigModel;
 import topicpromptui.core.domain.AiProvider;
 import topicpromptui.core.domain.AnswerType;
 
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
+import java.util.EnumMap;
 import java.util.Map;
-import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -27,15 +23,12 @@ import static topicpromptui.core.domain.AnswerType.AI_3;
 import static topicpromptui.core.domain.AnswerType.GRAMMAR;
 
 class AiProviderSelectionModelTest {
-    private static final AiApi API = new AiApi() {
-        @Override
-        public AiResponse send(String systemPrompt, List<ConversationTurn> turns, Consumer<String> onTextDelta) {
-            throw new UnsupportedOperationException();
-        }
+    private static final AiApi API = (systemPrompt, turns, onTextDelta) -> {
+        throw new UnsupportedOperationException();
     };
 
     private static AiProviderSelectionModel model(Map<String, String> properties, AiProvider... boundProviders) {
-        var apis = new HashMap<AiProvider, AiApi>();
+        var apis = new EnumMap<AiProvider, AiApi>(AiProvider.class);
         for (var provider : boundProviders) {
             apis.put(provider, API);
         }
