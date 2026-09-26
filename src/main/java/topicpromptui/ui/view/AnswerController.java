@@ -1,14 +1,17 @@
 package topicpromptui.ui.view;
 
 import com.google.gson.Gson;
+import topicpromptui.core.domain.AiProvider;
 import topicpromptui.ui.viewmodel.answer.AnswerVmController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.shape.Circle;
 import javafx.scene.web.WebView;
+import javafx.util.StringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -32,6 +35,17 @@ public class AnswerController extends BaseController {
     // Used only to build JS string literals (escapes quotes, <, >, & and U+2028/U+2029)
     private static final Gson GSON = new Gson();
     private static final String LINK_ALERT_PREFIX = "topicpromptui:open-url:";
+    private static final StringConverter<AiProvider> PROVIDER_CONVERTER = new StringConverter<>() {
+        @Override
+        public String toString(AiProvider provider) {
+            return provider != null ? provider.displayName() : "";
+        }
+
+        @Override
+        public AiProvider fromString(String displayName) {
+            return null; // The ComboBox is not editable, so nothing is ever parsed back.
+        }
+    };
     // The click interception lives in JavaScript and reports back through window.alert (handled by
     // setOnAlert) rather than through a Java org.w3c.dom EventListener: WebKit's listener
     // registration retains the listener - and with it this controller and the whole object graph
@@ -53,6 +67,8 @@ public class AnswerController extends BaseController {
             }, false);""".formatted(LINK_ALERT_PREFIX);
     @FXML
     private Button answerButton;
+    @FXML
+    private ComboBox<AiProvider> providerComboBox;
     @FXML
     private Circle statusCircle;
     @FXML
@@ -84,6 +100,12 @@ public class AnswerController extends BaseController {
     }
 
     @FXML
+    void onProviderSelected(ActionEvent ignoredEvent) {
+        log.trace("onProviderSelected");
+        vm.onProviderSelected();
+    }
+
+    @FXML
     void onAnswerButtonClick(ActionEvent ignoredEvent) {
         log.trace("onAnswerButtonClick");
         // A plain loader, not the Guice-provided one: FXMLLoader is bound only by Ignite's GuiceContext
@@ -107,7 +129,12 @@ public class AnswerController extends BaseController {
         webView.getEngine().documentProperty().addListener((_, _, newValue) -> onDocumentChanged(newValue));
         vm.properties().webViewContent.addListener((_, _, newValue) -> onWebViewContentChanged(newValue));
         vm.properties().statusCircleFill.bindBidirectional(statusCircle.fillProperty());
-        vm.properties().answerButtonText.bindBidirectional(answerButton.textProperty());
+        vm.properties().providerCbItems.bindBidirectional(providerComboBox.itemsProperty());
+        vm.properties().providerCbValue.bindBidirectional(providerComboBox.valueProperty());
+        // A converter rather than AiProvider.toString(), which must keep returning the enum constant name
+        // (it is what the logs print and what the ai.provider.<slot> config values hold). One converter
+        // covers both the button cell and the popup cells, so no cell factory is needed.
+        providerComboBox.setConverter(PROVIDER_CONVERTER);
         vm.properties().copyButtonText.bindBidirectional(copyButton.textProperty());
         webView.getEngine().setOnAlert(event -> onWebViewAlert(event.getData()));
         webView.addEventFilter(KEY_PRESSED, this::onWebViewKeyPressed);

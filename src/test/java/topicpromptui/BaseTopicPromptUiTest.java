@@ -240,6 +240,10 @@ public abstract class BaseTopicPromptUiTest extends ApplicationTest {
             return lookup(tag + " #answerButton").queryButton();
         }
 
+        public ComboBox<AiProvider> providerComboBox() {
+            return lookup(tag + " #providerComboBox").queryComboBox();
+        }
+
         public Button copyButton() {
             return lookup(tag + " #copyButton").queryButton();
         }

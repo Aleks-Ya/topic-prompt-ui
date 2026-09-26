@@ -18,7 +18,6 @@ public class AnswerVmProperties {
      * the FX thread by AnswerVmImpl and never observed on its own.
      */
     public boolean preserveScrollOnNextUpdate = false;
-    public final StringProperty answerButtonText = new SimpleStringProperty();
     public final ListProperty<AiProvider> providerCbItems = new SimpleListProperty<>();
     public final ObjectProperty<AiProvider> providerCbValue = new SimpleObjectProperty<>();
     public final StringProperty copyButtonText = new SimpleStringProperty();

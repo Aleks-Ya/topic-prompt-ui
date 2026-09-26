@@ -16,12 +16,11 @@ import static topicpromptui.core.domain.AnswerType.AI_2;
 import static topicpromptui.ui.viewmodel.question.QuestionStyle.QUESTION_STYLE_EDITED;
 
 /**
- * Choosing another provider for a pane through the mediator seam must route that pane's requests to it and
- * show it in that pane's ComboBox — without touching the other panes. {@link SelectProviderFromComboBoxUiTest}
- * covers the same scenario driven through the control itself. Claude is the target because it backs no pane by default and its mock
- * is a distinct instance, unlike the OpenAI mock that serves both OpenAI slots.
+ * Picking a provider in a pane's ComboBox must route that pane's requests to it and persist the choice.
+ * Claude is the target because it backs no pane by default and its mock is a distinct instance, unlike the
+ * OpenAI mock that serves both OpenAI slots.
  */
-class SelectAnswerProviderUiTest extends BaseTopicPromptUiTest {
+class SelectProviderFromComboBoxUiTest extends BaseTopicPromptUiTest {
     @Override
     public void init() {
         storage.saveTopic(I1.TOPIC);
@@ -29,10 +28,13 @@ class SelectAnswerProviderUiTest extends BaseTopicPromptUiTest {
     }
 
     @Test
-    void selectedProviderAnswersInItsPane() {
+    void providerChosenInTheComboBoxAnswersInItsPane() {
         assertThat(providerSelection.getAll()).containsEntry(AI_2, XAI);
 
-        selectProvider(AI_2, CLAUDE);
+        clickOn(ai2Answer().providerComboBox()).clickOn("Claude");
+
+        assertThat(providerSelection.getAll()).containsEntry(AI_2, CLAUDE);
+        assertThat(configModel.getProperty("ai.provider.ai_2")).isEqualTo("CLAUDE");
 
         gptApi.clear()
                 .putGrammarResponse("Question 2", ZERO)
@@ -69,6 +71,5 @@ class SelectAnswerProviderUiTest extends BaseTopicPromptUiTest {
 
         assertThat(claudeApi.getSendHistory()).hasSize(1);
         assertThat(xaiApi.getSendHistory()).isEmpty();
-        assertThat(configModel.getProperty("ai.provider.ai_2")).isEqualTo("CLAUDE");
     }
 }

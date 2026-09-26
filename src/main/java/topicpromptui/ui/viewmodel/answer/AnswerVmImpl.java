@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static topicpromptui.core.domain.AnswerState.NEW;
 import static topicpromptui.core.domain.AnswerType.AI_2;
@@ -65,6 +66,21 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
         Mdc.run(answerType.toString(), () -> {
             log.trace("onExpandButtonClick");
             mediator.toggleExpandedAnswer(answerType);
+        });
+    }
+
+    @Override
+    public void onProviderSelected() {
+        Mdc.run(answerType.toString(), () -> {
+            var cbValue = vmProperties.providerCbValue.getValue();
+            var modelValue = mediator.getAnswerProvider(answerType);
+            log.trace("onProviderSelected: cbValue={}, modelValue={}", cbValue, modelValue);
+            // Guarded because setAnswerProvider calls refreshProvider back, and a ComboBox fires its
+            // action on a programmatic setValue too: without the comparison that echo would recurse.
+            // cbValue is null while JavaFX has cleared the selection to install a new items list.
+            if (cbValue != null && cbValue != modelValue) {
+                mediator.setAnswerProvider(answerType, cbValue);
+            }
         });
     }
 
@@ -161,12 +177,13 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
 
     @Override
     public void refreshProvider() {
-        var provider = mediator.getAnswerProvider(answerType);
-        vmProperties.providerCbItems.setValue(FXCollections.observableArrayList(mediator.getAvailableProviders()));
-        vmProperties.providerCbValue.setValue(provider);
-        // Temporary: the provider ComboBox will display the name itself and this button will become a
-        // static Answer Info trigger, taking answerButtonText and this colon with it.
-        vmProperties.answerButtonText.setValue(provider.displayName() + ":");
+        var items = FXCollections.observableArrayList(mediator.getAvailableProviders());
+        // Replaced only when it really differs: installing a new items list clears the ComboBox
+        // selection, which would fire onProviderSelected with a null value.
+        if (!Objects.equals(items, vmProperties.providerCbItems.getValue())) {
+            vmProperties.providerCbItems.setValue(items);
+        }
+        vmProperties.providerCbValue.setValue(mediator.getAnswerProvider(answerType));
     }
 
     @Override

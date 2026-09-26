@@ -7,6 +7,9 @@ public interface AnswerVmController {
 
     void onExpandButtonClick();
 
+    /** The pane's provider ComboBox fired: applies its value if it differs from the current selection. */
+    void onProviderSelected();
+
     /** A link inside the answer was clicked; opens it outside the WebView. */
     void onSourceLinkClick(String url);
 

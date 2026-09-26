@@ -1,5 +1,6 @@
 package topicpromptui;
 
+import topicpromptui.core.domain.AiProvider;
 import topicpromptui.core.domain.AnswerType;
 import topicpromptui.core.domain.Interaction;
 import topicpromptui.core.domain.Topic;
@@ -50,10 +51,13 @@ public class WindowAssertion {
     private String questionStyle;
     private Boolean isEnteringNewQuestion;
     private String modelEditedQuestion;
-    // Literals, not AiProvider.displayName(), so the assertion independently verifies that the name of
-    // the selected provider reaches the button. These are the defaults; a test that selects another
-    // provider for a pane overrides them with answerCaptions(...).
-    private String[] answerCaptions = {"OpenAI mini:", "OpenAI:", "Grok:", "Gemini:"};
+    // The defaults; a test that selects another provider for a pane overrides them with answerProviders(...).
+    private AiProvider[] answerProviders = {AiProvider.OPEN_AI_GRAMMAR, AiProvider.OPEN_AI, AiProvider.XAI, AiProvider.GCP};
+    // Literals, not AiProvider.displayName(), so the assertion independently verifies which text the
+    // selected provider shows in the pane's ComboBox.
+    private static final Map<AiProvider, String> PROVIDER_TEXTS = new EnumMap<>(Map.of(
+            AiProvider.OPEN_AI, "OpenAI", AiProvider.OPEN_AI_GRAMMAR, "OpenAI mini",
+            AiProvider.CLAUDE, "Claude", AiProvider.GCP, "Gemini", AiProvider.XAI, "Grok"));
     // Literals rather than production constants (AnswerVmImpl.hotkeyDigitMap, the descr() prefixes), so
     // the assertion stays an independent statement of what the panes must show.
     private static final Map<AnswerType, String> ANSWER_LABELS = new EnumMap<>(Map.of(
@@ -208,8 +212,8 @@ public class WindowAssertion {
         return answers.get(AnswerType.AI_3);
     }
 
-    public WindowAssertion answerCaptions(String grammar, String ai1, String ai2, String ai3) {
-        answerCaptions = new String[]{grammar, ai1, ai2, ai3};
+    public WindowAssertion answerProviders(AiProvider grammar, AiProvider ai1, AiProvider ai2, AiProvider ai3) {
+        answerProviders = new AiProvider[]{grammar, ai1, ai2, ai3};
         return this;
     }
 
@@ -307,7 +311,14 @@ public class WindowAssertion {
             var label = "Answer/" + ANSWER_LABELS.get(answerType);
             var answer = app.answer(answerType);
             var expected = answers.get(answerType);
-            soft.assertThat(answer.button().getText()).as(descr(label + "/Button/Text")).isEqualTo(answerCaptions[answerType.ordinal()]);
+            var expectedProvider = answerProviders[answerType.ordinal()];
+            var providerComboBox = answer.providerComboBox();
+            soft.assertThat(providerComboBox.getValue()).as(descr(label + "/ProviderComboBox/Value")).isEqualTo(expectedProvider);
+            soft.assertThat(providerComboBox.getConverter().toString(providerComboBox.getValue()))
+                    .as(descr(label + "/ProviderComboBox/Text")).isEqualTo(PROVIDER_TEXTS.get(expectedProvider));
+            soft.assertThat(providerComboBox.getItems()).as(descr(label + "/ProviderComboBox/Items"))
+                    .containsExactly(AiProvider.values());
+            soft.assertThat(answer.button().getText()).as(descr(label + "/Button/Text")).isEqualTo("ⓘ");
             soft.assertThat(answer.copyButton().getText()).as(descr(label + "/CopyButton/Text")).isEqualTo("Copy _" + ANSWER_DIGITS.get(answerType));
             soft.assertThat(answer.regenerateButton().getText()).as(descr(label + "/RegenerateButton/Text")).isEqualTo("⟳");
             soft.assertThat(answer.expandButton().getText()).as(descr(label + "/ExpandButton/Text")).isEqualTo("⛶");
