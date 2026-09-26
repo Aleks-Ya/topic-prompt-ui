@@ -9,3 +9,18 @@
 .monospace {
     -fx-font-family: monospace;
 }
+
+/* The provider ComboBox sits in a deliberately narrow column - its width is taken straight out of
+   the answer WebView - so the stock Modena padding is trimmed to fit the longest display name
+   without truncation. The popup is only as wide as the control, hence the font stays default. */
+.provider-combo-box {
+    -fx-padding: 0;
+}
+
+.provider-combo-box > .list-cell {
+    -fx-padding: 2 0 2 3;
+}
+
+.provider-combo-box > .arrow-button {
+    -fx-padding: 2 3 2 0;
+}

@@ -11,7 +11,7 @@ package topicpromptui.core.domain;
  */
 public enum AiProvider {
     OPEN_AI("OpenAI"),
-    OPEN_AI_GRAMMAR("OpenAI mini"),
+    OPEN_AI_GRAMMAR("GPT mini"),
     CLAUDE("Claude"),
     GCP("Gemini"),
     XAI("Grok");

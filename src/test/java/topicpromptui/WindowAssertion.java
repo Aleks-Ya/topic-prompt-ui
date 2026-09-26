@@ -56,7 +56,7 @@ public class WindowAssertion {
     // Literals, not AiProvider.displayName(), so the assertion independently verifies which text the
     // selected provider shows in the pane's ComboBox.
     private static final Map<AiProvider, String> PROVIDER_TEXTS = new EnumMap<>(Map.of(
-            AiProvider.OPEN_AI, "OpenAI", AiProvider.OPEN_AI_GRAMMAR, "OpenAI mini",
+            AiProvider.OPEN_AI, "OpenAI", AiProvider.OPEN_AI_GRAMMAR, "GPT mini",
             AiProvider.CLAUDE, "Claude", AiProvider.GCP, "Gemini", AiProvider.XAI, "Grok"));
     // Literals rather than production constants (AnswerVmImpl.hotkeyDigitMap, the descr() prefixes), so
     // the assertion stays an independent statement of what the panes must show.

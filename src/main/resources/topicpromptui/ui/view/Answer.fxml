@@ -11,9 +11,13 @@
 <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/21"
       xmlns:fx="http://javafx.com/fxml/1" fx:controller="topicpromptui.ui.view.AnswerController">
     <!-- prefWidth on the VBox, not on the ComboBox: every pixel here is taken from the answer WebView,
-         and a fixed column keeps all four WebViews starting at the same x whatever the display name. -->
-    <VBox alignment="TOP_CENTER" prefWidth="100.0">
-        <ComboBox fx:id="providerComboBox" maxWidth="1.7976931348623157E308" onAction="#onProviderSelected"/>
+         and a fixed column keeps all four WebViews starting at the same x whatever the display name.
+         70 is where the longest AiProvider.displayName() starts to ellipsize with the tightened
+         padding of .provider-combo-box in app.css (measured); 75 leaves a margin for font
+         differences. A longer display name means re-measuring this number. -->
+    <VBox alignment="TOP_CENTER" prefWidth="75.0">
+        <ComboBox fx:id="providerComboBox" maxWidth="1.7976931348623157E308" onAction="#onProviderSelected"
+                  styleClass="provider-combo-box"/>
         <Separator visible="false"/>
         <Button fx:id="answerButton" mnemonicParsing="false" onAction="#onAnswerButtonClick" text="ⓘ">
             <tooltip>
