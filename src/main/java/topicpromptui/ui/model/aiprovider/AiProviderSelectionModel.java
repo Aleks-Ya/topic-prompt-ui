@@ -3,6 +3,7 @@ package topicpromptui.ui.model.aiprovider;
 import topicpromptui.core.domain.AiProvider;
 import topicpromptui.core.domain.AnswerType;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,4 +24,11 @@ public interface AiProviderSelectionModel {
 
     /** Immutable snapshot of the whole slot to provider table. */
     Map<AnswerType, AiProvider> getAll();
+
+    /**
+     * The providers a pane may be switched to: every {@link AiProvider} that {@link AiProviderModule}
+     * binds an {@code AiApi} for, in enum declaration order. Includes {@code OPEN_AI_GRAMMAR}, which is
+     * the default of the {@code GRAMMAR} slot and therefore must be offerable to it.
+     */
+    List<AiProvider> getAvailableProviders();
 }

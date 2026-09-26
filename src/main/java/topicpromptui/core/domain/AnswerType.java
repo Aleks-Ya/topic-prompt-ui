@@ -7,7 +7,7 @@ package topicpromptui.core.domain;
  * Which provider backs a slot is not hardcoded here — it is chosen at runtime by
  * {@code ui.model.aiprovider.AiProviderSelectionModel} (hardcoded defaults, overridable per slot from
  * {@code config.properties} and via its setter), and the pane's button caption comes from
- * {@link AiProvider#caption()} of the selected provider.
+ * {@link AiProvider#displayName()} of the selected provider.
  * <p>
  * The names are the persisted JSON keys of {@code Interaction.answers}, so renaming a constant
  * invalidates previously stored interactions.

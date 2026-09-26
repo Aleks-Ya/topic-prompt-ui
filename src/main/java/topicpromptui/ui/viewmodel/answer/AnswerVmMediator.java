@@ -21,9 +21,9 @@ public interface AnswerVmMediator {
     void initialize();
 
     /**
-     * Re-reads the answer button caption from the provider currently selected for this pane.
+     * Re-reads the provider currently selected for this pane, plus the providers it can be switched to.
      * Separate from {@link #initialize()} because that also appends the hotkey digit to the copy
      * button label, so calling it twice would append the digit twice.
      */
-    void refreshCaption();
+    void refreshProvider();
 }

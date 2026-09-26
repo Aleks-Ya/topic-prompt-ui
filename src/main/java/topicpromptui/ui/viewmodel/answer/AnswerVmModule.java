@@ -1,6 +1,7 @@
 package topicpromptui.ui.viewmodel.answer;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.multibindings.MapBinder;
 import com.google.inject.name.Names;
 import topicpromptui.core.domain.AnswerType;
 
@@ -17,14 +18,19 @@ public class AnswerVmModule extends AbstractModule {
         var ai2Answer = new AnswerVmImpl(AnswerType.AI_2);
         var ai3Answer = new AnswerVmImpl(AnswerType.AI_3);
 
+        // The view still resolves its pane view models per fx:id, so these keep their @Named qualifiers.
         bind(AnswerVmController.class).annotatedWith(Names.named(GRAMMAR)).toInstance(grammarAnswer);
         bind(AnswerVmController.class).annotatedWith(Names.named(AI_1)).toInstance(ai1Answer);
         bind(AnswerVmController.class).annotatedWith(Names.named(AI_2)).toInstance(ai2Answer);
         bind(AnswerVmController.class).annotatedWith(Names.named(AI_3)).toInstance(ai3Answer);
 
-        bind(AnswerVmMediator.class).annotatedWith(Names.named(GRAMMAR)).toInstance(grammarAnswer);
-        bind(AnswerVmMediator.class).annotatedWith(Names.named(AI_1)).toInstance(ai1Answer);
-        bind(AnswerVmMediator.class).annotatedWith(Names.named(AI_2)).toInstance(ai2Answer);
-        bind(AnswerVmMediator.class).annotatedWith(Names.named(AI_3)).toInstance(ai3Answer);
+        // Unlike AiProviderModule, whose map entries link to existing @Named bindings, these bind the
+        // instances directly: the mediator addresses panes only by AnswerType, so no @Named
+        // AnswerVmMediator binding is left to link to.
+        var mediators = MapBinder.newMapBinder(binder(), AnswerType.class, AnswerVmMediator.class);
+        mediators.addBinding(AnswerType.GRAMMAR).toInstance(grammarAnswer);
+        mediators.addBinding(AnswerType.AI_1).toInstance(ai1Answer);
+        mediators.addBinding(AnswerType.AI_2).toInstance(ai2Answer);
+        mediators.addBinding(AnswerType.AI_3).toInstance(ai3Answer);
     }
 }

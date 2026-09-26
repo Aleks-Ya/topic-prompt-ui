@@ -10,20 +10,24 @@ package topicpromptui.core.domain;
  * tools off, bound as a second instance in {@code OpenAiModule}.
  */
 public enum AiProvider {
-    OPEN_AI("OpenAI:"),
-    OPEN_AI_GRAMMAR("Grammar:"),
-    CLAUDE("Claude:"),
-    GCP("Gemini:"),
-    XAI("Grok:");
+    OPEN_AI("OpenAI"),
+    OPEN_AI_GRAMMAR("OpenAI mini"),
+    CLAUDE("Claude"),
+    GCP("Gemini"),
+    XAI("Grok");
 
-    private final String caption;
+    private final String displayName;
 
-    AiProvider(String caption) {
-        this.caption = caption;
+    AiProvider(String displayName) {
+        this.displayName = displayName;
     }
 
-    /** Text on the answer button of whichever pane currently selects this provider. */
-    public String caption() {
-        return caption;
+    /**
+     * Human-readable provider name, shown wherever a pane's provider is displayed or offered for
+     * selection. Deliberately not {@code toString()}: the logs and the {@code ai.provider.<slot>}
+     * config values use the enum constant name, and both must stay greppable.
+     */
+    public String displayName() {
+        return displayName;
     }
 }

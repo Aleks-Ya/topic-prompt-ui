@@ -14,9 +14,13 @@ import topicpromptui.ui.viewmodel.ui.TopicPromptUiVmMediator;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
+import java.util.Map;
 import java.util.function.Consumer;
 
+import static topicpromptui.core.domain.AnswerType.AI_1;
+import static topicpromptui.core.domain.AnswerType.AI_2;
 import static topicpromptui.core.domain.AnswerType.AI_3;
+import static topicpromptui.core.domain.AnswerType.GRAMMAR;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -32,14 +36,15 @@ import static org.mockito.Mockito.when;
  */
 class AnswerCallbackGuardTest {
     private final AnswerVmMediator grammarAnswerVM = mock(AnswerVmMediator.class);
-    private final AnswerVmMediator openAiAnswerVM = mock(AnswerVmMediator.class);
-    private final AnswerVmMediator grokAnswerVM = mock(AnswerVmMediator.class);
-    private final AnswerVmMediator gcpAnswerVM = mock(AnswerVmMediator.class);
+    private final AnswerVmMediator ai1AnswerVM = mock(AnswerVmMediator.class);
+    private final AnswerVmMediator ai2AnswerVM = mock(AnswerVmMediator.class);
+    private final AnswerVmMediator ai3AnswerVM = mock(AnswerVmMediator.class);
     private final HistoryVmMediator historyVM = mock(HistoryVmMediator.class);
     private final StateModel stateModel = mock(StateModel.class);
     private final QuestionModel questionModel = mock(QuestionModel.class);
-    private final MediatorImpl mediator = new MediatorImpl(grammarAnswerVM, openAiAnswerVM, grokAnswerVM,
-            gcpAnswerVM, historyVM, mock(QuestionVmMediator.class), mock(TopicVmMediator.class),
+    private final MediatorImpl mediator = new MediatorImpl(
+            Map.of(GRAMMAR, grammarAnswerVM, AI_1, ai1AnswerVM, AI_2, ai2AnswerVM, AI_3, ai3AnswerVM),
+            historyVM, mock(QuestionVmMediator.class), mock(TopicVmMediator.class),
             mock(TopicPromptUiVmMediator.class), stateModel, questionModel,
             mock(ClipboardModel.class), mock(FileModel.class), mock(AiProviderSelectionModel.class));
 
@@ -50,8 +55,8 @@ class AnswerCallbackGuardTest {
     void completionForNonCurrentInteractionSkipsPaneButRefreshesHistory() {
         when(stateModel.getCurrentInteractionId()).thenReturn(otherId);
         captureCallbacks().completion().run();
-        verify(gcpAnswerVM, never()).displayCompletedAnswer();
-        verify(gcpAnswerVM, never()).displayCurrentAnswer();
+        verify(ai3AnswerVM, never()).displayCompletedAnswer();
+        verify(ai3AnswerVM, never()).displayCurrentAnswer();
         verify(historyVM).displayCurrentInteraction();
     }
 
@@ -60,8 +65,8 @@ class AnswerCallbackGuardTest {
         when(stateModel.getCurrentInteractionId()).thenReturn(streamedId);
         captureCallbacks().completion().run();
         // displayCompletedAnswer, not displayCurrentAnswer: the partial→final swap must keep scroll
-        verify(gcpAnswerVM).displayCompletedAnswer();
-        verify(gcpAnswerVM, never()).displayCurrentAnswer();
+        verify(ai3AnswerVM).displayCompletedAnswer();
+        verify(ai3AnswerVM, never()).displayCurrentAnswer();
         verify(historyVM).displayCurrentInteraction();
     }
 
@@ -69,14 +74,14 @@ class AnswerCallbackGuardTest {
     void progressForNonCurrentInteractionIsDropped() {
         when(stateModel.getCurrentInteractionId()).thenReturn(otherId);
         captureCallbacks().progress().accept("<p>partial</p>");
-        verify(gcpAnswerVM, never()).displayPartialAnswer(any());
+        verify(ai3AnswerVM, never()).displayPartialAnswer(any());
     }
 
     @Test
     void progressForCurrentInteractionIsDisplayed() {
         when(stateModel.getCurrentInteractionId()).thenReturn(streamedId);
         captureCallbacks().progress().accept("<p>partial</p>");
-        verify(gcpAnswerVM).displayPartialAnswer("<p>partial</p>");
+        verify(ai3AnswerVM).displayPartialAnswer("<p>partial</p>");
     }
 
     private record Callbacks(Runnable completion, Consumer<String> progress) {

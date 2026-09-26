@@ -28,8 +28,7 @@ class SelectAnswerProviderUiTest extends BaseTopicPromptUiTest {
     void selectedProviderAnswersInItsPane() {
         assertThat(providerSelection.getAll()).containsEntry(AI_2, XAI);
 
-        providerSelection.setProvider(AI_2, CLAUDE);
-        refreshAnswerCaptions();
+        selectProvider(AI_2, CLAUDE);
 
         gptApi.clear()
                 .putGrammarResponse("Question 2", ZERO)
@@ -56,7 +55,7 @@ class SelectAnswerProviderUiTest extends BaseTopicPromptUiTest {
                 .questionStyle(QUESTION_STYLE_EDITED)
                 .modelEditedQuestion("Question 2")
                 .modelIsEnteringNewQuestion(false)
-                .answerCaptions("Grammar:", "OpenAI:", "Claude:", "Gemini:")
+                .answerCaptions("OpenAI mini:", "OpenAI:", "Claude:", "Gemini:")
                 .grammarA().text("<p>Question 2</p>\n")
                 .ai1A().text("<p>Fact from OpenAI</p>\n")
                 .ai2A().text("<p>Fact from Claude</p>\n")
@@ -66,5 +65,6 @@ class SelectAnswerProviderUiTest extends BaseTopicPromptUiTest {
 
         assertThat(claudeApi.getSendHistory()).hasSize(1);
         assertThat(xaiApi.getSendHistory()).isEmpty();
+        assertThat(configModel.getProperty("ai.provider.ai_2")).isEqualTo("CLAUDE");
     }
 }

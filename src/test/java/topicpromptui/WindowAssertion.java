@@ -1,5 +1,6 @@
 package topicpromptui;
 
+import topicpromptui.core.domain.AnswerType;
 import topicpromptui.core.domain.Interaction;
 import topicpromptui.core.domain.Topic;
 import topicpromptui.ui.viewmodel.InteractionItem;
@@ -15,6 +16,7 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,14 +50,19 @@ public class WindowAssertion {
     private String questionStyle;
     private Boolean isEnteringNewQuestion;
     private String modelEditedQuestion;
-    // Literals, not AnswerType/AiProvider.caption(), so the assertion independently verifies that the
-    // caption of the selected provider reaches the button. These are the defaults; a test that selects
-    // another provider for a pane overrides them with answerCaptions(...).
-    private String[] answerCaptions = {"Grammar:", "OpenAI:", "Grok:", "Gemini:"};
-    private final AnswerInfo grammarAnswer = new AnswerInfo();
-    private final AnswerInfo ai1Answer = new AnswerInfo();
-    private final AnswerInfo ai2Answer = new AnswerInfo();
-    private final AnswerInfo ai3Answer = new AnswerInfo();
+    // Literals, not AiProvider.displayName(), so the assertion independently verifies that the name of
+    // the selected provider reaches the button. These are the defaults; a test that selects another
+    // provider for a pane overrides them with answerCaptions(...).
+    private String[] answerCaptions = {"OpenAI mini:", "OpenAI:", "Grok:", "Gemini:"};
+    // Literals rather than production constants (AnswerVmImpl.hotkeyDigitMap, the descr() prefixes), so
+    // the assertion stays an independent statement of what the panes must show.
+    private static final Map<AnswerType, String> ANSWER_LABELS = new EnumMap<>(Map.of(
+            AnswerType.GRAMMAR, "Grammar", AnswerType.AI_1, "Ai1", AnswerType.AI_2, "Ai2", AnswerType.AI_3, "Ai3"));
+    private static final Map<AnswerType, Integer> ANSWER_DIGITS = new EnumMap<>(Map.of(
+            AnswerType.GRAMMAR, 1, AnswerType.AI_1, 2, AnswerType.AI_2, 3, AnswerType.AI_3, 4));
+    private final Map<AnswerType, AnswerInfo> answers = new EnumMap<>(Map.of(
+            AnswerType.GRAMMAR, new AnswerInfo(), AnswerType.AI_1, new AnswerInfo(),
+            AnswerType.AI_2, new AnswerInfo(), AnswerType.AI_3, new AnswerInfo()));
     private String testName = "Initialize";
     private String clipboard = null;
 
@@ -186,19 +193,19 @@ public class WindowAssertion {
     }
 
     public AnswerInfo grammarA() {
-        return grammarAnswer;
+        return answers.get(AnswerType.GRAMMAR);
     }
 
     public AnswerInfo ai1A() {
-        return ai1Answer;
+        return answers.get(AnswerType.AI_1);
     }
 
     public AnswerInfo ai2A() {
-        return ai2Answer;
+        return answers.get(AnswerType.AI_2);
     }
 
     public AnswerInfo ai3A() {
-        return ai3Answer;
+        return answers.get(AnswerType.AI_3);
     }
 
     public WindowAssertion answerCaptions(String grammar, String ai1, String ai2, String ai3) {
@@ -296,44 +303,16 @@ public class WindowAssertion {
             soft.assertThat(app.stateModel.isEnteringNewQuestion()).as(descr("Question/Model/IsEnteringNewQuestion")).isEqualTo(isEnteringNewQuestion);
         }
 
-        {
-            var answer = app.grammarAnswer();
-            soft.assertThat(answer.button().getText()).as(descr("Answer/Grammar/Button/Text")).isEqualTo(answerCaptions[0]);
-            soft.assertThat(answer.copyButton().getText()).as(descr("Answer/Grammar/CopyButton/Text")).isEqualTo("Copy _1");
-            soft.assertThat(answer.regenerateButton().getText()).as(descr("Answer/Grammar/RegenerateButton/Text")).isEqualTo("⟳");
-            soft.assertThat(answer.expandButton().getText()).as(descr("Answer/Grammar/ExpandButton/Text")).isEqualTo("⛶");
-            app.verifyWebViewBody(soft, descr("Answer/Grammar/WebView/Body"), answer.webView(), grammarAnswer.text);
-            soft.assertThat(colorToString(answer.circle().getFill())).as(descr("Answer/Grammar/Circle/Fill")).isEqualTo(colorToString(grammarAnswer.circleColor));
-        }
-
-        {
-            var answer = app.ai1Answer();
-            soft.assertThat(answer.button().getText()).as(descr("Answer/Ai1/Button/Text")).isEqualTo(answerCaptions[1]);
-            soft.assertThat(answer.copyButton().getText()).as(descr("Answer/Ai1/CopyButton/Text")).isEqualTo("Copy _2");
-            soft.assertThat(answer.regenerateButton().getText()).as(descr("Answer/Ai1/RegenerateButton/Text")).isEqualTo("⟳");
-            soft.assertThat(answer.expandButton().getText()).as(descr("Answer/Ai1/ExpandButton/Text")).isEqualTo("⛶");
-            app.verifyWebViewBody(soft, descr("Answer/Ai1/WebView/Body"), answer.webView(), ai1A().text);
-            soft.assertThat(colorToString(answer.circle().getFill())).as(descr("Answer/Ai1/Circle/Fill")).isEqualTo(colorToString(ai1A().circleColor));
-        }
-
-        {
-            var answer = app.ai2Answer();
-            soft.assertThat(answer.button().getText()).as(descr("Answer/Ai2/Button/Text")).isEqualTo(answerCaptions[2]);
-            soft.assertThat(answer.copyButton().getText()).as(descr("Answer/Ai2/CopyButton/Text")).isEqualTo("Copy _3");
-            soft.assertThat(answer.regenerateButton().getText()).as(descr("Answer/Ai2/RegenerateButton/Text")).isEqualTo("⟳");
-            soft.assertThat(answer.expandButton().getText()).as(descr("Answer/Ai2/ExpandButton/Text")).isEqualTo("⛶");
-            app.verifyWebViewBody(soft, descr("Answer/Ai2/WebView/Body"), answer.webView(), ai2A().text);
-            soft.assertThat(colorToString(answer.circle().getFill())).as(descr("Answer/Ai2/Circle/Fill")).isEqualTo(colorToString(ai2A().circleColor));
-        }
-
-        {
-            var answer = app.ai3Answer();
-            soft.assertThat(answer.button().getText()).as(descr("Answer/Ai3/Button/Text")).isEqualTo(answerCaptions[3]);
-            soft.assertThat(answer.copyButton().getText()).as(descr("Answer/Ai3/CopyButton/Text")).isEqualTo("Copy _4");
-            soft.assertThat(answer.regenerateButton().getText()).as(descr("Answer/Ai3/RegenerateButton/Text")).isEqualTo("⟳");
-            soft.assertThat(answer.expandButton().getText()).as(descr("Answer/Ai3/ExpandButton/Text")).isEqualTo("⛶");
-            app.verifyWebViewBody(soft, descr("Answer/Ai3/WebView/Body"), answer.webView(), ai3A().text);
-            soft.assertThat(colorToString(answer.circle().getFill())).as(descr("Answer/Ai3/Circle/Fill")).isEqualTo(colorToString(ai3A().circleColor));
+        for (var answerType : AnswerType.values()) {
+            var label = "Answer/" + ANSWER_LABELS.get(answerType);
+            var answer = app.answer(answerType);
+            var expected = answers.get(answerType);
+            soft.assertThat(answer.button().getText()).as(descr(label + "/Button/Text")).isEqualTo(answerCaptions[answerType.ordinal()]);
+            soft.assertThat(answer.copyButton().getText()).as(descr(label + "/CopyButton/Text")).isEqualTo("Copy _" + ANSWER_DIGITS.get(answerType));
+            soft.assertThat(answer.regenerateButton().getText()).as(descr(label + "/RegenerateButton/Text")).isEqualTo("⟳");
+            soft.assertThat(answer.expandButton().getText()).as(descr(label + "/ExpandButton/Text")).isEqualTo("⛶");
+            app.verifyWebViewBody(soft, descr(label + "/WebView/Body"), answer.webView(), expected.text);
+            soft.assertThat(colorToString(answer.circle().getFill())).as(descr(label + "/Circle/Fill")).isEqualTo(colorToString(expected.circleColor));
         }
 
         {

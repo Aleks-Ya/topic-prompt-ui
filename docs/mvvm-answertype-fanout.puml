@@ -64,6 +64,13 @@ ai1AnswerVM <--> ViewModelMediator
 ai2AnswerVM <--> ViewModelMediator
 ai3AnswerVM <--> ViewModelMediator
 
+note right of ViewModelMediator
+  The four answer view models are held as one
+  EnumMap<AnswerType, AnswerVmMediator>, supplied
+  by a MapBinder in AnswerVmModule: no per-slot
+  fields and no switch over AnswerType.
+end note
+
 TopicVM ---> StateModel
 HistoryVM ---> StateModel
 QuestionVM ---> StateModel

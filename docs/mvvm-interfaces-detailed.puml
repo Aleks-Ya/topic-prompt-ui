@@ -58,7 +58,7 @@ ViewModelMediatorImpl ..|> HistoryMediator
 ViewModelMediatorImpl ..|> QuestionMediator
 ViewModelMediatorImpl ..|> TopicMediator
 
-ViewModelMediatorImpl --> AnswerVmMediator
+ViewModelMediatorImpl "1" --> "4" AnswerVmMediator: Map<AnswerType, AnswerVmMediator>
 ViewModelMediatorImpl --> HistoryVmMediator
 ViewModelMediatorImpl --> QuestionVmMediator
 ViewModelMediatorImpl --> TopicVmMediator

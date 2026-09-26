@@ -6,12 +6,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import topicpromptui.core.ai.AiApi;
 import topicpromptui.core.config.ConfigModel;
+import topicpromptui.core.config.ConfigWriter;
 import topicpromptui.core.domain.AiProvider;
 import topicpromptui.core.domain.AnswerType;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -42,10 +44,14 @@ class AiProviderSelectionModelImpl implements AiProviderSelectionModel {
 
     private final Map<AnswerType, AiProvider> selection = new EnumMap<>(AnswerType.class);
     private final Set<AiProvider> boundProviders;
+    private final List<AiProvider> availableProviders;
+    private final ConfigWriter configWriter;
 
     @Inject
-    AiProviderSelectionModelImpl(ConfigModel configModel, Map<AiProvider, AiApi> apis) {
+    AiProviderSelectionModelImpl(ConfigModel configModel, ConfigWriter configWriter, Map<AiProvider, AiApi> apis) {
+        this.configWriter = configWriter;
         boundProviders = Set.copyOf(apis.keySet());
+        availableProviders = Arrays.stream(AiProvider.values()).filter(boundProviders::contains).toList();
         for (var answerType : AnswerType.values()) {
             selection.put(answerType, readProvider(configModel, answerType));
         }
@@ -94,6 +100,15 @@ class AiProviderSelectionModelImpl implements AiProviderSelectionModel {
         }
         log.info("AI provider for {}: {} -> {}", answerType, selection.get(answerType), provider);
         selection.put(answerType, provider);
+        // Written under the lock, so the file can never disagree with a selection an executor thread is
+        // reading. Costs a few hundred bytes of IO on the FX thread, which is the only caller.
+        configWriter.setProperty(propertyKey(answerType), provider.name());
+    }
+
+    /** Not synchronized, unlike its siblings: an immutable list computed once from a set fixed at construction. */
+    @Override
+    public List<AiProvider> getAvailableProviders() {
+        return availableProviders;
     }
 
     @Override

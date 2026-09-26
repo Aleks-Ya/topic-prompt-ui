@@ -1,10 +1,13 @@
 package topicpromptui.ui.viewmodel.answer;
 
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.paint.Paint;
+import topicpromptui.core.domain.AiProvider;
 
 public class AnswerVmProperties {
     public final StringProperty webViewContent = new SimpleStringProperty();
@@ -16,6 +19,8 @@ public class AnswerVmProperties {
      */
     public boolean preserveScrollOnNextUpdate = false;
     public final StringProperty answerButtonText = new SimpleStringProperty();
+    public final ListProperty<AiProvider> providerCbItems = new SimpleListProperty<>();
+    public final ObjectProperty<AiProvider> providerCbValue = new SimpleObjectProperty<>();
     public final StringProperty copyButtonText = new SimpleStringProperty();
     public final ObjectProperty<Paint> statusCircleFill = new SimpleObjectProperty<>();
 }

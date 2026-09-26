@@ -8,6 +8,7 @@ import topicpromptui.core.domain.AnswerType;
 
 import java.nio.file.Path;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,11 +29,16 @@ class AiProviderSelectionModelTest {
     };
 
     private static AiProviderSelectionModel model(Map<String, String> properties, AiProvider... boundProviders) {
+        return model(properties, new HashMap<>(), boundProviders);
+    }
+
+    private static AiProviderSelectionModel model(Map<String, String> properties, Map<String, String> written,
+                                                  AiProvider... boundProviders) {
         var apis = new EnumMap<AiProvider, AiApi>(AiProvider.class);
         for (var provider : boundProviders) {
             apis.put(provider, API);
         }
-        return new AiProviderSelectionModelImpl(configWith(properties), apis);
+        return new AiProviderSelectionModelImpl(configWith(properties), written::put, apis);
     }
 
     private static AiProviderSelectionModel modelWithAllProvidersBound(Map<String, String> properties) {
@@ -115,11 +121,38 @@ class AiProviderSelectionModelTest {
     }
 
     @Test
+    void setProviderPersistsTheSelectionUnderTheDerivedKey() {
+        var written = new HashMap<String, String>();
+        model(Map.of(), written, AiProvider.values()).setProvider(AI_2, CLAUDE);
+        assertThat(written).containsExactlyEntriesOf(Map.of("ai.provider.ai_2", "CLAUDE"));
+    }
+
+    @Test
     void setProviderRejectsAProviderWithoutAnAiApiBinding() {
         var model = model(Map.of(), OPEN_AI, OPEN_AI_GRAMMAR, GCP, XAI);
         assertThatThrownBy(() -> model.setProvider(AI_2, CLAUDE))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("CLAUDE");
+    }
+
+    @Test
+    void availableProvidersAreTheBoundOnesInDeclarationOrder() {
+        assertThat(modelWithAllProvidersBound(Map.of()).getAvailableProviders())
+                .containsExactly(OPEN_AI, OPEN_AI_GRAMMAR, CLAUDE, GCP, XAI);
+        assertThat(model(Map.of(), OPEN_AI, OPEN_AI_GRAMMAR, GCP, XAI).getAvailableProviders())
+                .containsExactly(OPEN_AI, OPEN_AI_GRAMMAR, GCP, XAI);
+    }
+
+    @Test
+    void availableProvidersAreImmutable() {
+        var providers = modelWithAllProvidersBound(Map.of()).getAvailableProviders();
+        assertThatThrownBy(() -> providers.add(CLAUDE)).isInstanceOf(UnsupportedOperationException.class);
+    }
+
+    /** The names label a ComboBox item, so a leftover caption colon would leak into the UI. */
+    @Test
+    void displayNamesAreColonFree() {
+        assertThat(AiProvider.values()).extracting(AiProvider::displayName).noneMatch(name -> name.contains(":"));
     }
 
     @Test

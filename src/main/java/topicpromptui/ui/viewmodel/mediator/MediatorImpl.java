@@ -5,6 +5,7 @@ import topicpromptui.ui.model.clipboard.ClipboardModel;
 import topicpromptui.ui.model.file.FileModel;
 import topicpromptui.ui.model.question.QuestionModel;
 import topicpromptui.ui.model.state.StateModel;
+import topicpromptui.core.domain.AiProvider;
 import topicpromptui.core.domain.AnswerType;
 import topicpromptui.core.domain.Interaction;
 import topicpromptui.core.domain.InteractionId;
@@ -12,13 +13,11 @@ import topicpromptui.core.domain.InteractionType;
 import topicpromptui.core.domain.Topic;
 import topicpromptui.core.domain.TopicId;
 import topicpromptui.ui.viewmodel.answer.AnswerVmMediator;
-import topicpromptui.ui.viewmodel.answer.AnswerVmModule;
 import topicpromptui.ui.viewmodel.history.HistoryVmMediator;
 import topicpromptui.ui.viewmodel.question.QuestionVmMediator;
 import topicpromptui.ui.viewmodel.topic.TopicVmMediator;
 import topicpromptui.ui.viewmodel.ui.TopicPromptUiVmMediator;
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import javafx.collections.ObservableMap;
 import javafx.scene.input.KeyCodeCombination;
@@ -28,7 +27,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static topicpromptui.core.domain.AnswerType.AI_2;
@@ -54,10 +55,7 @@ import static javafx.scene.input.KeyCombination.CONTROL_DOWN;
 class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, AnswerMediator,
         TopicPromptUiMediator, TopicPromptUiApplicationMediator {
     private static final Logger log = LoggerFactory.getLogger(MediatorImpl.class);
-    private final AnswerVmMediator grammarAnswerVM;
-    private final AnswerVmMediator ai1AnswerVM;
-    private final AnswerVmMediator ai2AnswerVM;
-    private final AnswerVmMediator ai3AnswerVM;
+    private final Map<AnswerType, AnswerVmMediator> answerVMs;
     private final HistoryVmMediator historyVM;
     private final QuestionVmMediator questionVM;
     private final TopicVmMediator topicVM;
@@ -69,10 +67,7 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
     private final AiProviderSelectionModel providerSelection;
 
     @Inject
-    MediatorImpl(@Named(AnswerVmModule.GRAMMAR) AnswerVmMediator grammarAnswerVM,
-                 @Named(AnswerVmModule.AI_1) AnswerVmMediator ai1AnswerVM,
-                 @Named(AnswerVmModule.AI_2) AnswerVmMediator ai2AnswerVM,
-                 @Named(AnswerVmModule.AI_3) AnswerVmMediator ai3AnswerVM,
+    MediatorImpl(Map<AnswerType, AnswerVmMediator> answerVMs,
                  HistoryVmMediator historyVM,
                  QuestionVmMediator questionVM,
                  TopicVmMediator topicVM,
@@ -82,10 +77,11 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
                  ClipboardModel clipboardModel,
                  FileModel fileModel,
                  AiProviderSelectionModel providerSelection) {
-        this.grammarAnswerVM = grammarAnswerVM;
-        this.ai1AnswerVM = ai1AnswerVM;
-        this.ai2AnswerVM = ai2AnswerVM;
-        this.ai3AnswerVM = ai3AnswerVM;
+        // EnumMap, so iterating the panes follows slot order regardless of how the map was assembled.
+        this.answerVMs = new EnumMap<>(answerVMs);
+        if (this.answerVMs.size() != AnswerType.values().length) {
+            throw new IllegalStateException("Expected one AnswerVmMediator per AnswerType, got " + this.answerVMs.keySet());
+        }
         this.historyVM = historyVM;
         this.questionVM = questionVM;
         this.topicVM = topicVM;
@@ -100,10 +96,7 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
     @Override
     public void stageShowed() {
         log.trace("stageShowed");
-        grammarAnswerVM.initialize();
-        ai1AnswerVM.initialize();
-        ai2AnswerVM.initialize();
-        ai3AnswerVM.initialize();
+        answerVMs.values().forEach(AnswerVmMediator::initialize);
         historyVM.displayCurrentInteraction();
         topicVM.initialize();
         topicVM.setLabel();
@@ -120,10 +113,7 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
         topicVM.updateComboBoxSelectedItemFromStateModel();
         historyVM.displayCurrentInteraction();
         questionVM.displayCurrentInteraction();
-        grammarAnswerVM.displayCurrentAnswer();
-        ai1AnswerVM.displayCurrentAnswer();
-        ai2AnswerVM.displayCurrentAnswer();
-        ai3AnswerVM.displayCurrentAnswer();
+        answerVMs.values().forEach(AnswerVmMediator::displayCurrentAnswer);
         questionVM.focusOnQuestionAndSelect();
     }
 
@@ -135,12 +125,7 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
         // displayCompletedAnswer (not displayCurrentAnswer) so the partial→final swap keeps the
         // user's scroll position; every other pane refresh resets the scroll on purpose.
         if (interactionId.equals(stateModel.getCurrentInteractionId())) {
-            switch (answerType) {
-                case GRAMMAR -> grammarAnswerVM.displayCompletedAnswer();
-                case AI_1 -> ai1AnswerVM.displayCompletedAnswer();
-                case AI_2 -> ai2AnswerVM.displayCompletedAnswer();
-                case AI_3 -> ai3AnswerVM.displayCompletedAnswer();
-            }
+            answerVMs.get(answerType).displayCompletedAnswer();
         }
         historyVM.displayCurrentInteraction();
     }
@@ -151,12 +136,7 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
         if (!interactionId.equals(stateModel.getCurrentInteractionId())) {
             return;
         }
-        switch (answerType) {
-            case GRAMMAR -> grammarAnswerVM.displayPartialAnswer(html);
-            case AI_1 -> ai1AnswerVM.displayPartialAnswer(html);
-            case AI_2 -> ai2AnswerVM.displayPartialAnswer(html);
-            case AI_3 -> ai3AnswerVM.displayPartialAnswer(html);
-        }
+        answerVMs.get(answerType).displayPartialAnswer(html);
     }
 
     @Override
@@ -166,10 +146,7 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
             stateModel.chooseFirstInteractionAsCurrent();
         }
         historyVM.displayCurrentInteraction();
-        grammarAnswerVM.displayCurrentAnswer();
-        ai1AnswerVM.displayCurrentAnswer();
-        ai2AnswerVM.displayCurrentAnswer();
-        ai3AnswerVM.displayCurrentAnswer();
+        answerVMs.values().forEach(AnswerVmMediator::displayCurrentAnswer);
     }
 
     @Override
@@ -179,10 +156,7 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
         questionVM.displayCurrentInteraction();
         topicVM.updateComboBoxItems();
         topicVM.updateComboBoxSelectedItemFromCurrentInteraction();
-        grammarAnswerVM.displayCurrentAnswer();
-        ai1AnswerVM.displayCurrentAnswer();
-        ai2AnswerVM.displayCurrentAnswer();
-        ai3AnswerVM.displayCurrentAnswer();
+        answerVMs.values().forEach(AnswerVmMediator::displayCurrentAnswer);
     }
 
     @Override
@@ -343,8 +317,20 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
     }
 
     @Override
-    public String getAnswerCaption(AnswerType answerType) {
-        return providerSelection.getProvider(answerType).caption();
+    public AiProvider getAnswerProvider(AnswerType answerType) {
+        return providerSelection.getProvider(answerType);
+    }
+
+    @Override
+    public List<AiProvider> getAvailableProviders() {
+        return providerSelection.getAvailableProviders();
+    }
+
+    @Override
+    public void setAnswerProvider(AnswerType answerType, AiProvider provider) {
+        log.trace("setAnswerProvider: {} -> {}", answerType, provider);
+        providerSelection.setProvider(answerType, provider);
+        answerVMs.get(answerType).refreshProvider();
     }
 
     @Override
@@ -363,10 +349,7 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
     public InteractionId createInteraction(InteractionType interactionType, InteractionId parentInteractionId) {
         var interaction = stateModel.createInteraction(interactionType, parentInteractionId);
         topicVM.updateComboBoxItems();
-        grammarAnswerVM.displayCurrentAnswer();
-        ai1AnswerVM.displayCurrentAnswer();
-        ai2AnswerVM.displayCurrentAnswer();
-        ai3AnswerVM.displayCurrentAnswer();
+        answerVMs.values().forEach(AnswerVmMediator::displayCurrentAnswer);
         return interaction;
     }
 

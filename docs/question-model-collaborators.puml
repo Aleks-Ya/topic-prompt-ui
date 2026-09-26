@@ -21,6 +21,8 @@ interface AiApi {
 }
 interface AiProviderSelectionModel {
     getProvider()
+    setProvider()
+    getAvailableProviders()
 }
 interface SoundService {
     beenOnAnswer()

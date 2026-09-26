@@ -10,13 +10,13 @@ import topicpromptui.ui.model.clipboard.ClipboardModel;
 import topicpromptui.ui.model.file.FileModelMock;
 import topicpromptui.ui.model.state.StateModel;
 import topicpromptui.ui.model.storage.StorageModel;
+import topicpromptui.core.config.ConfigModel;
+import topicpromptui.core.domain.AiProvider;
+import topicpromptui.core.domain.AnswerType;
 import topicpromptui.core.domain.Topic;
 import topicpromptui.ui.view.TopicPromptUiApplication;
 import topicpromptui.ui.viewmodel.InteractionItem;
-import topicpromptui.ui.viewmodel.answer.AnswerVmMediator;
-import topicpromptui.ui.viewmodel.answer.AnswerVmModule;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
+import topicpromptui.ui.viewmodel.mediator.AnswerMediator;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -34,6 +34,8 @@ import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public abstract class BaseTopicPromptUiTest extends ApplicationTest {
@@ -44,16 +46,18 @@ public abstract class BaseTopicPromptUiTest extends ApplicationTest {
     protected final MockXaiApi xaiApi = app.getGuiceContext().getInstance(MockXaiApi.class);
     protected final MockClaudeApi claudeApi = app.getGuiceContext().getInstance(MockClaudeApi.class);
     protected final AiProviderSelectionModel providerSelection = app.getGuiceContext().getInstance(AiProviderSelectionModel.class);
+    protected final ConfigModel configModel = app.getGuiceContext().getInstance(ConfigModel.class);
     protected final StorageModel storage = app.getGuiceContext().getInstance(StorageModel.class);
     protected final ClipboardModel clipboardModel = app.getGuiceContext().getInstance(ClipboardModel.class);
     protected final FileModelMock fileModel = app.getGuiceContext().getInstance(FileModelMock.class);
     private final HistoryInfo history = new HistoryInfo();
     private final TopicInfo topic = new TopicInfo();
     private final QuestionInfo question = new QuestionInfo();
-    private final AnswerInfo answerGrammar = new AnswerInfo("#grammarAnswer");
-    private final AnswerInfo answerAi1 = new AnswerInfo("#ai1Answer");
-    private final AnswerInfo answerAi2 = new AnswerInfo("#ai2Answer");
-    private final AnswerInfo answerAi3 = new AnswerInfo("#ai3Answer");
+    private final Map<AnswerType, AnswerInfo> answers = new EnumMap<>(Map.of(
+            AnswerType.GRAMMAR, new AnswerInfo("#grammarAnswer"),
+            AnswerType.AI_1, new AnswerInfo("#ai1Answer"),
+            AnswerType.AI_2, new AnswerInfo("#ai2Answer"),
+            AnswerType.AI_3, new AnswerInfo("#ai3Answer")));
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -76,51 +80,31 @@ public abstract class BaseTopicPromptUiTest extends ApplicationTest {
         return question;
     }
 
+    /** Keyed access, so an assertion over all four panes can loop instead of repeating itself. */
+    protected AnswerInfo answer(AnswerType answerType) {
+        return answers.get(answerType);
+    }
+
     protected AnswerInfo grammarAnswer() {
-        return answerGrammar;
+        return answer(AnswerType.GRAMMAR);
     }
 
     protected AnswerInfo ai1Answer() {
-        return answerAi1;
+        return answer(AnswerType.AI_1);
     }
 
     protected AnswerInfo ai2Answer() {
-        return answerAi2;
+        return answer(AnswerType.AI_2);
     }
 
     protected AnswerInfo ai3Answer() {
-        return answerAi3;
+        return answer(AnswerType.AI_3);
     }
 
-    /** Applies a provider selection change to the panes' button captions, as the future UI wiring would. */
-    protected void refreshAnswerCaptions() {
-        var answerVms = new AnswerVmHolder();
-        app.getGuiceContext().injectMembers(answerVms);
-        interact(() -> {
-            answerVms.grammarAnswerVm.refreshCaption();
-            answerVms.ai1AnswerVm.refreshCaption();
-            answerVms.ai2AnswerVm.refreshCaption();
-            answerVms.ai3AnswerVm.refreshCaption();
-        });
-    }
-
-    /**
-     * The pane view models are only bound with {@code @Named} qualifiers, and Ignite's GuiceContext
-     * resolves by {@code Class} alone, so they are reached through member injection instead.
-     */
-    public static class AnswerVmHolder {
-        @Inject
-        @Named(AnswerVmModule.GRAMMAR)
-        public AnswerVmMediator grammarAnswerVm;
-        @Inject
-        @Named(AnswerVmModule.AI_1)
-        public AnswerVmMediator ai1AnswerVm;
-        @Inject
-        @Named(AnswerVmModule.AI_2)
-        public AnswerVmMediator ai2AnswerVm;
-        @Inject
-        @Named(AnswerVmModule.AI_3)
-        public AnswerVmMediator ai3AnswerVm;
+    /** Selects a provider for a pane through the same mediator seam the provider ComboBox uses. */
+    protected void selectProvider(AnswerType answerType, AiProvider provider) {
+        var mediator = app.getGuiceContext().getInstance(AnswerMediator.class);
+        interact(() -> mediator.setAnswerProvider(answerType, provider));
     }
 
     private String extractWebViewContent(WebView webView) {

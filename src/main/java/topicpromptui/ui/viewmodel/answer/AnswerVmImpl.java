@@ -7,6 +7,7 @@ import topicpromptui.core.domain.AnswerType;
 import topicpromptui.core.domain.Interaction;
 import topicpromptui.ui.viewmodel.mediator.AnswerMediator;
 import jakarta.inject.Inject;
+import javafx.collections.FXCollections;
 import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -153,14 +154,19 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
     public void initialize() {
         Mdc.run(answerType.toString(), () -> {
             log.trace("displayInitialState");
-            refreshCaption();
+            refreshProvider();
             vmProperties.copyButtonText.setValue(vmProperties.copyButtonText.getValue() + " _" + hotkeyDigitMap.get(answerType));
         });
     }
 
     @Override
-    public void refreshCaption() {
-        vmProperties.answerButtonText.setValue(mediator.getAnswerCaption(answerType));
+    public void refreshProvider() {
+        var provider = mediator.getAnswerProvider(answerType);
+        vmProperties.providerCbItems.setValue(FXCollections.observableArrayList(mediator.getAvailableProviders()));
+        vmProperties.providerCbValue.setValue(provider);
+        // Temporary: the provider ComboBox will display the name itself and this button will become a
+        // static Answer Info trigger, taking answerButtonText and this colon with it.
+        vmProperties.answerButtonText.setValue(provider.displayName() + ":");
     }
 
     @Override
