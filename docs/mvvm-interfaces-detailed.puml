@@ -3,6 +3,7 @@ hide empty members
 
 package model{
     class StateModel
+    class AiProviderSelectionModel
     class ClipboardModel
     class FileModel
     class QuestionModel
@@ -80,8 +81,10 @@ TopicPromptUiController --> TopicPromptUiVmController
 
 StateModel --> StorageModel
 QuestionModel --> StorageModel
+QuestionModel --> AiProviderSelectionModel
 
 ViewModelMediatorImpl --> StateModel
+ViewModelMediatorImpl --> AiProviderSelectionModel
 ViewModelMediatorImpl --> QuestionModel
 ViewModelMediatorImpl --> ClipboardModel
 ViewModelMediatorImpl --> FileModel

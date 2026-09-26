@@ -1,9 +1,11 @@
 package topicpromptui;
 
 import com.google.inject.util.Modules;
+import topicpromptui.core.ai.claude.MockClaudeApi;
 import topicpromptui.core.ai.xai.MockXaiApi;
 import topicpromptui.core.ai.gcp.MockGcpApi;
 import topicpromptui.core.ai.openai.MockOpenAiApi;
+import topicpromptui.ui.model.aiprovider.AiProviderSelectionModel;
 import topicpromptui.ui.model.clipboard.ClipboardModel;
 import topicpromptui.ui.model.file.FileModelMock;
 import topicpromptui.ui.model.state.StateModel;
@@ -11,6 +13,10 @@ import topicpromptui.ui.model.storage.StorageModel;
 import topicpromptui.core.domain.Topic;
 import topicpromptui.ui.view.TopicPromptUiApplication;
 import topicpromptui.ui.viewmodel.InteractionItem;
+import topicpromptui.ui.viewmodel.answer.AnswerVmMediator;
+import topicpromptui.ui.viewmodel.answer.AnswerVmModule;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -36,6 +42,8 @@ public abstract class BaseTopicPromptUiTest extends ApplicationTest {
     protected final MockOpenAiApi gptApi = app.getGuiceContext().getInstance(MockOpenAiApi.class);
     protected final MockGcpApi gcpApi = app.getGuiceContext().getInstance(MockGcpApi.class);
     protected final MockXaiApi xaiApi = app.getGuiceContext().getInstance(MockXaiApi.class);
+    protected final MockClaudeApi claudeApi = app.getGuiceContext().getInstance(MockClaudeApi.class);
+    protected final AiProviderSelectionModel providerSelection = app.getGuiceContext().getInstance(AiProviderSelectionModel.class);
     protected final StorageModel storage = app.getGuiceContext().getInstance(StorageModel.class);
     protected final ClipboardModel clipboardModel = app.getGuiceContext().getInstance(ClipboardModel.class);
     protected final FileModelMock fileModel = app.getGuiceContext().getInstance(FileModelMock.class);
@@ -82,6 +90,37 @@ public abstract class BaseTopicPromptUiTest extends ApplicationTest {
 
     protected AnswerInfo ai3Answer() {
         return answerAi3;
+    }
+
+    /** Applies a provider selection change to the panes' button captions, as the future UI wiring would. */
+    protected void refreshAnswerCaptions() {
+        var answerVms = new AnswerVmHolder();
+        app.getGuiceContext().injectMembers(answerVms);
+        interact(() -> {
+            answerVms.grammarAnswerVm.refreshCaption();
+            answerVms.ai1AnswerVm.refreshCaption();
+            answerVms.ai2AnswerVm.refreshCaption();
+            answerVms.ai3AnswerVm.refreshCaption();
+        });
+    }
+
+    /**
+     * The pane view models are only bound with {@code @Named} qualifiers, and Ignite's GuiceContext
+     * resolves by {@code Class} alone, so they are reached through member injection instead.
+     */
+    public static class AnswerVmHolder {
+        @Inject
+        @Named(AnswerVmModule.GRAMMAR)
+        public AnswerVmMediator grammarAnswerVm;
+        @Inject
+        @Named(AnswerVmModule.AI_1)
+        public AnswerVmMediator ai1AnswerVm;
+        @Inject
+        @Named(AnswerVmModule.AI_2)
+        public AnswerVmMediator ai2AnswerVm;
+        @Inject
+        @Named(AnswerVmModule.AI_3)
+        public AnswerVmMediator ai3AnswerVm;
     }
 
     private String extractWebViewContent(WebView webView) {

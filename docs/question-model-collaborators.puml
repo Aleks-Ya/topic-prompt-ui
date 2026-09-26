@@ -19,6 +19,9 @@ interface PromptFactory {
 interface AiApi {
     send()
 }
+interface AiProviderSelectionModel {
+    getProvider()
+}
 interface SoundService {
     beenOnAnswer()
 }
@@ -34,7 +37,8 @@ interface FollowUpHistoryBuilder {
 
 QuestionModel --> StorageModel
 QuestionModel --> PromptFactory
-QuestionModel "1" --> "*" AiApi: Map<AiProvider, AiApi>
+QuestionModel --> AiProviderSelectionModel: which provider backs the pane
+QuestionModel "1" --> "*" AiApi: Map<AiProvider, AiApi>,\nlooked up by the selected provider
 QuestionModel --> SoundService
 QuestionModel --> FormatConverter
 QuestionModel --> GrammarDiffMarker: GRAMMAR only

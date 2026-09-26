@@ -1,4 +1,4 @@
-package topicpromptui.ui.model;
+package topicpromptui.ui.model.aiprovider;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Key;
@@ -14,8 +14,11 @@ import topicpromptui.core.domain.AiProvider;
  * bindings rather than replacing them, so the {@code *ApiIT}s and {@code TestRootModule} keep
  * resolving providers by name (and test mocks bound over those names flow through this map too).
  * <p>
- * Lives in {@code ui.model} rather than in the {@code core.ai.*} provider modules because
+ * Lives in {@code ui.model.aiprovider} rather than in the {@code core.ai.*} provider modules because
  * {@code core.ai} deliberately does not depend on {@code core.domain}, where {@link AiProvider} lives.
+ * <p>
+ * The table says which providers exist; {@link AiProviderSelectionModel} says which one backs each
+ * answer pane, and validates a selection against this table's keys.
  */
 public class AiProviderModule extends AbstractModule {
     @Override

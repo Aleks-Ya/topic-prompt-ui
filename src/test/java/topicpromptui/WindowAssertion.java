@@ -48,6 +48,10 @@ public class WindowAssertion {
     private String questionStyle;
     private Boolean isEnteringNewQuestion;
     private String modelEditedQuestion;
+    // Literals, not AnswerType/AiProvider.caption(), so the assertion independently verifies that the
+    // caption of the selected provider reaches the button. These are the defaults; a test that selects
+    // another provider for a pane overrides them with answerCaptions(...).
+    private String[] answerCaptions = {"Grammar:", "OpenAI:", "Grok:", "Gemini:"};
     private final AnswerInfo grammarAnswer = new AnswerInfo();
     private final AnswerInfo ai1Answer = new AnswerInfo();
     private final AnswerInfo ai2Answer = new AnswerInfo();
@@ -197,6 +201,11 @@ public class WindowAssertion {
         return ai3Answer;
     }
 
+    public WindowAssertion answerCaptions(String grammar, String ai1, String ai2, String ai3) {
+        answerCaptions = new String[]{grammar, ai1, ai2, ai3};
+        return this;
+    }
+
     public WindowAssertion answerCircleColors(Color answerGrammarCircleColor, Color answerAi1CircleColor,
                                               Color answerAi2CircleColor, Color answerAi3CircleColor) {
         grammarA().circleColor(answerGrammarCircleColor);
@@ -289,7 +298,7 @@ public class WindowAssertion {
 
         {
             var answer = app.grammarAnswer();
-            soft.assertThat(answer.button().getText()).as(descr("Answer/Grammar/Button/Text")).isEqualTo("Grammar:");
+            soft.assertThat(answer.button().getText()).as(descr("Answer/Grammar/Button/Text")).isEqualTo(answerCaptions[0]);
             soft.assertThat(answer.copyButton().getText()).as(descr("Answer/Grammar/CopyButton/Text")).isEqualTo("Copy _1");
             soft.assertThat(answer.regenerateButton().getText()).as(descr("Answer/Grammar/RegenerateButton/Text")).isEqualTo("⟳");
             soft.assertThat(answer.expandButton().getText()).as(descr("Answer/Grammar/ExpandButton/Text")).isEqualTo("⛶");
@@ -299,7 +308,7 @@ public class WindowAssertion {
 
         {
             var answer = app.ai1Answer();
-            soft.assertThat(answer.button().getText()).as(descr("Answer/Ai1/Button/Text")).isEqualTo("OpenAI:");
+            soft.assertThat(answer.button().getText()).as(descr("Answer/Ai1/Button/Text")).isEqualTo(answerCaptions[1]);
             soft.assertThat(answer.copyButton().getText()).as(descr("Answer/Ai1/CopyButton/Text")).isEqualTo("Copy _2");
             soft.assertThat(answer.regenerateButton().getText()).as(descr("Answer/Ai1/RegenerateButton/Text")).isEqualTo("⟳");
             soft.assertThat(answer.expandButton().getText()).as(descr("Answer/Ai1/ExpandButton/Text")).isEqualTo("⛶");
@@ -309,7 +318,7 @@ public class WindowAssertion {
 
         {
             var answer = app.ai2Answer();
-            soft.assertThat(answer.button().getText()).as(descr("Answer/Ai2/Button/Text")).isEqualTo("Grok:");
+            soft.assertThat(answer.button().getText()).as(descr("Answer/Ai2/Button/Text")).isEqualTo(answerCaptions[2]);
             soft.assertThat(answer.copyButton().getText()).as(descr("Answer/Ai2/CopyButton/Text")).isEqualTo("Copy _3");
             soft.assertThat(answer.regenerateButton().getText()).as(descr("Answer/Ai2/RegenerateButton/Text")).isEqualTo("⟳");
             soft.assertThat(answer.expandButton().getText()).as(descr("Answer/Ai2/ExpandButton/Text")).isEqualTo("⛶");
@@ -319,7 +328,7 @@ public class WindowAssertion {
 
         {
             var answer = app.ai3Answer();
-            soft.assertThat(answer.button().getText()).as(descr("Answer/Ai3/Button/Text")).isEqualTo("Gemini:");
+            soft.assertThat(answer.button().getText()).as(descr("Answer/Ai3/Button/Text")).isEqualTo(answerCaptions[3]);
             soft.assertThat(answer.copyButton().getText()).as(descr("Answer/Ai3/CopyButton/Text")).isEqualTo("Copy _4");
             soft.assertThat(answer.regenerateButton().getText()).as(descr("Answer/Ai3/RegenerateButton/Text")).isEqualTo("⟳");
             soft.assertThat(answer.expandButton().getText()).as(descr("Answer/Ai3/ExpandButton/Text")).isEqualTo("⛶");

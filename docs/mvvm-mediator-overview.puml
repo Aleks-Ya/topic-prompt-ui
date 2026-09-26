@@ -24,6 +24,7 @@ package viewmodel {
 
 package model{
     class StateModel
+    class AiProviderSelectionModel
     class ClipboardModel
     class FileModel
     class QuestionModel
@@ -53,6 +54,7 @@ StateModel --> StorageModel
 QuestionModel --> StorageModel
 
 ViewModelMediator --> StateModel
+ViewModelMediator --> AiProviderSelectionModel
 ViewModelMediator --> QuestionModel
 ViewModelMediator --> ClipboardModel
 ViewModelMediator --> FileModel

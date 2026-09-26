@@ -25,6 +25,7 @@ module TopicPromptUi.main {
     exports topicpromptui;
     exports topicpromptui.ui.view;
     exports topicpromptui.ui.model;
+    exports topicpromptui.ui.model.aiprovider;
     exports topicpromptui.ui.model.storage;
     exports topicpromptui.ui.model.question;
     exports topicpromptui.core.ai.openai;
@@ -38,6 +39,7 @@ module TopicPromptUi.main {
     exports topicpromptui.ui.model.clipboard;
     exports topicpromptui.core.util;
 
+    opens topicpromptui.ui.model.aiprovider to com.google.guice;
     opens topicpromptui.ui.model.storage to com.google.guice;
     opens topicpromptui.ui.model.question to com.google.gson, com.google.guice;
     opens topicpromptui.core.ai.openai to com.google.gson, com.google.guice;

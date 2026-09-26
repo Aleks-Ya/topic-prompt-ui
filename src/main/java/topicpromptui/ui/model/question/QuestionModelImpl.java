@@ -16,6 +16,7 @@ import topicpromptui.core.domain.InteractionId;
 import topicpromptui.core.prompt.PromptFactory;
 import topicpromptui.core.sound.SoundService;
 import topicpromptui.core.util.Mdc;
+import topicpromptui.ui.model.aiprovider.AiProviderSelectionModel;
 import topicpromptui.ui.model.storage.StorageModel;
 
 import java.time.Duration;
@@ -52,6 +53,7 @@ class QuestionModelImpl implements QuestionModel {
     private final StorageModel storage;
     private final PromptFactory promptFactory;
     private final Map<AiProvider, AiApi> apis;
+    private final AiProviderSelectionModel providerSelection;
     private final SoundService soundService;
     private final FormatConverter formatConverter;
     private final GrammarDiffMarker grammarDiffMarker;
@@ -59,13 +61,14 @@ class QuestionModelImpl implements QuestionModel {
 
     @Inject
     QuestionModelImpl(StorageModel storage, PromptFactory promptFactory,
-                      Map<AiProvider, AiApi> apis,
+                      Map<AiProvider, AiApi> apis, AiProviderSelectionModel providerSelection,
                       SoundService soundService, FormatConverter formatConverter,
                       GrammarDiffMarker grammarDiffMarker,
                       FollowUpHistoryBuilder followUpHistoryBuilder) {
         this.storage = storage;
         this.promptFactory = promptFactory;
         this.apis = apis;
+        this.providerSelection = providerSelection;
         this.soundService = soundService;
         this.formatConverter = formatConverter;
         this.grammarDiffMarker = grammarDiffMarker;
@@ -102,7 +105,7 @@ class QuestionModelImpl implements QuestionModel {
             }
             var turns = new ArrayList<>(followUpHistoryBuilder.buildHistory(parentInteractionId, answerType));
             turns.add(new ConversationTurn(USER, prompt));
-            return apis.get(answerType.provider()).send(systemPrompt, turns, onTextDelta);
+            return apis.get(providerSelection.getProvider(answerType)).send(systemPrompt, turns, onTextDelta);
         }, UnaryOperator.identity(), "The follow-up answer request finished.");
     }
 
@@ -134,7 +137,7 @@ class QuestionModelImpl implements QuestionModel {
                     ? md -> grammarDiffMarker.markChanges(interaction.question(), md)
                     : UnaryOperator.identity();
             sendAsync(interactionId, answerType, callback, progressHtml,
-                    onTextDelta -> apis.get(answerType.provider()).send(systemPrompt, turns, onTextDelta),
+                    onTextDelta -> apis.get(providerSelection.getProvider(answerType)).send(systemPrompt, turns, onTextDelta),
                     postProcessMd, "The short answer request finished.");
         } else {
             log.info("The short answer was skipped.");

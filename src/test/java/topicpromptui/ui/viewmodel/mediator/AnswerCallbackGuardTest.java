@@ -1,6 +1,7 @@
 package topicpromptui.ui.viewmodel.mediator;
 
 import topicpromptui.core.domain.InteractionId;
+import topicpromptui.ui.model.aiprovider.AiProviderSelectionModel;
 import topicpromptui.ui.model.clipboard.ClipboardModel;
 import topicpromptui.ui.model.file.FileModel;
 import topicpromptui.ui.model.question.QuestionModel;
@@ -40,7 +41,7 @@ class AnswerCallbackGuardTest {
     private final MediatorImpl mediator = new MediatorImpl(grammarAnswerVM, openAiAnswerVM, grokAnswerVM,
             gcpAnswerVM, historyVM, mock(QuestionVmMediator.class), mock(TopicVmMediator.class),
             mock(TopicPromptUiVmMediator.class), stateModel, questionModel,
-            mock(ClipboardModel.class), mock(FileModel.class));
+            mock(ClipboardModel.class), mock(FileModel.class), mock(AiProviderSelectionModel.class));
 
     private final InteractionId streamedId = new InteractionId(1L);
     private final InteractionId otherId = new InteractionId(2L);

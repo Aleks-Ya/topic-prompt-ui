@@ -1,6 +1,8 @@
 package topicpromptui.ui.model;
 
 import com.google.inject.AbstractModule;
+import topicpromptui.ui.model.aiprovider.AiProviderModule;
+import topicpromptui.ui.model.aiprovider.AiProviderSelectionModule;
 import topicpromptui.ui.model.clipboard.ClipboardModelModule;
 import topicpromptui.core.config.ConfigurationModule;
 import topicpromptui.ui.model.file.FileModelModule;
@@ -23,6 +25,7 @@ public class ModelModule extends AbstractModule {
         install(new ClaudeModule());
         install(new XaiModule());
         install(new AiProviderModule());
+        install(new AiProviderSelectionModule());
         install(new QuestionModule());
         install(new StorageModule());
         install(new StateModelModule());

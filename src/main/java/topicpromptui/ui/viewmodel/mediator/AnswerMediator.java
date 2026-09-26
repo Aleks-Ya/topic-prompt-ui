@@ -23,6 +23,9 @@ public interface AnswerMediator {
 
     void toggleExpandedAnswer(AnswerType answerType);
 
+    /** Caption for this pane's answer button: the display name of the provider selected for the slot. */
+    String getAnswerCaption(AnswerType answerType);
+
     void openInteractionFile(InteractionId interactionId);
 
     void openUrl(String url);

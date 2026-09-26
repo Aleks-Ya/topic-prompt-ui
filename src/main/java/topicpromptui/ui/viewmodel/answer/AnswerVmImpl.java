@@ -153,9 +153,14 @@ class AnswerVmImpl implements AnswerVmController, AnswerVmMediator {
     public void initialize() {
         Mdc.run(answerType.toString(), () -> {
             log.trace("displayInitialState");
-            vmProperties.answerButtonText.setValue(answerType.caption());
+            refreshCaption();
             vmProperties.copyButtonText.setValue(vmProperties.copyButtonText.getValue() + " _" + hotkeyDigitMap.get(answerType));
         });
+    }
+
+    @Override
+    public void refreshCaption() {
+        vmProperties.answerButtonText.setValue(mediator.getAnswerCaption(answerType));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package topicpromptui.ui.viewmodel.mediator;
 
+import topicpromptui.ui.model.aiprovider.AiProviderSelectionModel;
 import topicpromptui.ui.model.clipboard.ClipboardModel;
 import topicpromptui.ui.model.file.FileModel;
 import topicpromptui.ui.model.question.QuestionModel;
@@ -65,6 +66,7 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
     private final QuestionModel questionModel;
     private final ClipboardModel clipboardModel;
     private final FileModel fileModel;
+    private final AiProviderSelectionModel providerSelection;
 
     @Inject
     MediatorImpl(@Named(AnswerVmModule.GRAMMAR) AnswerVmMediator grammarAnswerVM,
@@ -78,7 +80,8 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
                  StateModel stateModel,
                  QuestionModel questionModel,
                  ClipboardModel clipboardModel,
-                 FileModel fileModel) {
+                 FileModel fileModel,
+                 AiProviderSelectionModel providerSelection) {
         this.grammarAnswerVM = grammarAnswerVM;
         this.ai1AnswerVM = ai1AnswerVM;
         this.ai2AnswerVM = ai2AnswerVM;
@@ -91,6 +94,7 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
         this.questionModel = questionModel;
         this.clipboardModel = clipboardModel;
         this.fileModel = fileModel;
+        this.providerSelection = providerSelection;
     }
 
     @Override
@@ -336,6 +340,11 @@ class MediatorImpl implements HistoryMediator, QuestionMediator, TopicMediator, 
     public void toggleExpandedAnswer(AnswerType answerType) {
         log.trace("toggleExpandedAnswer: {}", answerType);
         uiVM.toggleExpandedAnswer(answerType);
+    }
+
+    @Override
+    public String getAnswerCaption(AnswerType answerType) {
+        return providerSelection.getProvider(answerType).caption();
     }
 
     @Override
