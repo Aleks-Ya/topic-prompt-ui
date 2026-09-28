@@ -1,6 +1,7 @@
 package topicpromptui.ui.model.question;
 
 import com.github.difflib.DiffUtils;
+import com.github.difflib.patch.AbstractDelta;
 import com.github.difflib.patch.Chunk;
 import jakarta.inject.Singleton;
 
@@ -20,16 +21,26 @@ class GrammarDiffMarker {
             return correctedMd;
         }
         var corrected = correctedMd.replace("**", "");
-        if (CORRECT_SENTINEL.equals(corrected.trim())) {
-            return corrected;
+        if (isCorrectSentinel(corrected)) {
+            return CORRECT_SENTINEL;
         }
         var correctedWords = split(corrected);
-        var boldIndexes = boldIndexes(split(question), correctedWords);
-        return render(corrected, correctedWords, boldIndexes);
+        var deltas = DiffUtils.diff(texts(split(question)), texts(correctedWords)).getDeltas();
+        if (deltas.isEmpty()) {
+            return CORRECT_SENTINEL;
+        }
+        return render(corrected, correctedWords, boldIndexes(deltas, correctedWords.size()));
     }
 
-    private Set<Integer> boldIndexes(List<Word> questionWords, List<Word> correctedWords) {
-        var deltas = DiffUtils.diff(texts(questionWords), texts(correctedWords)).getDeltas();
+    private boolean isCorrectSentinel(String corrected) {
+        var trimmed = corrected.trim();
+        if (trimmed.endsWith(".")) {
+            trimmed = trimmed.substring(0, trimmed.length() - 1).trim();
+        }
+        return CORRECT_SENTINEL.equalsIgnoreCase(trimmed);
+    }
+
+    private Set<Integer> boldIndexes(List<AbstractDelta<String>> deltas, int correctedWordCount) {
         var boldIndexes = new HashSet<Integer>();
         for (var delta : deltas) {
             Chunk<String> target = delta.getTarget();
@@ -40,8 +51,8 @@ class GrammarDiffMarker {
                     }
                 }
                 case DELETE -> {
-                    addIfPresent(boldIndexes, target.getPosition() - 1, correctedWords.size());
-                    addIfPresent(boldIndexes, target.getPosition(), correctedWords.size());
+                    addIfPresent(boldIndexes, target.getPosition() - 1, correctedWordCount);
+                    addIfPresent(boldIndexes, target.getPosition(), correctedWordCount);
                 }
                 case EQUAL -> { /* not produced by DiffUtils.diff */ }
             }

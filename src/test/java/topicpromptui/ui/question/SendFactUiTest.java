@@ -11,6 +11,7 @@ import static topicpromptui.ui.viewmodel.question.QuestionStyle.QUESTION_STYLE_E
 import static java.time.Duration.ZERO;
 import static javafx.scene.paint.Color.GREEN;
 import static javafx.scene.paint.Color.RED;
+import static topicpromptui.ui.TestingData.GRAMMAR_CORRECT;
 
 class SendFactUiTest extends BaseTopicPromptUiTest {
     @Override
@@ -69,7 +70,7 @@ class SendFactUiTest extends BaseTopicPromptUiTest {
                 .questionStyle(QUESTION_STYLE_EDITED)
                 .modelEditedQuestion("Question 4")
                 .modelIsEnteringNewQuestion(false)
-                .grammarA().text("<p>Question 4</p>\n")
+                .grammarA().text("<p>" + GRAMMAR_CORRECT + "</p>\n")
                 .ai1A().text("<p>Fact answer 4</p>\n")
                 .ai2A().text("<p>Fact answer 4</p>\n")
                 .ai3A().text("<p>Fact answer 4</p>\n")

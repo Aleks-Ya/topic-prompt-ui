@@ -55,8 +55,9 @@ class MultiLineQuestionUiTest extends BaseTopicPromptUiTest {
         overWrite(questionLine1).write("\n").write(questionLine2).write("\n").write(questionLine3);
         var questionText = questionLine1 + "\n" + questionLine2 + "\n" + questionLine3;
 
+        var correctedText = questionLine1 + "\n" + "Question line two" + "\n" + questionLine3;
         gptApi.clear()
-                .putGrammarResponse(questionText, ZERO)
+                .putGrammarResponse(correctedText, ZERO)
                 .putOpenAiResponse(I1.AI_1_HTML, ZERO);
         xaiApi.clear().putGrokResponse(I1.AI_2_HTML, ZERO);
         gcpApi.clear().putGcpResponse(I1.AI_3_HTML, ZERO);
@@ -80,7 +81,9 @@ class MultiLineQuestionUiTest extends BaseTopicPromptUiTest {
                 .questionStyle(QUESTION_STYLE_EMPTY)
                 .modelEditedQuestion(questionText)
                 .modelIsEnteringNewQuestion(false)
-                .grammarA().text("<p>" + questionText + "</p>\n")
+                .grammarA().text("<p>" + questionLine1 + "\n"
+                        + "Question line <strong>two</strong>\n"
+                        + questionLine3 + "</p>\n")
                 .ai1A().text(I1.EXP_AI_1_HTML_BODY)
                 .ai2A().text(I1.EXP_AI_2_HTML_BODY)
                 .ai3A().text(I1.EXP_AI_3_HTML_BODY)

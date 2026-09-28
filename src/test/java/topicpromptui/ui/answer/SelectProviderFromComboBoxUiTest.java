@@ -14,6 +14,7 @@ import static topicpromptui.core.domain.AiProvider.OPEN_AI_GRAMMAR;
 import static topicpromptui.core.domain.AiProvider.XAI;
 import static topicpromptui.core.domain.AnswerType.AI_2;
 import static topicpromptui.ui.viewmodel.question.QuestionStyle.QUESTION_STYLE_EDITED;
+import static topicpromptui.ui.TestingData.GRAMMAR_CORRECT;
 
 /**
  * Picking a provider in a pane's ComboBox must route that pane's requests to it and persist the choice.
@@ -62,7 +63,7 @@ class SelectProviderFromComboBoxUiTest extends BaseTopicPromptUiTest {
                 .modelEditedQuestion("Question 2")
                 .modelIsEnteringNewQuestion(false)
                 .answerProviders(OPEN_AI_GRAMMAR, OPEN_AI, CLAUDE, GCP)
-                .grammarA().text("<p>Question 2</p>\n")
+                .grammarA().text("<p>" + GRAMMAR_CORRECT + "</p>\n")
                 .ai1A().text("<p>Fact from OpenAI</p>\n")
                 .ai2A().text("<p>Fact from Claude</p>\n")
                 .ai3A().text("<p>Fact from Gemini</p>\n")

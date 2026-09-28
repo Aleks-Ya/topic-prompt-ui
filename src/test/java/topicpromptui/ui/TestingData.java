@@ -18,6 +18,8 @@ import static topicpromptui.core.domain.AnswerType.GRAMMAR;
 import static topicpromptui.core.domain.AnswerType.AI_1;
 
 public class TestingData {
+    public static final String GRAMMAR_CORRECT = "Correct";
+
     public static class I0 {
         public static final String QUESTION = "";
         public static final String GRAMMAR_HTML = "";
@@ -42,7 +44,7 @@ public class TestingData {
         public static final String AI_3_HTML = "AI_3 answer HTML 1";
         /** What the grammar check answers when the question has no mistakes: the question itself, unchanged. */
         public static final String GRAMMAR_ANSWER = QUESTION;
-        public static final String EXP_GRAMMAR_ANSWER_BODY = wrapExpectedWebViewContent(GRAMMAR_ANSWER);
+        public static final String EXP_GRAMMAR_ANSWER_BODY = wrapExpectedWebViewContent(GRAMMAR_CORRECT);
         public static final String EXP_AI_1_HTML_BODY = wrapExpectedWebViewContent(AI_1_HTML);
         public static final String EXP_AI_2_HTML_BODY = wrapExpectedWebViewContent(AI_2_HTML);
         public static final String EXP_AI_3_HTML_BODY = wrapExpectedWebViewContent(AI_3_HTML);
@@ -64,7 +66,7 @@ public class TestingData {
         public static final String AI_3_HTML = "AI_3 answer HTML 2";
         /** What the grammar check answers when the question has no mistakes: the question itself, unchanged. */
         public static final String GRAMMAR_ANSWER = QUESTION;
-        public static final String EXP_GRAMMAR_ANSWER_BODY = wrapExpectedWebViewContent(GRAMMAR_ANSWER);
+        public static final String EXP_GRAMMAR_ANSWER_BODY = wrapExpectedWebViewContent(GRAMMAR_CORRECT);
         public static final String EXP_AI_1_HTML_BODY = wrapExpectedWebViewContent(I2.AI_1_HTML);
         public static final String EXP_AI_2_HTML_BODY = wrapExpectedWebViewContent(I2.AI_2_HTML);
         public static final String EXP_AI_3_HTML_BODY = wrapExpectedWebViewContent(I2.AI_3_HTML);
