@@ -50,7 +50,7 @@ class GrammarOpenAiApiIT {
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
                 new ModelIdGrader(
-                        "gpt-5.6-luna"),
+                        "gpt-6-luna"),
                 new ResponseTextLengthGrader(100, 1000),
                 new EffortLevelGrader("LOW"),
                 new FinishReasonGrader("completed"),
@@ -65,7 +65,7 @@ class GrammarOpenAiApiIT {
         var response = grammarApi.send(system, List.of(new ConversationTurn(USER, prompt)), NO_OP);
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
-                new ModelIdGrader("gpt-5.6-luna"),
+                new ModelIdGrader("gpt-6-luna"),
                 new ResponseTextExactGrader("Garbage collector"),
                 new EffortLevelGrader("LOW"),
                 new FinishReasonGrader("completed"),
@@ -80,7 +80,7 @@ class GrammarOpenAiApiIT {
         var response = grammarApi.send(system, List.of(new ConversationTurn(USER, prompt)), NO_OP);
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
-                new ModelIdGrader("gpt-5.6-luna"),
+                new ModelIdGrader("gpt-6-luna"),
                 new ResponseTextExactGrader("Correct"),
                 new EffortLevelGrader("LOW"),
                 new FinishReasonGrader("completed"),
@@ -96,7 +96,7 @@ class GrammarOpenAiApiIT {
         var response = grammarApi.send(system, List.of(new ConversationTurn(USER, prompt)), NO_OP);
         assertThat(Grader.combine(response,
                 new ResponseIdNotEmptyGrader(),
-                new ModelIdGrader("gpt-5.6-luna"),
+                new ModelIdGrader("gpt-6-luna"),
                 new ResponseTextExactGrader(expected),
                 new EffortLevelGrader("LOW"),
                 new FinishReasonGrader("completed"),
