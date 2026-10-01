@@ -22,7 +22,7 @@ public record InteractionItem(Topic topic, Interaction interaction) {
         if (interaction.parentInteractionId() != null) {
             typeStr = "↳ " + typeStr;
         }
-        var s = String.format("%s%s: %s", typeStr, topic.title(), interaction.question());
+        var s = typeStr + topic.title() + ": " + interaction.question();
         if (s.length() > MAX_LENGTH) {
             s = s.substring(0, MAX_LENGTH - SUFFIX.length()) + SUFFIX;
         }

@@ -7,7 +7,6 @@ import topicpromptui.ui.TestingData.I3;
 import org.junit.jupiter.api.Test;
 
 import static topicpromptui.ui.viewmodel.question.QuestionStyle.QUESTION_STYLE_EMPTY;
-import static java.lang.String.format;
 import static javafx.scene.paint.Color.GREEN;
 import static javafx.scene.paint.Color.RED;
 
@@ -45,7 +44,7 @@ class DeleteInteractionMiddleTopicFilteredUiTest extends BaseTopicPromptUiTest {
                 .answerCircleColors(GREEN, GREEN, RED, GREEN)
                 .assertApp();
 
-        clickOn(history().comboBox()).clickOn(format("[Q] %s: %s", I2.TOPIC.title(), I2.QUESTION));
+        clickOn(history().comboBox()).clickOn("[Q] " + I2.TOPIC.title() + ": " + I2.QUESTION);
         clickOn(topic().filterHistoryCheckBox());
 
         assertion()

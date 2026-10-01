@@ -382,7 +382,7 @@ class SequentialRequestsUiTest extends BaseTopicPromptUiTest {
                 .answerCircleColors(GREEN, GREEN, GREEN, GREEN)
                 .assertApp();
 
-        clickOn(history().comboBox()).clickOn(String.format("[Q] %s: %s", I1.TOPIC.title(), I1.QUESTION));
+        clickOn(history().comboBox()).clickOn("[Q] " + I1.TOPIC.title() + ": " + I1.QUESTION);
         assertion()
                 .focus(history().comboBox())
                 .historySize(2, 2)

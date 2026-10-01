@@ -177,7 +177,7 @@ class HotKeysUiTest extends BaseTopicPromptUiTest {
 
     @Test
     void selectNextInteractionByCtrlAltUp() {
-        clickOn(history().comboBox()).clickOn(String.format("[Q] %s: %s", I1.TOPIC.title(), I1.QUESTION));
+        clickOn(history().comboBox()).clickOn("[Q] " + I1.TOPIC.title() + ": " + I1.QUESTION);
         assertThat(history().comboBox().getSelectionModel().getSelectedItem().interaction()).isEqualTo(I1.INTERACTION);
 
         press(CONTROL, ALT, UP).release(UP, ALT, CONTROL);
@@ -192,7 +192,7 @@ class HotKeysUiTest extends BaseTopicPromptUiTest {
 
     @Test
     void selectPreviousInteractionByCtrlAltDown() {
-        clickOn(history().comboBox()).clickOn(String.format("[Q] %s: %s", I3.TOPIC.title(), I3.QUESTION));
+        clickOn(history().comboBox()).clickOn("[Q] " + I3.TOPIC.title() + ": " + I3.QUESTION);
         assertThat(history().comboBox().getSelectionModel().getSelectedItem().interaction()).isEqualTo(I3.INTERACTION);
 
         press(CONTROL, ALT, DOWN).release(DOWN, ALT, CONTROL);
@@ -207,7 +207,7 @@ class HotKeysUiTest extends BaseTopicPromptUiTest {
 
     @Test
     void selectPreviousInteractionByCtrlAltDown_FocusOnWebView() {
-        clickOn(history().comboBox()).clickOn(String.format("[Q] %s: %s", I3.TOPIC.title(), I3.QUESTION));
+        clickOn(history().comboBox()).clickOn("[Q] " + I3.TOPIC.title() + ": " + I3.QUESTION);
         clickOn(ai2Answer().webView());
         assertThat(history().comboBox().getSelectionModel().getSelectedItem().interaction()).isEqualTo(I3.INTERACTION);
 
@@ -217,7 +217,7 @@ class HotKeysUiTest extends BaseTopicPromptUiTest {
 
     @Test
     void selectNextInteractionByCtrlAltUp_FocusOnWebView() {
-        clickOn(history().comboBox()).clickOn(String.format("[Q] %s: %s", I2.TOPIC.title(), I2.QUESTION));
+        clickOn(history().comboBox()).clickOn("[Q] " + I2.TOPIC.title() + ": " + I2.QUESTION);
         clickOn(ai2Answer().webView());
         scroll(10, VerticalDirection.DOWN);
         assertThat(history().comboBox().getSelectionModel().getSelectedItem().interaction()).isEqualTo(I2.INTERACTION);

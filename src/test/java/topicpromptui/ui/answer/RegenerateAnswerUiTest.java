@@ -82,7 +82,7 @@ class RegenerateAnswerUiTest extends BaseTopicPromptUiTest {
 
                 .work("Choose Interaction 1 from history", () -> {
                     clickOn(history().comboBox());
-                    clickOn(String.format("[Q] %s: %s", I1.TOPIC.title(), I1.QUESTION));
+                    clickOn("[Q] " + I1.TOPIC.title() + ": " + I1.QUESTION);
                 })
                 .focus(history().comboBox())
                 .historySelectedItem(storage.readInteraction(I1.INTERACTION.id()).orElseThrow())

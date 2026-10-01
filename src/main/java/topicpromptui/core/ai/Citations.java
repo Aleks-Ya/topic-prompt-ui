@@ -1,6 +1,5 @@
 package topicpromptui.core.ai;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -18,12 +17,9 @@ public final class Citations {
      */
     public static List<Citation> dedup(List<Citation> citations) {
         var seen = new HashSet<String>();
-        var result = new ArrayList<Citation>();
-        for (var citation : citations) {
-            if (citation.url() != null && !citation.url().isBlank() && seen.add(citation.url())) {
-                result.add(citation);
-            }
-        }
-        return List.copyOf(result);
+        return citations.stream()
+                .filter(citation -> citation.url() != null && !citation.url().isBlank())
+                .filter(citation -> seen.add(citation.url()))
+                .toList();
     }
 }

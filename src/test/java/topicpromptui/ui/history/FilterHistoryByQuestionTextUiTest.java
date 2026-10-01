@@ -7,7 +7,6 @@ import topicpromptui.ui.TestingData.I3;
 import org.junit.jupiter.api.Test;
 
 import static topicpromptui.ui.viewmodel.question.QuestionStyle.QUESTION_STYLE_EMPTY;
-import static java.lang.String.format;
 import static javafx.scene.paint.Color.GREEN;
 import static javafx.scene.paint.Color.RED;
 
@@ -57,7 +56,7 @@ class FilterHistoryByQuestionTextUiTest extends BaseTopicPromptUiTest {
                 .historyFilterText("question 1")
 
                 .work("Select filtered item", () ->
-                        clickOn(history().comboBox()).clickOn(format("[Q] %s: %s", I1.TOPIC.title(), I1.QUESTION)))
+                        clickOn(history().comboBox()).clickOn("[Q] " + I1.TOPIC.title() + ": " + I1.QUESTION))
                 .focus(history().comboBox())
                 .historySelectedItem(I1.INTERACTION)
                 .modelCurrentInteraction(I1.INTERACTION)

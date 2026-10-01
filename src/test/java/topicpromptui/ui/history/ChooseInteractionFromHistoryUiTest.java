@@ -6,7 +6,6 @@ import topicpromptui.ui.TestingData.I2;
 import org.junit.jupiter.api.Test;
 
 import static topicpromptui.ui.viewmodel.question.QuestionStyle.QUESTION_STYLE_EMPTY;
-import static java.lang.String.format;
 import static javafx.scene.paint.Color.GREEN;
 import static javafx.scene.paint.Color.RED;
 
@@ -43,7 +42,7 @@ class ChooseInteractionFromHistoryUiTest extends BaseTopicPromptUiTest {
                 .answerCircleColors(GREEN, GREEN, RED, GREEN)
                 .assertApp();
 
-        clickOn(history().comboBox()).clickOn(format("[Q] %s: %s", I1.TOPIC.title(), I1.QUESTION));
+        clickOn(history().comboBox()).clickOn("[Q] " + I1.TOPIC.title() + ": " + I1.QUESTION);
 
         assertion()
                 .focus(history().comboBox())
