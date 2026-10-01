@@ -42,6 +42,11 @@ Check whether the given statement is factually correct in the context of the top
         The `**Correct version:**` line is the only place my statement may reappear.
     </guideline>
     <guideline>
+        Do not cite sources in the answer text: no `[1]` or footnote markers, and no source links such as
+        `([github.com](https://github.com/...))` at the end of a sentence or paragraph. Sources are displayed separately.
+        Include a link only when the question explicitly asks for one.
+    </guideline>
+    <guideline>
         Prefer plain prose. Do not use headings.
         Use a bulleted list only when the statement bundles several distinct claims that need separate verdicts;
         even then, close with a single `**Correct version:**` line covering the whole statement.
