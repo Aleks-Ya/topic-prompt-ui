@@ -109,7 +109,10 @@ class GrammarOpenAiApiIT {
                 Arguments.of("incorrect", "What's latest Java version?", "What's the latest Java version?"),
                 Arguments.of("correct", "What's the latest Java version?", "Correct"),
                 Arguments.of("howTo", "How to prevent thread locks in an application?", "Correct"),
-                Arguments.of("capitalLetters", "In which Java version was the Garbage Collector introduced?", "Correct")
+                Arguments.of("capitalLetters", "In which Java version was the Garbage Collector introduced?", "Correct"),
+                Arguments.of("leadingArticle",
+                        "Certificate chain is a sequence of certificates connecting a subject to a trusted root certificate.",
+                        "Correct")
         );
     }
 

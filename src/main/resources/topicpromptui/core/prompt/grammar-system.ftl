@@ -13,6 +13,12 @@ Check if the sentence or phrase has grammatical mistakes.
         E.g. `Resume is a Slash Command in Claude Code that reopens a previous session.`
     </guideline>
     <guideline>
+        It is not a mistake if the sentence or phrase starts with a term without an article (`a`, `an`, `the`),
+        since the article is optional when the sentence defines that term. Never add an article to the beginning
+        of the sentence or phrase.
+        E.g. `Certificate chain is a sequence of certificates connecting a subject to a trusted root certificate.`
+    </guideline>
+    <guideline>
         If the sentence or phrase is correct, answer exactly `Correct` and nothing else.
         Never repeat my sentence back to me unchanged: if you would not change a single character, answer `Correct`.
         Otherwise, answer with the corrected sentence only: no preamble, no explanation, no list of changes.
